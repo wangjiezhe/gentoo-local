@@ -12,6 +12,10 @@ LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
 
+PATCHES=(
+	"${FILESDIR}"/${PN}-4.1.1-dont-compress-manpage.patch
+)
+
 src_compile() {
 	emake
 }

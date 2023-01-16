@@ -1,0 +1,31 @@
+From 624a68c19e3fdc7d0494919d483f53569d02c1b9 Mon Sep 17 00:00:00 2001
+From: wangjiezhe <wangjiezhe@gmail.com>
+Date: Mon, 16 Jan 2023 15:49:50 +0800
+Subject: [PATCH] don't compress manpage
+
+---
+ Makefile | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index d4ebbfb..fb1f87a 100644
+--- a/Makefile
++++ b/Makefile
+@@ -47,12 +47,11 @@ doc:
+ 		cp $$file $(OUTMANPATH); \
+ 		sed -e 's/DATEPLACEHOLDER/'$(DATETMP)'/' -e 's/VERSIONPLACEHOLDER/'$(VERTMP)'/' $(OUTMANPATH)/`basename $$file` > $(OUTMANPATH)/`basename $$file`.tmp; \
+ 		mv $(OUTMANPATH)/`basename $$file`.tmp $(OUTMANPATH)/`basename $$file`; \
+-		gzip -f -q $(OUTMANPATH)/`basename $$file`; \
+ 	done
+ 
+ doc_install:
+-	install -Dm 644 out-docs/*.1.gz -t $(DESTDIR)$(PREFIX)/share/man/man1
+-	install -Dm 644 out-docs/*.7.gz -t $(DESTDIR)$(PREFIX)/share/man/man7
++	install -Dm 644 out-docs/*.1 -t $(DESTDIR)$(PREFIX)/share/man/man1
++	install -Dm 644 out-docs/*.7 -t $(DESTDIR)$(PREFIX)/share/man/man7
+ 
+ res_install:
+ 	install -Dm 644 src/etc/*.vbs -t $(DESTDIR)$(PREFIX)/share/wslu
+-- 
+2.38.2
+
