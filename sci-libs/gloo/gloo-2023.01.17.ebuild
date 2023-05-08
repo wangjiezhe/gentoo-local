@@ -40,7 +40,6 @@ PATCHES=(
 )
 
 src_prepare() {
-	eapply_user
 	cmake_src_prepare
 	use cuda && cuda_add_sandbox
 }
