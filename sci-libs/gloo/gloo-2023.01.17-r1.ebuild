@@ -53,7 +53,7 @@ src_configure() {
 		-DUSE_REDIS=$(usex redis ON OFF)
 		-DUSE_TCP_OPENSSL_LINK=$(usex ssl ON OFF)
 		-DUSE_CUDA=$(usex cuda ON OFF)
-		-DGLOO_USE_CUDA_TOOLKIT=ON=$(usex cuda ON OFF)
+		-DGLOO_USE_CUDA_TOOLKIT=$(usex cuda ON OFF)
 	)
 	if use cuda; then
 		mycmakeargs+=(
