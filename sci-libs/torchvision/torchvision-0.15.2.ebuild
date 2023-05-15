@@ -5,6 +5,7 @@ EAPI=8
 
 PYTHON_COMPAT=( python3_10 )
 DISTUTILS_SINGLE_IMPL=1
+#DISTUTILS_EXT=1
 DISTUTILS_USE_PEP517=setuptools
 inherit distutils-r1 cuda
 
@@ -25,7 +26,7 @@ RDEPEND="
 		dev-python/requests[${PYTHON_USEDEP}]
 		dev-python/scipy[${PYTHON_USEDEP}]
 	')
-	>=sci-libs/pytorch-2.0.0[${PYTHON_SINGLE_USEDEP}]
+	>=sci-libs/pytorch-2.0.1[${PYTHON_SINGLE_USEDEP}]
 	media-video/ffmpeg
 	dev-qt/qtcore:5
 "
