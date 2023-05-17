@@ -1,0 +1,33 @@
+diff --git a/app/Main.hs b/app/Main.hs
+index 78524d3..cdf7530 100644
+--- a/app/Main.hs
++++ b/app/Main.hs
+@@ -11,7 +11,7 @@ import Debug.Trace
+ import System.Exit
+ import System.Console.Haskeline
+ import System.Environment
+-import System.Directory (doesFileExist)
++import System.Directory (doesFileExist, getHomeDirectory)
+ 
+ 
+ version = "2.2.0"
+@@ -76,7 +76,7 @@ execute line env =
+                             outFile <- liftIO $ openFile (importPath ++ f ++ ".plam") WriteMode
+                             liftIO $ mapM_ (saveGlobal outFile) (reverse env)
+                             liftIO $ hClose outFile
+-                            outputStrLn("--- successfully exported to import/" ++ f ++ ".plam")
++                            outputStrLn("--- successfully exported to " ++ importPath ++ f ++ ".plam")
+                         else
+                             outputStrLn("--- export failed : " ++ f ++ " already exists")
+                     return env
+@@ -170,7 +170,9 @@ decideRun args
+         putStrLn heading 
+         runInput
+     where
+-      runInput = runInputT defaultSettings { historyFile = Just ".plam-history" } (repl [])
++      runInput = do
++        homePath <- getHomeDirectory
++        runInputT defaultSettings { historyFile = Just (homePath ++ "/.plam-history") } (repl [])
+ 
+ main :: IO ()
+ main = do
