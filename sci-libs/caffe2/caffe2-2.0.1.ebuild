@@ -24,6 +24,7 @@ REQUIRED_USE="
 	ffmpeg? ( opencv )
 	mpi? ( distributed )
 	tensorpipe? ( distributed )
+	distributed? ( tensorpipe )
 	gloo? ( distributed )
 " # ?? ( cuda rocm )
 
@@ -78,12 +79,12 @@ DEPEND="
 S="${WORKDIR}"/${MYP}
 
 PATCHES=(
-	"${FILESDIR}"/${P}-gentoo.patch
+	"${FILESDIR}"/${PN}-2.0.0-gentoo.patch
 	"${FILESDIR}"/${PN}-1.13.0-install-dirs.patch
 	"${FILESDIR}"/${PN}-1.12.0-glog-0.6.0.patch
 	"${FILESDIR}"/${PN}-1.13.1-tensorpipe.patch
-	"${FILESDIR}"/${P}-gcc13.patch
-	"${FILESDIR}"/${P}-cudnn_include_fix.patch
+	"${FILESDIR}"/${PN}-2.0.0-gcc13.patch
+	"${FILESDIR}"/${PN}-2.0.0-cudnn_include_fix.patch
 )
 
 src_prepare() {
@@ -121,7 +122,6 @@ src_configure() {
 		-DUSE_CUDNN=$(usex cuda)
 		-DUSE_FAST_NVCC=$(usex cuda)
 		-DTORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST:-3.5 7.0}"
-		-DBUILD_NVFUSER=OFF
 		-DUSE_DISTRIBUTED=$(usex distributed)
 		-DUSE_MPI=$(usex mpi)
 		-DUSE_FAKELOWP=OFF
