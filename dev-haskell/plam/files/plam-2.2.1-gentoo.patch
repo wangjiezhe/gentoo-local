@@ -1,0 +1,109 @@
+diff --git a/app/Main.hs b/app/Main.hs
+index 31b5fcd..7f31fa3 100644
+--- a/app/Main.hs
++++ b/app/Main.hs
+@@ -10,7 +10,7 @@ import Parser
+ import Reducer
+ import Syntax
+ import System.Console.Haskeline
+-import System.Directory (doesFileExist)
++import System.Directory (doesFileExist, getHomeDirectory)
+ import System.Environment
+ import System.Exit
+ import System.IO (IOMode (WriteMode), hClose, hFlush, hPutStrLn, openFile, stdout)
+@@ -96,7 +96,7 @@ execute line env =
+                         >>= ( \outFile ->
+                                 liftIO (mapM_ (saveGlobal outFile) (reverse env) >> hClose outFile)
+                             )
+-                          >> outputStrLn ("--- successfully exported to import/" <> f <> ".plam")
++                          >> outputStrLn ("--- successfully exported to " <> importPath <> f <> ".plam")
+                     )
+                   True -> outputStrLn ("--- export failed : " <> f <> " already exists")
+               )
+@@ -182,4 +182,5 @@ main = do
+     FileInput file -> readFile file >>= (\content -> execJustProg (lines content) []) >> putStrLn (boldGreen "Done.")
+     Repl noHeading ->
+       unless noHeading (putStrLn heading)
+-        >> runInputT defaultSettings {historyFile = Just ".plam-history"} (repl [])
++        >> getHomeDirectory
++        >>= (\homePath -> runInputT defaultSettings {historyFile = Just (homePath <> "/.plam-history")} (repl []))
+diff --git a/import/comp.plam b/import/comp.plam
+index 06987da..3d1084e 100644
+--- a/import/comp.plam
++++ b/import/comp.plam
+@@ -1,19 +1,19 @@
+-  ___________________________________________
+-  ||*         ___ ___  __  __ ___         *||
+-  ||         / __| _ \|  \/  | _ \         ||
+-  ||	       \___|___/|_\__/_|  _/         ||
+-  ||                         |_|           ||
+-  |\     -----------------------------     /|
+-  ===========================================
+-  |                                         |
+-  |   library for:                          |
+-  | defining partial recursive functions    |
+-  | [but preferably total ;)]               |
+-  |                                         |
+-  +-----------------------------------------+
+-
+---==========================================--
+-               BASIC FUNCTIONS
++--  ___________________________________________
++--  ||*         ___ ___  __  __ ___         *||
++--  ||         / __| _ \|  \/  | _ \         ||
++--  ||         \___|___/|_\__/_|  _/         ||
++--  ||                         |_|           ||
++--  |\     -----------------------------     /|
++--  ===========================================
++--  |                                         |
++--  |   library for:                          |
++--  | defining partial recursive functions    |
++--  | [but preferably total ;)]               |
++--  |                                         |
++--  +-----------------------------------------+
++
++--==========================================--
++--             BASIC FUNCTIONS              --
+ --==========================================--
+ T = \x y. x
+ F = \x y. y
+@@ -21,12 +21,12 @@ P = \n f x. n (\g h. h (g f)) (\u. x) (\u. u)
+ isZ = \n. n (\x. F) T
+ 
+ --==========================================--
+-            FIXED POINT COMBINATOR 
++--          FIXED POINT COMBINATOR          --
+ --==========================================--
+ Y = \f. (\x. f(x x)) (\x. f(x x))
+ 
+ --==========================================--
+-              INITIAL FUNCTIONS 
++--            INITIAL FUNCTIONS             --
+ --==========================================--
+ Z = \x. 0
+ S = \n f x. f (n f x)
+@@ -38,7 +38,7 @@ I23 = \x y z. y
+ I33 = \x y z. z
+ 
+ --==========================================--
+-                 COMPOSITION 
++--               COMPOSITION                --
+ --==========================================--
+ C1 = \g h. \x. g (h x)
+ C2 = \g h. \x y. g (h x y)
+@@ -47,13 +47,13 @@ C3 = \g h. \x y z. g (h x y z)
+ C23 = \g h i. \x y z. g (h x y z) (i x y z)
+ 
+ --==========================================--
+-             PRIMITIVE RECURSION 
++--           PRIMITIVE RECURSION            --
+ --==========================================--
+ PR0 = \g h. Y (\f k. (isZ k) g (h (P k) (f (P k))))
+ PR1 = \g h. Y (\f x y. (isZ y) (g x) (h x (P y) (f x (P y))))
+ 
+ --==========================================--
+-                MINIMIZATION 
++--              MINIMIZATION                --
+ --==========================================--
+ MIN1x = \g. Y (\h x. (isZ (g x)) x (h (S x)))
+ MIN1 = \g. (Y (\h x. (isZ (g x)) x (h (S x)))) 0
