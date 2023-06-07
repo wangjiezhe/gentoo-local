@@ -2,5 +2,4 @@ app-i18n/man-pages-zh_CN 1.6.4.0: A somewhat comprehensive collection of Chinese
 app-misc/wslu 4.1.1-r1: A collection of utilities for Windows Subsystem for Linux (WSL)
 app-vim/vimcdoc 2.4.0: online vim documentation translated into Chinese
 dev-haskell/plam 2.2.0 2.2.1: An interpreter for learning and exploring pure λ-calculus
-dev-libs/cudnn 8.9.2.26: NVIDIA Accelerated Deep Learning on GPU library
 sci-libs/torchvision 0.15.2: Datasets, transforms and models to specific to computer vision
