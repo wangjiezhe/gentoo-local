@@ -34,10 +34,11 @@ RDEPEND="
 		>=dev-util/nvidia-cuda-toolkit-11
 		<dev-util/nvidia-cuda-toolkit-13
 		)
-	ffmpeg? ( || (
+	ffmpeg? (
 		media-video/ffmpeg:0/56.58.58
-		media-video/ffmpeg:0/58.60.60
-		) )
+		x11-libs/libXinerama
+		net-print/cups
+		)
 	R? ( dev-lang/R )
 "
 
@@ -113,6 +114,9 @@ src_install() {
 	if ! use ffmpeg; then
 		einfo 'Removing FFmpegTools support'
 		rm -r "${S}/${M_TARGET}/SystemFiles/Links/FFmpegTools/LibraryResources/Linux-x86-64/FFmpegToolsSystem"*.so || die
+	else
+	einfo 'Removing FFmpegTools-6.0 support'
+		rm -r "${S}/${M_TARGET}/SystemFiles/Links/FFmpegTools/LibraryResources/Linux-x86-64/FFmpegToolsSystem-6.0.so" || die
 	fi
 
 	# fix RPATH
