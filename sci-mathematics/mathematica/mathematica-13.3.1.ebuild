@@ -8,7 +8,7 @@ inherit check-reqs desktop unpacker xdg
 
 DESCRIPTION="Wolfram Mathematica"
 HOMEPAGE="https://www.wolfram.com/mathematica/"
-SRC_URI="Mathematica_${PV}_BNDL_Chinese_LINUX_CN.sh"
+SRC_URI="Mathematica_${PV}_BNDL_Chinese_LINUX.sh"
 S="${WORKDIR}"
 
 LICENSE="all-rights-reserved"
@@ -35,7 +35,7 @@ RDEPEND="
 		<dev-util/nvidia-cuda-toolkit-13
 		)
 	ffmpeg? (
-		media-video/ffmpeg:0/56.58.58
+		media-video/ffmpeg:0/58.60.60
 		x11-libs/libXinerama
 		net-print/cups
 		)
@@ -115,8 +115,8 @@ src_install() {
 		einfo 'Removing FFmpegTools support'
 		rm -r "${S}/${M_TARGET}/SystemFiles/Links/FFmpegTools/LibraryResources/Linux-x86-64/FFmpegToolsSystem"*.so || die
 	else
-	einfo 'Removing FFmpegTools-6.0 support'
-		rm -r "${S}/${M_TARGET}/SystemFiles/Links/FFmpegTools/LibraryResources/Linux-x86-64/FFmpegToolsSystem-6.0.so" || die
+	einfo 'Removing FFmpegTools-4.4 support'
+		rm -r "${S}/${M_TARGET}/SystemFiles/Links/FFmpegTools/LibraryResources/Linux-x86-64/FFmpegToolsSystem-4.4.so" || die
 	fi
 
 	# fix RPATH
