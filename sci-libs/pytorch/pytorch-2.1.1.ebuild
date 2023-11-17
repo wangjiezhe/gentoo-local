@@ -4,7 +4,7 @@
 EAPI=8
 
 DISTUTILS_USE_PEP517=setuptools
-PYTHON_COMPAT=( python3_{10,11} )
+PYTHON_COMPAT=( python3_{10..12} )
 DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_EXT=1
 inherit distutils-r1 prefix
@@ -42,7 +42,7 @@ DEPEND="${RDEPEND}
 "
 
 PATCHES=(
-	"${FILESDIR}"/${P}-don-t-build-libtorch-again.patch
+	"${FILESDIR}"/${PN}-2.1.0-don-t-build-libtorch-again.patch
 	"${FILESDIR}"/${PN}-1.9.0-Change-library-directory-according-to-CMake-build.patch
 	"${FILESDIR}"/${PN}-2.0.0-global-dlopen.patch
 	"${FILESDIR}"/${PN}-1.7.1-torch_shm_manager.patch
