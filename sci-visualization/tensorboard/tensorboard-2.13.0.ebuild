@@ -38,7 +38,7 @@ BDEPEND="
 	${PYTHON_DEPS}
 "
 PDEPEND="
-	sci-libs/tensorflow[python,${PYTHON_USEDEP}]
+	=sci-libs/tensorflow-2.13*[python,${PYTHON_USEDEP}]
 "
 
 src_prepare() {
