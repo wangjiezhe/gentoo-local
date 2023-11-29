@@ -1,0 +1,50 @@
+From 3207685f5f0b95bb225821c37d184553c5705184 Mon Sep 17 00:00:00 2001
+From: wangjiezhe <wangjiezhe@gmail.com>
+Date: Wed, 29 Nov 2023 00:40:53 +0800
+Subject: [PATCH 2/3] Disable 32-bit tests
+
+https://github.com/protocolbuffers/protobuf/issues/8460
+https://github.com/protocolbuffers/protobuf/issues/8459
+---
+ src/google/protobuf/any_test.cc       | 2 ++
+ src/google/protobuf/arena_unittest.cc | 4 ++++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/src/google/protobuf/any_test.cc b/src/google/protobuf/any_test.cc
+index f8f4eb98b..982040ec0 100644
+--- a/src/google/protobuf/any_test.cc
++++ b/src/google/protobuf/any_test.cc
+@@ -43,6 +43,8 @@ TEST(AnyTest, TestPackFromSerializationExceedsSizeLimit) {
+ #if defined(_MSC_VER) && defined(_M_IX86)
+   GTEST_SKIP() << "This toolchain can't allocate that much memory.";
+ #endif
++  // Filter out this test on 32-bit architectures.
++  if (sizeof(void*) < 8) return;
+   protobuf_unittest::TestAny submessage;
+   submessage.mutable_text()->resize(INT_MAX, 'a');
+   protobuf_unittest::TestAny message;
+diff --git a/src/google/protobuf/arena_unittest.cc b/src/google/protobuf/arena_unittest.cc
+index 4a2d502cc..e7629f3d2 100644
+--- a/src/google/protobuf/arena_unittest.cc
++++ b/src/google/protobuf/arena_unittest.cc
+@@ -1350,6 +1350,8 @@ TEST(ArenaTest, MessageLiteOnArena) {
+ uint64_t Align8(uint64_t n) { return (n + 7) & -8; }
+ 
+ TEST(ArenaTest, SpaceAllocated_and_Used) {
++  // Filter out this test on 32-bit architectures.
++  if (sizeof(void*) < 8) return;
+   Arena arena_1;
+   EXPECT_EQ(0, arena_1.SpaceAllocated());
+   EXPECT_EQ(0, arena_1.SpaceUsed());
+@@ -1430,6 +1432,8 @@ TEST(ArenaTest, Alignment) {
+ }
+ 
+ TEST(ArenaTest, BlockSizeSmallerThanAllocation) {
++  // Filter out this test on 32-bit architectures.
++  if (sizeof(void*) < 8) return;
+   for (size_t i = 0; i <= 8; ++i) {
+     ArenaOptions opt;
+     opt.start_block_size = opt.max_block_size = i;
+-- 
+2.41.0
+
