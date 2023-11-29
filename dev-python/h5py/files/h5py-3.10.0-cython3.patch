@@ -1,0 +1,70 @@
+diff --git a/h5py/_errors.pyx b/h5py/_errors.pyx
+index c3bd184e..5e158081 100644
+--- a/h5py/_errors.pyx
++++ b/h5py/_errors.pyx
+@@ -94,7 +94,7 @@ cdef struct err_data_t:
+     H5E_error_t err
+     int n
+ 
+-cdef herr_t walk_cb(unsigned int n, const H5E_error_t *desc, void *e) nogil noexcept:
++cdef herr_t walk_cb(unsigned int n, const H5E_error_t *desc, void *e) noexcept nogil:
+ 
+     cdef err_data_t *ee = <err_data_t*>e
+ 
+diff --git a/h5py/_proxy.pyx b/h5py/_proxy.pyx
+index 46b4fe0d..e40504f5 100644
+--- a/h5py/_proxy.pyx
++++ b/h5py/_proxy.pyx
+@@ -241,7 +241,7 @@ ctypedef struct h5py_scatter_t:
+     void* buf
+ 
+ cdef herr_t h5py_scatter_cb(void* elem, hid_t type_id, unsigned ndim,
+-                const hsize_t *point, void *operator_data) nogil except -1:
++                const hsize_t *point, void *operator_data) except -1 nogil:
+     cdef h5py_scatter_t* info = <h5py_scatter_t*>operator_data
+ 
+     memcpy(elem, (<char*>info[0].buf)+((info[0].i)*(info[0].elsize)),
+@@ -252,7 +252,7 @@ cdef herr_t h5py_scatter_cb(void* elem, hid_t type_id, unsigned ndim,
+     return 0
+ 
+ cdef herr_t h5py_gather_cb(void* elem, hid_t type_id, unsigned ndim,
+-                const hsize_t *point, void *operator_data) nogil except -1:
++                const hsize_t *point, void *operator_data) except -1 nogil:
+     cdef h5py_scatter_t* info = <h5py_scatter_t*>operator_data
+ 
+     memcpy((<char*>info[0].buf)+((info[0].i)*(info[0].elsize)), elem,
+diff --git a/h5py/h5fd.pyx b/h5py/h5fd.pyx
+index e9746057..c3530ff3 100644
+--- a/h5py/h5fd.pyx
++++ b/h5py/h5fd.pyx
+@@ -195,18 +195,18 @@ info.name = 'fileobj'
+ info.maxaddr = libc.stdint.SIZE_MAX - 1
+ info.fc_degree = H5F_CLOSE_WEAK
+ info.fapl_size = sizeof(PyObject *)
+-info.fapl_get = <void *(*)(H5FD_t *)>H5FD_fileobj_fapl_get
+-info.fapl_copy = <void *(*)(const void *)>H5FD_fileobj_fapl_copy
+-info.fapl_free = <herr_t (*)(void *)>H5FD_fileobj_fapl_free
+-info.open = <H5FD_t *(*)(const char *name, unsigned flags, hid_t fapl, haddr_t maxaddr)>H5FD_fileobj_open
+-info.close = <herr_t (*)(H5FD_t *)>H5FD_fileobj_close
+-info.get_eoa = <haddr_t (*)(const H5FD_t *, H5FD_mem_t)>H5FD_fileobj_get_eoa
+-info.set_eoa = <herr_t (*)(H5FD_t *, H5FD_mem_t, haddr_t)>H5FD_fileobj_set_eoa
+-info.get_eof = <haddr_t (*)(const H5FD_t *, H5FD_mem_t)>H5FD_fileobj_get_eof
+-info.read = <herr_t (*)(H5FD_t *, H5FD_mem_t, hid_t, haddr_t, size_t, void *)>H5FD_fileobj_read
+-info.write = <herr_t (*)(H5FD_t *, H5FD_mem_t, hid_t, haddr_t, size_t, const void *)>H5FD_fileobj_write
+-info.truncate = <herr_t (*)(H5FD_t *, hid_t, hbool_t)>H5FD_fileobj_truncate
+-info.flush = <herr_t (*)(H5FD_t *, hid_t, hbool_t)>H5FD_fileobj_flush
++info.fapl_get = <void *(*)(H5FD_t *) noexcept>H5FD_fileobj_fapl_get
++info.fapl_copy = <void *(*)(const void *) noexcept>H5FD_fileobj_fapl_copy
++info.fapl_free = <herr_t (*)(void *) noexcept>H5FD_fileobj_fapl_free
++info.open = <H5FD_t *(*)(const char *name, unsigned flags, hid_t fapl, haddr_t maxaddr) noexcept>H5FD_fileobj_open
++info.close = <herr_t (*)(H5FD_t *) noexcept>H5FD_fileobj_close
++info.get_eoa = <haddr_t (*)(const H5FD_t *, H5FD_mem_t) noexcept>H5FD_fileobj_get_eoa
++info.set_eoa = <herr_t (*)(H5FD_t *, H5FD_mem_t, haddr_t) noexcept>H5FD_fileobj_set_eoa
++info.get_eof = <haddr_t (*)(const H5FD_t *, H5FD_mem_t) noexcept>H5FD_fileobj_get_eof
++info.read = <herr_t (*)(H5FD_t *, H5FD_mem_t, hid_t, haddr_t, size_t, void *) noexcept>H5FD_fileobj_read
++info.write = <herr_t (*)(H5FD_t *, H5FD_mem_t, hid_t, haddr_t, size_t, const void *) noexcept>H5FD_fileobj_write
++info.truncate = <herr_t (*)(H5FD_t *, hid_t, hbool_t) noexcept>H5FD_fileobj_truncate
++info.flush = <herr_t (*)(H5FD_t *, hid_t, hbool_t) noexcept>H5FD_fileobj_flush
+ # H5FD_FLMAP_DICHOTOMY
+ info.fl_map = [H5FD_MEM_SUPER,  # default
+                H5FD_MEM_SUPER,  # super
