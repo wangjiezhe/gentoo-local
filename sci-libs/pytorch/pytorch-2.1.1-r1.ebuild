@@ -58,7 +58,10 @@ src_prepare() {
 		|| die
 
 	# Crazy workaround for splitting "caffe2" and "pytorch" in two different packages:
-	# cp -a "${EPREFIX}/usr/$(get_libdir)/functorch.so" functorch/ || die
+	cp -a "${EPREFIX}/usr/$(get_libdir)/functorch.so" functorch/ || die
+	mkdir nvfuser || die
+	cp -a "${EPREFIX}/usr/$(get_libdir)/nvfuser.so" nvfuser/ || die
+	cp -a third_party/nvfuser/python/__init__.py nvfuser/ || die
 
 	distutils-r1_src_prepare
 
