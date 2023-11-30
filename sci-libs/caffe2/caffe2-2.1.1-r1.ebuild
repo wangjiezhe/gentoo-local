@@ -44,6 +44,8 @@ RDEPEND="
 		=dev-libs/cudnn-8*
 		dev-libs/cudnn-frontend:0/8
 		=dev-util/nvidia-cuda-toolkit-12*:=[profiler]
+		dev-libs/nccl
+		dev-libs/cusparselt
 	)
 	fbgemm? ( dev-libs/FBGEMM )
 	ffmpeg? ( media-video/ffmpeg:= )
@@ -74,6 +76,9 @@ DEPEND="
 		dev-python/pybind11[${PYTHON_USEDEP}]
 	')
 "
+BDEPEND="
+	dev-util/patchelf
+"
 
 S="${WORKDIR}"/${MYP}
 
@@ -84,7 +89,7 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-1.13.1-tensorpipe.patch
 	"${FILESDIR}"/${PN}-2.0.0-gcc13.patch
 	"${FILESDIR}"/${PN}-2.0.1-functorch.patch
-	"${FILESDIR}"/${PN}-2.1.0-nvfuser.patch
+	# "${FILESDIR}"/${PN}-2.1.0-nvfuser.patch
 )
 
 src_prepare() {
@@ -93,6 +98,8 @@ src_prepare() {
 		-e "/third_party\/gloo/d" \
 		cmake/Dependencies.cmake \
 		|| die
+	# Fix cmake prefix path
+	sed -i "s|cmake_prefix_path = _osp.*|cmake_prefix_path = '/usr/share/cmake'|g" torch/utils/__init__.py
 	cmake_src_prepare
 	pushd torch/csrc/jit/serialization || die
 	flatc --cpp --gen-mutable --scoped-enums mobile_bytecode.fbs || die
@@ -134,7 +141,6 @@ src_configure() {
 		-DUSE_CCACHE=OFF
 		-DUSE_CUDA=$(usex cuda)
 		-DUSE_CUDNN=$(usex cuda)
-		-DUSE_FAST_NVCC=$(usex cuda)
 		-DTORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST:-3.5 7.0}"
 		-DBUILD_NVFUSER=$(usex cuda)
 		-DUSE_DISTRIBUTED=$(usex distributed)
@@ -149,7 +155,8 @@ src_configure() {
 		-DUSE_LEVELDB=OFF
 		-DUSE_MAGMA=OFF # TODO: In GURU as sci-libs/magma
 		-DUSE_MKLDNN=OFF
-		-DUSE_NCCL=OFF # TODO: NVIDIA Collective Communication Library
+		-DUSE_NCCL=$(usex cuda)
+		-DUSE_SYSTEM_NCCL=$(usex cuda)
 		-DUSE_NNPACK=$(usex nnpack)
 		-DUSE_QNNPACK=$(usex qnnpack)
 		-DUSE_XNNPACK=$(usex xnnpack)
@@ -196,7 +203,14 @@ src_configure() {
 src_install() {
 	cmake_src_install
 
-	use cuda && dolib.so "${BUILD_DIR}"/lib/libnvfuser_codegen.so
+	if use cuda; then
+		dolib.so "${BUILD_DIR}/lib/libnvfuser_codegen.so"
+		dolib.so "${BUILD_DIR}/nvfuser/nvfuser.so"
+		einfo "patching libnvfuser_codegen.so, nvfuser.so, functorch.so"
+		patchelf --set-rpath "/usr/$(get_libdir):/opt/cuda/$(get_libdir)" "${ED}"/usr/$(get_libdir)/libnvfuser_codegen.so
+		patchelf --set-rpath "/usr/$(get_libdir):/opt/cuda/$(get_libdir)" "${ED}"/usr/$(get_libdir)/nvfuser.so
+		patchelf --set-rpath "/usr/$(get_libdir):/opt/cuda/$(get_libdir)" "${ED}"/usr/$(get_libdir)/functorch.so
+	fi
 
 	insinto "/var/lib/${PN}"
 	doins "${BUILD_DIR}"/CMakeCache.txt
@@ -204,7 +218,7 @@ src_install() {
 	rm -rf python
 	mkdir -p python/torch/include || die
 	mv "${ED}"/usr/lib/python*/site-packages/caffe2 python/ || die
-	mv "${ED}"/usr/include/torch python/torch/include || die
+	# mv "${ED}"/usr/include/torch python/torch/include || die
 	cp torch/version.py python/torch/ || die
 	rm -rf "${ED}"/var/tmp || die
 	python_domodule python/caffe2
