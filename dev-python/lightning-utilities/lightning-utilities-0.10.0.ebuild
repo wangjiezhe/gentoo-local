@@ -21,6 +21,5 @@ RDEPEND="
 	$(python_gen_cond_dep '
 		dev-python/packaging[${PYTHON_USEDEP}]
 		dev-python/typing-extensions[${PYTHON_USEDEP}]
-		dev-python/setuptools[${PYTHON_USEDEP}]
 	')
 "
