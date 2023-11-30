@@ -8,7 +8,7 @@ HOMEPAGE="https://developer.nvidia.com/cusparselt-downloads"
 SRC_URI="https://developer.download.nvidia.com/compute/cusparselt/redist/libcusparse_lt/linux-x86_64/libcusparse_lt-linux-x86_64-${PV}-archive.tar.xz"
 S="${WORKDIR}/libcusparse_lt-linux-x86_64-${PV}-archive"
 
-LICENSE="NVIDIA-SDK"
+LICENSE="NVIDIA-cuSPARSELt"
 SLOT="0"
 KEYWORDS="~amd64 ~amd64-linux"
 RESTRICT="mirror"
