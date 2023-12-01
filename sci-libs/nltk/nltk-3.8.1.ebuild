@@ -15,9 +15,11 @@ SRC_URI="https://github.com/nltk/nltk/archive/${PV}.tar.gz
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~amd64"
+IUSE="data"
 RESTRICT="test"
 
 RDEPEND="
+	data? ( sci-libs/nltk-data )
 	$(python_gen_cond_dep '
 		dev-python/joblib[${PYTHON_USEDEP}]
 		>=dev-python/regex-2021.8.3[${PYTHON_USEDEP}]

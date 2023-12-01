@@ -5,6 +5,9 @@
 		<email>wangjiezhe@gmail.com</email>
 		<name>wangjiezhe</name>
 	</maintainer>
+	<use>
+		<flag name="data">Add additional data</flag>
+	</use>
 	<upstream>
 		<remote-id type="github">nltk/nltk</remote-id>
 		<remote-id type="pypi">nltk</remote-id>
