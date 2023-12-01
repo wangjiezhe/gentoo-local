@@ -111,6 +111,8 @@ RDEPEND="
 	cuda? (
 		=dev-util/nvidia-cuda-toolkit-12*:=[profiler]
 		=dev-libs/cudnn-8*
+		dev-libs/nccl
+		=sci-libs/tensorrt-8*
 	)
 	mpi? ( virtual/mpi )
 	python? (
@@ -259,7 +261,7 @@ src_configure() {
 		export TF_NEED_CUDA=$(usex cuda 1 0)
 		export TF_DOWNLOAD_CLANG=0
 		export TF_CUDA_CLANG=0
-		export TF_NEED_TENSORRT=0
+		export TF_NEED_TENSORRT=$(usex cuda 1 0)
 		if use cuda; then
 			export TF_CUDA_PATHS="${EPREFIX}/opt/cuda"
 			export GCC_HOST_COMPILER_PATH="$(cuda_gccdir)/$(tc-getCC)"
@@ -335,7 +337,7 @@ src_configure() {
 		# This is not autoconf
 		./configure || die
 
-		echo 'build --config=noaws --config=nohdfs --config=nonccl' >> .bazelrc || die
+		echo 'build --config=noaws --config=nohdfs' >> .bazelrc || die
 		echo 'build --define tensorflow_mkldnn_contraction_kernel=0' >> .bazelrc || die
 		echo "build --action_env=KERAS_HOME=\"${T}/.keras\"" >> .bazelrc || die
 		echo "build --host_action_env=KERAS_HOME=\"${T}/.keras\"" >> .bazelrc || die
