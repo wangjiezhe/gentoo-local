@@ -37,6 +37,7 @@ sci-libs/onnx 1.14.0-r2: Open Neural Network Exchange (ONNX)
 sci-libs/pytorch 2.1.1-r1: Tensors and Dynamic neural networks in Python
 sci-libs/tensorflow 2.13.1: Computation framework using data flow graphs for scalable machine learning
 sci-libs/tensorflow-estimator 2.13.0 2.14.0 2.15.0: A high-level TensorFlow API that greatly simplifies machine learning programming
+sci-libs/tensorrt 8.6.1.6 9.1.0.4: An SDK for high-performance deep learning inference
 sci-libs/torch-fidelity 0.3.0: High-fidelity performance metrics for generative models in PyTorch
 sci-libs/torchaudio 2.1.1: Data manipulation and transformation for audio signal processing, powered by PyTorch
 sci-libs/torchmetrics 1.2.0: Machine learning metrics for distributed, scalable PyTorch applications
