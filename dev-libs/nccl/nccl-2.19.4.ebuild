@@ -47,7 +47,7 @@ src_compile() {
 src_install() {
 	emake PREFIX="${ED}/opt/cuda/targets/x86_64-linux" src.install
 
-	mkdir -p "${ED}/usr/$(get_libdir)" || die
+	dodir "/usr/$(get_libdir)"
 	mv "${ED}/opt/cuda/targets/x86_64-linux/lib/pkgconfig" \
 		"${ED}/usr/$(get_libdir)/pkgconfig" || die
 
