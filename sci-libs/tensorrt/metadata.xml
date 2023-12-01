@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="project">
+		<email>wangjiezhe@gmail.com</email>
+		<name>wangjiezhe</name>
+	</maintainer>
+	<use>
+		<flag name="data">Add additional data</flag>
+		<flag name="samples">Install samples</flag>
+	</use>
+	<upstream>
+		<remote-id type="github">NVIDIA/TensorRT</remote-id>
+	</upstream>
+</pkgmetadata>
