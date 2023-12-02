@@ -25,7 +25,7 @@ RDEPEND="
 	sys-libs/zlib:=
 "
 DEPEND="${RDEPEND}"
-BDEPEND="dev-python/cython[${PYTHON_USEDEP}]"
+BDEPEND=">=dev-python/cython-3[${PYTHON_USEDEP}]"
 
 PATCHES=(
 	"${FILESDIR}/${PV}-cython3.patch"

@@ -33,7 +33,7 @@ RDEPEND="
 "
 
 BDEPEND="
-	dev-python/cython[${PYTHON_USEDEP}]
+	>=dev-python/cython-3[${PYTHON_USEDEP}]
 	>=dev-python/numpy-1.14.5[${PYTHON_USEDEP}]
 	dev-python/pkgconfig[${PYTHON_USEDEP}]
 	test? (
