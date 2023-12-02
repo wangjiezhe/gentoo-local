@@ -1,0 +1,59 @@
+From 092290df4ae969ba684f9c06d4c285d0e1d55e7e Mon Sep 17 00:00:00 2001
+From: Chad Fulton <chad@chadfulton.com>
+Date: Mon, 24 Jul 2023 23:33:37 -0400
+Subject: [PATCH] COMPAT: cpow=True for Cython >= 3.0 compatibility
+
+---
+ statsmodels/tsa/exponential_smoothing/_ets_smooth.pyx          | 2 +-
+ statsmodels/tsa/statespace/_filters/_inversions.pyx.in         | 1 +
+ statsmodels/tsa/statespace/_filters/_univariate.pyx.in         | 1 +
+ statsmodels/tsa/statespace/_filters/_univariate_diffuse.pyx.in | 1 +
+ 4 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/statsmodels/tsa/exponential_smoothing/_ets_smooth.pyx b/statsmodels/tsa/exponential_smoothing/_ets_smooth.pyx
+index e769c0f4019..1766d1716d5 100644
+--- a/statsmodels/tsa/exponential_smoothing/_ets_smooth.pyx
++++ b/statsmodels/tsa/exponential_smoothing/_ets_smooth.pyx
+@@ -1,5 +1,5 @@
+ #!python
+-#cython: wraparound=False, boundscheck=False, cdivision=True
++#cython: wraparound=False, boundscheck=False, cdivision=True, cpow=True
+ 
+ from cpython cimport bool
+ import numpy as np
+diff --git a/statsmodels/tsa/statespace/_filters/_inversions.pyx.in b/statsmodels/tsa/statespace/_filters/_inversions.pyx.in
+index 73687885bb0..583957fd261 100644
+--- a/statsmodels/tsa/statespace/_filters/_inversions.pyx.in
++++ b/statsmodels/tsa/statespace/_filters/_inversions.pyx.in
+@@ -1,6 +1,7 @@
+ #cython: boundscheck=False
+ #cython: wraparound=False
+ #cython: cdivision=False
++#cython: cpow=True
+ """
+ State Space Models
+ 
+diff --git a/statsmodels/tsa/statespace/_filters/_univariate.pyx.in b/statsmodels/tsa/statespace/_filters/_univariate.pyx.in
+index 843a2cfbd5e..703f8549ebe 100644
+--- a/statsmodels/tsa/statespace/_filters/_univariate.pyx.in
++++ b/statsmodels/tsa/statespace/_filters/_univariate.pyx.in
+@@ -2,6 +2,7 @@
+ #cython: boundscheck=False
+ #cython: wraparound=False
+ #cython: cdivision=False
++#cython: cpow=True
+ """
+ State Space Models
+ 
+diff --git a/statsmodels/tsa/statespace/_filters/_univariate_diffuse.pyx.in b/statsmodels/tsa/statespace/_filters/_univariate_diffuse.pyx.in
+index 441babd17f6..1e5fcc67168 100644
+--- a/statsmodels/tsa/statespace/_filters/_univariate_diffuse.pyx.in
++++ b/statsmodels/tsa/statespace/_filters/_univariate_diffuse.pyx.in
+@@ -2,6 +2,7 @@
+ #cython: boundscheck=False
+ #cython: wraparound=False
+ #cython: cdivision=False
++#cython: cpow=True
+ """
+ State Space Models
+ 
