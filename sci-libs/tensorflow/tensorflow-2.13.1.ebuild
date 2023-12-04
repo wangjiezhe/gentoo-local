@@ -416,6 +416,8 @@ src_install() {
 			[[ -e "${ED}/usr/bin/${n}" ]] || dosym ../lib/python-exec/python-exec2 "/usr/bin/${n}"
 		done
 
+		sed -i 's/\(typing_extensions\)<.*\(>=.*\)/\1\2/' "${ED}"/usr/lib/python*/site-packages/tensorflow-*-info/requires.txt
+
 		python_setup
 		local BUILD_DIR="${S}-${EPYTHON/./_}"
 		cd "${BUILD_DIR}" || die
