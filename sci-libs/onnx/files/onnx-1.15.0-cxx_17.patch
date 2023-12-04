@@ -1,0 +1,99 @@
+From a99cba32b6e3a99ebc13065db7eb5c8cef8f6b5b Mon Sep 17 00:00:00 2001
+From: Chun-Wei Chen <jacky82226@gmail.com>
+Date: Thu, 21 Sep 2023 09:07:48 -0700
+Subject: [PATCH 1/4] Bump CMAKE_CXX_STANDARD as 17 globally for consistency
+
+Signed-off-by: Chun-Wei Chen <jacky82226@gmail.com>
+---
+ CMakeLists.txt | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0372c54b0fb..481255ecb4f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -55,12 +55,7 @@ else()
+   set(Protobuf_USE_STATIC_LIBS ON)
+ endif()
+ 
+-# Required to use C++17 or higher on Windows
+-# For other platforms, set C++14 as standard for the whole project
+ if(NOT DEFINED CMAKE_CXX_STANDARD)
+-  set(CMAKE_CXX_STANDARD 14)
+-endif()
+-if(MSVC AND CMAKE_CXX_STANDARD LESS 17)
+   set(CMAKE_CXX_STANDARD 17)
+ elseif(CMAKE_CXX_STANDARD LESS 14)
+   set(CMAKE_CXX_STANDARD 14)
+
+From e95a6d82109083a03dfb421873f6257a734f15ea Mon Sep 17 00:00:00 2001
+From: Chun-Wei Chen <jacky82226@gmail.com>
+Date: Thu, 21 Sep 2023 09:19:14 -0700
+Subject: [PATCH 2/4] set 17 globally
+
+Signed-off-by: Chun-Wei Chen <jacky82226@gmail.com>
+---
+ CMakeLists.txt | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 481255ecb4f..bb608844cd7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -57,8 +57,6 @@ endif()
+ 
+ if(NOT DEFINED CMAKE_CXX_STANDARD)
+   set(CMAKE_CXX_STANDARD 17)
+-elseif(CMAKE_CXX_STANDARD LESS 14)
+-  set(CMAKE_CXX_STANDARD 14)
+ endif()
+ 
+ include(GNUInstallDirs)
+
+From 23397d5bf7fd555627087d33c15bfc0a16091344 Mon Sep 17 00:00:00 2001
+From: Chun-Wei Chen <jacky82226@gmail.com>
+Date: Thu, 21 Sep 2023 09:28:52 -0700
+Subject: [PATCH 3/4] update readme accordingly
+
+Signed-off-by: Chun-Wei Chen <jacky82226@gmail.com>
+---
+ README.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/README.md b/README.md
+index 0266338714b..47572e44e00 100644
+--- a/README.md
++++ b/README.md
+@@ -111,7 +111,7 @@ conda install -c conda-forge onnx
+ 
+ Before building from source uninstall any existing versions of onnx `pip uninstall onnx`.
+ 
+-c++17 or higher C++ compiler version is required to build ONNX from source on Windows. For other platforms, please use C++14 or higher versions.
++c++17 or higher C++ compiler version is required to build ONNX from source. Still, users can specify their own CMAKE_CXX_STANDARD version.
+ 
+ If you don't have protobuf installed, ONNX will internally download and build protobuf for ONNX build.
+ 
+
+From 38323d93303dd3c6c671a4041297a79581dda175 Mon Sep 17 00:00:00 2001
+From: Chun-Wei Chen <jacky82226@gmail.com>
+Date: Fri, 22 Sep 2023 10:46:06 -0700
+Subject: [PATCH 4/4] nit
+
+Signed-off-by: Chun-Wei Chen <jacky82226@gmail.com>
+---
+ README.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/README.md b/README.md
+index 47572e44e00..378a577ea73 100644
+--- a/README.md
++++ b/README.md
+@@ -111,7 +111,7 @@ conda install -c conda-forge onnx
+ 
+ Before building from source uninstall any existing versions of onnx `pip uninstall onnx`.
+ 
+-c++17 or higher C++ compiler version is required to build ONNX from source. Still, users can specify their own CMAKE_CXX_STANDARD version.
++c++17 or higher C++ compiler version is required to build ONNX from source. Still, users can specify their own `CMAKE_CXX_STANDARD` version for building ONNX.
+ 
+ If you don't have protobuf installed, ONNX will internally download and build protobuf for ONNX build.
+ 

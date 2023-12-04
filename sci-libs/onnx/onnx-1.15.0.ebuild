@@ -33,7 +33,7 @@ BDEPEND="python? (
 	${DISTUTILS_DEPS}
 )"
 
-PATCHES=( "${FILESDIR}"/${P}-cxx_17.patch )
+PATCHES=("${FILESDIR}/${P}-cxx_17.patch")
 
 src_prepare() {
 	cmake_src_prepare
