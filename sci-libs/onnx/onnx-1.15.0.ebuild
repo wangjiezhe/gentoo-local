@@ -43,7 +43,7 @@ src_prepare() {
 src_configure() {
 	mycmakeargs=(
 		-DONNX_USE_PROTOBUF_SHARED_LIBS=ON
-		-DONNX_USE_LITE_PROTO=ON
+		-DONNX_USE_LITE_PROTO=OFF
 	)
 	cmake_src_configure
 	use python && distutils-r1_src_configure
