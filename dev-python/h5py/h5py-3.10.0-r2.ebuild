@@ -18,7 +18,7 @@ HOMEPAGE="
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="~amd64 ~arm ~arm64 ~riscv x86 ~amd64-linux ~x86-linux ~arm64-macos ~x64-macos"
+KEYWORDS="~amd64 ~arm ~arm64 ~riscv ~x86 ~amd64-linux ~x86-linux ~arm64-macos ~x64-macos"
 # disable mpi until mpi4py gets python3_8
 #IUSE="examples mpi"
 IUSE="examples"
@@ -33,7 +33,7 @@ RDEPEND="
 "
 
 BDEPEND="
-	>=dev-python/cython-3[${PYTHON_USEDEP}]
+	dev-python/cython[${PYTHON_USEDEP}]
 	>=dev-python/numpy-1.14.5[${PYTHON_USEDEP}]
 	dev-python/pkgconfig[${PYTHON_USEDEP}]
 	test? (
