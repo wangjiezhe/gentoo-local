@@ -217,9 +217,8 @@ src_install() {
 	doins "${BUILD_DIR}"/CMakeCache.txt
 
 	rm -rf python
-	mkdir -p python/torch/include || die
+	mkdir -p python/torch || die
 	mv "${ED}"/usr/lib/python*/site-packages/caffe2 python/ || die
-	# mv "${ED}"/usr/include/torch python/torch/include || die
 	cp torch/version.py python/torch/ || die
 	rm -rf "${ED}"/var/tmp || die
 	python_domodule python/caffe2

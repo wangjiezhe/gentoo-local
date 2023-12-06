@@ -79,4 +79,6 @@ src_compile() {
 
 src_install() {
 	USE_SYSTEM_LIBS=ON distutils-r1_src_install
+
+	dosym "../../../../../../usr/include/torch" "$(python_get_sitedir)/torch/include/torch"
 }
