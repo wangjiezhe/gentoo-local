@@ -37,6 +37,7 @@ S="${WORKDIR}"/${PN}-${CommitId}
 PATCHES=(
 	"${FILESDIR}"/${PN}-2022.05.18-gentoo.patch
 	"${FILESDIR}"/${PN}-2023.01.17-cuda.patch
+	"${FILESDIR}"/${PN}-2023.01.17-ssl3.patch
 )
 
 src_prepare() {
