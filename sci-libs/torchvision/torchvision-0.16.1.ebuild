@@ -42,7 +42,7 @@ BDEPEND="
 distutils_enable_tests pytest
 
 PATCHES=(
-	"${FILESDIR}"/7378-fix-ffmpeg-6-macro-error.patch
+	"${FILESDIR}"/8096-fix-build-with-ffmpeg-6.0.patch
 )
 
 src_prepare() {
