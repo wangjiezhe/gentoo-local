@@ -87,7 +87,7 @@ BDEPEND="
 S="${WORKDIR}"/${MYP}
 
 PATCHES=(
-	"${FILESDIR}"/${PN}-2.1.0-gentoo.patch
+	"${FILESDIR}"/${P}-gentoo.patch
 	"${FILESDIR}"/${PN}-1.13.0-install-dirs.patch
 	"${FILESDIR}"/${PN}-1.12.0-glog-0.6.0.patch
 	"${FILESDIR}"/${PN}-1.13.1-tensorpipe.patch
@@ -171,7 +171,7 @@ src_configure() {
 		-DUSE_NCCL=$(usex cuda)
 		-DUSE_SYSTEM_NCCL=$(usex cuda)
 		-DUSE_NNPACK=$(usex nnpack)
-		-DUSE_QNNPACK=OFF # TODO: $(usex qnnpack)
+		-DUSE_QNNPACK=$(usex qnnpack)
 		-DUSE_XNNPACK=$(usex xnnpack)
 		-DUSE_SYSTEM_XNNPACK=$(usex xnnpack)
 		-DUSE_TENSORPIPE=$(usex tensorpipe)
