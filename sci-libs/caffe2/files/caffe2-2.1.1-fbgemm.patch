@@ -1,0 +1,13 @@
+diff --git a/caffe2/quantization/server/CMakeLists.txt b/caffe2/quantization/server/CMakeLists.txt
+index 2eaba691231..8076dcb60da 100644
+--- a/caffe2/quantization/server/CMakeLists.txt
++++ b/caffe2/quantization/server/CMakeLists.txt
+@@ -65,7 +65,7 @@ list(APPEND Caffe2_CPU_SRCS
+ 
+ if(CXX_AVX2_FOUND)
+   add_library(caffe2_dnnlowp_avx2_ops OBJECT ${caffe2_dnnlowp_avx2_ops_SRCS})
+-  add_dependencies(caffe2_dnnlowp_avx2_ops fbgemm Caffe2_PROTO c10)
++  add_dependencies(caffe2_dnnlowp_avx2_ops Caffe2_PROTO c10)
+   target_include_directories(caffe2_dnnlowp_avx2_ops BEFORE
+     PRIVATE $<BUILD_INTERFACE:${FBGEMM_SOURCE_DIR}/include>)
+ 
