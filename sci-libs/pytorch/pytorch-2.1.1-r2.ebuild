@@ -80,5 +80,8 @@ src_compile() {
 src_install() {
 	USE_SYSTEM_LIBS=ON distutils-r1_src_install
 
+	rm -rf "${ED}$(python_get_sitedir)"/caffe2 || die
+
 	dosym "../../../../../../usr/include/torch" "$(python_get_sitedir)/torch/include/torch"
+	dosym "../../../../../usr/lib64" "$(python_get_sitedir)/torch/lib"
 }
