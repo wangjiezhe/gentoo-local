@@ -98,6 +98,7 @@ PATCHES=(
 	"${FILESDIR}"/${P}-ffmpeg6.patch
 	"${FILESDIR}"/${P}-protobuf.patch
 	"${FILESDIR}"/${P}-lite-proto.patch
+	"${FILESDIR}"/${P}-opencl.patch
 )
 
 src_prepare() {
@@ -176,7 +177,7 @@ src_configure() {
 		-DUSE_TENSORPIPE=$(usex tensorpipe)
 		-DUSE_PYTORCH_QNNPACK=OFF
 		-DUSE_NUMPY=$(usex numpy)
-		-DUSE_OPENCL=OFF # TODO: $(usex opencl)
+		-DUSE_OPENCL=$(usex opencl)
 		-DUSE_OPENCV=$(usex opencv)
 		-DUSE_OPENMP=$(usex openmp)
 		-DUSE_ROCM=OFF # TODO
