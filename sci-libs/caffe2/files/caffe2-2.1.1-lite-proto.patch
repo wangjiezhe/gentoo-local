@@ -1,32 +1,19 @@
-diff --git a/caffe2/utils/proto_utils.cc b/caffe2/utils/proto_utils.cc
-index 8fc81586f3c..1fa36924e18 100644
---- a/caffe2/utils/proto_utils.cc
-+++ b/caffe2/utils/proto_utils.cc
-@@ -136,13 +136,7 @@ class IfstreamInputStream : public ::google::protobuf::io::CopyingInputStream {
- } // namespace
- 
- C10_EXPORT string ProtoDebugString(const MessageLite& proto) {
--  string serialized = proto.SerializeAsString();
--  for (char& c : serialized) {
--    if (c < 0x20 || c >= 0x7f) {
--      c = '?';
--    }
--  }
--  return serialized;
-+  return proto.ShortDebugString();
- }
- 
- C10_EXPORT bool ParseProtoFromLargeString(
 diff --git a/caffe2/utils/proto_utils.h b/caffe2/utils/proto_utils.h
-index a6903425ab4..03dbaef0377 100644
+index a6903425ab4..f088d1a5577 100644
 --- a/caffe2/utils/proto_utils.h
 +++ b/caffe2/utils/proto_utils.h
-@@ -71,8 +71,27 @@ inline bool ParseFromString(const string& spec, MessageLite* proto) {
+@@ -71,8 +71,33 @@ inline bool ParseFromString(const string& spec, MessageLite* proto) {
  
  
  TORCH_API string ProtoDebugString(const MessageLite& proto);
 +inline string ProtoDebugString(const MessageLite& proto) {
-+  return proto.ShortDebugString();
++  string serialized = proto.SerializeAsString();
++  for (char& c : serialized) {
++    if (c < 0x20 || c >= 0x7f) {
++      c = '?';
++    }
++  }
++  return serialized;
 +}
 +
 +inline void setTotalBytesLimit(::google::protobuf::io::CodedInputStream& stream, int bytes_limit, int warning_threshold) {

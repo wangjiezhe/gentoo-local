@@ -97,7 +97,7 @@ PATCHES=(
 	"${FILESDIR}"/${P}-fbgemm.patch
 	"${FILESDIR}"/${P}-ffmpeg6.patch
 	"${FILESDIR}"/${P}-protobuf.patch
-	"${FILESDIR}"/${P}-proto-utils.patch
+	"${FILESDIR}"/${P}-lite-proto.patch
 )
 
 src_prepare() {
@@ -144,10 +144,9 @@ src_configure() {
 
 	local mycmakeargs=(
 		-DBUILD_CAFFE2=ON
-		# -DUSE_SYSTEM_LIBS=ON
+		-DBUILD_BINARY=ON
 		-DBUILD_CUSTOM_PROTOBUF=OFF
 		-DUSE_LITE_PROTO=ON
-		# -Dprotobuf_MODULE_COMPATIBLE=ON
 		-DBUILD_SHARED_LIBS=ON
 
 		-DUSE_CCACHE=OFF
