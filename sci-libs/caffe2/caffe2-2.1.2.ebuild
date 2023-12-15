@@ -28,6 +28,7 @@ REQUIRED_USE="
 	gloo? ( distributed )
 " # ?? ( cuda rocm )
 
+# `CUSPARSE_COMPUTE_16F` and `CUSPARSE_COMPUTE_TF32` are removed in dev-libs/cusparselt-0.5.2.1
 #		sci-libs/tensorrt
 RDEPEND="
 	${PYTHON_DEPS}
@@ -47,7 +48,7 @@ RDEPEND="
 		dev-libs/cudnn-frontend:0/8
 		=dev-util/nvidia-cuda-toolkit-12*:=[profiler]
 		dev-libs/nccl
-		dev-libs/cusparselt
+		<=dev-libs/cusparselt-0.5.1.1
 	)
 	fbgemm? ( dev-libs/FBGEMM )
 	ffmpeg? ( media-video/ffmpeg:= )
@@ -87,18 +88,18 @@ BDEPEND="
 S="${WORKDIR}"/${MYP}
 
 PATCHES=(
-	"${FILESDIR}"/${P}-gentoo.patch
+	"${FILESDIR}"/${PN}-2.1.1-gentoo.patch
 	"${FILESDIR}"/${PN}-1.13.0-install-dirs.patch
 	"${FILESDIR}"/${PN}-1.12.0-glog-0.6.0.patch
 	"${FILESDIR}"/${PN}-1.13.1-tensorpipe.patch
 	"${FILESDIR}"/${PN}-2.0.0-gcc13.patch
 	"${FILESDIR}"/${PN}-2.0.1-functorch.patch
 	# "${FILESDIR}"/${PN}-2.1.0-nvfuser.patch
-	"${FILESDIR}"/${P}-fbgemm.patch
-	"${FILESDIR}"/${P}-ffmpeg6.patch
-	"${FILESDIR}"/${P}-protobuf.patch
-	"${FILESDIR}"/${P}-lite-proto.patch
-	"${FILESDIR}"/${P}-opencl.patch
+	"${FILESDIR}"/${PN}-2.1.1-fbgemm.patch
+	"${FILESDIR}"/${PN}-2.1.1-ffmpeg6.patch
+	"${FILESDIR}"/${PN}-2.1.1-protobuf.patch
+	"${FILESDIR}"/${PN}-2.1.1-lite-proto.patch
+	"${FILESDIR}"/${PN}-2.1.1-opencl.patch
 )
 
 src_prepare() {
