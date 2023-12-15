@@ -28,7 +28,6 @@ REQUIRED_USE="
 	gloo? ( distributed )
 " # ?? ( cuda rocm )
 
-# `CUSPARSE_COMPUTE_16F` and `CUSPARSE_COMPUTE_TF32` are removed in dev-libs/cusparselt-0.5.2.1
 #		sci-libs/tensorrt
 RDEPEND="
 	${PYTHON_DEPS}
@@ -48,7 +47,7 @@ RDEPEND="
 		dev-libs/cudnn-frontend:0/8
 		=dev-util/nvidia-cuda-toolkit-12*:=[profiler]
 		dev-libs/nccl
-		<dev-libs/cusparselt-0.5.2
+		>=dev-libs/cusparselt-0.5.2
 	)
 	fbgemm? ( dev-libs/FBGEMM )
 	ffmpeg? ( media-video/ffmpeg:= )
@@ -99,6 +98,7 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.1.1-protobuf.patch
 	"${FILESDIR}"/${PN}-2.1.1-lite-proto.patch
 	"${FILESDIR}"/${PN}-2.1.1-opencl.patch
+	"${FILESDIR}"/${P}-cuSPARSELt.patch
 )
 
 src_prepare() {
