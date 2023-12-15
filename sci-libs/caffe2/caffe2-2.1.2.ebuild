@@ -68,7 +68,6 @@ DEPEND="
 	${RDEPEND}
 	dev-cpp/benchmark
 	dev-cpp/eigen
-	dev-cpp/tbb
 	cuda? ( dev-libs/cutlass )
 	dev-libs/psimd
 	dev-libs/FP16
@@ -199,8 +198,6 @@ src_configure() {
 		-DONNX_PROTO_LIBRARY=/usr/$(get_libdir)/libonnx_proto.so
 		-DUSE_SYSTEM_PSIMD=ON
 		-DUSE_SYSTEM_SLEEF=ON
-		-DUSE_TBB=ON
-		-DUSE_SYSTEM_TBB=ON
 
 		-Wno-dev
 		-DTORCH_INSTALL_LIB_DIR="${EPREFIX}"/usr/$(get_libdir)
