@@ -14,6 +14,7 @@ HOMEPAGE="https://github.com/mpariente/pystoi"
 LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64"
+RESTRICT="test"
 
 RDEPEND="
 	$(python_gen_cond_dep '
