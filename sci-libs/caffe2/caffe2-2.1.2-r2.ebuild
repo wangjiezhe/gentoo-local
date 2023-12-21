@@ -17,7 +17,7 @@ SRC_URI="https://github.com/pytorch/${MYPN}/archive/refs/tags/v${PV}.tar.gz
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="cuda distributed fbgemm ffmpeg gloo mpi nnpack +numpy opencl opencv openmp qnnpack tensorpipe xnnpack"
+IUSE="cuda distributed fbgemm ffmpeg gloo magma mpi nnpack +numpy opencl opencv openmp qnnpack tensorpipe xnnpack"
 RESTRICT="test"
 REQUIRED_USE="
 	${PYTHON_REQUIRED_USE}
@@ -26,6 +26,7 @@ REQUIRED_USE="
 	tensorpipe? ( distributed )
 	distributed? ( tensorpipe )
 	gloo? ( distributed )
+	magma? ( cuda )
 " # ?? ( cuda rocm )
 
 #		sci-libs/tensorrt
@@ -52,6 +53,7 @@ RDEPEND="
 	fbgemm? ( >=dev-libs/FBGEMM-2023.11.02 )
 	ffmpeg? ( media-video/ffmpeg:= )
 	gloo? ( sci-libs/gloo[cuda?] )
+	magma? ( sci-libs/magma[cuda?] )
 	mpi? ( virtual/mpi )
 	nnpack? ( sci-libs/NNPACK )
 	numpy? ( $(python_gen_cond_dep '
@@ -92,7 +94,6 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-1.13.1-tensorpipe.patch
 	"${FILESDIR}"/${PN}-2.0.0-gcc13.patch
 	"${FILESDIR}"/${PN}-2.0.1-functorch.patch
-	# "${FILESDIR}"/${PN}-2.1.0-nvfuser.patch
 	"${FILESDIR}"/${PN}-2.1.1-fbgemm.patch
 	"${FILESDIR}"/${PN}-2.1.1-ffmpeg6.patch
 	"${FILESDIR}"/${PN}-2.1.1-protobuf.patch
@@ -166,7 +167,8 @@ src_configure() {
 		-DUSE_GLOO=$(usex gloo)
 		-DUSE_KINETO=OFF # TODO
 		-DUSE_LEVELDB=OFF
-		-DUSE_MAGMA=OFF # TODO: In GURU as sci-libs/magma
+		-DUSE_MAGMA=$(usex magma)
+		-DMAGMA_V2=$(usex magma)
 		-DUSE_MKLDNN=OFF
 		-DUSE_NCCL=$(usex cuda)
 		-DUSE_SYSTEM_NCCL=$(usex cuda)

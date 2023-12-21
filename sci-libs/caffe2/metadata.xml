@@ -15,6 +15,7 @@
 		<flag name="fbgemm">Use FBGEMM</flag>
 		<flag name="ffmpeg">Add support for video processing operators</flag>
 		<flag name="gloo">Use sci-libs/gloo</flag>
+		<flag name="magma">Use sci-libs/magma</flag>
 		<flag name="nnpack">Use NNPACK</flag>
 		<flag name="numpy">Add support for math operations through numpy</flag>
 		<flag name="opencl">Use OpenCL</flag>
