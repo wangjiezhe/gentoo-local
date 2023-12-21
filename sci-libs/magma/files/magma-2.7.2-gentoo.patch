@@ -1,0 +1,24 @@
+diff -ur magma-2.7.2_orig/CMakeLists.txt magma-2.7.2/CMakeLists.txt
+--- magma-2.7.2_orig/CMakeLists.txt	2023-08-25 21:15:37.000000000 +0800
++++ magma-2.7.2/CMakeLists.txt	2023-12-21 17:42:08.979201999 +0800
+@@ -760,8 +772,8 @@
+ # what to install
+ install( TARGETS magma magma_sparse ${blas_fix}
+          RUNTIME DESTINATION bin
+-         LIBRARY DESTINATION lib
+-         ARCHIVE DESTINATION lib )
++         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" )
+ if (MAGMA_ENABLE_CUDA)
+   file( GLOB headers include/*.h sparse/include/*.h "${CMAKE_BINARY_DIR}/include/*.h" )
+ else()
+@@ -799,7 +811,7 @@
+ set( MAGMA_REQUIRED "" )
+ configure_file( "${pkgconfig}.in" "${pkgconfig}" @ONLY )
+ install( FILES "${CMAKE_BINARY_DIR}/${pkgconfig}"
+-         DESTINATION lib/pkgconfig )
++         DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig" )
+ 
+ # ----------------------------------------
+ get_directory_property( compile_definitions COMPILE_DEFINITIONS )
+ 
