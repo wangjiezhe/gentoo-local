@@ -1,7 +1,7 @@
 From ccc257959219fa447c43f52883963d10cc165810 Mon Sep 17 00:00:00 2001
 From: wangjiezhe <wangjiezhe@gmail.com>
 Date: Wed, 29 Nov 2023 00:43:16 +0800
-Subject: [PATCH 3/3] Fix static_assert failure
+Subject: [PATCH 3/4] Fix static_assert failure
 
 https://github.com/protocolbuffers/protobuf/issues/9433
 ---

@@ -1,7 +1,7 @@
 From 3207685f5f0b95bb225821c37d184553c5705184 Mon Sep 17 00:00:00 2001
 From: wangjiezhe <wangjiezhe@gmail.com>
 Date: Wed, 29 Nov 2023 00:40:53 +0800
-Subject: [PATCH 2/3] Disable 32-bit tests
+Subject: [PATCH 2/4] Disable 32-bit tests
 
 https://github.com/protocolbuffers/protobuf/issues/8460
 https://github.com/protocolbuffers/protobuf/issues/8459
