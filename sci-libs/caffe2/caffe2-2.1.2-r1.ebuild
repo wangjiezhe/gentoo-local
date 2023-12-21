@@ -44,12 +44,12 @@ RDEPEND="
 	sci-libs/foxi
 	cuda? (
 		=dev-libs/cudnn-8*
-		dev-libs/cudnn-frontend:0/8
+		>=dev-libs/cudnn-frontend-0.9.2:0/8
 		=dev-util/nvidia-cuda-toolkit-12*:=[profiler]
 		dev-libs/nccl
 		>=dev-libs/cusparselt-0.5.2
 	)
-	fbgemm? ( dev-libs/FBGEMM )
+	fbgemm? ( >=dev-libs/FBGEMM-2023.11.02 )
 	ffmpeg? ( media-video/ffmpeg:= )
 	gloo? ( sci-libs/gloo[cuda?] )
 	mpi? ( virtual/mpi )
@@ -67,7 +67,7 @@ DEPEND="
 	${RDEPEND}
 	dev-cpp/benchmark
 	dev-cpp/eigen
-	cuda? ( dev-libs/cutlass )
+	cuda? ( >=dev-libs/cutlass-3.1.0 )
 	dev-libs/psimd
 	dev-libs/FP16
 	dev-libs/FXdiv
