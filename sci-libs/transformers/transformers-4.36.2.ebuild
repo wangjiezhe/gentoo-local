@@ -22,7 +22,7 @@ RESTRICT="test" # Need some modules, not yet packaged
 
 RDEPEND="
 	dev-python/filelock[${PYTHON_USEDEP}]
-	sci-libs/huggingface_hub[${PYTHON_USEDEP}]
+	>=sci-libs/huggingface_hub-0.19.0[${PYTHON_USEDEP}]
 	dev-python/numpy[${PYTHON_USEDEP}]
 	dev-python/packaging[${PYTHON_USEDEP}]
 	dev-python/pyyaml[${PYTHON_USEDEP}]
