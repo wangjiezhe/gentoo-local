@@ -1,17 +1,17 @@
-From 1a68579e26bbf89f39789398f5e1b682d69944a5 Mon Sep 17 00:00:00 2001
+From fa870249f5629d1e5cc3299c1a42078dd94343c7 Mon Sep 17 00:00:00 2001
 From: wangjiezhe <wangjiezhe@gmail.com>
 Date: Sun, 26 Nov 2023 10:14:42 +0800
 Subject: [PATCH 08/12] Relax setup.py version requirements
 
 ---
- tensorflow/tools/pip_package/setup.py | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ tensorflow/tools/pip_package/setup.py | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/tensorflow/tools/pip_package/setup.py b/tensorflow/tools/pip_package/setup.py
-index e64c0d4344b..c7ac6feecc3 100644
+index e64c0d4344b..62315962318 100644
 --- a/tensorflow/tools/pip_package/setup.py
 +++ b/tensorflow/tools/pip_package/setup.py
-@@ -86,11 +86,11 @@ REQUIRED_PACKAGES = [
+@@ -86,21 +86,21 @@ REQUIRED_PACKAGES = [
      'astunparse >= 1.6.0',
      'flatbuffers >= 23.1.21',
      # TODO(b/213222745) gast versions above 0.4.0 break TF's tests
@@ -26,9 +26,11 @@ index e64c0d4344b..c7ac6feecc3 100644
      'opt_einsum >= 2.3.2',
      'packaging',
      'protobuf>=3.20.3,<5.0.0dev,!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5',
-@@ -99,8 +99,8 @@ REQUIRED_PACKAGES = [
+     'setuptools',
+     'six >= 1.12.0',
      'termcolor >= 1.1.0',
-     'typing_extensions>=3.6.6,<4.6.0',
+-    'typing_extensions>=3.6.6,<4.6.0',
++    'typing_extensions>=3.6.6',
      'wrapt >= 1.11.0',
 -    'tensorflow-io-gcs-filesystem >= 0.23.1;platform_machine!="arm64" or ' +
 -    'platform_system!="Darwin"',

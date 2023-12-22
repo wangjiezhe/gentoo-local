@@ -88,8 +88,6 @@ SRC_URI="https://github.com/${PN}/${PN}/archive/v${MY_PV}.tar.gz -> ${P}.tar.gz
 
 # abseil-cpp-20211102.0-r0 does not work with NVCC
 # check flatbuffers version in tensorflow/lite/schema/schema_generated.h
-# RDEPEND: >=dev-libs/protobuf-3.13.0:=
-# RDEPEND: (python)>=dev-python/protobuf-python-3.13.0[${PYTHON_USEDEP}]
 # BDEPEND: >=dev-libs/protobuf-3.8.0
 RDEPEND="
 	app-arch/snappy
@@ -100,6 +98,7 @@ RDEPEND="
 	>=dev-libs/jsoncpp-1.9.2:=
 	>=dev-libs/nsync-1.25.0
 	dev-libs/openssl:0=
+	>=dev-libs/protobuf-3.13.0:=
 	>=dev-libs/re2-0.2019.06.01:=
 	media-libs/giflib
 	media-libs/libjpeg-turbo
@@ -109,7 +108,7 @@ RDEPEND="
 	sys-libs/zlib
 	>=sys-apps/hwloc-2:=
 	cuda? (
-		=dev-util/nvidia-cuda-toolkit-12*:=[profiler]
+		dev-util/nvidia-cuda-toolkit:=[profiler]
 		=dev-libs/cudnn-8*
 		dev-libs/nccl
 		=sci-libs/tensorrt-8*
@@ -129,6 +128,7 @@ RDEPEND="
 		>=dev-python/numpy-1.19[${PYTHON_USEDEP}]
 		>=dev-python/google-pasta-0.1.8[${PYTHON_USEDEP}]
 		>=dev-python/opt-einsum-3.3.0[${PYTHON_USEDEP}]
+		>=dev-python/protobuf-python-3.13.0[${PYTHON_USEDEP}]
 		dev-python/pybind11[${PYTHON_USEDEP}]
 		dev-python/six[${PYTHON_USEDEP}]
 		dev-python/tblib[${PYTHON_USEDEP}]
@@ -220,7 +220,6 @@ src_prepare() {
 	append-cxxflags -std=c++17
 	export BUILD_CXXFLAGS+=" -std=c++17"
 	filter-flags '-fvtable-verify=@(std|preinit)'
-	#append-ldflags -Wl,--copy-dt-needed-entries
 	bazel_setup_bazelrc
 
 	# Relax version checks in setup.py
@@ -415,8 +414,6 @@ src_install() {
 			n="${i##*/}"
 			[[ -e "${ED}/usr/bin/${n}" ]] || dosym ../lib/python-exec/python-exec2 "/usr/bin/${n}"
 		done
-
-		sed -i 's/\(typing_extensions\)<.*\(>=.*\)/\1\2/' "${ED}"/usr/lib/python*/site-packages/tensorflow-*-info/requires.txt
 
 		python_setup
 		local BUILD_DIR="${S}-${EPYTHON/./_}"

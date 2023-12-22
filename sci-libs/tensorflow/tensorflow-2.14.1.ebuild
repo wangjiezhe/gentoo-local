@@ -109,6 +109,7 @@ RDEPEND="
 	cuda? (
 		dev-util/nvidia-cuda-toolkit:=[profiler]
 		=dev-libs/cudnn-8*
+		dev-libs/nccl
 		=sci-libs/tensorrt-8*
 	)
 	mpi? ( virtual/mpi )
@@ -294,6 +295,8 @@ src_configure() {
 
 		# com_googlesource_code_re2 weird branch using absl, doesnt work with released re2
 		#com_github_googleapis_googleapis
+		# disable com_google_protobuf
+		# due to https://github.com/tensorflow/tensorflow/issues/61593
 		local SYSLIBS=(
 			absl_py
 			astor_archive
