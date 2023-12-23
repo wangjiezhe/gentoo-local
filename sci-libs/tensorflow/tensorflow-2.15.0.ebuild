@@ -142,7 +142,7 @@ RDEPEND="
 		>=dev-python/grpcio-1.28[${PYTHON_USEDEP}]
 		>=dev-python/wrapt-1.11.1[${PYTHON_USEDEP}]
 		>=net-libs/google-cloud-cpp-0.10.0
-		>=sci-visualization/tensorboard-${DEP_VER}[${PYTHON_USEDEP}]
+		=sci-visualization/tensorboard-${DEP_VER}*[${PYTHON_USEDEP}]
 	)"
 DEPEND="${RDEPEND}
 	python? (
@@ -150,17 +150,19 @@ DEPEND="${RDEPEND}
 		dev-python/setuptools
 	)"
 PDEPEND="python? (
-		>=sci-libs/keras-${DEP_VER}[${PYTHON_USEDEP}]
-		>=sci-libs/tensorflow-estimator-${DEP_VER}[${PYTHON_USEDEP}]
+		=sci-libs/keras-${DEP_VER}*[${PYTHON_USEDEP}]
+		=sci-libs/tensorflow-estimator-${DEP_VER}*[${PYTHON_USEDEP}]
 	)"
 #	>=dev-libs/protobuf-3.8.0
-# disable bazel-6.4.0
+# bazel-6.4 failed with undefined references to `_mlir_ciface_*'
 # see https://discuss.tensorflow.org/t/undefined-references-to-mlir-ciface-symbols/20571
+# bazel-6.3 failed with undefined reference to `riegeli::RecordsMetadata::Clear()'
+# tested on bazel-6.1.2 and bazel-6.2.1
 BDEPEND="
 	app-arch/unzip
 	dev-java/java-config
 	=dev-util/bazel-6*
-	<dev-util/bazel-6.4.0
+	<dev-util/bazel-6.3
 	cuda? (
 		>=dev-util/nvidia-cuda-toolkit-9.1[profiler]
 	)
@@ -224,15 +226,16 @@ src_unpack() {
 }
 
 src_prepare() {
+	local d
 	export JAVA_HOME=$(java-config --jre-home) # so keepwork works
 	export TF_PYTHON_VERSION="${EPYTHON/python/}"
 
 	# Use non-hermetic python
-	for py_parent_dir in third_party third_party/xla/third_party third_party/xla/third_party/tsl/third_party;
+	for d in third_party third_party/xla/third_party third_party/xla/third_party/tsl/third_party;
 	do
-		mv ${py_parent_dir}/py/non_hermetic ${py_parent_dir} || die
-		rm -rf ${py_parent_dir}/py || die
-		mv ${py_parent_dir}/non_hermetic ${py_parent_dir}/py || die
+		mv ${d}/py/non_hermetic ${d} || die
+		rm -rf ${d}/py || die
+		mv ${d}/non_hermetic ${d}/py || die
 	done
 
 	append-flags $(get-cpu-flags)
@@ -419,9 +422,9 @@ src_install() {
 		cd "${srcdir}" || die
 		esetup.py install
 
-		# libtensorflow_framework.so is in /usr/lib already
+		# libtensorflow_framework.so and libtensorflow_cc.so is in /usr/lib already
 		rm -f "${D}/$(python_get_sitedir)"/${PN}/lib${PN}_framework.so* || die
-		rm -f "${D}/$(python_get_sitedir)"/${PN}_core/lib${PN}_framework.so* || die
+		rm -f "${D}/$(python_get_sitedir)"/${PN}/lib${PN}_cc.so* || die
 		python_optimize
 	}
 

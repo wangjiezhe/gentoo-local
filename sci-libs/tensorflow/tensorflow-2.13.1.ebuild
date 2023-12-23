@@ -137,7 +137,7 @@ RDEPEND="
 		>=dev-python/grpcio-1.28[${PYTHON_USEDEP}]
 		>=dev-python/wrapt-1.11.1[${PYTHON_USEDEP}]
 		>=net-libs/google-cloud-cpp-0.10.0
-		>=sci-visualization/tensorboard-${DEP_VER}[${PYTHON_USEDEP}]
+		=sci-visualization/tensorboard-${DEP_VER}*[${PYTHON_USEDEP}]
 	)"
 DEPEND="${RDEPEND}
 	python? (
@@ -145,8 +145,8 @@ DEPEND="${RDEPEND}
 		dev-python/setuptools
 	)"
 PDEPEND="python? (
-		>=sci-libs/keras-${DEP_VER}[${PYTHON_USEDEP}]
-		>=sci-libs/tensorflow-estimator-${DEP_VER}[${PYTHON_USEDEP}]
+		=sci-libs/keras-${DEP_VER}*[${PYTHON_USEDEP}]
+		=sci-libs/tensorflow-estimator-${DEP_VER}*[${PYTHON_USEDEP}]
 	)"
 BDEPEND="
 	app-arch/unzip
@@ -400,9 +400,9 @@ src_install() {
 		cd "${srcdir}" || die
 		esetup.py install
 
-		# libtensorflow_framework.so is in /usr/lib already
+		# libtensorflow_framework.so and libtensorflow_cc.so is in /usr/lib already
 		rm -f "${D}/$(python_get_sitedir)"/${PN}/lib${PN}_framework.so* || die
-		rm -f "${D}/$(python_get_sitedir)"/${PN}_core/lib${PN}_framework.so* || die
+		rm -f "${D}/$(python_get_sitedir)"/${PN}/lib${PN}_cc.so* || die
 		python_optimize
 	}
 
