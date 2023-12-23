@@ -49,7 +49,7 @@ bazel_external_uris="
 	https://github.com/bazelbuild/rules_python/releases/download/0.1.0/rules_python-0.1.0.tar.gz -> bazelbuild-rules_python-0.1.0.tar.gz
 	https://github.com/bazelbuild/rules_swift/releases/download/1.0.0/rules_swift.1.0.0.tar.gz -> bazelbuild-rules_swift.1.0.0.tar.gz
 	https://github.com/dmlc/dlpack/archive/9351cf542ab478499294864ff3acfdab5c8c5f3d.tar.gz -> dlpack-9351cf542ab478499294864ff3acfdab5c8c5f3d.tar.gz
-		https://github.com/google/XNNPACK/archive/b9d4073a6913891ce9cbd8965c8d506075d2a45a.zip -> XNNPACK-b9d4073a6913891ce9cbd8965c8d506075d2a45a.zip
+	https://github.com/google/XNNPACK/archive/b9d4073a6913891ce9cbd8965c8d506075d2a45a.zip -> XNNPACK-b9d4073a6913891ce9cbd8965c8d506075d2a45a.zip
 	https://github.com/google/benchmark/archive/f7547e29ccaed7b64ef4f7495ecfff1c9f6f3d03.tar.gz -> benchmark-f7547e29ccaed7b64ef4f7495ecfff1c9f6f3d03.tar.gz
 	https://github.com/google/farmhash/archive/0d859a811870d10f53a594927d0d0b97573ad06d.tar.gz -> farmhash-0d859a811870d10f53a594927d0d0b97573ad06d.tar.gz
 	https://github.com/google/gemmlowp/archive/e844ffd17118c1e17d94e1ba4354c075a4577b88.zip -> gemmlowp-e844ffd17118c1e17d94e1ba4354c075a4577b88.zip
