@@ -59,6 +59,7 @@ bazel_external_uris="
 	https://github.com/google/re2/archive/03da4fc0857c285e3a26782f6bc8931c4c950df4.tar.gz -> re2-03da4fc0857c285e3a26782f6bc8931c4c950df4.tar.gz
 	https://github.com/google/riegeli/archive/264ef7b4a1314d97265b37544b27cd3923ea72d2.zip -> riegeli-264ef7b4a1314d97265b37544b27cd3923ea72d2.zip
 	https://github.com/google/ruy/archive/3286a34cc8de6149ac6844107dfdffac91531e72.zip -> ruy-3286a34cc8de6149ac6844107dfdffac91531e72.zip
+	https://github.com/googleapis/googleapis/archive/6b3fdcea8bc5398be4e7e9930c693f0ea09316a0.tar.gz -> googleapis-6b3fdcea8bc5398be4e7e9930c693f0ea09316a0.tar.gz
 	https://github.com/jax-ml/ml_dtypes/archive/2ca30a2b3c0744625ae3d6988f5596740080bbd0/ml_dtypes-2ca30a2b3c0744625ae3d6988f5596740080bbd0.tar.gz
 	https://github.com/joe-kuo/sobol_data/archive/835a7d7b1ee3bc83e575e302a985c66ec4b65249.tar.gz -> sobol_data-835a7d7b1ee3bc83e575e302a985c66ec4b65249.tar.gz
 	https://github.com/llvm/llvm-project/archive/49cb1595c1b3ae1de3684fea6148363c15bae12a.tar.gz -> llvm-project-49cb1595c1b3ae1de3684fea6148363c15bae12a.tar.gz
@@ -246,7 +247,6 @@ src_prepare() {
 
 	# Relax version checks in setup.py
 	sed -i "/^    '/s/==/>=/g" tensorflow/tools/pip_package/setup.py || die
-	sed -i "/config_googleapis/d" tensorflow/workspace0.bzl || die
 
 	# Prefixify hard-coded command locations
 	hprefixify -w /host_compiler_prefix/ third_party/gpus/cuda_configure.bzl
@@ -313,7 +313,6 @@ src_configure() {
 		fi
 
 		# com_googlesource_code_re2 weird branch using absl, doesnt work with released re2
-		#com_github_googleapis_googleapis
 		# disable com_google_protobuf
 		# due to https://github.com/tensorflow/tensorflow/issues/61593
 		local SYSLIBS=(
