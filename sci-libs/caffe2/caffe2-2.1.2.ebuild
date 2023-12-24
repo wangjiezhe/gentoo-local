@@ -82,9 +82,6 @@ DEPEND="
 		dev-python/pybind11[${PYTHON_USEDEP}]
 	')
 "
-BDEPEND="
-	dev-util/patchelf
-"
 
 S="${WORKDIR}"/${MYP}
 
