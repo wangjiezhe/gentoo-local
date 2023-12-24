@@ -8,7 +8,7 @@ DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_USE_PEP517=setuptools
 inherit distutils-r1 cuda
 
-DESCRIPTION="Data manipulation and transformation for audio signal processing, powered by PyTorch"
+DESCRIPTION="Data manipulation and transformation for audio signal processing"
 HOMEPAGE="https://github.com/pytorch/audio"
 SRC_URI="https://github.com/pytorch/audio/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 S="${WORKDIR}/audio-${PV}"
