@@ -12,7 +12,7 @@ inherit distutils-r1
 DESCRIPTION="Perceptual Similarity Metric and Dataset"
 HOMEPAGE="https://github.com/richzhang/PerceptualSimilarity"
 SRC_URI="https://github.com/richzhang/PerceptualSimilarity/archive/v${PV}.tar.gz
-		-> ${P}.tar.gz"
+		-> ${P}.gh.tar.gz"
 S="${WORKDIR}/PerceptualSimilarity-${PV}"
 
 LICENSE="BSD-2"
