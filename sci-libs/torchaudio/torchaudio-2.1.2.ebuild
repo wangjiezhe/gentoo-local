@@ -26,19 +26,17 @@ RDEPEND="
 	cuda? ( >=sci-libs/caffe2-2.1.1[cuda?] )
 "
 DEPEND="${RDEPEND}"
-RESTRICT="test"
+RESTRICT="test" 	# RuntimeError: get_output_devices requires FFmpeg extension which is not available
 
 src_prepare() {
+	export USE_FFMPEG=$(usex ffmpeg)
+	export FFMPEG_ROOT="/usr"
+	export USE_CUDA=$(usex cuda)
+	export BUILD_CUDA_CTC_DECODER=$(usex cuda)
+
 	sed -i "s/FetchContent_Populate/#FetchContent_Populate/" third_party/sox/CMakeLists.txt
 	sed -i "s@/lib@/lib64@" third_party/ffmpeg/single/CMakeLists.txt
 
 	distutils-r1_src_prepare
 	use cuda && cuda_src_prepare
-}
-
-python_configure_all() {
-	export USE_FFMPEG=(usex ffmpeg)
-	export FFMPEG_ROOT="/usr"
-	export USE_CUDA=(usex cuda)
-	export BUILD_CUDA_CTC_DECODER=(usex cuda)
 }

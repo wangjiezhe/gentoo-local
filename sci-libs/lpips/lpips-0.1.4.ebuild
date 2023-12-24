@@ -18,7 +18,7 @@ S="${WORKDIR}/PerceptualSimilarity-${PV}"
 LICENSE="BSD-2"
 SLOT="0"
 KEYWORDS="~amd64"
-RESTRICT="test"
+RESTRICT="test"		# Need network access
 
 RDEPEND="
 	sci-libs/pytorch[${PYTHON_SINGLE_USEDEP}]
