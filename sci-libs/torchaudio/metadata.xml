@@ -7,6 +7,7 @@
 	</maintainer>
 	<upstream>
 		<remote-id type="github">pytorch/audio</remote-id>
+		<remote-id type="pypi">torchaudio</remote-id>
 	</upstream>
 	<use>
 		<flag name="cuda">Enable CUDA support</flag>
