@@ -10,7 +10,7 @@ inherit distutils-r1 cuda
 
 DESCRIPTION="Data manipulation and transformation for audio signal processing"
 HOMEPAGE="https://github.com/pytorch/audio"
-SRC_URI="https://github.com/pytorch/audio/archive/v${PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/pytorch/audio/archive/v${PV}.tar.gz -> ${P}.gh.tar.gz"
 S="${WORKDIR}/audio-${PV}"
 
 LICENSE="BSD-2"
