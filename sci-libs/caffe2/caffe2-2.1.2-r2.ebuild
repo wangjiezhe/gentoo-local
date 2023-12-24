@@ -228,9 +228,9 @@ src_install() {
 	insinto "/var/lib/${PN}"
 	doins "${BUILD_DIR}"/CMakeCache.txt
 
-	rm -rf python
+	rm -rf python || die
 	mkdir -p python/torch || die
-	mv "${ED}"/usr/lib/python*/site-packages/caffe2 python/ || die
+	mv "${D}/$(python_get_sitedir)"/caffe2 python/ || die
 	cp torch/version.py python/torch/ || die
 	rm -rf "${ED}"/var/tmp || die
 	python_domodule python/caffe2
