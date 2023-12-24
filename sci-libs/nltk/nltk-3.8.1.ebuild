@@ -10,13 +10,14 @@ inherit distutils-r1
 DESCRIPTION="Natural Language Toolkit"
 HOMEPAGE="https://github.com/nltk/nltk"
 SRC_URI="https://github.com/nltk/nltk/archive/${PV}.tar.gz
-		-> ${P}.tar.gz"
+		-> ${P}.gh.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~amd64"
 IUSE="data"
-RESTRICT="test"
+
+PATCHES=( "${FILESDIR}/${P}-test.patch" )
 
 RDEPEND="
 	data? ( sci-libs/nltk-data )
@@ -26,3 +27,16 @@ RDEPEND="
 		dev-python/tqdm[${PYTHON_USEDEP}]
 	')
 "
+BDEPEND="
+	test? (
+		dev-lang/python[tk]
+		dev-python/pytest-mock[${PYTHON_USEDEP}]
+	)
+"
+
+distutils_enable_tests pytest
+
+python_test() {
+	rm -f nltk/test/unit/test_downloader.py || die		# Need network access
+	epytest --doctest-modules
+}

@@ -1,0 +1,12 @@
+diff -ur nltk-3.8.1_orig/tools/find_deprecated.py nltk-3.8.1/tools/find_deprecated.py
+--- nltk-3.8.1_orig/tools/find_deprecated.py	2023-12-24 14:03:49.934812768 +0800
++++ nltk-3.8.1/tools/find_deprecated.py	2023-12-24 14:16:51.364778567 +0800
+@@ -29,7 +29,7 @@
+ import tokenize
+ from doctest import DocTestParser, register_optionflag
+ 
+-from cStringIO import StringIO
++from io import StringIO
+ 
+ import nltk.corpus
+ from nltk import defaultdict
