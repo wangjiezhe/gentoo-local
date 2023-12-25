@@ -31,6 +31,9 @@ RDEPEND="
 		>=dev-python/gpep517-15[${PYTHON_USEDEP}]
 	')
 "
+BDEPEND="
+	dev-util/patchelf
+"
 S="${WORKDIR}/TensorRT-${PV}"
 
 src_install() {
@@ -44,6 +47,12 @@ src_install() {
 		"/opt/cuda/targets/x86_64-linux/lib/libnvinfer_builder_resource.so.${BASE_VER%%.*}"
 	dosym "libnvinfer_builder_resource.so.${BASE_VER}" \
 		"/opt/cuda/targets/x86_64-linux/lib/libnvinfer_builder_resource.so"
+	dosym "libnvinfer_builder_resource.so.${BASE_VER}" \
+		"/opt/cuda/targets/x86_64-linux/lib/do_not_link_against_nvinfer_builder_resource"
+
+	# See https://github.com/NVIDIA/TensorRT/issues/2218#issuecomment-1258227217
+	# and https://docs.nvidia.com/deeplearning/tensorrt/release-notes/index.html#rel-8-4-1
+	patchelf --add-rpath '$ORIGIN' ${ED}/opt/cuda/targets/x86_64-linux/lib/libnvinfer.so
 
 	do_install() {
 		local PYTHON_VER="${EPYTHON/python/}"
