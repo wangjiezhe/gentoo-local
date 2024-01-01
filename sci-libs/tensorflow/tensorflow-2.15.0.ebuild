@@ -247,7 +247,7 @@ src_prepare() {
 	bazel_setup_bazelrc
 
 	# Relax version checks in setup.py
-	sed -i "/^    '/s/==/>=/g" tensorflow/tools/pip_package/setup.py || die
+	# sed -i "/^    '/s/==/>=/g" tensorflow/tools/pip_package/setup.py || die
 
 	# Prefixify hard-coded command locations
 	hprefixify -w /host_compiler_prefix/ third_party/gpus/cuda_configure.bzl
