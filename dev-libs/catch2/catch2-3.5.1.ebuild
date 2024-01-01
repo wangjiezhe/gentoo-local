@@ -14,5 +14,4 @@ LICENSE="Boost-1.0"
 SLOT="0"
 KEYWORDS="~amd64"
 
-BDEPEND=""
 S="${WORKDIR}/Catch2-${PV}"
