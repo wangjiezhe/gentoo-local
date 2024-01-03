@@ -1,11 +1,11 @@
-# Copyright 2022-2023 Gentoo Authors
+# Copyright 2022-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 DISTUTILS_USE_PEP517=setuptools
 DISTUTILS_OPTIONAL=1
 DISTUTILS_EXT=1
-PYTHON_COMPAT=( python3_{9..11} )
+PYTHON_COMPAT=( python3_{9..12} )
 inherit distutils-r1 cmake
 
 DESCRIPTION="Open Neural Network Exchange (ONNX)"
@@ -24,6 +24,7 @@ RDEPEND="
 	python? (
 		${PYTHON_DEPS}
 		dev-python/protobuf-python[${PYTHON_USEDEP}]
+		dev-python/pybind11[${PYTHON_USEDEP}]
 	)
 	dev-libs/protobuf:=
 "
@@ -43,7 +44,7 @@ src_prepare() {
 src_configure() {
 	mycmakeargs=(
 		-DONNX_USE_PROTOBUF_SHARED_LIBS=ON
-		-DONNX_USE_LITE_PROTO=OFF
+		-DONNX_USE_LITE_PROTO=ON
 	)
 	cmake_src_configure
 	use python && distutils-r1_src_configure
