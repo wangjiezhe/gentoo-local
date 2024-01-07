@@ -24,6 +24,9 @@ KEYWORDS="~amd64"
 DEPEND="
 	dev-python/numpy[${PYTHON_USEDEP}]
 "
+BDEPEND="
+	dev-python/pybind11[${PYTHON_USEDEP}]
+"
 
 python_prepare_all() {
 	rmdir third_party/eigen
