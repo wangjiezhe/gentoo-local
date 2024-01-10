@@ -1,4 +1,4 @@
-# Copyright 2022-2023 Gentoo Authors
+# Copyright 2022-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -68,17 +68,16 @@ src_prepare() {
 	hprefixify tools/setup_helpers/env.py
 }
 
-src_compile() {
+python_compile() {
 	PYTORCH_BUILD_VERSION=${PV} \
 	PYTORCH_BUILD_NUMBER=0 \
 	USE_SYSTEM_LIBS=ON \
 	CMAKE_BUILD_DIR="${BUILD_DIR}" \
-	BUILD_DIR= \
-	distutils-r1_src_compile develop sdist
+	distutils-r1_python_compile develop sdist
 }
 
-src_install() {
-	USE_SYSTEM_LIBS=ON distutils-r1_src_install
+python_install() {
+	USE_SYSTEM_LIBS=ON distutils-r1_python_install
 
 	rm -rf "${ED}/usr/lib/${EPYTHON}/site-packages"/caffe2 || die
 
