@@ -291,3 +291,24 @@ source = "github"
 github = "keras-team/keras"
 use_latest_release = true
 prefix = "v"
+
+["sci-libs/pytorch-image-models"]
+source = "github"
+github = "huggingface/pytorch-image-models"
+use_latest_release = true
+prefix = "v"
+
+["dev-python/watermark"]
+source = "pypi"
+pypi = "watermark"
+
+["dev-python/docker-pycreds"]
+source = "github"
+github = "shin-/dockerpy-creds"
+use_max_tag = true
+
+["dev-python/wandb"]
+source = "github"
+github = "wandb/wandb"
+use_latest_release = true
+prefix = "v"
