@@ -2,221 +2,282 @@
 oldver = "old_ver.json"
 newver = "new_ver.json"
 
-[pytorch]
+["sci-libs/pytorch"]
 source = "github"
 github = "pytorch/pytorch"
 use_latest_release = true
+prefix = "v"
 
-[torchvision]
+["sci-libs/torchvision"]
 source = "github"
 github = "pytorch/vision"
 use_latest_release = true
+prefix = "v"
 
-[man-pages-zh_CN]
+["app-i18n/man-pages-zh_CN"]
 source = "github"
 github = "man-pages-zh/manpages-zh"
 use_max_tag = true
+prefix = "v"
 
-[cheat]
+["app-misc/cheat"]
 source = "github"
 github = "cheat/cheat"
 use_latest_release = true
 
-[wslu]
+["app-misc/wslu"]
 source = "github"
 github = "wslutilities/wslu"
 use_latest_release = true
+prefix = "v"
 
-[vimcdoc]
+["app-vim/vimcdoc"]
 source = "github"
 github = "yianwillis/vimcdoc"
 use_latest_release = true
+prefix = "v"
 
-[pLam]
+["dev-haskell/pLam"]
 source = "github"
 github = "sandrolovnicki/pLam"
 use_latest_release = true
+prefix = "v"
 
-[FBGEMM]
+["dev-libs/FBGEMM"]
 source = "github"
 github = "pytorch/FBGEMM"
 use_latest_release = true
+prefix = "v"
 
-[cudnn-frontend]
+["dev-libs/cudnn-frontend"]
 source = "github"
 github = "NVIDIA/cudnn-frontend"
 use_latest_release = true
+prefix = "v"
 
-[cudnn]
+["dev-libs/cudnn"]
 source = "regex"
 url = "https://developer.download.nvidia.cn/compute/cudnn/redist/cudnn/linux-x86_64/"
 regex = "\\d\\.\\d\\.\\d\\.\\d+"
 
-[cutlass]
+["dev-libs/cutlass"]
 source = "github"
 github = "NVIDIA/cutlass"
 use_max_tag = true
+prefix = "v"
 
-[mathematica]
+["sci-mathematics/mathematica"]
 source = "aur"
 
-[pytorch-lightning]
+["dev-python/pytorch-lightning"]
 source = "github"
 github = "Lightning-AI/lightning"
 use_latest_release = true
 
-[nccl]
+["dev-libs/nccl"]
 source = "github"
 github = "NVIDIA/nccl"
 use_max_tag = true
+prefix = "v"
 
-[cusparselt]
+["dev-libs/cusparselt"]
 source = "regex"
 url = "https://developer.download.nvidia.cn/compute/cusparselt/redist/libcusparse_lt/linux-x86_64/"
 regex = "\\d\\.\\d\\.\\d\\.\\d+"
 
-[pystoi]
+["dev-python/pystoi"]
 source = "github"
 github = "mpariente/pystoi"
 use_max_tag = true
+prefix = "v"
 
-[lightning-utilities]
+["dev-python/lightning-utilities"]
 source = "github"
 github = "Lightning-AI/utilities"
 use_latest_release = true
+prefix = "v"
 
-[torchaudio]
+["sci-libs/torchaudio"]
 source = "github"
 github = "pytorch/audio"
 use_latest_release = true
+prefix = "v"
 
-[lpips]
+["sci-libs/lpips"]
 source = "github"
 github = "richzhang/PerceptualSimilarity"
 use_latest_release = true
+prefix = "v"
 
-[torch-fidelity]
+["sci-libs/torch-fidelity"]
 source = "github"
 github = "toshas/torch-fidelity"
 use_latest_release = true
+prefix = "v"
 
-[nltk]
+["sci-libs/nltk"]
 source = "github"
 github = "nltk/nltk"
 use_max_tag = true
 
-[nltk-data]
+["sci-libs/nltk-data"]
 source = "github"
 github = "nltk/nltk_data"
 
-[torchmetrics]
+["sci-libs/torchmetrics"]
 source = "github"
 github = "Lightning-AI/torchmetrics"
 use_latest_release = true
+prefix = "v"
 
-[tensorrt]
+["sci-libs/tensorrt"]
 source = "github"
 github = "NVIDIA/TensorRT"
 use_latest_release = true
+prefix = "v"
 
-[onnx]
+["sci-libs/onnx"]
 source = "github"
 github = "onnx/onnx"
 use_latest_release = true
+prefix = "v"
 
-[h5py]
+["dev-python/h5py"]
 source = "github"
 github = "h5py/h5py"
 use_latest_release = true
 
-[dlpack]
+["dev-libs/dlpack"]
 source = "github"
 github = "dmlc/dlpack"
 use_latest_release = true
+prefix = "v"
 
-[catch2]
+["dev-libs/catch2"]
 source = "github"
 github = "catchorg/Catch2"
 use_latest_release = true
+prefix = "v"
 
-[statsmodels]
+["dev-python/statsmodels"]
 source = "github"
 github = "statsmodels/statsmodels"
 use_latest_release = true
+prefix = "v"
 
-[google-cloud-cpp]
+["net-libs/google-cloud-cpp"]
 source = "github"
 github = "googleapis/google-cloud-cpp"
 use_latest_release = true
+prefix = "v"
 
-[torchinfo]
+["dev-python/torchinfo"]
 source = "github"
 github = "TylerYep/torchinfo"
 use_latest_release = true
+prefix = "v"
 
-[kineto]
+["sci-libs/kineto"]
 source = "github"
 github = "pytorch/kineto"
 use_latest_release = true
+prefix = "v"
 
-[transformers]
+["sci-libs/transformers"]
 source = "github"
 github = "huggingface/transformers"
 use_latest_release = true
 
-[magma]
+["sci-libs/magma"]
 source = "bitbucket"
 bitbucket = "icl/magma"
 use_max_tag = true
+prefix = "v"
 
-[huggingface_hub]
+["sci-libs/huggingface_hub"]
 source = "github"
 github = "huggingface/huggingface_hub"
 use_latest_release = true
+prefix = "v"
 
-[ml_dtypes]
+["dev-python/ml_dtypes"]
 source = "github"
 github = "jax-ml/ml_dtypes"
 use_latest_release = true
+prefix = "v"
 
-[clean-fid]
+["sci-libs/clean-fid"]
 source = "pypi"
 pypi = "clean-fid"
 
-[framework-reproducibility]
+["sci-libs/framework-reproducibility"]
 source = "github"
 github = "NVIDIA/framework-reproducibility"
 use_latest_release = true
+prefix = "v"
 
-[expecttest]
+["dev-python/expecttest"]
 source = "pypi"
 pypi = "expecttest"
 
-[sentencepiece]
+["dev-libs/sentencepiece"]
 source = "github"
 github = "google/sentencepiece"
 use_latest_release = true
+prefix = "v"
 
-[sacremoses]
+["dev-python/sacremoses"]
 source = "github"
 github = "hplt-project/sacremoses"
 use_latest_release = true
 
-[revtok]
+["dev-python/revtok"]
 source = "pypi"
 pypi = "revtok"
 
-[torchdata]
+["sci-libs/torchdata"]
 source = "github"
 github = "pytorch/data"
 use_latest_release = true
+prefix = "v"
 
-[torchtext]
+["sci-libs/torchtext"]
 source = "github"
 github = "pytorch/text"
 use_latest_release = true
+prefix = "v"
 
-[grpc]
+["net-libs/grpc"]
 source = "github"
 github = "grpc/grpc"
 use_latest_release = true
+prefix = "v"
+
+["dev-cpp/abseil-cpp"]
+source = "github"
+github = "abseil/abseil-cpp"
+use_latest_release = true
+
+["sci-libs/tensorflow"]
+source = "github"
+github = "tensorflow/tensorflow"
+use_latest_release = true
+prefix = "v"
+
+["sci-visualization/tensorboard"]
+source = "github"
+github = "tensorflow/tensorboard"
+use_latest_release = true
+prefix = "v"
+
+["sci-libs/tensorflow-estimator"]
+source = "github"
+github = "tensorflow/estimator"
+use_latest_release = true
+prefix = "v"
+
+["sci-libs/keras"]
+source = "github"
+github = "keras-team/keras"
+use_latest_release = true
+prefix = "v"
