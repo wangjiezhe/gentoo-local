@@ -1,4 +1,4 @@
-# Copyright 1999-2022 Gentoo Authors
+# Copyright 1999-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -6,7 +6,7 @@ EAPI=8
 inherit cmake
 
 # From cmake/GoogleapisConfig.cmake
-GOOGLEAPIS_COMMIT="4a94b9e4403f958f65077f43863302c4ba4597da"
+GOOGLEAPIS_COMMIT="e56f4b1c926f42d6ab127c049158df2dda189914"
 
 DESCRIPTION="Google Cloud Client Library for C++"
 HOMEPAGE="https://cloud.google.com/"
@@ -15,11 +15,10 @@ SRC_URI="https://github.com/GoogleCloudPlatform/google-cloud-cpp/archive/v${PV}.
 
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~amd64 ~arm64 ~x86"
 IUSE="test"
+RESTRICT="!test? ( test )"
 
-# Tests need a GCP account
-RESTRICT="test"
 RDEPEND="dev-cpp/abseil-cpp:=
 	dev-cpp/nlohmann_json
 	dev-libs/protobuf:=
@@ -53,10 +52,6 @@ src_configure() {
 }
 
 src_test() {
-	# test fails
-	local myctestargs=(
-		-E internal_parse_rfc3339_test
-	)
-
-	cmake_src_test
+	# ClogEnvironment fails under portage sandbox, no fail outside
+	cmake_src_test -LE "integration-test" -E common_log_test
 }
