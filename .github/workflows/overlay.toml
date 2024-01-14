@@ -1,0 +1,222 @@
+[__config__]
+oldver = "old_ver.json"
+newver = "new_ver.json"
+
+[pytorch]
+source = "github"
+github = "pytorch/pytorch"
+use_latest_release = true
+
+[torchvision]
+source = "github"
+github = "pytorch/vision"
+use_latest_release = true
+
+[man-pages-zh_CN]
+source = "github"
+github = "man-pages-zh/manpages-zh"
+use_max_tag = true
+
+[cheat]
+source = "github"
+github = "cheat/cheat"
+use_latest_release = true
+
+[wslu]
+source = "github"
+github = "wslutilities/wslu"
+use_latest_release = true
+
+[vimcdoc]
+source = "github"
+github = "yianwillis/vimcdoc"
+use_latest_release = true
+
+[pLam]
+source = "github"
+github = "sandrolovnicki/pLam"
+use_latest_release = true
+
+[FBGEMM]
+source = "github"
+github = "pytorch/FBGEMM"
+use_latest_release = true
+
+[cudnn-frontend]
+source = "github"
+github = "NVIDIA/cudnn-frontend"
+use_latest_release = true
+
+[cudnn]
+source = "regex"
+url = "https://developer.download.nvidia.cn/compute/cudnn/redist/cudnn/linux-x86_64/"
+regex = "\\d\\.\\d\\.\\d\\.\\d+"
+
+[cutlass]
+source = "github"
+github = "NVIDIA/cutlass"
+use_max_tag = true
+
+[mathematica]
+source = "aur"
+
+[pytorch-lightning]
+source = "github"
+github = "Lightning-AI/lightning"
+use_latest_release = true
+
+[nccl]
+source = "github"
+github = "NVIDIA/nccl"
+use_max_tag = true
+
+[cusparselt]
+source = "regex"
+url = "https://developer.download.nvidia.cn/compute/cusparselt/redist/libcusparse_lt/linux-x86_64/"
+regex = "\\d\\.\\d\\.\\d\\.\\d+"
+
+[pystoi]
+source = "github"
+github = "mpariente/pystoi"
+use_max_tag = true
+
+[lightning-utilities]
+source = "github"
+github = "Lightning-AI/utilities"
+use_latest_release = true
+
+[torchaudio]
+source = "github"
+github = "pytorch/audio"
+use_latest_release = true
+
+[lpips]
+source = "github"
+github = "richzhang/PerceptualSimilarity"
+use_latest_release = true
+
+[torch-fidelity]
+source = "github"
+github = "toshas/torch-fidelity"
+use_latest_release = true
+
+[nltk]
+source = "github"
+github = "nltk/nltk"
+use_max_tag = true
+
+[nltk-data]
+source = "github"
+github = "nltk/nltk_data"
+
+[torchmetrics]
+source = "github"
+github = "Lightning-AI/torchmetrics"
+use_latest_release = true
+
+[tensorrt]
+source = "github"
+github = "NVIDIA/TensorRT"
+use_latest_release = true
+
+[onnx]
+source = "github"
+github = "onnx/onnx"
+use_latest_release = true
+
+[h5py]
+source = "github"
+github = "h5py/h5py"
+use_latest_release = true
+
+[dlpack]
+source = "github"
+github = "dmlc/dlpack"
+use_latest_release = true
+
+[catch2]
+source = "github"
+github = "catchorg/Catch2"
+use_latest_release = true
+
+[statsmodels]
+source = "github"
+github = "statsmodels/statsmodels"
+use_latest_release = true
+
+[google-cloud-cpp]
+source = "github"
+github = "googleapis/google-cloud-cpp"
+use_latest_release = true
+
+[torchinfo]
+source = "github"
+github = "TylerYep/torchinfo"
+use_latest_release = true
+
+[kineto]
+source = "github"
+github = "pytorch/kineto"
+use_latest_release = true
+
+[transformers]
+source = "github"
+github = "huggingface/transformers"
+use_latest_release = true
+
+[magma]
+source = "bitbucket"
+bitbucket = "icl/magma"
+use_max_tag = true
+
+[huggingface_hub]
+source = "github"
+github = "huggingface/huggingface_hub"
+use_latest_release = true
+
+[ml_dtypes]
+source = "github"
+github = "jax-ml/ml_dtypes"
+use_latest_release = true
+
+[clean-fid]
+source = "pypi"
+pypi = "clean-fid"
+
+[framework-reproducibility]
+source = "github"
+github = "NVIDIA/framework-reproducibility"
+use_latest_release = true
+
+[expecttest]
+source = "pypi"
+pypi = "expecttest"
+
+[sentencepiece]
+source = "github"
+github = "google/sentencepiece"
+use_latest_release = true
+
+[sacremoses]
+source = "github"
+github = "hplt-project/sacremoses"
+use_latest_release = true
+
+[revtok]
+source = "pypi"
+pypi = "revtok"
+
+[torchdata]
+source = "github"
+github = "pytorch/data"
+use_latest_release = true
+
+[torchtext]
+source = "github"
+github = "pytorch/text"
+use_latest_release = true
+
+[grpc]
+source = "github"
+github = "grpc/grpc"
+use_latest_release = true
