@@ -37,7 +37,7 @@ github = "yianwillis/vimcdoc"
 use_latest_release = true
 prefix = "v"
 
-["dev-haskell/pLam"]
+["dev-haskell/plam"]
 source = "github"
 github = "sandrolovnicki/pLam"
 use_latest_release = true
@@ -68,6 +68,8 @@ prefix = "v"
 
 ["sci-mathematics/mathematica"]
 source = "aur"
+aur = "mathematica"
+strip_release = true
 
 ["dev-python/pytorch-lightning"]
 source = "github"
@@ -78,7 +80,9 @@ use_latest_release = true
 source = "github"
 github = "NVIDIA/nccl"
 use_max_tag = true
-prefix = "v"
+# prefix = "v"
+from_pattern = 'v(\d+)\.(\d+)\.(\d+)-\d+'
+to_pattern = '\1.\2.\3'
 
 ["dev-libs/cusparselt"]
 source = "regex"
@@ -123,6 +127,8 @@ use_max_tag = true
 ["sci-libs/nltk-data"]
 source = "github"
 github = "nltk/nltk_data"
+from_pattern = '(\d+)\.\d+'
+to_pattern = '\1'
 
 ["sci-libs/torchmetrics"]
 source = "github"
@@ -131,10 +137,13 @@ use_latest_release = true
 prefix = "v"
 
 ["sci-libs/tensorrt"]
-source = "github"
-github = "NVIDIA/TensorRT"
-use_latest_release = true
-prefix = "v"
+# source = "github"
+# github = "NVIDIA/TensorRT"
+# use_latest_release = true
+# prefix = "v"
+source = "aur"
+aur = "tensorrt"
+strip_release = true
 
 ["sci-libs/onnx"]
 source = "github"
@@ -187,6 +196,7 @@ prefix = "v"
 source = "github"
 github = "huggingface/transformers"
 use_latest_release = true
+prefix = "v"
 
 ["sci-libs/magma"]
 source = "bitbucket"
