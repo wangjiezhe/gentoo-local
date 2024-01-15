@@ -312,3 +312,16 @@ source = "github"
 github = "wandb/wandb"
 use_latest_release = true
 prefix = "v"
+
+["dev-python/pyre-extensions"]
+source = "pypi"
+pypi = "pyre-extensions"
+
+["sci-libs/torchtnt"]
+source = "pypi"
+pypi = "torchtnt"
+
+["sci-libs/torcheval"]
+source = "github"
+github = "pytorch/torcheval"
+use_latest_release = true
