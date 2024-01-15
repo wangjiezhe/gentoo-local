@@ -325,3 +325,18 @@ pypi = "torchtnt"
 source = "github"
 github = "pytorch/torcheval"
 use_latest_release = true
+
+["dev-python/setuptools-git-version"]
+source = "github"
+github = "pyfidelity/setuptools-git-version"
+use_latest_tag = true
+
+["dev-python/setuptools-git-versioning"]
+source = "github"
+pypi = "setuptools-git-versioning"
+
+["dev-python/FBGEMM_GPU"]
+source = "github"
+github = "pytorch/FBGEMM"
+use_latest_release = true
+prefix = "v"
