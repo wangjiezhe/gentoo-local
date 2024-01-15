@@ -333,7 +333,9 @@ use_latest_tag = true
 
 ["dev-python/setuptools-git-versioning"]
 source = "github"
-pypi = "setuptools-git-versioning"
+github = "dolfinus/setuptools-git-versioning"
+use_latest_release = true
+prefix = "v"
 
 ["dev-python/FBGEMM_GPU"]
 source = "github"
