@@ -1,0 +1,14 @@
+diff --git a/setup.cfg b/setup.cfg
+index b894ee4..cdcbf59 100644
+--- a/setup.cfg
++++ b/setup.cfg
+@@ -1,7 +1,4 @@
+-[pytest]
++[tool:pytest]
+ addopts =
+-	--strict
+-	--flakes
+-	--pep8
++	--strict-markers
+ 	tests.py
+-pep8ignore = E501
