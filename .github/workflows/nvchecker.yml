@@ -43,7 +43,8 @@ jobs:
         echo "::endgroup::"
         # homepage
         echo "::group::eix search homepage for packages"
-        pkgs=$(EIX_LIMIT=0 NAMEVERSION="\"<category>/<name>\": \"<homepage>\",\n" eix --pure-packages --in-overlay "$repo_name" --format '<bestversion:NAMEVERSION>')
+        pkgs=$(EIX_LIMIT=0 NAMEVERSION="'<category>/<name>': '<homepage>',\n" eix --pure-packages --in-overlay "$repo_name" --format '<bestversion:NAMEVERSION>')
+        echo "$pkgs"
         echo "homepages=\"{ ${pkgs::-1} }\"" >> $GITHUB_ENV
 
     - name: nvchecker
