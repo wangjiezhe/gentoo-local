@@ -43,6 +43,7 @@ module.exports = async ({ github, context, core }) => {
   }
 
   let pkgs = JSON.parse(process.env.pkgs);
+  let homepages = JSON.parse(process.env.homepages)
   for (let pkg of pkgs) {
     // // limit "x11-misc/9menu" and "dev-libs/libthai"
     // if (pkg.name != "x11-misc/9menu" && pkg.name != "dev-libs/libthai") {
@@ -55,6 +56,8 @@ module.exports = async ({ github, context, core }) => {
     if (pkg.oldver != null) {
       body += "oldver: " + pkg.oldver;
     }
+
+    body += "\nhomepage: " + homepages[pkg.name];
 
     // append @github_account to body
     github_accounts = getGithubAccount(pkg.name);

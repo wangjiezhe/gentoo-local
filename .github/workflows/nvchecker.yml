@@ -15,7 +15,6 @@ concurrency:
 jobs:
   nvchecker:
     runs-on: ubuntu-latest
-    if: github.repository == 'wangjiezhe/gentoo-local' && github.ref == 'refs/heads/main'
     container:
       image: ghcr.io/liangyongxiang/gentoo-testing:master
 
@@ -42,6 +41,10 @@ jobs:
         echo "$pkgs" > .github/workflows/old_ver.json
         cat .github/workflows/old_ver.json
         echo "::endgroup::"
+        # homepage
+        echo "::group::eix search homepage for packages"
+        pkgs=$(EIX_LIMIT=0 NAMEVERSION="\"<category>/<name>\": \"<homepage>\",\n" eix --pure-packages --in-overlay "$repo_name" --format '<bestversion:NAMEVERSION>')
+        echo "homepages=\"{ ${pkgs::-1} }\"" >> $GITHUB_ENV
 
     - name: nvchecker
       id: nvchecker
@@ -66,7 +69,7 @@ jobs:
       uses: actions/github-script@v6
       timeout-minutes: 1
       env:
-        pkgs: ${{steps.nvchecker.outputs.nvcmp}}
+        pkgs: ${{ steps.nvchecker.outputs.nvcmp }}
       with:
         github-token: ${{ secrets.NVCHECKER_PAT }}
         script: |
