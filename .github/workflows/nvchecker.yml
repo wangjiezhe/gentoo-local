@@ -41,7 +41,7 @@ jobs:
         echo "$pkgs" > .github/workflows/old_ver.json
         sed -r -i \
           -e 's#(\.|-|_)?p([[:digit:]]{8})(",?)$#\3#' \
-          .github/workflow/old_ver.json
+          .github/workflows/old_ver.json
         cat .github/workflows/old_ver.json
         echo "::endgroup::"
         # homepage
