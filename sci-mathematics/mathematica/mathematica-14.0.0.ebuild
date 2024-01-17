@@ -1,4 +1,4 @@
-# Copyright 1999-2023 Gentoo Authors
+# Copyright 1999-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -8,7 +8,15 @@ inherit check-reqs desktop unpacker xdg
 
 DESCRIPTION="Wolfram Mathematica"
 HOMEPAGE="https://www.wolfram.com/mathematica/"
-SRC_URI="Mathematica_${PV}_BNDL_Chinese_LINUX.sh"
+# _source_url=$(
+#     curl -q "https://www.wolfram.com/download-center/mathematica/" \
+#     | grep "account.wolfram.com/dl/Mathematica" \
+#     | grep "version=${_pkgver}" \
+#     | grep "platform=Linux" \
+#     | grep -v "includesDocumentation" \
+#     | sed -E 's/.*href="([^"]+)".*/\1/'
+# )
+SRC_URI="Mathematica_${PV}_BNDL_LINUX_CN.sh"
 S="${WORKDIR}"
 
 LICENSE="all-rights-reserved"
@@ -24,6 +32,7 @@ RESTRICT="strip mirror bindist fetch"
 # FFmpegTools (FFmpegToolsSystem-6.0.so) requires media-video/ffmpeg-6.0
 # FFmpegTools (FFmpegToolsSystem-4.4.so) requires media-video/ffmpeg-4.4
 RDEPEND="
+	dev-libs/nss
 	dev-qt/qt5compat:6
 	dev-qt/qtbase:6[eglfs,wayland]
 	dev-qt/qtsvg:6
@@ -92,7 +101,7 @@ src_install() {
 
 	einfo 'Removing MacOS- and Windows-specific files'
 	find "${S}/${M_TARGET}" -type d -\( -name Windows -o -name Windows-x86-64 \
-		-o -name MacOSX -o -name MacOSX-x86-64 -o -name Macintosh -\) \
+		-o -name MacOSX -o -name MacOSX-x86-64 -o -name MacOSX-ARM64 -o -name Macintosh -\) \
 		-exec rm -rv {} + || die
 
 	if ! use cuda; then
@@ -104,7 +113,6 @@ src_install() {
 	einfo 'Removing unsupported RLink versions'
 	rm -r "${S}/${M_TARGET}/SystemFiles/Links/RLink/SystemFiles/Libraries/Linux-x86-64/3.5.0" || die
 	rm -r "${S}/${M_TARGET}/SystemFiles/Links/RLink/SystemFiles/Libraries/Linux-x86-64/3.6.0" || die
-	rm -r "${S}/${M_TARGET}/SystemFiles/Links/RLink/SystemFiles/Libraries/Linux/AllVersions" || die
 	# RLink can't use if R not used
 	if ! use R; then
 		einfo 'Removing RLink support'
