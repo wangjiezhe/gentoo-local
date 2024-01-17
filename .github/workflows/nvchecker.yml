@@ -43,9 +43,9 @@ jobs:
         echo "::endgroup::"
         # homepage
         echo "::group::eix search homepage for packages"
-        pkgs=$(ACCEPT_LICENSE="*" ACCEPT_KEYWORDS="~amd64" EIX_LIMIT=0 NAMEVERSION='\\"<category>/<name>\\": \\"<homepage>\\", ' eix --pure-packages --in-overlay "$repo_name" --format '<bestversion:NAMEVERSION>')
-        echo "$pkgs"
-        echo "homepages=\"{ ${pkgs::-2} }\"" >> $GITHUB_ENV
+        pkgs=$(ACCEPT_LICENSE="*" ACCEPT_KEYWORDS="~amd64" EIX_LIMIT=0 NAMEVERSION='"<category>/<name>": "<homepage>", ' eix --pure-packages --in-overlay "$repo_name" --format '<bestversion:NAMEVERSION>')
+        echo "$pkgs" | sed 's/, /\n/g'
+        echo "homepages={ ${pkgs::-2} }" >> $GITHUB_ENV
 
     - name: nvchecker
       id: nvchecker
