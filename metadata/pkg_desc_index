@@ -2,14 +2,15 @@ app-i18n/man-pages-zh_CN 1.6.4.0: A somewhat comprehensive collection of Chinese
 app-misc/cheat 4.4.2: cheat allows you to create and view interactive cheatsheets on the command-line
 app-misc/wslu 4.1.1-r1: A collection of utilities for Windows Subsystem for Linux (WSL)
 app-vim/vimcdoc 2.4.0: online vim documentation translated into Chinese
+dev-build/bazel 5.4.1 6.1.2 6.2.1 6.3.2 6.4.0: Fast and correct automated build system
 dev-cpp/abseil-cpp 20230802.1: Abseil Common Libraries (C++), LTS Branch
 dev-haskell/plam 2.2.0 2.2.1: An interpreter for learning and exploring pure λ-calculus
 dev-libs/FBGEMM 2023.11.03: Facebook GEneral Matrix Multiplication
-dev-libs/catch2 3.5.1: A modern, C++-native, test framework for unit-tests, TDD and BDD
+dev-libs/catch2 3.5.2: A modern, C++-native, test framework for unit-tests, TDD and BDD
 dev-libs/cudnn 8.9.6.50 8.9.7.29: NVIDIA Accelerated Deep Learning on GPU library
 dev-libs/cudnn-frontend 1.0.2: A c++ wrapper for the cudnn backend API
 dev-libs/cusparselt 0.5.1.1 0.5.2.1: A High-Performance CUDA Library for Sparse Matrix-Matrix Multiplication
-dev-libs/cutlass 3.2.2 3.3.0: CUDA Templates for Linear Algebra Subroutines
+dev-libs/cutlass 3.3.0 3.4.0: CUDA Templates for Linear Algebra Subroutines
 dev-libs/dlpack 0.8: common in-memory tensor structure
 dev-libs/flatbuffers 23.1.21: Memory efficient serialization library
 dev-libs/nccl 2.19.4: Optimized primitives for collective multi-GPU communication
@@ -39,7 +40,6 @@ dev-python/statsmodels 0.14.1: Statistical computations and models for use with 
 dev-python/torchinfo 1.8.0: View model summaries in PyTorch
 dev-python/wandb 0.16.2: A tool for visualizing and tracking your machine learning experiments
 dev-python/watermark 2.4.3: IPython magic function to print date/time stamps and various system information
-dev-util/bazel 5.4.1 6.1.2 6.2.1 6.3.2 6.4.0: Fast and correct automated build system
 net-libs/google-cloud-cpp 2.20.0: Google Cloud Client Library for C++
 net-libs/grpc 1.59.3 1.60.0: Modern open source high performance RPC framework
 net-misc/mosh 1.4.0: Mobile shell that supports roaming and intelligent local echo
@@ -69,5 +69,5 @@ sci-libs/torchtext 0.16.2: Data manipulation and transformation for audio signal
 sci-libs/torchtnt 0.2.1: A lightweight library for PyTorch training tools and utilities
 sci-libs/torchvision 0.16.2: Datasets, transforms and models to specific to computer vision
 sci-libs/transformers 4.35.2 4.36.2: State-of-the-art Machine Learning for JAX, PyTorch and TensorFlow
-sci-mathematics/mathematica 13.3.1: Wolfram Mathematica
+sci-mathematics/mathematica 14.0.0: Wolfram Mathematica
 sci-visualization/tensorboard 2.13.0 2.14.1 2.15.1: TensorFlow's Visualization Toolkit
