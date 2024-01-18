@@ -1,0 +1,5 @@
+dev-build/bazel
+=sci-libs/keras-2.13*
+=sci-libs/tensorflow-2.13*
+=sci-libs/tensorflow-estimator-2.13*
+=sci-visualization/tensorboard-2.13*
