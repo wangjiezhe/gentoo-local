@@ -131,10 +131,12 @@ from_pattern = '(\d+)\.\d+'
 to_pattern = '\1'
 
 ["sci-libs/torchmetrics"]
-source = "github"
-github = "Lightning-AI/torchmetrics"
-use_latest_release = true
-prefix = "v"
+# source = "github"
+# github = "Lightning-AI/torchmetrics"
+# use_latest_release = true
+# prefix = "v"
+source = "pypi"
+pypi = "torchmetrics"
 
 ["sci-libs/tensorrt"]
 # source = "github"

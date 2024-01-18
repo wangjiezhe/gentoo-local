@@ -32,6 +32,7 @@ jobs:
         egencache --jobs=$(nproc) --update --repo "$repo_name" &> /dev/null
         eix-update
         echo "::endgroup::"
+
         # eix
         echo "::group::eix search packages"
         pkgs=$(ACCEPT_LICENSE="*" ACCEPT_KEYWORDS="~amd64" EIX_LIMIT=0 NAMEVERSION="<category>/<name>-<version>\n" eix --pure-packages --in-overlay "$repo_name" --format '<bestversion:NAMEVERSION>')
@@ -39,11 +40,14 @@ jobs:
         echo "$pkgs"
         pkgs="{ ${pkgs::-1} }"
         echo "$pkgs" > .github/workflows/old_ver.json
+
         sed -r -i \
           -e 's#(\.|-|_)?p([[:digit:]]{8})(",?)$#\3#' \
           .github/workflows/old_ver.json
+
         cat .github/workflows/old_ver.json
         echo "::endgroup::"
+
         # homepage
         echo "::group::eix search homepage for packages"
         pkgs=$(ACCEPT_LICENSE="*" ACCEPT_KEYWORDS="~amd64" EIX_LIMIT=0 NAMEVERSION='"<category>/<name>": "<homepage>", ' eix --pure-packages --in-overlay "$repo_name" --format '<bestversion:NAMEVERSION>')
@@ -57,6 +61,12 @@ jobs:
         cd .github/workflows/
         echo -e "[keys]\ngithub = \"${{ secrets.GITHUB_TOKEN }}\"" > keyfile.toml
         nvchecker --file overlay.toml --keyfile keyfile.toml
+
+        sed -r -i \
+          -e 's#(\.|-|_)?post([[:digit:]]+)(",?)$#_p\2\3#' \
+          new_ver.json
+
+        cat new_ver.json
         echo "nvcmp=$(nvcmp --file overlay.toml --json --newer)" >> $GITHUB_OUTPUT
         echo "::endgroup::"
 
