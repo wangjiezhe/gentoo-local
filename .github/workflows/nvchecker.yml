@@ -24,6 +24,12 @@ jobs:
 
     - name: gentoo
       run: |
+        # unmask packages
+        echo "::group::relax unmasked packages"
+        sed -i -e "s/^=\(.*\)-[0-9.*]\+$/\1/" profiles/package.unmask
+        cat profiles/package.unmask
+        echo "::endgroup::"
+
         # eselect
         echo "::group::eselect repository add and sync"
         repo_name=$(cat profiles/repo_name)
