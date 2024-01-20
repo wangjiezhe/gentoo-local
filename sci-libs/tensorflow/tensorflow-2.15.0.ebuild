@@ -9,7 +9,7 @@ MY_PV=${PV/_rc/-rc}
 MY_P=${PN}-${MY_PV}
 DEP_VER="$(ver_cut 1-2)"
 
-inherit bazel check-reqs cuda distutils-r1 flag-o-matic prefix toolchain-funcs
+inherit bazel check-reqs cuda distutils-r1 flag-o-matic multibuild prefix toolchain-funcs
 
 DESCRIPTION="Computation framework using data flow graphs for scalable machine learning"
 HOMEPAGE="https://www.tensorflow.org/"
