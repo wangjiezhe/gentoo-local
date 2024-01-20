@@ -91,7 +91,7 @@ SRC_URI="https://github.com/${PN}/${PN}/archive/v${MY_PV}.tar.gz -> ${P}.tar.gz
 # BDEPEND: >=dev-libs/protobuf-3.8.0
 RDEPEND="
 	app-arch/snappy
-	>=dev-cpp/abseil-cpp-20211102-r2:=
+	>=dev-cpp/abseil-cpp-20220623:=
 	dev-db/sqlite
 	dev-libs/double-conversion
 	dev-libs/icu:=
@@ -150,8 +150,8 @@ PDEPEND="python? (
 	)"
 BDEPEND="
 	app-arch/unzip
-	dev-java/java-config
 	=dev-build/bazel-5*
+	dev-java/java-config
 	cuda? (
 		>=dev-util/nvidia-cuda-toolkit-9.1[profiler]
 	)
@@ -171,18 +171,18 @@ CHECKREQS_MEMORY="5G"
 CHECKREQS_DISK_BUILD="10G"
 
 PATCHES=(
-	"${FILESDIR}"/"tensorflow-2.13.0-0001-WORKSPACE-add-rules-docker-http_archive-bazel-toolch.patch"
-	"${FILESDIR}"/"tensorflow-2.13.0-0002-systemlib-Latest-absl-LTS-has-split-cord-libs.patch"
-	"${FILESDIR}"/"tensorflow-2.13.0-0003-mkl_dnn-Must-link-against-libm-for-round-and-log2.patch"
-	"${FILESDIR}"/"tensorflow-2.13.0-0004-tensorflow_cc-Add-systemlib-nsync-linkopts.patch"
-	"${FILESDIR}"/"tensorflow-2.13.0-0005-systemlib-Updates-for-Abseil-20220623-LTS.patch"
-	"${FILESDIR}"/"tensorflow-2.13.0-0006-systemlib-Update-targets-for-absl_py.patch"
-	"${FILESDIR}"/"tensorflow-2.13.0-0007-systemlibs-Add-well_known_types_py_pb2-target.patch"
-	"${FILESDIR}"/"tensorflow-2.13.0-0008-Relax-setup.py-version-requirements.patch"
-	"${FILESDIR}"/"tensorflow-2.13.0-0009-fix-sparse-transpose-op2.patch"
-	"${FILESDIR}"/"tensorflow-2.13.0-0010-systemlibs-update-targets-for-absl.patch"
-	"${FILESDIR}"/"tensorflow-2.13.0-0011-systemlibs-update-targets-for-google_cloud_cpp.patch"
-	"${FILESDIR}"/"tensorflow-2.13.0-0012-bump-cudnn-frontend-to-v0.9.patch"
+	"${FILESDIR}/tensorflow-2.13.0-0001-WORKSPACE-add-rules-docker-http_archive-bazel-toolch.patch"
+	"${FILESDIR}/tensorflow-2.13.0-0002-systemlib-Latest-absl-LTS-has-split-cord-libs.patch"
+	"${FILESDIR}/tensorflow-2.13.0-0003-mkl_dnn-Must-link-against-libm-for-round-and-log2.patch"
+	"${FILESDIR}/tensorflow-2.13.0-0004-tensorflow_cc-Add-systemlib-nsync-linkopts.patch"
+	"${FILESDIR}/tensorflow-2.13.0-0005-systemlib-Updates-for-Abseil-20220623-LTS.patch"
+	"${FILESDIR}/tensorflow-2.13.0-0006-systemlib-Update-targets-for-absl_py.patch"
+	"${FILESDIR}/tensorflow-2.13.0-0007-systemlibs-Add-well_known_types_py_pb2-target.patch"
+	"${FILESDIR}/tensorflow-2.13.0-0008-Relax-setup.py-version-requirements.patch"
+	"${FILESDIR}/tensorflow-2.13.0-0009-fix-sparse-transpose-op2.patch"
+	"${FILESDIR}/tensorflow-2.13.0-0010-systemlibs-update-targets-for-absl.patch"
+	"${FILESDIR}/tensorflow-2.13.0-0011-systemlibs-update-targets-for-google_cloud_cpp.patch"
+	"${FILESDIR}/tensorflow-2.13.0-0012-bump-cudnn-frontend-to-v0.9.patch"
 )
 
 get-cpu-flags() {
