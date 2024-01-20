@@ -34,6 +34,6 @@ BDEPEND="
 python_test() {
 	cd "${WORKDIR}/${P}/tests" || die
 	# zeroes means without benchmarks
-	"${EPYTHON}" py_test.py 0 0 0 false || die
-	"${EPYTHON}" py_flexbuffers_test.py -v || die
+	"${EPYTHON}" py_test.py 0 0 0 false || die "Tests failed with ${EPYTHON}"
+	"${EPYTHON}" py_flexbuffers_test.py -v || die "Tests failed with ${EPYTHON}"
 }

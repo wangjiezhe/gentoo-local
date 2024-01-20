@@ -38,13 +38,10 @@ SLOT="0/25.1.0"
 
 S="${WORKDIR}/${PARENT_P}/python"
 
-BDEPEND="
-"
 DEPEND="
 	${PYTHON_DEPS}
 "
 RDEPEND="
-	${BDEPEND}
 	dev-libs/protobuf:${SLOT}
 "
 
