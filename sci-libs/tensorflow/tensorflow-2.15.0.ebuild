@@ -155,6 +155,8 @@ PDEPEND="python? (
 		=sci-libs/tensorflow-estimator-${DEP_VER}*[${PYTHON_USEDEP}]
 	)"
 #	>=dev-libs/protobuf-3.8.0
+# bazel-7.0 (need to remove `distinct_host_configuration` in bazel.eclass and
+# add `echo 'common --noenable_bzlmod' >> .bazelrc` in src_configure) failed with plenty of errors
 # bazel-6.4 failed with undefined references to `_mlir_ciface_*'
 # see https://discuss.tensorflow.org/t/undefined-references-to-mlir-ciface-symbols/20571
 # bazel-6.3 failed with undefined reference to `riegeli::RecordsMetadata::Clear()'
