@@ -121,7 +121,7 @@ RDEPEND="
 	mpi? ( virtual/mpi )
 	python? (
 		${PYTHON_DEPS}
-		~dev-libs/flatbuffers-23.5.26
+		~dev-libs/flatbuffers-23.5.26:=
 		dev-python/absl-py[${PYTHON_USEDEP}]
 		>=dev-python/astor-0.7.1[${PYTHON_USEDEP}]
 		dev-python/astunparse[${PYTHON_USEDEP}]
