@@ -344,3 +344,8 @@ source = "github"
 github = "pytorch/FBGEMM"
 use_latest_release = true
 prefix = "v"
+
+["dev-build/bazel"]
+source = "github"
+github = "bazelbuild/bazel"
+use_latest_release = true
