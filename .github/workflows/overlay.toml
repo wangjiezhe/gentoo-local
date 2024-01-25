@@ -360,3 +360,15 @@ source = "github"
 github = "NVIDIA/cuda-python"
 use_latest_release = true
 prefix = "v"
+
+["dev-python/treelib"]
+source = "github"
+github = "caesar0301/treelib"
+use_latest_release = true
+prefix = "v"
+
+["dev-python/cutlass"]
+source = "github"
+github = "NVIDIA/cutlass"
+use_latest_release = true
+prefix = "v"
