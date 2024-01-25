@@ -58,10 +58,7 @@ python_configure_all() {
 # distutils_enable_tests pytest
 
 # python_test() {
-# 	pushd fbgemm_gpu >/dev/null || die
-# 	ln -s "${BUILD_DIR}/install$(python_get_sitedir)/fbgemm_gpu/fbgemm_gpu_py.so" || die
-# 	ln -s "${BUILD_DIR}/install$(python_get_sitedir)/fbgemm_gpu/split_embedding_codegen_lookup_invokers" || die
-# 	ln -s "${BUILD_DIR}/install$(python_get_sitedir)/fbgemm_gpu/split_embedding_optimizer_codegen" || die
-# 	popd >/dev/null || die
+# 	rm -rf fbgemm_gpu || die
+# 	rm -f test/ssd_split_table_batched_embeddings_test.py || die
 # 	epytest
 # }
