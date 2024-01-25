@@ -349,3 +349,14 @@ prefix = "v"
 source = "github"
 github = "bazelbuild/bazel"
 use_latest_release = true
+
+["dev-python/pyclibrary"]
+source = "github"
+github = "MatthieuDartiailh/pyclibrary"
+use_latest_release = true
+
+["dev-python/cuda-python"]
+source = "github"
+github = "NVIDIA/cuda-python"
+use_latest_release = true
+prefix = "v"
