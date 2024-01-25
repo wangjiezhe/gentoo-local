@@ -65,11 +65,17 @@ RDEPEND="
 	tensorpipe? ( sci-libs/tensorpipe[cuda?] )
 	xnnpack? ( >=sci-libs/XNNPACK-2022.12.22 )
 "
+# Failed with cutlass-3.4.0:
+# /usr/include/cutlass/bfloat16.h(94): error: name followed by "::" must be a class or namespace name
+#        static_assert(cutlass::platform::is_integral<T>::value && sizeof(T) == 4, "Requires 32-bit integer");
 DEPEND="
 	${RDEPEND}
 	dev-cpp/benchmark
 	dev-cpp/eigen
-	cuda? ( >=dev-libs/cutlass-3.1.0 )
+	cuda? (
+		>=dev-libs/cutlass-3.1.0
+		<dev-libs/cutlass-3.4.0
+	)
 	dev-libs/psimd
 	dev-libs/FP16
 	dev-libs/FXdiv
