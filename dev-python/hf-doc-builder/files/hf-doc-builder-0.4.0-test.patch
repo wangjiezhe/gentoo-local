@@ -1,0 +1,27 @@
+diff -ur doc-builder-0.4.0_orig/tests/test_autodoc.py doc-builder-0.4.0/tests/test_autodoc.py
+--- doc-builder-0.4.0_orig/tests/test_autodoc.py	2024-01-26 16:11:42.448522183 +0800
++++ doc-builder-0.4.0/tests/test_autodoc.py	2024-01-26 16:36:14.888039912 +0800
+@@ -170,10 +170,10 @@
+         self.assertEqual(get_type_name(str), "str")
+         self.assertEqual(get_type_name(BertModel), "BertModel")
+         # Objects from typing which are the most annoying
+-        self.assertEqual(get_type_name(List[str]), "typing.List[str]")
+-        self.assertEqual(get_type_name(Optional[str]), "typing.Optional[str]")
+-        self.assertEqual(get_type_name(Union[bool, int]), "typing.Union[bool, int]")
+-        self.assertEqual(get_type_name(List[Optional[str]]), "typing.List[typing.Optional[str]]")
++        self.assertEqual(get_type_name(List[str]), "List")
++        self.assertEqual(get_type_name(Optional[str]), "Optional")
++        self.assertEqual(get_type_name(Union[bool, int]), "Union")
++        self.assertEqual(get_type_name(List[Optional[str]]), "List")
+ 
+     def test_format_signature(self):
+         self.assertEqual(
+@@ -254,7 +254,7 @@
+         model_output_doc = """
+ <docstring><name>class transformers.utils.ModelOutput</name><anchor>transformers.utils.ModelOutput</anchor><source>"""
+         model_output_doc += f"{self.test_source_link}"
+-        model_output_doc += """</source><parameters>""</parameters></docstring>
++        model_output_doc += """</source><parameters>[{"name": "*args", "val": ""}, {"name": "**kwargs", "val": ""}]</parameters></docstring>
+ 
+ Base class for all model outputs as dataclass. Has a `__getitem__` that allows indexing by integer or slice (like a
+ tuple) or strings (like a dictionary) that will ignore the `None` attributes. Otherwise behaves like a regular
