@@ -410,3 +410,30 @@ source = "github"
 github = "facebookresearch/faiss"
 use_latest_release = true
 prefix = "v"
+
+["sci-libs/torchsnapshot"]
+source = "github"
+github = "pytorch/torchsnapshot"
+use_latest_release = true
+
+["dev-python/iopath"]
+source = "pypi"
+pypi = "iopath"
+
+["sci-libs/torchrec"]
+source = "github"
+github = "pytorch/torchrec"
+use_latest_release = true
+prefix = "v"
+
+["dev-python/rjieba"]
+source = "github"
+github = "messense/rjieba-py"
+use_latest_tag = true
+prefix = "v"
+
+["sci-libs/accelerate"]
+source = "github"
+github = "huggingface/accelerate"
+use_latest_release = true
+prefix = "v"
