@@ -8,9 +8,12 @@ DISTUTILS_USE_PEP517=setuptools
 DISTUTILS_SINGLE_IMPL=1
 inherit distutils-r1
 
+CommitId="5a7c96f1f14773fa9f915c0d5dc4f155b730834a"
+
 DESCRIPTION="A performant, memory-efficient checkpointing library for PyTorch applications"
 HOMEPAGE="https://github.com/pytorch/torchsnapshot"
-SRC_URI="https://github.com/pytorch/torchsnapshot/archive/${PV}.tar.gz -> ${P}.gh.tar.gz"
+SRC_URI="https://github.com/pytorch/torchsnapshot/archive/${CommitId}.tar.gz -> ${P}.gh.tar.gz"
+S="${WORKDIR}/${PN}-${CommitId}"
 
 LICENSE="BSD"
 SLOT="0"
@@ -25,6 +28,7 @@ RDEPEND="
 		dev-python/importlib-metadata[${PYTHON_USEDEP}]
 		dev-python/nest-asyncio[${PYTHON_USEDEP}]
 		dev-python/psutil[${PYTHON_USEDEP}]
+		dev-python/pyre-extensions[${PYTHON_USEDEP}]
 		dev-python/typing-extensions[${PYTHON_USEDEP}]
 	')
 "
