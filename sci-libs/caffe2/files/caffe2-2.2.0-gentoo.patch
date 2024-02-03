@@ -1,10 +1,10 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3a48eaf4e29..27a7aa524c4 100644
+index 9194e520bb0..a9cd117ea2d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -812,12 +812,11 @@ endif()
- 
- # ---[ Build flags
+@@ -833,12 +833,11 @@ endif()
+ # Re-include to override append_cxx_flag_if_supported from third_party/FBGEMM
+ include(cmake/public/utils.cmake)
  if(NOT MSVC)
 -  string(APPEND CMAKE_CXX_FLAGS " -O2 -fPIC")
 +  string(APPEND CMAKE_CXX_FLAGS " -fPIC")
@@ -16,30 +16,29 @@ index 3a48eaf4e29..27a7aa524c4 100644
    append_cxx_flag_if_supported("-Werror=non-virtual-dtor" CMAKE_CXX_FLAGS)
    append_cxx_flag_if_supported("-Werror=braced-scalar-init" CMAKE_CXX_FLAGS)
    append_cxx_flag_if_supported("-Werror=range-loop-construct" CMAKE_CXX_FLAGS)
-@@ -917,8 +916,6 @@ if(NOT MSVC)
+@@ -928,7 +927,6 @@ if(NOT MSVC)
    string(APPEND CMAKE_LINKER_FLAGS_DEBUG " -fno-omit-frame-pointer -O0")
    append_cxx_flag_if_supported("-fno-math-errno" CMAKE_CXX_FLAGS)
    append_cxx_flag_if_supported("-fno-trapping-math" CMAKE_CXX_FLAGS)
 -  append_cxx_flag_if_supported("-Werror=format" CMAKE_CXX_FLAGS)
--  append_cxx_flag_if_supported("-Werror=cast-function-type" CMAKE_CXX_FLAGS)
  else()
    # skip unwanted includes from windows.h
    add_compile_definitions(WIN32_LEAN_AND_MEAN)
 diff --git a/c10/CMakeLists.txt b/c10/CMakeLists.txt
-index feebad7cbb7..7c029cd88d9 100644
+index 68396a654d2..98178c3e549 100644
 --- a/c10/CMakeLists.txt
 +++ b/c10/CMakeLists.txt
-@@ -87,7 +87,7 @@ endif()
- if(${USE_GLOG})
+@@ -89,7 +89,7 @@ endif()
+ if(C10_USE_GLOG)
      target_link_libraries(c10 PUBLIC glog::glog)
  endif()
 -target_link_libraries(c10 PRIVATE fmt::fmt-header-only)
 +target_link_libraries(c10 PRIVATE fmt)
  
- find_package(Backtrace)
- if(Backtrace_FOUND)
+ if(C10_USE_NUMA)
+   target_include_directories(c10 PRIVATE ${Numa_INCLUDE_DIR})
 diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
-index 74d0d557190..d03a833e712 100644
+index 748363725bc..72723ade172 100644
 --- a/caffe2/CMakeLists.txt
 +++ b/caffe2/CMakeLists.txt
 @@ -107,7 +107,7 @@ endif()
@@ -51,15 +50,16 @@ index 74d0d557190..d03a833e712 100644
    if(NOT TARGET fxdiv)
      set(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
      set(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
-@@ -1023,7 +1023,6 @@ elseif(USE_CUDA)
+@@ -1054,7 +1054,7 @@ elseif(USE_CUDA)
+   endif()
  endif()
  
- if(NOT MSVC AND USE_XNNPACK)
--  TARGET_LINK_LIBRARIES(torch_cpu PRIVATE fxdiv)
+-if(NOT MSVC AND USE_XNNPACK)
++if(FALSE)
+   TARGET_LINK_LIBRARIES(torch_cpu PRIVATE fxdiv)
  endif()
  
- # ==========================================================
-@@ -1143,10 +1142,9 @@ target_include_directories(torch_cpu PRIVATE
+@@ -1175,10 +1175,9 @@ target_include_directories(torch_cpu PRIVATE
  target_include_directories(torch_cpu PRIVATE
    ${TORCH_ROOT}/third_party/miniz-2.1.0)
  
@@ -73,7 +73,7 @@ index 74d0d557190..d03a833e712 100644
      ${TORCH_ROOT}/third_party/kineto/libkineto/src)
  endif()
 diff --git a/cmake/Codegen.cmake b/cmake/Codegen.cmake
-index 6fa2ab6ea11..9e7b61332e7 100644
+index b478f3cc2e1..6e14facb6c6 100644
 --- a/cmake/Codegen.cmake
 +++ b/cmake/Codegen.cmake
 @@ -57,7 +57,7 @@ if(INTERN_BUILD_ATEN_OPS)
@@ -86,11 +86,11 @@ index 6fa2ab6ea11..9e7b61332e7 100644
        set(OPT_FLAG " ")
      endif()
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index c3abce52e4c..22d2143e67f 100644
+index acc95842b63..9c03e5bc527 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
-@@ -487,7 +487,7 @@ endif()
- list(APPEND Caffe2_DEPENDENCY_LIBS cpuinfo)
+@@ -474,7 +474,7 @@ if(NOT CMAKE_SYSTEM_PROCESSOR MATCHES "^(s390x|ppc64le)$")
+ endif()
  
  # ---[ QNNPACK
 -if(USE_QNNPACK)
@@ -98,12 +98,13 @@ index c3abce52e4c..22d2143e67f 100644
    set(CAFFE2_THIRD_PARTY_ROOT "${PROJECT_SOURCE_DIR}/third_party")
  
    if(NOT DEFINED QNNPACK_SOURCE_DIR)
-@@ -542,8 +542,19 @@ if(USE_QNNPACK)
-   list(APPEND Caffe2_DEPENDENCY_LIBS qnnpack)
- endif()
+@@ -531,9 +531,14 @@ endif()
  
--# ---[ Caffe2 Int8 operators (enabled by USE_QNNPACK) depend on gemmlowp and neon2sse headers
+ # ---[ Caffe2 Int8 operators (enabled by USE_QNNPACK) depend on gemmlowp and neon2sse headers
  if(USE_QNNPACK)
+-  set(CAFFE2_THIRD_PARTY_ROOT "${PROJECT_SOURCE_DIR}/third_party")
+-  include_directories(SYSTEM "${CAFFE2_THIRD_PARTY_ROOT}/gemmlowp")
+-  include_directories(SYSTEM "${CAFFE2_THIRD_PARTY_ROOT}/neon2sse")
 +  add_library(QNNPACK SHARED IMPORTED)
 +  find_library(QNNPACK_LIBRARY qnnpack)
 +  set_property(TARGET QNNPACK PROPERTY IMPORTED_LOCATION "${QNNPACK_LIBRARY}")
@@ -112,14 +113,10 @@ index c3abce52e4c..22d2143e67f 100644
 +  endif()
 +  message("-- Found QNNPACK: ${QNNPACK_LIBRARY}")
 +  list(APPEND Caffe2_DEPENDENCY_LIBS QNNPACK)
-+endif()
-+
-+# ---[ Caffe2 Int8 operators (enabled by USE_QNNPACK) depend on gemmlowp and neon2sse headers
-+if(FALSE)
-   set(CAFFE2_THIRD_PARTY_ROOT "${PROJECT_SOURCE_DIR}/third_party")
-   include_directories(SYSTEM "${CAFFE2_THIRD_PARTY_ROOT}/gemmlowp")
-   include_directories(SYSTEM "${CAFFE2_THIRD_PARTY_ROOT}/neon2sse")
-@@ -803,7 +814,7 @@ if(BUILD_TEST OR BUILD_MOBILE_BENCHMARK OR BUILD_MOBILE_TEST)
+ endif()
+ 
+ # ---[ PYTORCH_QNNPACK
+@@ -780,7 +785,7 @@ if(BUILD_TEST OR BUILD_MOBILE_BENCHMARK OR BUILD_MOBILE_TEST)
  endif()
  
  # ---[ FBGEMM
@@ -128,7 +125,7 @@ index c3abce52e4c..22d2143e67f 100644
    set(CAFFE2_THIRD_PARTY_ROOT "${PROJECT_SOURCE_DIR}/third_party")
    if(NOT DEFINED FBGEMM_SOURCE_DIR)
      set(FBGEMM_SOURCE_DIR "${CAFFE2_THIRD_PARTY_ROOT}/fbgemm" CACHE STRING "FBGEMM source directory")
-@@ -848,6 +859,7 @@ if(USE_FBGEMM)
+@@ -828,6 +833,7 @@ if(USE_FBGEMM)
  endif()
  
  if(USE_FBGEMM)
@@ -136,7 +133,7 @@ index c3abce52e4c..22d2143e67f 100644
    caffe2_update_option(USE_FBGEMM ON)
  else()
    caffe2_update_option(USE_FBGEMM OFF)
-@@ -1243,7 +1255,7 @@ if(USE_LLVM)
+@@ -1207,7 +1213,7 @@ if(USE_LLVM)
  endif(USE_LLVM)
  
  # ---[ cuDNN
@@ -145,7 +142,7 @@ index c3abce52e4c..22d2143e67f 100644
    set(CUDNN_FRONTEND_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/../third_party/cudnn_frontend/include)
    target_include_directories(torch::cudnn INTERFACE ${CUDNN_FRONTEND_INCLUDE_DIR})
  endif()
-@@ -1555,7 +1567,6 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
+@@ -1529,7 +1535,6 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
        set_target_properties(onnx_proto PROPERTIES CXX_STANDARD 17)
      endif()
    endif()
@@ -153,7 +150,7 @@ index c3abce52e4c..22d2143e67f 100644
  
    add_definitions(-DONNX_NAMESPACE=${ONNX_NAMESPACE})
    if(NOT USE_SYSTEM_ONNX)
-@@ -1834,7 +1845,6 @@ endif()
+@@ -1796,7 +1801,6 @@ endif()
  #
  set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
  set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
@@ -161,7 +158,7 @@ index c3abce52e4c..22d2143e67f 100644
  
  # Disable compiler feature checks for `fmt`.
  #
-@@ -1843,9 +1853,7 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
+@@ -1805,9 +1809,7 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
  # CMAKE_CXX_FLAGS in ways that break feature checks. Since we already know
  # `fmt` is compatible with a superset of the compilers that PyTorch is, it
  # shouldn't be too bad to just disable the checks.
@@ -172,10 +169,10 @@ index c3abce52e4c..22d2143e67f 100644
  
  # ---[ Kineto
 diff --git a/cmake/External/nnpack.cmake b/cmake/External/nnpack.cmake
-index a41343cbb5f..b68d88286af 100644
+index 9d5f0643ece..68222ed9150 100644
 --- a/cmake/External/nnpack.cmake
 +++ b/cmake/External/nnpack.cmake
-@@ -58,7 +58,7 @@ if(ANDROID OR IOS OR ${CMAKE_SYSTEM_NAME} STREQUAL "Linux" OR ${CMAKE_SYSTEM_NAM
+@@ -56,7 +56,7 @@ if(ANDROID OR IOS OR ${CMAKE_SYSTEM_NAME} STREQUAL "Linux" OR ${CMAKE_SYSTEM_NAM
    set(PTHREADPOOL_SOURCE_DIR "${CAFFE2_THIRD_PARTY_ROOT}/pthreadpool" CACHE STRING "pthreadpool source directory")
    set(GOOGLETEST_SOURCE_DIR "${CAFFE2_THIRD_PARTY_ROOT}/googletest" CACHE STRING "Google Test source directory")
  
@@ -185,10 +182,10 @@ index a41343cbb5f..b68d88286af 100644
        set(NNPACK_CUSTOM_THREADPOOL ON CACHE BOOL "")
      endif()
 diff --git a/cmake/public/utils.cmake b/cmake/public/utils.cmake
-index 4d48c0f0f3d..29d2d572279 100644
+index 9d79051c111..3ee11bad989 100644
 --- a/cmake/public/utils.cmake
 +++ b/cmake/public/utils.cmake
-@@ -492,8 +492,6 @@ function(torch_compile_options libname)
+@@ -486,8 +486,6 @@ function(torch_compile_options libname)
    endif()
  
    # Use -O2 for release builds (-O3 doesn't improve perf, and -Os results in perf regression)
@@ -198,10 +195,10 @@ index 4d48c0f0f3d..29d2d572279 100644
  endfunction()
  
 diff --git a/torch/CMakeLists.txt b/torch/CMakeLists.txt
-index 62ee4c12a94..373af3535dc 100644
+index b0d7bd842d3..3434f388d84 100644
 --- a/torch/CMakeLists.txt
 +++ b/torch/CMakeLists.txt
-@@ -63,15 +63,9 @@ set(TORCH_PYTHON_INCLUDE_DIRECTORIES
+@@ -59,15 +59,9 @@ set(TORCH_PYTHON_INCLUDE_DIRECTORIES
      ${CMAKE_BINARY_DIR}
      ${CMAKE_BINARY_DIR}/aten/src
      ${CMAKE_BINARY_DIR}/caffe2/aten/src
@@ -218,7 +215,7 @@ index 62ee4c12a94..373af3535dc 100644
  
      ${TORCH_SRC_DIR}/csrc
      ${TORCH_SRC_DIR}/csrc/api/include
-@@ -84,7 +78,6 @@ set(TORCH_PYTHON_LINK_LIBRARIES
+@@ -80,7 +74,6 @@ set(TORCH_PYTHON_LINK_LIBRARIES
      python::python
      pybind::pybind11
      shm

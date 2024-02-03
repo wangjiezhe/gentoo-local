@@ -1,4 +1,4 @@
-# Copyright 2022-2023 Gentoo Authors
+# Copyright 2022-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -47,8 +47,8 @@ RDEPEND="
 		=dev-libs/cudnn-8*
 		>=dev-libs/cudnn-frontend-0.9.2:0/8
 		dev-util/nvidia-cuda-toolkit:=[profiler]
-		dev-libs/nccl
-		>=dev-libs/cusparselt-0.5.2
+		<=dev-libs/nccl-2.19.1
+		dev-libs/cusparselt
 	)
 	fbgemm? ( >=dev-libs/FBGEMM-2023.11.02 )
 	ffmpeg? ( media-video/ffmpeg:= )
@@ -91,11 +91,10 @@ DEPEND="
 S="${WORKDIR}"/${MYP}
 
 PATCHES=(
-	"${FILESDIR}"/${PN}-2.1.1-gentoo.patch
+	"${FILESDIR}"/${P}-gentoo.patch
 	"${FILESDIR}"/${PN}-1.13.0-install-dirs.patch
 	"${FILESDIR}"/${PN}-1.12.0-glog-0.6.0.patch
 	"${FILESDIR}"/${PN}-1.13.1-tensorpipe.patch
-	"${FILESDIR}"/${PN}-2.0.0-gcc13.patch
 	"${FILESDIR}"/${PN}-2.0.1-functorch.patch
 	"${FILESDIR}"/${PN}-2.1.1-fbgemm.patch
 	"${FILESDIR}"/${PN}-2.1.1-ffmpeg6.patch
@@ -200,7 +199,7 @@ src_configure() {
 		-DUSE_SYSTEM_FP16=ON
 		-DUSE_SYSTEM_GLOO=ON
 		-DUSE_SYSTEM_ONNX=ON
-		-DONNX_PROTO_LIBRARY=/usr/$(get_libdir)/libonnx_proto.so
+		-DONNX_PROTO_LIBRARY="${EPREFIX}"/usr/$(get_libdir)/libonnx_proto.so
 		-DUSE_SYSTEM_PSIMD=ON
 		-DUSE_SYSTEM_SLEEF=ON
 
@@ -223,11 +222,6 @@ src_configure() {
 src_install() {
 	cmake_src_install
 
-	if use cuda; then
-		dolib.so "${ED}${S}"/torch/lib/libnvfuser_codegen.so
-		dolib.so "${ED}${S}"/nvfuser/nvfuser.so
-	fi
-
 	insinto "/var/lib/${PN}"
 	doins "${BUILD_DIR}"/CMakeCache.txt
 
@@ -235,7 +229,6 @@ src_install() {
 	mkdir -p python/torch || die
 	mv "${D}/$(python_get_sitedir)"/caffe2 python/ || die
 	cp torch/version.py python/torch/ || die
-	rm -rf "${ED}"/var/tmp || die
 	python_domodule python/caffe2
 	python_domodule python/torch
 }
