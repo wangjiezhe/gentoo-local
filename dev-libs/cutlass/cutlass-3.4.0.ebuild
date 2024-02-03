@@ -16,6 +16,11 @@ KEYWORDS="~amd64"
 
 BDEPEND="dev-util/nvidia-cuda-toolkit"
 
+PATCHES=(
+	"${FILESDIR}/${P}-Fix-Missing-Include-File.patch"
+	"${FILESDIR}/${P}-Add-a-missing-platform-include.patch"
+)
+
 src_prepare() {
 	cmake_src_prepare
 	cuda_src_prepare
