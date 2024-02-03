@@ -1,0 +1,111 @@
+From cb6844a12a5794b743abe8b49abcb0f97177cb2d Mon Sep 17 00:00:00 2001
+From: Daniel Richard G <skunk@iSKUNK.ORG>
+Date: Fri, 15 Dec 2023 13:21:27 -0500
+Subject: [PATCH] Use find_package() to locate googletest and benchmark
+ dependencies (#5804)
+
+### Description
+This updates the CMake code to use `find_package()` to locate the
+**googletest** and **benchmark** dependencies, as well as sets CMake
+policy CMP0074=NEW to allow specifying their locations with `*_ROOT`
+variables, e.g. `-DGTest_ROOT=/path/to/gtest/install`.
+
+If `find_package()` fails, then the code will fall back to the existing
+support that uses bundled/downloaded source. I've tested both modalities
+(`find_package()` versus auto-deps) and verified that both yield a
+successful build.
+
+I've also included a commit that adds `include(CTest)` to
+`cmake/unittest.cmake`. This is solely to allow invoking the C++ unit
+tests with `make test` (when using CMake's `Unix Makefiles` generator),
+which was conspicuous by its absence. (All other CMake projects with
+test programs that I've come across provide this target.)
+
+### Motivation and Context
+I am building ONNX in a regulated environment, and need it to use
+existing pre-built dependencies. Also, these dependencies are not
+installed in system/default paths, so their location needs to be
+specified to the build.
+
+---------
+
+Signed-off-by: Daniel Richard G <skunk@iSKUNK.ORG>
+---
+ CMakeLists.txt       | 18 ++++++++++++++----
+ cmake/unittest.cmake |  6 +++++-
+ 2 files changed, 19 insertions(+), 5 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f71c3c7a4e3..c6380951dd1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,6 +12,7 @@ if(NOT CMAKE_BUILD_TYPE)
+     FORCE)
+ endif()
+ cmake_policy(SET CMP0063 NEW)
++cmake_policy(SET CMP0074 NEW)
+ 
+ # Project
+ project(onnx C CXX)
+@@ -117,8 +118,14 @@ if(NOT DEFINED CMAKE_POSITION_INDEPENDENT_CODE)
+ endif()
+ 
+ if(ONNX_BUILD_TESTS)
+-  list(APPEND CMAKE_MODULE_PATH ${ONNX_ROOT}/cmake/external)
+-  include(googletest)
++  find_package(GTest)
++  if(GTest_FOUND)
++    set(googletest_INCLUDE_DIRS)
++    set(googletest_STATIC_LIBRARIES GTest::gtest)
++  else()
++    list(APPEND CMAKE_MODULE_PATH ${ONNX_ROOT}/cmake/external)
++    include(googletest)
++  endif()
+ endif()
+ 
+ if((ONNX_USE_LITE_PROTO AND TARGET protobuf::libprotobuf-lite) OR ((NOT ONNX_USE_LITE_PROTO) AND TARGET protobuf::libprotobuf))
+@@ -620,7 +627,10 @@ if(ONNX_BUILD_BENCHMARKS)
+     set(BENCHMARK_ENABLE_INSTALL OFF
+         CACHE BOOL
+               "Disable benchmark install to avoid overwriting vendor install.")
+-    add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/benchmark)
++    find_package(benchmark)
++    if(NOT benchmark_FOUND)
++      add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/benchmark)
++    endif()
+   endif()
+ 
+   add_executable(protobuf-bench tools/protobuf-bench.cc)
+@@ -629,7 +639,7 @@ if(ONNX_BUILD_BENCHMARKS)
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+     $<INSTALL_INTERFACE:include>
+     $<BUILD_INTERFACE:${PROTOBUF_INCLUDE_DIRS}>)
+-  target_link_libraries(protobuf-bench onnx_proto benchmark)
++  target_link_libraries(protobuf-bench onnx_proto benchmark::benchmark)
+ endif()
+ 
+ # Export include directories
+diff --git a/cmake/unittest.cmake b/cmake/unittest.cmake
+index e71b92a733d..cc825a0344e 100644
+--- a/cmake/unittest.cmake
++++ b/cmake/unittest.cmake
+@@ -4,6 +4,7 @@ set(UT_NAME ${PROJECT_NAME}_gtests)
+ set(ONNX_ROOT ${PROJECT_SOURCE_DIR})
+ 
+ include(${ONNX_ROOT}/cmake/Utils.cmake)
++include(CTest)
+ 
+ find_package(Threads)
+ 
+@@ -22,7 +23,10 @@ function(AddTest)
+   list(REMOVE_DUPLICATES _UT_SOURCES)
+ 
+   add_executable(${_UT_TARGET} ${_UT_SOURCES})
+-  add_dependencies(${_UT_TARGET} onnx onnx_proto googletest)
++  add_dependencies(${_UT_TARGET} onnx onnx_proto)
++  if(NOT GTest_FOUND)
++    add_dependencies(${_UT_TARGET} googletest)
++  endif()
+ 
+   target_include_directories(${_UT_TARGET}
+                              PUBLIC ${googletest_INCLUDE_DIRS}

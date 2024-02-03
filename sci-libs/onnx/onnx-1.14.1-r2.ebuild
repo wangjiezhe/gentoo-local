@@ -6,7 +6,7 @@ DISTUTILS_USE_PEP517=setuptools
 DISTUTILS_OPTIONAL=1
 DISTUTILS_EXT=1
 PYTHON_COMPAT=( python3_{9..12} )
-inherit distutils-r1 cmake
+inherit distutils-r1 cmake flag-o-matic
 
 DESCRIPTION="Open Neural Network Exchange (ONNX)"
 HOMEPAGE="https://github.com/onnx/onnx"
@@ -16,8 +16,8 @@ SRC_URI="https://github.com/onnx/${PN}/archive/refs/tags/v${PV}.tar.gz
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~amd64 ~riscv"
-IUSE="python"
-RESTRICT="test"
+IUSE="python test"
+RESTRICT="!test? ( test )"
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
 RDEPEND="
@@ -30,14 +30,30 @@ RDEPEND="
 "
 DEPEND="${RDEPEND}"
 
-BDEPEND="python? (
-	${DISTUTILS_DEPS}
-)"
+BDEPEND="
+	python? ( ${DISTUTILS_DEPS} )
+	test? (
+		dev-cpp/gtest
+		python? (
+			dev-python/nbval[${PYTHON_USEDEP}]
+			dev-python/numpy[${PYTHON_USEDEP}]
+			dev-python/parameterized[${PYTHON_USEDEP}]
+			dev-python/pytest-cov[${PYTHON_USEDEP}]
+			dev-python/pytest-xdist[${PYTHON_USEDEP}]
+		)
+	)
+"
 
-PATCHES=("${FILESDIR}/${PN}-1.14.0-cxx_17.patch")
+PATCHES=(
+	"${FILESDIR}/${PN}-1.14.0-cxx_17.patch"
+	"${FILESDIR}/${PN}-1.15.0-test.patch"
+)
 
 src_prepare() {
 	cmake_src_prepare
+	# https://github.com/onnx/onnx/issues/5740
+	# https://github.com/protocolbuffers/protobuf/issues/14500
+	append-ldflags -Wl,--copy-dt-needed-entries
 	use python && distutils-r1_src_prepare
 }
 
@@ -45,6 +61,7 @@ src_configure() {
 	mycmakeargs=(
 		-DONNX_USE_PROTOBUF_SHARED_LIBS=ON
 		-DONNX_USE_LITE_PROTO=ON
+		-DONNX_BUILD_TESTS=$(usex test ON OFF)
 	)
 	cmake_src_configure
 	use python && distutils-r1_src_configure
@@ -58,4 +75,16 @@ src_compile() {
 src_install() {
 	cmake_src_install
 	use python && distutils-r1_src_install
+}
+
+distutils_enable_tests pytest
+
+src_test() {
+	cmake_src_test
+	use python && distutils-r1_src_test
+}
+
+python_test() {
+	rm -rf onnx || die
+	epytest --pyargs onnx
 }
