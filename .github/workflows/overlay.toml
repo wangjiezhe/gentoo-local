@@ -2,6 +2,12 @@
 oldver = "old_ver.json"
 newver = "new_ver.json"
 
+["sci-libs/caffe2"]
+source = "github"
+github = "pytorch/pytorch"
+use_latest_release = true
+prefix = "v"
+
 ["sci-libs/pytorch"]
 source = "github"
 github = "pytorch/pytorch"
@@ -71,9 +77,14 @@ source = "aur"
 aur = "mathematica"
 strip_release = true
 
+["dev-python/lightning"]
+source = "github"
+github = "Lightning-AI/pytorch-lightning"
+use_latest_release = true
+
 ["dev-python/pytorch-lightning"]
 source = "github"
-github = "Lightning-AI/lightning"
+github = "Lightning-AI/pytorch-lightning"
 use_latest_release = true
 
 ["dev-libs/nccl"]
