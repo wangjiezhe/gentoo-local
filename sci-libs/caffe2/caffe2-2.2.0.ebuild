@@ -71,6 +71,10 @@ RDEPEND="
 # Failed with cutlass-3.4.0:
 # /usr/include/cutlass/bfloat16.h(94): error: name followed by "::" must be a class or namespace name
 #        static_assert(cutlass::platform::is_integral<T>::value && sizeof(T) == 4, "Requires 32-bit integer");
+# After apply patches:
+# pytorch-2.2.0/aten/src/ATen/native/transformers/cuda/flash_attn/flash_bwd_kernel.h:
+# error: no instance of constructor "Tensor" matches the argument list
+# error: cannot deduce class template arguments
 DEPEND="
 	${RDEPEND}
 	dev-cpp/benchmark
