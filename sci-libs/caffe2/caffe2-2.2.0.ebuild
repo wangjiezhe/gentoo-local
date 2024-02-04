@@ -30,6 +30,9 @@ REQUIRED_USE="
 " # ?? ( cuda rocm )
 
 #		sci-libs/tensorrt
+# Failed with onnx-1.15.0:
+# /usr/lib64/libonnx.so: undefined reference to
+# `onnx::AttributeProto_AttributeType_Name[abi:cxx11](onnx::AttributeProto_AttributeType)'
 RDEPEND="
 	${PYTHON_DEPS}
 	dev-cpp/gflags:=
