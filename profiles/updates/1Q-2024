@@ -1,1 +1,2 @@
 move dev-util/bazel dev-build/bazel
+move dev-python/ml_dtypes dev-python/ml-dtypes
