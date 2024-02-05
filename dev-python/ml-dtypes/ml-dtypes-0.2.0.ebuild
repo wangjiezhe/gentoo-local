@@ -17,6 +17,7 @@ SRC_URI="
 	https://github.com/jax-ml/${PNGH}/archive/refs/tags/v${PV}.tar.gz -> ${PNGH}-${PV}.gh.tar.gz
 	https://gitlab.com/libeigen/eigen/-/archive/${EIGEN_CommitId}/eigen-${EIGEN_CommitId}.tar.bz2
 "
+S="${WORKDIR}/${PNGH}-${PV}"
 
 LICENSE="Apache-2.0"
 SLOT="0"
