@@ -1,4 +1,4 @@
-# Copyright 1999-2023 Gentoo Authors
+# Copyright 1999-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -15,7 +15,7 @@ SRC_URI="https://developer.download.nvidia.com/compute/cudnn/redist/cudnn/linux-
 S="${WORKDIR}/cudnn-linux-x86_64-${PV}_cuda${CUDA_MA}-archive"
 
 LICENSE="NVIDIA-cuDNN"
-SLOT="0/8"
+SLOT="0/9"
 KEYWORDS="~amd64 ~amd64-linux"
 RESTRICT="mirror"
 
