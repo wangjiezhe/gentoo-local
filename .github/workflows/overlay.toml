@@ -448,3 +448,8 @@ source = "github"
 github = "huggingface/accelerate"
 use_latest_release = true
 prefix = "v"
+
+["sci-libs/datasets"]
+source = "github"
+github = "huggingface/datasets"
+use_latest_release = true

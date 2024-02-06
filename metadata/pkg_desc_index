@@ -60,6 +60,7 @@ sci-libs/accelerate 0.26.1: A simple way to train and use PyTorch models with mu
 sci-libs/caffe2 2.2.0: A deep learning framework
 sci-libs/clean-fid 0.1.35: FID calculation with proper image resizing and quantization steps
 sci-libs/compressai 1.2.4: A PyTorch library and evaluation platform for end-to-end compression research
+sci-libs/datasets 2.16.1: Access and share datasets for Audio, Computer Vision, and NLP tasks
 sci-libs/faiss 1.7.4: A library for efficient similarity search and clustering of dense vectors
 sci-libs/framework-reproducibility 0.6.0: Providing reproducibility in deep learning frameworks
 sci-libs/gloo 2023.07.15-r1: library of floating-point neural network inference operators
