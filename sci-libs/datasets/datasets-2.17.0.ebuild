@@ -42,12 +42,11 @@ RDEPEND="
 "
 DEPEND="${RDEPEND}"
 BDEPEND="test? (
-	net-fs/s3fs
 	$(python_gen_cond_dep '
 		dev-python/absl-py[${PYTHON_USEDEP}]
 		dev-python/pytest-datadir[${PYTHON_USEDEP}]
 		dev-python/decorator[${PYTHON_USEDEP}]
-		=dev-python/sqlalchemy-1*[${PYTHON_USEDEP}]
+		=dev-python/sqlalchemy-2*[${PYTHON_USEDEP}]
 		sci-libs/jiwer[${PYTHON_USEDEP}]
 		sci-libs/seqeval[${PYTHON_USEDEP}]
 	')

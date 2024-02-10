@@ -1,8 +1,8 @@
 diff --git a/tests/commands/test_test.py b/tests/commands/test_test.py
-index 0c4bf68..984cdf7 100644
+index c26ded0..4dec29d 100644
 --- a/tests/commands/test_test.py
 +++ b/tests/commands/test_test.py
-@@ -29,6 +29,7 @@ def is_1percent_close(source, target):
+@@ -30,6 +30,7 @@ def is_1percent_close(source, target):
      return (abs(source - target) / target) < 0.01
  
  
@@ -86,6 +86,18 @@ index 255a6e4..0c28e0c 100644
  def test_dataset_with_audio_feature_map_undecoded(shared_datadir):
      audio_path = str(shared_datadir / "test_audio_44100.wav")
      data = {"audio": [audio_path]}
+diff --git a/tests/io/test_parquet.py b/tests/io/test_parquet.py
+index 3e5ddee..fb15e62 100644
+--- a/tests/io/test_parquet.py
++++ b/tests/io/test_parquet.py
+@@ -69,6 +69,7 @@ def test_dataset_from_parquet_path_type(path_type, parquet_path, tmp_path):
+     _check_parquet_dataset(dataset, expected_features)
+ 
+ 
++@pytest.mark.skip(reason="not working in sandbox")
+ def test_parquet_read_geoparquet(geoparquet_path, tmp_path):
+     cache_dir = tmp_path / "cache"
+     dataset = ParquetDatasetReader(path_or_paths=geoparquet_path, cache_dir=cache_dir).read()
 diff --git a/tests/packaged_modules/test_audiofolder.py b/tests/packaged_modules/test_audiofolder.py
 index 712e6ae..5a1960f 100644
 --- a/tests/packaged_modules/test_audiofolder.py
@@ -114,10 +126,10 @@ index 712e6ae..5a1960f 100644
      data_dir.mkdir(parents=True, exist_ok=True)
      archive_dir = data_dir / "archive"
 diff --git a/tests/packaged_modules/test_cache.py b/tests/packaged_modules/test_cache.py
-index 8d37fb0..776a254 100644
+index aed1496..0dfc962 100644
 --- a/tests/packaged_modules/test_cache.py
 +++ b/tests/packaged_modules/test_cache.py
-@@ -46,6 +46,7 @@ def test_cache_missing(text_dir: Path):
+@@ -61,6 +61,7 @@ def test_cache_missing(text_dir: Path):
          Cache(dataset_name=text_dir.name, config_name="missing", version="auto", hash="auto").download_and_prepare()
  
  
@@ -146,10 +158,10 @@ index c6aad5d..96f29cf 100644
  @pytest.mark.parametrize("drop_labels", [None, True, False])
  def test_data_files_with_one_label_no_metadata(data_files_with_one_label_no_metadata, drop_labels, remote, cache_dir):
 diff --git a/tests/test_arrow_dataset.py b/tests/test_arrow_dataset.py
-index 0b9b4e5..9ba2925 100644
+index bc2c884..c1c922d 100644
 --- a/tests/test_arrow_dataset.py
 +++ b/tests/test_arrow_dataset.py
-@@ -3077,6 +3077,7 @@ class MiscellaneousDatasetTest(TestCase):
+@@ -3111,6 +3111,7 @@ class MiscellaneousDatasetTest(TestCase):
                      self.assertEqual(len(concatenated_dset), len(dset1) + len(dset2) + len(dset3))
                      self.assertListEqual(concatenated_dset["id"], dset1["id"] + dset2["id"] + dset3["id"])
  
@@ -157,7 +169,7 @@ index 0b9b4e5..9ba2925 100644
      @require_transformers
      @pytest.mark.integration
      def test_set_format_encode(self):
-@@ -3982,7 +3983,8 @@ def test_dummy_dataset_serialize_fs(dataset, mockfs):
+@@ -4016,7 +4017,8 @@ def test_dummy_dataset_serialize_fs(dataset, mockfs):
      [
          "relative/path",
          "/absolute/path",
@@ -167,7 +179,7 @@ index 0b9b4e5..9ba2925 100644
          "hdfs://relative/path",
          "hdfs:///absolute/path",
      ],
-@@ -4141,6 +4143,7 @@ class TaskTemplatesTest(TestCase):
+@@ -4175,6 +4177,7 @@ class TaskTemplatesTest(TestCase):
                  )
                  self.assertDictEqual(features_after_cast, dset.features)
  
@@ -236,10 +248,10 @@ index 8755981..f340906 100644
      @pytest.mark.integration
      def test_hash_tokenizer_with_cache(self):
 diff --git a/tests/test_hf_gcp.py b/tests/test_hf_gcp.py
-index d58529f..ba2afbb 100644
+index 7278e07..1999cdf 100644
 --- a/tests/test_hf_gcp.py
 +++ b/tests/test_hf_gcp.py
-@@ -46,6 +46,7 @@ def list_datasets_on_hf_gcp_parameters(with_config=True):
+@@ -45,6 +45,7 @@ def list_datasets_on_hf_gcp_parameters(with_config=True):
          ]
  
  
@@ -247,7 +259,7 @@ index d58529f..ba2afbb 100644
  @parameterized.named_parameters(list_datasets_on_hf_gcp_parameters(with_config=True))
  class TestDatasetOnHfGcp(TestCase):
      dataset = None
-@@ -74,6 +75,7 @@ class TestDatasetOnHfGcp(TestCase):
+@@ -73,6 +74,7 @@ class TestDatasetOnHfGcp(TestCase):
              self.assertTrue(os.path.exists(datset_info_path))
  
  
@@ -255,7 +267,7 @@ index d58529f..ba2afbb 100644
  @pytest.mark.integration
  def test_as_dataset_from_hf_gcs(tmp_path_factory):
      tmp_dir = tmp_path_factory.mktemp("test_hf_gcp") / "test_wikipedia_simple"
-@@ -91,6 +93,7 @@ def test_as_dataset_from_hf_gcs(tmp_path_factory):
+@@ -90,6 +92,7 @@ def test_as_dataset_from_hf_gcs(tmp_path_factory):
      assert ds
  
  
@@ -264,7 +276,7 @@ index d58529f..ba2afbb 100644
  def test_as_streaming_dataset_from_hf_gcs(tmp_path):
      dataset_module = dataset_module_factory("wikipedia", cache_dir=tmp_path)
 diff --git a/tests/test_inspect.py b/tests/test_inspect.py
-index 3d8435c..b76dc8a 100644
+index 23658ae..f86299d 100644
 --- a/tests/test_inspect.py
 +++ b/tests/test_inspect.py
 @@ -18,6 +18,7 @@ from datasets.packaged_modules.csv import csv
@@ -272,7 +284,7 @@ index 3d8435c..b76dc8a 100644
  
  
 +@pytest.mark.skip(reason="not working in sandbox")
- @pytest.mark.parametrize("path", ["paws", csv.__file__])
+ @pytest.mark.parametrize("path", ["lhoestq/test", csv.__file__])
  def test_inspect_dataset(path, tmp_path):
      inspect_dataset(path, tmp_path)
 @@ -25,6 +26,7 @@ def test_inspect_dataset(path, tmp_path):
@@ -358,18 +370,18 @@ index ba94aec..afd61f7 100644
  @pytest.mark.integration
  @pytest.mark.parametrize("num_workers", [1, 2])
 diff --git a/tests/test_load.py b/tests/test_load.py
-index cf2bddd..d9261e6 100644
+index d6dab4f..5d600c6 100644
 --- a/tests/test_load.py
 +++ b/tests/test_load.py
-@@ -386,6 +386,7 @@ class ModuleFactoryTest(TestCase):
+@@ -388,6 +388,7 @@ class ModuleFactoryTest(TestCase):
              hf_modules_cache=self.hf_modules_cache,
          )
  
 +    @pytest.mark.skip(reason="not working in sandbox")
      def test_HubDatasetModuleFactoryWithScript_dont_trust_remote_code(self):
-         # "squad" has a dataset script
+         # "lhoestq/test" has a dataset script
          factory = HubDatasetModuleFactoryWithScript(
-@@ -401,6 +402,7 @@ class ModuleFactoryTest(TestCase):
+@@ -403,6 +404,7 @@ class ModuleFactoryTest(TestCase):
          )
          self.assertRaises(ValueError, factory.get_module)
  
@@ -377,7 +389,7 @@ index cf2bddd..d9261e6 100644
      def test_HubDatasetModuleFactoryWithScript_with_github_dataset(self):
          # "wmt_t2t" has additional imports (internal)
          factory = HubDatasetModuleFactoryWithScript(
-@@ -410,6 +412,7 @@ class ModuleFactoryTest(TestCase):
+@@ -412,6 +414,7 @@ class ModuleFactoryTest(TestCase):
          assert importlib.import_module(module_factory_result.module_path) is not None
          assert module_factory_result.builder_kwargs["base_path"].startswith(config.HF_ENDPOINT)
  
@@ -385,7 +397,7 @@ index cf2bddd..d9261e6 100644
      def test_GithubMetricModuleFactory_with_internal_import(self):
          # "squad_v2" requires additional imports (internal)
          factory = GithubMetricModuleFactory(
-@@ -418,6 +421,7 @@ class ModuleFactoryTest(TestCase):
+@@ -420,6 +423,7 @@ class ModuleFactoryTest(TestCase):
          module_factory_result = factory.get_module()
          assert importlib.import_module(module_factory_result.module_path) is not None
  
@@ -393,7 +405,7 @@ index cf2bddd..d9261e6 100644
      @pytest.mark.filterwarnings("ignore:GithubMetricModuleFactory is deprecated:FutureWarning")
      def test_GithubMetricModuleFactory_with_external_import(self):
          # "bleu" requires additional imports (external from github)
-@@ -599,6 +603,7 @@ class ModuleFactoryTest(TestCase):
+@@ -601,6 +605,7 @@ class ModuleFactoryTest(TestCase):
          assert any(Path(data_file).name == "metadata.jsonl" for data_file in data_files["train"])
          assert any(Path(data_file).name == "metadata.jsonl" for data_file in data_files["test"])
  
@@ -401,7 +413,7 @@ index cf2bddd..d9261e6 100644
      @pytest.mark.integration
      def test_HubDatasetModuleFactoryWithoutScript(self):
          factory = HubDatasetModuleFactoryWithoutScript(
-@@ -608,6 +613,7 @@ class ModuleFactoryTest(TestCase):
+@@ -610,6 +615,7 @@ class ModuleFactoryTest(TestCase):
          assert importlib.import_module(module_factory_result.module_path) is not None
          assert module_factory_result.builder_kwargs["base_path"].startswith(config.HF_ENDPOINT)
  
@@ -409,7 +421,7 @@ index cf2bddd..d9261e6 100644
      @pytest.mark.integration
      def test_HubDatasetModuleFactoryWithoutScript_with_data_dir(self):
          data_dir = "data2"
-@@ -628,6 +634,7 @@ class ModuleFactoryTest(TestCase):
+@@ -630,6 +636,7 @@ class ModuleFactoryTest(TestCase):
              for data_file in builder_config.data_files["train"] + builder_config.data_files["test"]
          )
  
@@ -417,7 +429,7 @@ index cf2bddd..d9261e6 100644
      @pytest.mark.integration
      def test_HubDatasetModuleFactoryWithoutScript_with_metadata(self):
          factory = HubDatasetModuleFactoryWithoutScript(
-@@ -659,6 +666,7 @@ class ModuleFactoryTest(TestCase):
+@@ -661,6 +668,7 @@ class ModuleFactoryTest(TestCase):
          )
          assert any(Path(data_file).name == "metadata.jsonl" for data_file in builder_config.data_files["train"])
  
@@ -425,7 +437,7 @@ index cf2bddd..d9261e6 100644
      @pytest.mark.integration
      def test_HubDatasetModuleFactoryWithoutScript_with_one_default_config_in_metadata(self):
          factory = HubDatasetModuleFactoryWithoutScript(
-@@ -698,6 +706,7 @@ class ModuleFactoryTest(TestCase):
+@@ -700,6 +708,7 @@ class ModuleFactoryTest(TestCase):
          # we don't pass config params to builder in builder_kwargs, they are stored in builder_configs directly
          assert "drop_labels" not in module_factory_result.builder_kwargs
  
@@ -433,7 +445,7 @@ index cf2bddd..d9261e6 100644
      @pytest.mark.integration
      def test_HubDatasetModuleFactoryWithoutScript_with_two_configs_in_metadata(self):
          datasets_names = [SAMPLE_DATASET_TWO_CONFIG_IN_METADATA, SAMPLE_DATASET_TWO_CONFIG_IN_METADATA_WITH_DEFAULT]
-@@ -749,6 +758,7 @@ class ModuleFactoryTest(TestCase):
+@@ -751,6 +760,7 @@ class ModuleFactoryTest(TestCase):
              else:
                  assert module_factory_result.builder_configs_parameters.default_config_name is None
  
@@ -441,7 +453,7 @@ index cf2bddd..d9261e6 100644
      @pytest.mark.integration
      def test_HubDatasetModuleFactoryWithScript(self):
          factory = HubDatasetModuleFactoryWithScript(
-@@ -760,6 +770,7 @@ class ModuleFactoryTest(TestCase):
+@@ -762,6 +772,7 @@ class ModuleFactoryTest(TestCase):
          assert importlib.import_module(module_factory_result.module_path) is not None
          assert module_factory_result.builder_kwargs["base_path"].startswith(config.HF_ENDPOINT)
  
@@ -449,7 +461,7 @@ index cf2bddd..d9261e6 100644
      @pytest.mark.integration
      def test_HubDatasetModuleFactoryWithParquetExport(self):
          factory = HubDatasetModuleFactoryWithParquetExport(
-@@ -782,6 +793,7 @@ class ModuleFactoryTest(TestCase):
+@@ -784,6 +795,7 @@ class ModuleFactoryTest(TestCase):
              ],
          }
  
@@ -457,7 +469,7 @@ index cf2bddd..d9261e6 100644
      @pytest.mark.integration
      def test_HubDatasetModuleFactoryWithParquetExport_errors_on_wrong_sha(self):
          factory = HubDatasetModuleFactoryWithParquetExport(
-@@ -798,6 +810,7 @@ class ModuleFactoryTest(TestCase):
+@@ -800,6 +812,7 @@ class ModuleFactoryTest(TestCase):
          with self.assertRaises(_datasets_server.DatasetsServerError):
              factory.get_module()
  
@@ -465,7 +477,7 @@ index cf2bddd..d9261e6 100644
      @pytest.mark.integration
      def test_CachedDatasetModuleFactory(self):
          name = SAMPLE_DATASET_IDENTIFIER2
-@@ -921,6 +934,7 @@ class LoadTest(TestCase):
+@@ -923,6 +936,7 @@ class LoadTest(TestCase):
                              "__missing_dummy_module_name__", dynamic_modules_path=self.dynamic_modules_path
                          )
  
@@ -473,7 +485,7 @@ index cf2bddd..d9261e6 100644
      @pytest.mark.integration
      def test_offline_dataset_module_factory(self):
          repo_id = SAMPLE_DATASET_IDENTIFIER2
-@@ -959,6 +973,7 @@ class LoadTest(TestCase):
+@@ -961,6 +975,7 @@ class LoadTest(TestCase):
                  self.assertNotEqual(dataset_module_1.module_path, dataset_module_3.module_path)
                  self.assertIn("Using the latest cached version of the module", self._caplog.text)
  
@@ -481,7 +493,7 @@ index cf2bddd..d9261e6 100644
      def test_load_dataset_from_hub(self):
          with self.assertRaises(DatasetNotFoundError) as context:
              datasets.load_dataset("_dummy")
-@@ -986,6 +1001,7 @@ class LoadTest(TestCase):
+@@ -988,6 +1003,7 @@ class LoadTest(TestCase):
                          str(context.exception),
                      )
  
@@ -489,7 +501,7 @@ index cf2bddd..d9261e6 100644
      def test_load_dataset_namespace(self):
          with self.assertRaises(DatasetNotFoundError) as context:
              datasets.load_dataset("hf-internal-testing/_dummy")
-@@ -1000,6 +1016,7 @@ class LoadTest(TestCase):
+@@ -1002,6 +1018,7 @@ class LoadTest(TestCase):
                  self.assertIn("hf-internal-testing/_dummy", str(context.exception), msg=offline_simulation_mode)
  
  
@@ -497,7 +509,7 @@ index cf2bddd..d9261e6 100644
  @pytest.mark.integration
  def test_load_dataset_builder_with_metadata():
      builder = datasets.load_dataset_builder(SAMPLE_DATASET_IDENTIFIER4)
-@@ -1011,6 +1028,7 @@ def test_load_dataset_builder_with_metadata():
+@@ -1013,6 +1030,7 @@ def test_load_dataset_builder_with_metadata():
          builder = datasets.load_dataset_builder(SAMPLE_DATASET_IDENTIFIER4, "non-existing-config")
  
  
@@ -505,7 +517,7 @@ index cf2bddd..d9261e6 100644
  @pytest.mark.integration
  def test_load_dataset_builder_config_kwargs_passed_as_arguments():
      builder_default = datasets.load_dataset_builder(SAMPLE_DATASET_IDENTIFIER4)
-@@ -1019,6 +1037,7 @@ def test_load_dataset_builder_config_kwargs_passed_as_arguments():
+@@ -1021,6 +1039,7 @@ def test_load_dataset_builder_config_kwargs_passed_as_arguments():
      assert builder_custom.config.drop_metadata is True
  
  
@@ -513,7 +525,7 @@ index cf2bddd..d9261e6 100644
  @pytest.mark.integration
  def test_load_dataset_builder_with_two_configs_in_metadata():
      builder = datasets.load_dataset_builder(SAMPLE_DATASET_TWO_CONFIG_IN_METADATA, "v1")
-@@ -1031,6 +1050,7 @@ def test_load_dataset_builder_with_two_configs_in_metadata():
+@@ -1033,6 +1052,7 @@ def test_load_dataset_builder_with_two_configs_in_metadata():
          datasets.load_dataset_builder(SAMPLE_DATASET_TWO_CONFIG_IN_METADATA, "non-existing-config")
  
  
@@ -521,7 +533,7 @@ index cf2bddd..d9261e6 100644
  @pytest.mark.parametrize("serializer", [pickle, dill])
  def test_load_dataset_builder_with_metadata_configs_pickable(serializer):
      builder = datasets.load_dataset_builder(SAMPLE_DATASET_SINGLE_CONFIG_IN_METADATA)
-@@ -1101,6 +1121,7 @@ def test_load_dataset_builder_for_relative_data_dir(complex_data_dir):
+@@ -1103,6 +1123,7 @@ def test_load_dataset_builder_for_relative_data_dir(complex_data_dir):
          assert len(builder.config.data_files["test"]) > 0
  
  
@@ -529,7 +541,7 @@ index cf2bddd..d9261e6 100644
  @pytest.mark.integration
  def test_load_dataset_builder_for_community_dataset_with_script():
      builder = datasets.load_dataset_builder(SAMPLE_DATASET_IDENTIFIER)
-@@ -1114,6 +1135,7 @@ def test_load_dataset_builder_for_community_dataset_with_script():
+@@ -1116,6 +1137,7 @@ def test_load_dataset_builder_for_community_dataset_with_script():
      assert builder.__module__.startswith("datasets.")
  
  
@@ -537,7 +549,7 @@ index cf2bddd..d9261e6 100644
  @pytest.mark.integration
  def test_load_dataset_builder_for_community_dataset_with_script_no_parquet_export():
      with patch.object(config, "USE_PARQUET_EXPORT", False):
-@@ -1128,6 +1150,7 @@ def test_load_dataset_builder_for_community_dataset_with_script_no_parquet_expor
+@@ -1130,6 +1152,7 @@ def test_load_dataset_builder_for_community_dataset_with_script_no_parquet_expor
      assert SAMPLE_DATASET_IDENTIFIER.replace("/", "--") in builder.__module__
  
  
@@ -545,7 +557,7 @@ index cf2bddd..d9261e6 100644
  @pytest.mark.integration
  def test_load_dataset_builder_use_parquet_export_if_dont_trust_remote_code_keeps_features():
      dataset_name = "food101"
-@@ -1140,6 +1163,7 @@ def test_load_dataset_builder_use_parquet_export_if_dont_trust_remote_code_keeps
+@@ -1142,6 +1165,7 @@ def test_load_dataset_builder_use_parquet_export_if_dont_trust_remote_code_keeps
      assert builder.info.features["image"] == Image()
  
  
@@ -553,7 +565,7 @@ index cf2bddd..d9261e6 100644
  @pytest.mark.integration
  def test_load_dataset_builder_for_community_dataset_without_script():
      builder = datasets.load_dataset_builder(SAMPLE_DATASET_IDENTIFIER2)
-@@ -1152,11 +1176,13 @@ def test_load_dataset_builder_for_community_dataset_without_script():
+@@ -1154,11 +1178,13 @@ def test_load_dataset_builder_for_community_dataset_without_script():
      assert len(builder.config.data_files["test"]) > 0
  
  
@@ -567,7 +579,7 @@ index cf2bddd..d9261e6 100644
  @pytest.mark.parametrize("keep_in_memory", [False, True])
  def test_load_dataset_local_script(dataset_loading_script_dir, data_dir, keep_in_memory, caplog):
      with assert_arrow_memory_increases() if keep_in_memory else assert_arrow_memory_doesnt_increase():
-@@ -1167,6 +1193,7 @@ def test_load_dataset_local_script(dataset_loading_script_dir, data_dir, keep_in
+@@ -1169,6 +1195,7 @@ def test_load_dataset_local_script(dataset_loading_script_dir, data_dir, keep_in
      assert isinstance(next(iter(dataset["train"])), dict)
  
  
@@ -575,7 +587,7 @@ index cf2bddd..d9261e6 100644
  def test_load_dataset_cached_local_script(dataset_loading_script_dir, data_dir, caplog):
      dataset = load_dataset(dataset_loading_script_dir, data_dir=data_dir)
      assert isinstance(dataset, DatasetDict)
-@@ -1186,6 +1213,7 @@ def test_load_dataset_cached_local_script(dataset_loading_script_dir, data_dir,
+@@ -1188,6 +1215,7 @@ def test_load_dataset_cached_local_script(dataset_loading_script_dir, data_dir,
      assert f"Dataset '{SAMPLE_DATASET_NAME_THAT_DOESNT_EXIST}' doesn't exist on the Hub" in str(exc_info.value)
  
  
@@ -583,7 +595,7 @@ index cf2bddd..d9261e6 100644
  @pytest.mark.integration
  @pytest.mark.parametrize("stream_from_cache, ", [False, True])
  def test_load_dataset_cached_from_hub(stream_from_cache, caplog):
-@@ -1223,6 +1251,7 @@ def test_load_dataset_streaming_gz_json(jsonl_gz_path):
+@@ -1225,6 +1253,7 @@ def test_load_dataset_streaming_gz_json(jsonl_gz_path):
      assert ds_item == {"col_1": "0", "col_2": 0, "col_3": 0.0}
  
  
@@ -591,7 +603,7 @@ index cf2bddd..d9261e6 100644
  @pytest.mark.integration
  @pytest.mark.parametrize(
      "path", ["sample.jsonl", "sample.jsonl.gz", "sample.tar", "sample.jsonl.xz", "sample.zip", "sample.jsonl.zst"]
-@@ -1360,6 +1389,7 @@ def test_load_dataset_with_unsupported_extensions(text_dir_with_unsupported_exte
+@@ -1362,6 +1391,7 @@ def test_load_dataset_with_unsupported_extensions(text_dir_with_unsupported_exte
      assert ds.num_rows == 4
  
  
@@ -599,7 +611,7 @@ index cf2bddd..d9261e6 100644
  @pytest.mark.integration
  def test_loading_from_the_datasets_hub():
      with tempfile.TemporaryDirectory() as tmp_dir:
-@@ -1385,24 +1415,28 @@ def test_loading_from_the_datasets_hub_with_token():
+@@ -1387,24 +1417,28 @@ def test_loading_from_the_datasets_hub_with_token():
          mock_request.assert_called()
  
  
@@ -628,7 +640,7 @@ index cf2bddd..d9261e6 100644
  @pytest.mark.integration
  def test_load_dataset_config_kwargs_passed_as_arguments():
      ds_default = load_dataset(SAMPLE_DATASET_IDENTIFIER4)
-@@ -1477,6 +1511,7 @@ def test_load_hub_dataset_without_script_with_metadata_config_in_parallel():
+@@ -1479,6 +1513,7 @@ def test_load_hub_dataset_without_script_with_metadata_config_in_parallel():
      assert len(ds["train"]) == 2 and len(ds["test"]) == 1
  
  
@@ -636,7 +648,7 @@ index cf2bddd..d9261e6 100644
  @require_pil
  @pytest.mark.integration
  @pytest.mark.parametrize("streaming", [True])
-@@ -1567,6 +1602,7 @@ def test_load_from_disk_with_default_in_memory(
+@@ -1569,6 +1604,7 @@ def test_load_from_disk_with_default_in_memory(
          _ = load_from_disk(dataset_path)
  
  
@@ -644,7 +656,7 @@ index cf2bddd..d9261e6 100644
  @pytest.mark.integration
  def test_remote_data_files():
      repo_id = "hf-internal-testing/raw_jsonl"
-@@ -1659,6 +1695,7 @@ def test_resolve_trust_remote_code_future(trust_remote_code, expected):
+@@ -1661,6 +1697,7 @@ def test_resolve_trust_remote_code_future(trust_remote_code, expected):
                  resolve_trust_remote_code(trust_remote_code, repo_id="dummy")
  
  
@@ -652,6 +664,14 @@ index cf2bddd..d9261e6 100644
  @pytest.mark.integration
  def test_reload_old_cache_from_2_15(tmp_path: Path):
      cache_dir = tmp_path / "test_reload_old_cache_from_2_15"
+@@ -1692,6 +1729,7 @@ def test_reload_old_cache_from_2_15(tmp_path: Path):
+     )  # new cache
+ 
+ 
++@pytest.mark.skip(reason="not working in sandbox")
+ @pytest.mark.integration
+ def test_update_dataset_card_data_with_standalone_yaml():
+     # Labels defined in .huggingface.yml because they are too long to be in README.md
 diff --git a/tests/test_metric_common.py b/tests/test_metric_common.py
 index c157df6..0f79716 100644
 --- a/tests/test_metric_common.py
