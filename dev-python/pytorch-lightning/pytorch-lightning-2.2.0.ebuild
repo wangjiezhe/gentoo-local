@@ -18,6 +18,8 @@ KEYWORDS="~amd64"
 
 RDEPEND="
 	sci-libs/pytorch[${PYTHON_SINGLE_USEDEP}]
+	dev-python/lightning-utilities[${PYTHON_SINGLE_USEDEP}]
+	sci-libs/torchmetrics[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		dev-python/numpy[${PYTHON_USEDEP}]
 		dev-python/tqdm[${PYTHON_USEDEP}]
@@ -26,6 +28,5 @@ RDEPEND="
 		sci-visualization/tensorboard[${PYTHON_USEDEP}]
 		dev-python/packaging[${PYTHON_USEDEP}]
 		dev-python/typing-extensions[${PYTHON_USEDEP}]
-		dev-python/ratelimit[${PYTHON_USEDEP}]
 	')
 "
