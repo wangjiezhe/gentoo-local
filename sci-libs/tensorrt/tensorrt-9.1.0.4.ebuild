@@ -1,4 +1,4 @@
-# Copyright 1999-2023 Gentoo Authors
+# Copyright 2023 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -29,6 +29,9 @@ RDEPEND="
 		>=dev-python/gpep517-15[${PYTHON_USEDEP}]
 	')
 "
+BDEPEND="
+	dev-util/patchelf
+"
 S="${WORKDIR}/TensorRT-${PV}"
 
 src_install() {
@@ -42,6 +45,10 @@ src_install() {
 		"/opt/cuda/targets/x86_64-linux/lib/libnvinfer_builder_resource.so.${BASE_VER%%.*}"
 	dosym "libnvinfer_builder_resource.so.${BASE_VER}" \
 		"/opt/cuda/targets/x86_64-linux/lib/libnvinfer_builder_resource.so"
+	dosym "libnvinfer_builder_resource.so.${BASE_VER}" \
+		"/opt/cuda/targets/x86_64-linux/lib/do_not_link_against_nvinfer_builder_resource"
+
+	patchelf --add-rpath '$ORIGIN' ${ED}/opt/cuda/targets/x86_64-linux/lib/libnvinfer.so
 
 	do_install() {
 		local PYTHON_VER="${EPYTHON/python/}"
