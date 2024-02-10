@@ -16,7 +16,6 @@ LICENSE="MIT"
 SLOT="0/8"
 KEYWORDS="~amd64"
 IUSE="python"
-RESTRICT="test"
 
 RDEPEND="=dev-libs/cudnn-8*"
 DEPEND="${RDEPEND}"
@@ -47,4 +46,21 @@ src_install() {
 	doins -r include
 
 	use python && distutils-r1_src_install
+}
+
+distutils_enable_tests pytest
+
+src_test() {
+	use python && distutils-r1_src_test
+}
+
+python_test() {
+	local EPYTEST_DESELECT=(
+		# Failed with param: ((1, 128, 1024), torch.bfloat16)
+		# AssertionError: Tensor-likes are not close!
+		# Mismatched elements: 0.2%
+		test/python_fe/test_matmul_bias_relu.py::test_matmul_bias_relu[param_extract4]
+	)
+
+	epytest
 }
