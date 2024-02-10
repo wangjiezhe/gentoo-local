@@ -52,7 +52,7 @@ src_install() {
 
 	# See https://github.com/NVIDIA/TensorRT/issues/2218#issuecomment-1258227217
 	# and https://docs.nvidia.com/deeplearning/tensorrt/release-notes/index.html#rel-8-4-1
-	patchelf --add-rpath '$ORIGIN' ${ED}/opt/cuda/targets/x86_64-linux/lib/libnvinfer.so
+	patchelf --add-rpath '$ORIGIN' "${ED}/opt/cuda/targets/x86_64-linux/lib/libnvinfer.so"
 
 	do_install() {
 		local PYTHON_VER="${EPYTHON/python/}"

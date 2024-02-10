@@ -48,7 +48,7 @@ src_install() {
 	dosym "libnvinfer_builder_resource.so.${BASE_VER}" \
 		"/opt/cuda/targets/x86_64-linux/lib/do_not_link_against_nvinfer_builder_resource"
 
-	patchelf --add-rpath '$ORIGIN' ${ED}/opt/cuda/targets/x86_64-linux/lib/libnvinfer.so
+	patchelf --add-rpath '$ORIGIN' "${ED}/opt/cuda/targets/x86_64-linux/lib/libnvinfer.so"
 
 	do_install() {
 		local PYTHON_VER="${EPYTHON/python/}"
