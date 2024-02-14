@@ -27,7 +27,7 @@ src_prepare() {
 }
 
 src_configure() {
-	export CUDA_HOME="/opt/cuda"
+	export CUDA_HOME="${EPREFIX}/opt/cuda"
 	export PREFIX="${EPREFIX}/opt/cuda/targets/x86_64-linux"
 	export CXXFLAGS+=" -ffat-lto-objects"
 	export CXX="$(cuda_gccdir | tr -d \")/g++"

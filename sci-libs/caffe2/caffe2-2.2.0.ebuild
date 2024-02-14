@@ -50,7 +50,7 @@ RDEPEND="
 		=dev-libs/cudnn-8*
 		>=dev-libs/cudnn-frontend-0.9.2:0/8
 		dev-util/nvidia-cuda-toolkit:=[profiler]
-		<=dev-libs/nccl-2.19.1
+		!=dev-libs/nccl-2.19.4*
 		dev-libs/cusparselt
 	)
 	fbgemm? ( >=dev-libs/FBGEMM-2023.11.02 )
