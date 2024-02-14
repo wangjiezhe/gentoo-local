@@ -17,7 +17,7 @@ SRC_URI="https://github.com/pytorch/${MYPN}/archive/refs/tags/v${PV}.tar.gz
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="cuda distributed fbgemm ffmpeg gloo magma mpi nnpack +numpy opencl opencv openmp qnnpack tensorpipe xnnpack"
+IUSE="cuda distributed fbgemm ffmpeg gloo magma mkl mpi nnpack +numpy opencl opencv openmp qnnpack tensorpipe xnnpack"
 RESTRICT="test"
 REQUIRED_USE="
 	${PYTHON_REQUIRED_USE}
@@ -42,7 +42,7 @@ RDEPEND="
 	dev-libs/protobuf:=
 	dev-libs/pthreadpool
 	dev-libs/sleef
-	sci-libs/lapack
+	virtual/lapack
 	>=sci-libs/onnx-1.12.0
 	<sci-libs/onnx-1.15.0
 	sci-libs/foxi
@@ -67,6 +67,7 @@ RDEPEND="
 	qnnpack? ( sci-libs/QNNPACK dev-cpp/gemmlowp )
 	tensorpipe? ( sci-libs/tensorpipe[cuda?] )
 	xnnpack? ( >=sci-libs/XNNPACK-2022.12.22 )
+	mkl? ( sci-libs/mkl )
 "
 # Failed with cutlass-3.4.0:
 # /usr/include/cutlass/bfloat16.h(94): error: name followed by "::" must be a class or namespace name
@@ -95,6 +96,10 @@ DEPEND="
 	')
 "
 
+BDEPEND="
+	dev-util/patchelf
+"
+
 S="${WORKDIR}"/${MYP}
 
 PATCHES=(
@@ -109,6 +114,8 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.1.1-lite-proto.patch
 	"${FILESDIR}"/${PN}-2.1.1-opencl.patch
 	"${FILESDIR}"/${P}-cuSPARSELt.patch
+	"${FILESDIR}"/${PN}-2.1.2-fix-rpath.patch
+	"${FILESDIR}"/${PN}-2.1.2-fix-openmp-link.patch
 )
 
 src_prepare() {
@@ -117,8 +124,6 @@ src_prepare() {
 		-e "/third_party\/gloo/d" \
 		cmake/Dependencies.cmake \
 		|| die
-	# Fix cmake prefix path
-	sed -i "s|cmake_prefix_path = _osp.*|cmake_prefix_path = '/usr/share/cmake'|g" torch/utils/__init__.py
 	cmake_src_prepare
 	pushd torch/csrc/jit/serialization || die
 	flatc --cpp --gen-mutable --scoped-enums mobile_bytecode.fbs || die
@@ -199,7 +204,6 @@ src_configure() {
 		-DPYBIND11_PYTHON_VERSION="${EPYTHON#python}"
 		-DPYTHON_EXECUTABLE="${PYTHON}"
 		-DUSE_ITT=OFF
-		-DBLAS=Eigen # avoid the use of MKL, if found on the system
 		-DUSE_SYSTEM_EIGEN_INSTALL=ON
 		-DUSE_SYSTEM_PTHREADPOOL=ON
 		-DUSE_SYSTEM_FXDIV=ON
@@ -209,11 +213,18 @@ src_configure() {
 		-DONNX_PROTO_LIBRARY="${EPREFIX}"/usr/$(get_libdir)/libonnx_proto.so
 		-DUSE_SYSTEM_PSIMD=ON
 		-DUSE_SYSTEM_SLEEF=ON
+		-DUSE_METAL=OFF
 
 		-Wno-dev
 		-DTORCH_INSTALL_LIB_DIR="${EPREFIX}"/usr/$(get_libdir)
 		-DLIBSHM_INSTALL_LIB_SUBDIR="${EPREFIX}"/usr/$(get_libdir)
 	)
+
+	if use mkl; then
+		mycmakeargs+=(-DBLAS=MKL)
+	else
+		mycmakeargs+=(-DBLAS=Generic -DBLAS_LIBRARIES=)
+	fi
 
 	if use cuda; then
 		addpredict "/dev/nvidiactl" # bug 867706
@@ -228,6 +239,9 @@ src_configure() {
 
 src_install() {
 	cmake_src_install
+
+	# patchelf --shrink-rpath --allowed-rpath-prefixes /opt "${ED}/usr/lib64/libtorch_cpu.so"
+	patchelf --remove-rpath "${ED}/usr/lib64/libtorch_cpu.so"
 
 	insinto "/var/lib/${PN}"
 	doins "${BUILD_DIR}"/CMakeCache.txt
