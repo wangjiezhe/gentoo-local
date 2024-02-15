@@ -86,20 +86,20 @@ src_install() {
 	use doc && dodoc README.md docs/*.md
 
 	if use eselect-ldso; then
-		insinto /usr/$(get_libdir)/blas/aocl-blas
+		insinto /usr/$(get_libdir)/blas/aocl
 		doins lib/*/lib{c,}blas.so.3
-		dosym libblas.so.3 usr/$(get_libdir)/blas/aocl-blas/libblas.so
-		dosym libcblas.so.3 usr/$(get_libdir)/blas/aocl-blas/libcblas.so
+		dosym libblas.so.3 usr/$(get_libdir)/blas/aocl/libblas.so
+		dosym libcblas.so.3 usr/$(get_libdir)/blas/aocl/libcblas.so
 	fi
 }
 
 pkg_postinst() {
 	use eselect-ldso || return
 
-	local libdir=$(get_libdir) me="aocl-blas"
+	local libdir=$(get_libdir) me="aocl"
 
 	# check blas
-	eselect blas add ${libdir} "${EROOT}"/usr/${libdir}/blas/${me} ${me}
+	eselect blas add ${libdir} "${EPREFIX}"/usr/${libdir}/blas/${me} ${me}
 	local current_blas=$(eselect blas show ${libdir} | cut -d' ' -f2)
 	if [[ ${current_blas} == "${me}" || -z ${current_blas} ]]; then
 		eselect blas set ${libdir} ${me}

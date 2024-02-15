@@ -79,21 +79,21 @@ src_install() {
 	patchelf --set-soname libaocldtl.so "${ED}/usr/$(get_libdir)/libaocldtl.so" || die
 
 	if use eselect-ldso; then
-		dodir /usr/$(get_libdir)/lapack/aocl-lapack/
-		dosym ../../libflame.so usr/$(get_libdir)/lapack/aocl-lapack/liblapack.so
-		dosym ../../libflame.so usr/$(get_libdir)/lapack/aocl-lapack/liblapack.so.3
-		dosym ../../libflame.so usr/$(get_libdir)/lapack/aocl-lapack/liblapacke.so
-		dosym ../../libflame.so usr/$(get_libdir)/lapack/aocl-lapack/liblapacke.so.3
+		dodir /usr/$(get_libdir)/lapack/aocl/
+		dosym ../../libflame.so usr/$(get_libdir)/lapack/aocl/liblapack.so
+		dosym ../../libflame.so usr/$(get_libdir)/lapack/aocl/liblapack.so.3
+		dosym ../../libflame.so usr/$(get_libdir)/lapack/aocl/liblapacke.so
+		dosym ../../libflame.so usr/$(get_libdir)/lapack/aocl/liblapacke.so.3
 	fi
 }
 
 pkg_postinst() {
 	use eselect-ldso || return
 
-	local libdir=$(get_libdir) me="aocl-lapack"
+	local libdir=$(get_libdir) me="aocl"
 
 	# check lapack
-	eselect lapack add ${libdir} "${EROOT}"/usr/${libdir}/lapack/${me} ${me}
+	eselect lapack add ${libdir} "${EPREFIX}"/usr/${libdir}/lapack/${me} ${me}
 	local current_lapack=$(eselect lapack show ${libdir} | cut -d' ' -f2)
 	if [[ ${current_lapack} == "${me}" || -z ${current_lapack} ]]; then
 		eselect lapack set ${libdir} ${me}
