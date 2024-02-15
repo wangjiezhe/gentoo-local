@@ -1,0 +1,12 @@
+diff -ur blis-4.1_orig/common.mk blis-4.1/common.mk
+--- blis-4.1_orig/common.mk	2024-02-15 01:45:31.855131006 +0800
++++ blis-4.1/common.mk	2024-02-15 01:45:53.105128639 +0800
+@@ -611,7 +611,7 @@
+ LIBBLIS_LINK   := $(LIBBLIS_SO_PATH)
+ ifeq ($(IS_WIN),no)
+ # For Linux and OS X: set rpath property of shared object.
+-LDFLAGS        += -Wl,-rpath,$(BASE_LIB_PATH)
++#LDFLAGS        += -Wl,-rpath,$(BASE_LIB_PATH)
+ endif
+ endif
+ # On windows, use the shared library even if static is created.
