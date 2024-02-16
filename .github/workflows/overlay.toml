@@ -453,3 +453,18 @@ prefix = "v"
 source = "github"
 github = "huggingface/datasets"
 use_latest_release = true
+
+["sci-libs/aocl-blas"]
+source = "github"
+github = "amd/blis"
+use_latest_release = true
+
+["sci-libs/aocl-utils"]
+source = "github"
+github = "amd/aocl-utils"
+use_latest_release = true
+
+["sci-libs/aocl-lapack"]
+source = "github"
+github = "amd/libflame"
+use_latest_release = true
