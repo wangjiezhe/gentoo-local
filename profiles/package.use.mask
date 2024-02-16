@@ -1,0 +1,2 @@
+# undefined symbol: RCCE_*
+sci-libs/aocl-lapack scc supermatrix
