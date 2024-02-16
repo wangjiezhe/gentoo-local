@@ -34,7 +34,10 @@ BDEPEND="
 	dev-util/patchelf
 "
 
-PATCHES=( "${FILESDIR}/${P}-lapack-provider.patch" )
+PATCHES=(
+	"${FILESDIR}/${P}-lapack-provider.patch"
+	"${FILESDIR}/${P}-supermatrix.patch"
+)
 
 src_configure() {
 	export LIBAOCLUTILS_LIBRARY_PATH="${EPREFIX}/usr/$(get_libdir)/libaoclutils.a"
