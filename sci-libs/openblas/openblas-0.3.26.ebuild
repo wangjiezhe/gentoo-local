@@ -125,8 +125,9 @@ src_compile() {
 
 	if use index-64bit; then
 		emake -C "${S}-index-64bit" \
-			  INTERFACE64=1 \
-			  LIBPREFIX=libopenblas64 shared
+				INTERFACE64=1 \
+				SYMBOLSUFFIX=_64 \
+				LIBPREFIX=libopenblas64 shared
 	fi
 }
 
@@ -136,13 +137,19 @@ src_test() {
 
 src_install() {
 	emake install DESTDIR="${D}" \
-			  OPENBLAS_INCLUDE_DIR='$(PREFIX)'/include/${PN} \
-			  OPENBLAS_LIBRARY_DIR='$(PREFIX)'/$(get_libdir)
+				OPENBLAS_INCLUDE_DIR='$(PREFIX)'/include/${PN} \
+				OPENBLAS_LIBRARY_DIR='$(PREFIX)'/$(get_libdir)
 
 	dodoc GotoBLAS_*.txt *.md Changelog.txt
 
 	if use index-64bit; then
-		dolib.so "${S}-index-64bit"/libopenblas64*.so*
+		emake -C "${S}-index-64bit" install DESTDIR="${D}" \
+				INTERFACE64=1 \
+				SYMBOLSUFFIX=64 \
+				LIBPREFIX=libopenblas64 \
+				OPENBLAS_INCLUDE_DIR='$(PREFIX)'/include/${PN}64 \
+				OPENBLAS_LIBRARY_DIR='$(PREFIX)'/$(get_libdir) \
+				OPENBLAS_CMAKE_DIR='$(OPENBLAS_LIBRARY_DIR)'/cmake/'$(LIBSONAMEBASE)'64
 	fi
 
 	if use eselect-ldso; then
