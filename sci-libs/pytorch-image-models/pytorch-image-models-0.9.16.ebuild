@@ -4,7 +4,7 @@
 EAPI=8
 
 PYTHON_COMPAT=( python3_{10..12} )
-DISTUTILS_USE_PEP517=setuptools
+DISTUTILS_USE_PEP517=pdm-backend
 DISTUTILS_SINGLE_IMPL=1
 inherit distutils-r1
 
@@ -16,6 +16,7 @@ SRC_URI="https://github.com/huggingface/pytorch-image-models/archive/refs/tags/v
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~amd64"
+RESTRICT="test"		# some tests fail randomly
 
 RDEPEND="
 	sci-libs/pytorch[${PYTHON_SINGLE_USEDEP}]
@@ -26,5 +27,3 @@ RDEPEND="
 		sci-libs/safetensors[${PYTHON_USEDEP}]
 	')
 "
-
-distutils_enable_tests pytest
