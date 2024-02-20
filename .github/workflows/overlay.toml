@@ -249,6 +249,12 @@ github = "google/sentencepiece"
 use_latest_release = true
 prefix = "v"
 
+["dev-python/sentencepiece"]
+source = "github"
+github = "google/sentencepiece"
+use_latest_release = true
+prefix = "v"
+
 ["dev-python/sacremoses"]
 source = "github"
 github = "hplt-project/sacremoses"
