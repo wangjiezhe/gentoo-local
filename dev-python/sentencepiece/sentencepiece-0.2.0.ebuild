@@ -23,7 +23,7 @@ LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~amd64"
 
-DEPEND="dev-libs/sentencepiece"
+DEPEND="~dev-libs/sentencepiece-${PV}[static-libs]"
 
 DOCS=()
 
@@ -31,4 +31,11 @@ python_prepare_all() {
 	sed -i "s@\.\./build/root@/usr@" setup.py
 
 	distutils-r1_python_prepare_all
+}
+
+distutils_enable_tests pytest
+
+python_test() {
+	rm -rf src || die
+	epytest
 }
