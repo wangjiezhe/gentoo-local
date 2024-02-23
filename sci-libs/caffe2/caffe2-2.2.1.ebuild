@@ -105,7 +105,7 @@ BDEPEND="
 S="${WORKDIR}"/${MYP}
 
 PATCHES=(
-	"${FILESDIR}"/${P}-gentoo.patch
+	"${FILESDIR}"/${PN}-2.2.0-gentoo.patch
 	"${FILESDIR}"/${PN}-1.13.0-install-dirs.patch
 	"${FILESDIR}"/${PN}-1.12.0-glog-0.6.0.patch
 	"${FILESDIR}"/${PN}-1.13.1-tensorpipe.patch
@@ -115,7 +115,7 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.1.1-protobuf.patch
 	"${FILESDIR}"/${PN}-2.1.1-lite-proto.patch
 	"${FILESDIR}"/${PN}-2.1.1-opencl.patch
-	"${FILESDIR}"/${P}-cuSPARSELt.patch
+	"${FILESDIR}"/${PN}-2.2.0-cuSPARSELt.patch
 	"${FILESDIR}"/${PN}-2.1.2-fix-rpath.patch
 	"${FILESDIR}"/${PN}-2.1.2-fix-openmp-link.patch
 )
