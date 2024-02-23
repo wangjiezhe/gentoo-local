@@ -24,7 +24,7 @@ RDEPEND="
 	dev-libs/double-conversion
 	dev-libs/sentencepiece
 	dev-libs/libutf8proc
-	>=sci-libs/pytorch-2.2.0[${PYTHON_SINGLE_USEDEP}]
+	>=sci-libs/pytorch-2.2.1[${PYTHON_SINGLE_USEDEP}]
 	sci-libs/torchdata[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		dev-python/tqdm[${PYTHON_USEDEP}]
