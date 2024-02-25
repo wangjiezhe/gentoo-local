@@ -1,0 +1,25 @@
+From 8852f31c0590f6e5ca53dd9ae05689fd6054548f Mon Sep 17 00:00:00 2001
+From: wangjiezhe <wangjiezhe@gmail.com>
+Date: Sun, 25 Feb 2024 20:15:25 +0800
+Subject: [PATCH 1/2] Revert "fix GradScaler pre-commit (#699)"
+
+This reverts commit 5295f82637428595658274d916f422ec85ae4d04.
+---
+ torchtnt/framework/auto_unit.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/torchtnt/framework/auto_unit.py b/torchtnt/framework/auto_unit.py
+index db720c1..ce4412a 100644
+--- a/torchtnt/framework/auto_unit.py
++++ b/torchtnt/framework/auto_unit.py
+@@ -13,6 +13,7 @@ from typing import Any, Generic, Iterator, List, Optional, Tuple, TypeVar, Union
+ 
+ import torch
+ from pyre_extensions import none_throws
++from torch.cuda.amp import GradScaler
+ from torch.distributed.fsdp import FullyShardedDataParallel as FSDP
+ from torch.nn.parallel import DistributedDataParallel as DDP
+ from torch.optim.swa_utils import SWALR
+-- 
+2.43.0
+

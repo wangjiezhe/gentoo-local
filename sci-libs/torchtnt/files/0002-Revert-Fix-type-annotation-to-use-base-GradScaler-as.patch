@@ -1,0 +1,41 @@
+From bdd377813903d41c422855e1d76bd72b0abd429f Mon Sep 17 00:00:00 2001
+From: wangjiezhe <wangjiezhe@gmail.com>
+Date: Sun, 25 Feb 2024 20:15:26 +0800
+Subject: [PATCH 2/2] Revert "Fix type annotation to use base GradScaler as
+ return type (#697)"
+
+This reverts commit 5b34c1c0417cdf5edde84b7bda02ac6030ff05cb.
+---
+ torchtnt/framework/auto_unit.py | 2 +-
+ torchtnt/utils/precision.py     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/torchtnt/framework/auto_unit.py b/torchtnt/framework/auto_unit.py
+index ce4412a..ed1cd83 100644
+--- a/torchtnt/framework/auto_unit.py
++++ b/torchtnt/framework/auto_unit.py
+@@ -486,7 +486,7 @@ class AutoUnit(
+             activation_checkpoint_params=activation_checkpoint_params,
+         )
+ 
+-        self.grad_scaler: Optional[torch.amp.GradScaler] = None
++        self.grad_scaler: Optional[GradScaler] = None
+         if self.precision:
+             self.grad_scaler = get_grad_scaler_from_precision(
+                 self.precision,
+diff --git a/torchtnt/utils/precision.py b/torchtnt/utils/precision.py
+index 1fb968d..f581ee1 100644
+--- a/torchtnt/utils/precision.py
++++ b/torchtnt/utils/precision.py
+@@ -38,7 +38,7 @@ def convert_precision_str_to_dtype(precision: str) -> Optional[torch.dtype]:
+ 
+ def get_grad_scaler_from_precision(
+     precision: torch.dtype, module: torch.nn.Module
+-) -> Optional[torch.amp.GradScaler]:
++) -> Optional[GradScaler]:
+     """
+     Returns the correct grad scaler to use based on the precision and whether
+     or not the model is FSDP.
+-- 
+2.43.0
+

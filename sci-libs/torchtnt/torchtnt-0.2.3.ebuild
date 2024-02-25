@@ -8,7 +8,7 @@ DISTUTILS_USE_PEP517=setuptools
 DISTUTILS_SINGLE_IMPL=1
 inherit distutils-r1 # pypi
 
-CommitId="466a0cd03aca3e7890b5a569670f99049b6b3775"
+CommitId="4a975f07ce2ec3af36a23928bc5b89041c81312c"
 
 DESCRIPTION="A lightweight library for PyTorch training tools and utilities"
 HOMEPAGE="https://github.com/pytorch/tnt"
@@ -42,6 +42,11 @@ BDEPEND="
 		')
 	)
 "
+
+PATCHES=(
+	"${FILESDIR}/0001-Revert-fix-GradScaler-pre-commit-699.patch"
+	"${FILESDIR}/0002-Revert-Fix-type-annotation-to-use-base-GradScaler-as.patch"
+)
 
 # python_prepare_all() {
 # 	cat <<- EOF > requirements.txt
