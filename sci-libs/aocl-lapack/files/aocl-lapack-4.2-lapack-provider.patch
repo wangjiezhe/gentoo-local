@@ -1,10 +1,10 @@
-diff -ur libflame-4.1_orig/Makefile libflame-4.1/Makefile
---- libflame-4.1_orig/Makefile	2024-02-16 11:47:41.278231124 +0800
-+++ libflame-4.1/Makefile	2024-02-16 17:49:29.625111306 +0800
-@@ -701,7 +701,9 @@
- 	@$(LINKER) $(SOFLAGS) -o $@ -Wl,-force_load,$(LIBFLAME_A) $(LDFLAGS)
+diff -ur libflame-4.2_orig/Makefile libflame-4.2/Makefile
+--- libflame-4.2_orig/Makefile	2024-02-28 21:32:03.771384944 +0800
++++ libflame-4.2/Makefile	2024-02-28 21:38:39.401251732 +0800
+@@ -751,7 +751,9 @@
  else
- 	@$(file > $@.in,$^ $(shell ls $(LIBAOCLUTILS_OBJ_DIR)/*.o))
+ 	@$(file > $@.in,$^)
+ endif
 -	@$(LINKER) $(SOFLAGS) -o $(LIBFLAME_SO_OUTPUT_NAME) @$@.in $(LDFLAGS)
 +	@$(LINKER) $(SOFLAGS) -o $(LIBFLAME_SO_OUTPUT_NAME) @$@.in $(LDFLAGS) -lblas -lcblas
 +	@$(LINKER) $(SOFLAGS) -o $(BASE_LIB_PATH)/liblapack.so.3 @$@.in $(LDFLAGS) -lblas -lcblas -Wl,--soname,liblapack.so.3

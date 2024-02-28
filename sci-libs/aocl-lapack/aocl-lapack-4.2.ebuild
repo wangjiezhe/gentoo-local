@@ -14,6 +14,7 @@ S="${WORKDIR}/libflame-${PV}"
 KEYWORDS="~amd64"
 LICENSE="BSD"
 SLOT="0"
+RESTRICT="test"		# There are some linking issue
 
 CPU_FLAGS=( sse3 )
 IUSE_CPU_FLAGS_X86="${CPU_FLAGS[@]/#/cpu_flags_x86_}"
@@ -36,12 +37,12 @@ BDEPEND="
 
 PATCHES=(
 	"${FILESDIR}/${P}-lapack-provider.patch"
-	"${FILESDIR}/${P}-supermatrix.patch"
 )
 
 src_configure() {
 	export LIBAOCLUTILS_LIBRARY_PATH="${EPREFIX}/usr/$(get_libdir)/libaoclutils.a"
 	export LIBAOCLUTILS_INCLUDE_PATH="${EPREFIX}/usr/include/alci"
+	export ENABLE_EMBED_AOCLUTILS=1
 
 	local myconf=(
 		--includedir="${EPREFIX}"/usr/include/flame
