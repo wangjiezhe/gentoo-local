@@ -1,0 +1,23 @@
+diff -ur aocl-utils-4.2_orig/CMakeLists.txt aocl-utils-4.2/CMakeLists.txt
+--- aocl-utils-4.2_orig/CMakeLists.txt	2024-02-28 20:41:51.692427249 +0800
++++ aocl-utils-4.2/CMakeLists.txt	2024-02-28 20:42:52.992405671 +0800
+@@ -44,7 +44,6 @@
+ SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+ SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+ 
+-SET(CMAKE_INSTALL_LIBDIR "lib")
+ 
+ OPTION(ALCI_DOCS "ENABLE DOCUMENTATION" ON)
+ OPTION(ALCI_DOXYGEN_DOC "ENABLE DOXYGEN DOCUMENTATION" OFF)
+diff -ur aocl-utils-4.2_orig/lib/CMakeLists.txt aocl-utils-4.2/lib/CMakeLists.txt
+--- aocl-utils-4.2_orig/lib/CMakeLists.txt	2024-02-28 20:41:51.692427249 +0800
++++ aocl-utils-4.2/lib/CMakeLists.txt	2024-02-28 20:42:48.432407263 +0800
+@@ -34,7 +34,7 @@
+     ENDIF()
+     # Install .dll into lib directory to have .lib and .dll in same path for shared library
+     INSTALL(FILES "${PROJECT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${CMAKE_SHARED_LIBRARY_PREFIX}${PROJECT_NAME}${AOCL_APPEND_BUILDTYPE_FOR_DLL}.dll"
+-            DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")
++            DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+   ENDIF()
+ ENDIF()
+ 
