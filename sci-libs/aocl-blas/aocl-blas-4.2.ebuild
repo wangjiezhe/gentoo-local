@@ -34,7 +34,7 @@ PATCHES=(
 	# to prevent QA Notice: pkg-config files with wrong LDFLAGS detected
 	"${FILESDIR}"/blis-0.8.1-pkg-config.patch
 	"${FILESDIR}"/${P}-rpath.patch
-	"${FILESDIR}"/${P}-python.patch
+	"${FILESDIR}"/${PN}-4.1-python.patch
 )
 
 src_configure() {
