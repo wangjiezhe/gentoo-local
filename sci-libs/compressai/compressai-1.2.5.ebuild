@@ -18,6 +18,7 @@ S="${WORKDIR}/CompressAI-${PV}"
 LICENSE="Clear-BSD"
 SLOT="0"
 KEYWORDS="~amd64"
+RESTRICT="test"		# Need torch_geometric
 
 RDEPEND="
 	sci-libs/pytorch[${PYTHON_SINGLE_USEDEP}]
