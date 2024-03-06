@@ -4,7 +4,7 @@
 EAPI=8
 DISTUTILS_OPTIONAL=1
 DISTUTILS_USE_PEP517=setuptools
-PYTHON_COMPAT=( python3_{9..12} )
+PYTHON_COMPAT=( python3_{10..12} )
 inherit distutils-r1 cmake cuda
 
 DESCRIPTION="A library for efficient similarity search and clustering of dense vectors"
@@ -39,7 +39,6 @@ BDEPEND="python? ( ${DISTUTILS_DEPS} )"
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
 PATCHES=(
-	"${FILESDIR}/${P}-cxx17.patch"
 	"${FILESDIR}/${P}-test.patch"
 )
 

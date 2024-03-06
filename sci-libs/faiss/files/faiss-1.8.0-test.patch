@@ -1,12 +1,12 @@
 diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
-index 55455bd7..0766a049 100644
+index 10243b9a..305f3328 100644
 --- a/tests/CMakeLists.txt
 +++ b/tests/CMakeLists.txt
-@@ -52,6 +52,7 @@ find_package(OpenMP REQUIRED)
+@@ -70,6 +70,7 @@ find_package(OpenMP REQUIRED)
  target_link_libraries(faiss_test PRIVATE
    OpenMP::OpenMP_CXX
    gtest_main
 +  gtest
+   $<$<BOOL:${FAISS_ENABLE_RAFT}>:raft::raft>
  )
  
- # Defines `gtest_discover_tests()`.
