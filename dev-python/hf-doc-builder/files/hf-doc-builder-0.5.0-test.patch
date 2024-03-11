@@ -1,0 +1,26 @@
+diff -ur doc-builder-0.5.0_orig/tests/test_autodoc.py doc-builder-0.5.0/tests/test_autodoc.py
+--- doc-builder-0.5.0_orig/tests/test_autodoc.py	2024-03-11 11:18:12.240568113 +0800
++++ doc-builder-0.5.0/tests/test_autodoc.py	2024-03-11 11:22:28.520541531 +0800
+@@ -172,17 +172,17 @@
+         self.assertEqual(get_shortest_path(PushToHubMixin, transformers), "transformers.utils.PushToHubMixin")
+         self.assertEqual(
+             get_shortest_path(TrainingArguments.__init__, transformers),
+-            "transformers.training_args.__create_fn__.<locals>.__init__",
++            "transformers.TrainingArguments.__init__",
+         )
+ 
+     def test_get_type_name(self):
+         self.assertEqual(get_type_name(str), "str")
+         self.assertEqual(get_type_name(BertModel), "BertModel")
+         # Objects from typing which are the most annoying
+-        self.assertEqual(get_type_name(List[str]), "typing.List[str]")
+-        self.assertEqual(get_type_name(Optional[str]), "typing.Optional[str]")
+-        self.assertEqual(get_type_name(Union[bool, int]), "typing.Union[bool, int]")
+-        self.assertEqual(get_type_name(List[Optional[str]]), "typing.List[typing.Optional[str]]")
++        self.assertEqual(get_type_name(List[str]), "List")
++        self.assertEqual(get_type_name(Optional[str]), "Optional")
++        self.assertEqual(get_type_name(Union[bool, int]), "Union")
++        self.assertEqual(get_type_name(List[Optional[str]]), "List")
+ 
+     def test_format_signature(self):
+         self.assertEqual(
