@@ -31,7 +31,7 @@ source = "github"
 github = "cheat/cheat"
 use_latest_release = true
 
-["app-misc/wslu"]
+["app-emulation/wslu"]
 source = "github"
 github = "wslutilities/wslu"
 use_latest_release = true
