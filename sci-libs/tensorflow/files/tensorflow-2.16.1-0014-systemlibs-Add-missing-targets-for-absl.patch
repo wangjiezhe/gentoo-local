@@ -1,0 +1,159 @@
+From 78f8e8601b70590772173b388a11b6efe24ab724 Mon Sep 17 00:00:00 2001
+From: wangjiezhe <wangjiezhe@gmail.com>
+Date: Mon, 18 Mar 2024 18:36:55 +0800
+Subject: [PATCH 14/14] systemlibs: Add missing targets for absl
+
+---
+ third_party/absl/system.absl.base.BUILD    | 16 ++++++
+ third_party/absl/system.absl.crc.BUILD     | 62 ++++++++++++++++++++++
+ third_party/absl/system.absl.log.BUILD     | 11 ++++
+ third_party/absl/system.absl.strings.BUILD | 11 ++++
+ third_party/absl/workspace.bzl             |  1 +
+ 5 files changed, 101 insertions(+)
+ create mode 100644 third_party/absl/system.absl.crc.BUILD
+
+diff --git a/third_party/absl/system.absl.base.BUILD b/third_party/absl/system.absl.base.BUILD
+index d6bf8748dee..0e381c1452f 100644
+--- a/third_party/absl/system.absl.base.BUILD
++++ b/third_party/absl/system.absl.base.BUILD
+@@ -105,3 +105,19 @@ cc_library(
+         "//absl:__subpackages__",
+     ],
+ )
++
++cc_library(
++    name = "nullability",
++    deps = [
++        ":core_headers",
++        "//absl/meta:type_traits",
++    ],
++)
++
++cc_library(
++    name = "prefetch",
++    deps = [
++        ":config",
++        ":core_headers",
++    ],
++)
+diff --git a/third_party/absl/system.absl.crc.BUILD b/third_party/absl/system.absl.crc.BUILD
+new file mode 100644
+index 00000000000..f30dbfd38b0
+--- /dev/null
++++ b/third_party/absl/system.absl.crc.BUILD
+@@ -0,0 +1,62 @@
++load("@rules_cc//cc:defs.bzl", "cc_library")
++
++package(default_visibility = ["//visibility:public"])
++
++cc_library(
++    name = "crc32c",
++    linkopts = ["-labsl_crc32c"],
++    deps = [
++        ":crc_cpu_detect",
++        ":crc_internal",
++        ":non_temporal_memcpy",
++        "//absl/base:config",
++        "//absl/base:core_headers",
++        "//absl/base:dynamic_annotations",
++        "//absl/base:endian",
++        "//absl/base:prefetch",
++        "//absl/strings:str_format",
++        "//absl/strings",
++    ],
++)
++
++cc_library(
++    name = "crc_cpu_detect",
++    linkopts = ["-labsl_crc_cpu_detect"],
++    deps = [
++        "//absl/base",
++        "//absl/base:config",
++    ],
++)
++
++cc_library(
++    name = "crc_internal",
++    linkopts = ["-labsl_crc_internal"],
++    deps = [
++        ":crc_cpu_detect",
++        "//absl/base",
++        "//absl/base:config",
++        "//absl/base:core_headers",
++        "//absl/base:dynamic_annotations",
++        "//absl/base:endian",
++        "//absl/base:prefetch",
++        "//absl/base:raw_logging_internal",
++        "//absl/memory",
++        "//absl/numeric:bits",
++    ],
++)
++
++cc_library(
++    name = "non_temporal_memcpy",
++    deps = [
++        ":non_temporal_arm_intrinsics",
++        "//absl/base:config",
++        "//absl/base:core_headers",
++    ],
++)
++
++cc_library(
++    name = "non_temporal_arm_intrinsics",
++    deps = [
++        "//absl/base:config",
++    ],
++)
+diff --git a/third_party/absl/system.absl.log.BUILD b/third_party/absl/system.absl.log.BUILD
+index 9a2a5de657e..8c3dc74db08 100644
+--- a/third_party/absl/system.absl.log.BUILD
++++ b/third_party/absl/system.absl.log.BUILD
+@@ -269,3 +269,14 @@ cc_library(
+     name = "absl_log",
+     deps = [":internal_log_impl"],
+ )
++
++cc_library(
++    name = "die_if_null",
++    linkopts = ["-labsl_die_if_null"],
++    deps = [
++        ":log",
++        "//absl/base:config",
++        "//absl/base:core_headers",
++        "//absl/strings",
++    ],
++)
+diff --git a/third_party/absl/system.absl.strings.BUILD b/third_party/absl/system.absl.strings.BUILD
+index 63bac99d71b..962f36bcc03 100644
+--- a/third_party/absl/system.absl.strings.BUILD
++++ b/third_party/absl/system.absl.strings.BUILD
+@@ -54,3 +54,14 @@ cc_library(
+         "//absl/types:span",
+     ],
+ )
++
++cc_library(
++    name = "string_view",
++    linkopts = ["-labsl_string_view"],
++    deps = [
++        "//absl/base",
++        "//absl/base:config",
++        "//absl/base:core_headers",
++        "//absl/base:throw_delegate",
++    ],
++)
+diff --git a/third_party/absl/workspace.bzl b/third_party/absl/workspace.bzl
+index c54df3cfbae..1d2f8d9562b 100644
+--- a/third_party/absl/workspace.bzl
++++ b/third_party/absl/workspace.bzl
+@@ -16,6 +16,7 @@ def repo():
+         "base",
+         "cleanup",
+         "container",
++        "crc",
+         "debugging",
+         "flags",
+         "functional",
+-- 
+2.43.2
+

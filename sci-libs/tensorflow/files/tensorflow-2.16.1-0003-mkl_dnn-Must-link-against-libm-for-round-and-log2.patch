@@ -1,0 +1,29 @@
+From dafd0652f5b275b49fc142f74f88e2c0f674fb65 Mon Sep 17 00:00:00 2001
+From: Jason Zaman <jason@perfinion.com>
+Date: Mon, 5 Sep 2022 12:52:44 -0700
+Subject: [PATCH 03/14] mkl_dnn: Must link against libm for round and log2
+
+---
+ third_party/mkl_dnn/mkldnn_v1.BUILD | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/third_party/mkl_dnn/mkldnn_v1.BUILD b/third_party/mkl_dnn/mkldnn_v1.BUILD
+index add18406251..df5555e552d 100644
+--- a/third_party/mkl_dnn/mkldnn_v1.BUILD
++++ b/third_party/mkl_dnn/mkldnn_v1.BUILD
+@@ -171,9 +171,9 @@ cc_library(
+     includes = _INCLUDES_LIST,
+     # TODO(penpornk): Use lrt_if_needed from tensorflow.bzl instead.
+     linkopts = select({
+-        "@local_tsl//tsl:linux_aarch64": ["-lrt"],
+-        "@local_tsl//tsl:linux_x86_64": ["-lrt"],
+-        "@local_tsl//tsl:linux_ppc64le": ["-lrt"],
++        "@local_tsl//tsl:linux_aarch64": ["-lrt", "-lm"],
++        "@local_tsl//tsl:linux_x86_64": ["-lrt", "-lm"],
++        "@local_tsl//tsl:linux_ppc64le": ["-lrt", "-lm"],
+         "//conditions:default": [],
+     }),
+     textual_hdrs = _TEXTUAL_HDRS_LIST,
+-- 
+2.43.2
+
