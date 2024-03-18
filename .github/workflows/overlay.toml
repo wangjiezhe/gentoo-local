@@ -477,5 +477,5 @@ use_latest_release = true
 
 ["dev-python/astunparse"]
 source = "github"
-github = simonpercivall/astunparse
+github = "simonpercivall/astunparse"
 use_latest_tag = true
