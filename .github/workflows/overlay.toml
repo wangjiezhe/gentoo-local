@@ -493,3 +493,8 @@ source = "github"
 github = "metaopt/optree"
 use_latest_release = true
 prefix = "v"
+
+["dev-python/dm-tree"]
+source = "github"
+github = "google-deepmind/tree"
+use_latest_release = true

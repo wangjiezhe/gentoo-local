@@ -20,6 +20,7 @@ RESTRICT="test"
 DEPEND="
 	>=dev-libs/protobuf-3.13.0:=
 	dev-python/absl-py[${PYTHON_USEDEP}]
+	dev-python/dm-tree[${PYTHON_USEDEP}]
 	dev-python/h5py[${PYTHON_USEDEP}]
 	dev-python/ml-dtypes[${PYTHON_USEDEP}]
 	dev-python/namex[${PYTHON_USEDEP}]

@@ -18,8 +18,8 @@ KEYWORDS="~amd64"
 DEPEND="dev-python/typing-extensions[${PYTHON_USEDEP}]"
 BDEPEND="
 	test? (
-		"dev-python/pytest-cov[${PYTHON_USEDEP}]"
-		"dev-python/pytest-xdist[${PYTHON_USEDEP}]"
+		dev-python/pytest-cov[${PYTHON_USEDEP}]
+		dev-python/pytest-xdist[${PYTHON_USEDEP}]
 	)
 "
 
