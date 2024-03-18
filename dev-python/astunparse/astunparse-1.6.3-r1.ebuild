@@ -9,10 +9,7 @@ PYTHON_COMPAT=( python3_{9..11} )
 inherit distutils-r1 pypi
 
 DESCRIPTION="Astun parser for python"
-HOMEPAGE="
-	https://github.com/simonpercivall/astunparse/
-	https://pypi.org/project/astunparse/
-"
+HOMEPAGE="https://github.com/simonpercivall/astunparse/ https://pypi.org/project/astunparse/"
 
 LICENSE="BSD"
 SLOT="0"
