@@ -479,3 +479,7 @@ use_latest_release = true
 source = "github"
 github = "simonpercivall/astunparse"
 use_latest_tag = true
+
+["dev-python/namex"]
+source = "pypi"
+pypi = "namex"
