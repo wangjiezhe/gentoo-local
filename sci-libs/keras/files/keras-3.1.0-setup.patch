@@ -1,0 +1,10 @@
+diff -ur keras-3.1.0/setup.py keras-3.1.0_modified/setup.py
+--- keras-3.1.0/setup.py	2024-03-11 21:54:49.000000000 +0800
++++ keras-3.1.0_modified/setup.py	2024-03-18 19:57:19.033516398 +0800
+@@ -62,5 +62,5 @@
+         "Topic :: Scientific/Engineering",
+         "Topic :: Software Development",
+     ],
+-    packages=find_packages(exclude=("*_test.py",)),
++    packages=find_packages(exclude=("*_test.py", "benchmarks", "benchmarks.*")),
+ )
