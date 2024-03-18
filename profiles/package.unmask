@@ -3,3 +3,4 @@ sci-libs/keras
 sci-libs/tensorflow
 sci-libs/tensorflow-estimator
 sci-visualization/tensorboard
+dev-python/astunparse
