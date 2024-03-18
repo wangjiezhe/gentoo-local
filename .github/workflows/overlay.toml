@@ -282,6 +282,10 @@ github = "grpc/grpc"
 use_latest_release = true
 prefix = "v"
 
+["dev-python/grpcio"]
+source = "pypi"
+pypi = "grpcio"
+
 ["dev-cpp/abseil-cpp"]
 source = "github"
 github = "abseil/abseil-cpp"
@@ -483,3 +487,9 @@ use_latest_tag = true
 ["dev-python/namex"]
 source = "pypi"
 pypi = "namex"
+
+["dev-python/optree"]
+source = "github"
+github = "metaopt/optree"
+use_latest_release = true
+prefix = "v"
