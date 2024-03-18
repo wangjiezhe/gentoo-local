@@ -130,7 +130,7 @@ RDEPEND="
 		~dev-python/flatbuffers-23.5.26[${PYTHON_USEDEP}]
 		>=dev-python/gast-0.3.3[${PYTHON_USEDEP}]
 		dev-python/h5py[${PYTHON_USEDEP}]
-		>=dev-python/ml-dtypes-0.2.0[${PYTHON_USEDEP}]
+		>=dev-python/ml-dtypes-0.3.1[${PYTHON_USEDEP}]
 		>=dev-python/numpy-1.19[${PYTHON_USEDEP}]
 		>=dev-python/google-pasta-0.1.8[${PYTHON_USEDEP}]
 		>=dev-python/opt-einsum-3.3.0[${PYTHON_USEDEP}]
@@ -185,19 +185,19 @@ CHECKREQS_MEMORY="5G"
 CHECKREQS_DISK_BUILD="10G"
 
 PATCHES=(
-	"${FILESDIR}/${P}-0001-WORKSPACE-add-rules-docker-http_archive-bazel-toolch.patch"
-	"${FILESDIR}/${P}-0002-systemlib-Latest-absl-LTS-has-split-cord-libs.patch"
-	"${FILESDIR}/${P}-0003-mkl_dnn-Must-link-against-libm-for-round-and-log2.patch"
-	"${FILESDIR}/${P}-0004-tensorflow_cc-Add-systemlib-nsync-linkopts.patch"
-	"${FILESDIR}/${P}-0005-systemlib-Updates-for-Abseil-20220623-LTS.patch"
-	"${FILESDIR}/${P}-0006-systemlib-Update-targets-for-absl_py.patch"
-	"${FILESDIR}/${P}-0007-systemlib-Add-well_known_types_py_pb2-target.patch"
+	"${FILESDIR}/${PN}-2.15.0-0001-WORKSPACE-add-rules-docker-http_archive-bazel-toolch.patch"
+	"${FILESDIR}/${PN}-2.15.0-0002-systemlib-Latest-absl-LTS-has-split-cord-libs.patch"
+	"${FILESDIR}/${PN}-2.15.0-0003-mkl_dnn-Must-link-against-libm-for-round-and-log2.patch"
+	"${FILESDIR}/${PN}-2.15.0-0004-tensorflow_cc-Add-systemlib-nsync-linkopts.patch"
+	"${FILESDIR}/${PN}-2.15.0-0005-systemlib-Updates-for-Abseil-20220623-LTS.patch"
+	"${FILESDIR}/${PN}-2.15.0-0006-systemlib-Update-targets-for-absl_py.patch"
+	"${FILESDIR}/${PN}-2.15.0-0007-systemlib-Add-well_known_types_py_pb2-target.patch"
 	"${FILESDIR}/${P}-0008-Relax-setup.py-version-requirements.patch"
-	"${FILESDIR}/${P}-0009-systemlib-update-targets-for-absl.patch"
-	"${FILESDIR}/${P}-0010-systemlib-fix-missing-osx-in-pybind11.patch"
-	"${FILESDIR}/${P}-0011-systemlib-fix-missing-LICENSE-in-flatbuffers.patch"
-	"${FILESDIR}/${P}-0012-installation-remove-cp_local_config_python.patch"
-	"${FILESDIR}/${P}-0013-build-use-non-hermetic-python.patch"
+	"${FILESDIR}/${PN}-2.15.0-0009-systemlib-update-targets-for-absl.patch"
+	"${FILESDIR}/${PN}-2.15.0-0010-systemlib-fix-missing-osx-in-pybind11.patch"
+	"${FILESDIR}/${PN}-2.15.0-0011-systemlib-fix-missing-LICENSE-in-flatbuffers.patch"
+	"${FILESDIR}/${PN}-2.15.0-0012-installation-remove-cp_local_config_python.patch"
+	"${FILESDIR}/${PN}-2.15.0-0013-build-use-non-hermetic-python.patch"
 )
 
 get-cpu-flags() {

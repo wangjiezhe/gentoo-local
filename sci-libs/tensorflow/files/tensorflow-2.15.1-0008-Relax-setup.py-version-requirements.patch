@@ -16,9 +16,9 @@ index b416731380f..a21f566ee4d 100644
      'google_pasta >= 0.1.1',
      'h5py >= 2.9.0',
 -    'libclang >= 13.0.0',
--    'ml_dtypes ~= 0.2.0',
+-    'ml_dtypes ~= 0.3.1',
 +    # 'libclang >= 13.0.0',
-+    'ml_dtypes >= 0.2.0',
++    'ml_dtypes >= 0.3.1',
      'numpy >= 1.23.5, < 2.0.0',
      'opt_einsum >= 2.3.2',
      'packaging',
@@ -44,7 +44,7 @@ index b416731380f..a21f566ee4d 100644
  
  if collaborator_build:
    # If this is a collaborator build, then build an "installer" wheel and
-@@ -163,21 +163,21 @@ if collaborator_build:
+@@ -163,18 +163,18 @@ if collaborator_build:
  EXTRA_PACKAGES = {}
  EXTRA_PACKAGES['and-cuda'] = [
      # TODO(nluehr): set nvidia-* versions based on build components.
@@ -60,9 +60,6 @@ index b416731380f..a21f566ee4d 100644
 -    'nvidia-cusparse-cu12 == 12.1.2.141',
 -    'nvidia-nccl-cu12 == 2.16.5',
 -    'nvidia-nvjitlink-cu12 == 12.2.140',
--    'tensorrt == 8.6.1.post1',
--    'tensorrt-bindings == 8.6.1',
--    'tensorrt-libs == 8.6.1',
 +    'nvidia-cublas-cu12 >= 12.2.5.6',
 +    'nvidia-cuda-cupti-cu12 >= 12.2.142',
 +    'nvidia-cuda-nvcc-cu12 >= 12.2.140',
@@ -75,9 +72,6 @@ index b416731380f..a21f566ee4d 100644
 +    'nvidia-cusparse-cu12 >= 12.1.2.141',
 +    'nvidia-nccl-cu12 >= 2.16.5',
 +    'nvidia-nvjitlink-cu12 >= 12.2.140',
-+    'tensorrt >= 8.6.1.post1',
-+    'tensorrt-bindings >= 8.6.1',
-+    'tensorrt-libs >= 8.6.1',
  ]
  
  DOCLINES = __doc__.split('\n')
