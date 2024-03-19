@@ -30,6 +30,11 @@ BDEPEND="
 
 PATCHES=("${FILESDIR}/${P}-desktop.patch")
 
+pkg_setup() {
+	# Needed for lrelease
+	export PATH="$(qt5_get_bindir):${PATH}" || die
+}
+
 src_configure() {
 	eqmake5
 }
