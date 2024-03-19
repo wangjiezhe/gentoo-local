@@ -167,8 +167,7 @@ BDEPEND="
 		dev-python/cython
 		dev-python/mock
 		>=dev-python/grpcio-tools-1.28
-	)
-	dev-util/patchelf"
+	)"
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
 S="${WORKDIR}/${MY_P}"
@@ -449,7 +448,6 @@ src_install() {
 	doins ${PN}.pc ${PN}_cc.pc
 
 	for l in libtensorflow{,_framework,_cc}.so; do
-		patchelf --add-rpath '/opt/cuda/lib64' bazel-bin/tensorflow/${l}
 		dolib.so bazel-bin/tensorflow/${l}
 		dolib.so bazel-bin/tensorflow/${l}.$(ver_cut 1)
 		dolib.so bazel-bin/tensorflow/${l}.$(ver_cut 1-3)
