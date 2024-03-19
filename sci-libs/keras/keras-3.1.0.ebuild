@@ -5,20 +5,18 @@ EAPI=8
 
 DISTUTILS_USE_PEP517=setuptools
 PYTHON_COMPAT=( python3_{10..12} )
-inherit distutils-r1
+inherit distutils-r1 pypi
 
 DESCRIPTION="Deep Learning for humans"
 HOMEPAGE="https://keras.io/"
-SRC_URI="https://github.com/keras-team/${PN}/archive/v${PV}.tar.gz -> ${P}.gh.tar.gz"
+# SRC_URI="https://github.com/keras-team/${PN}/archive/v${PV}.tar.gz -> ${P}.gh.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~amd64"
-DOCS=( CONTRIBUTING.md README.md )
 RESTRICT="test"
 
 DEPEND="
-	>=dev-libs/protobuf-3.13.0:=
 	dev-python/absl-py[${PYTHON_USEDEP}]
 	dev-python/dm-tree[${PYTHON_USEDEP}]
 	dev-python/h5py[${PYTHON_USEDEP}]
@@ -27,12 +25,10 @@ DEPEND="
 	dev-python/numpy[${PYTHON_USEDEP}]
 	dev-python/optree[${PYTHON_USEDEP}]
 	dev-python/pandas[${PYTHON_USEDEP}]
-	>=dev-python/protobuf-python-3.13.0[${PYTHON_USEDEP}]
+	dev-python/protobuf-python[${PYTHON_USEDEP}]
 	dev-python/requests[${PYTHON_USEDEP}]
 	dev-python/rich[${PYTHON_USEDEP}]
 	dev-python/scipy[${PYTHON_USEDEP}]
 	dev-python/six[${PYTHON_USEDEP}]
 	>=sci-libs/tensorflow-2.16[python,${PYTHON_USEDEP}]
 "
-
-PATCHES="${FILESDIR}/${P}-setup.patch"
