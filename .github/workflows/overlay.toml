@@ -499,3 +499,8 @@ prefix = "v"
 source = "github"
 github = "google-deepmind/tree"
 use_latest_release = true
+
+["app-office/qtikz"]
+source = "github"
+github = "fhackenberger/ktikz"
+use_latest_tag = true
