@@ -1,0 +1,21 @@
+diff -ur ktikz-0.13.2/data/data.pri ktikz-0.13.2_modified/data/data.pri
+--- ktikz-0.13.2/data/data.pri	2021-04-21 00:46:33.000000000 +0800
++++ ktikz-0.13.2_modified/data/data.pri	2024-03-19 14:13:40.638621458 +0800
+@@ -7,7 +7,7 @@
+ 	createdesktop.name = create desktop file
+ 	createdesktop.input = DESKTOPTEMPLATES
+ 	createdesktop.output = ${QMAKE_FILE_BASE}
+-	createdesktop.commands = sed -e \"s/Icon=/Icon=$${ICONDIR}\\/qtikz-128.png/\" ${QMAKE_FILE_IN} > ${QMAKE_FILE_OUT}
++	createdesktop.commands = sed -e \"s/Icon=/Icon=qtikz/\" ${QMAKE_FILE_IN} > ${QMAKE_FILE_OUT}
+ 	createdesktop.CONFIG = no_link target_predeps
+ 	QMAKE_EXTRA_COMPILERS += createdesktop
+ 
+@@ -15,8 +15,6 @@
+ 	desktop.files += $${OUT_PWD}/qtikz.desktop
+ 	desktop.CONFIG += no_check_exist
+ 	INSTALLS += desktop
+-
+-	resources.files += $${_PRO_FILE_PWD_}/app/icons/qtikz-128.png
+ }
+ 
+ ### Templates

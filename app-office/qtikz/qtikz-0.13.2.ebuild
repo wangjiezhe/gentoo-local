@@ -28,21 +28,34 @@ BDEPEND="
 	dev-qt/qthelp:5
 "
 
+PATCHES=("${FILESDIR}/${P}-desktop.patch")
+
 src_configure() {
 	eqmake5
 }
 
 src_install() {
 	emake INSTALL_ROOT="${D}" install
+
 	einstalldocs
+
+	for s in 22 128; do
+		insinto /usr/share/icons/hicolor/${s}x${s}/apps
+		newins app/icons/qtikz-${s}.png qtikz.png
+	done
+
+	insinto /usr/share/icons/hicolor/scalable/apps
+	doins app/icons/qtikz.svg
 }
 
 pkg_postinst() {
 	xdg_desktop_database_update
 	xdg_mimeinfo_database_update
+	xdg_icon_cache_update
 }
 
 pkg_postrm() {
 	xdg_desktop_database_update
 	xdg_mimeinfo_database_update
+	xdg_icon_cache_update
 }
