@@ -9,7 +9,7 @@ inherit distutils-r1
 
 DESCRIPTION="Deep Learning for humans"
 HOMEPAGE="https://keras.io/"
-SRC_URI="https://github.com/keras-team/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/keras-team/${PN}/archive/v${PV}.tar.gz -> ${P}.gh.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
