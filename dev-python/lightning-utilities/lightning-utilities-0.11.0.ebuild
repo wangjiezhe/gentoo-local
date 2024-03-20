@@ -17,7 +17,7 @@ LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~amd64"
 
-PATCHES=( "${FILESDIR}/${P}-test.patch" )
+PATCHES=( "${FILESDIR}/${PN}-0.10.1-test.patch" )
 
 S="${WORKDIR}/utilities-${PV}"
 
