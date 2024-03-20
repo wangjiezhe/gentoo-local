@@ -18,7 +18,6 @@ RESTRICT="test"
 
 DEPEND="
 	dev-python/absl-py[${PYTHON_USEDEP}]
-	dev-python/dm-tree[${PYTHON_USEDEP}]
 	dev-python/h5py[${PYTHON_USEDEP}]
 	dev-python/ml-dtypes[${PYTHON_USEDEP}]
 	dev-python/namex[${PYTHON_USEDEP}]
