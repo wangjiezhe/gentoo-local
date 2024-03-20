@@ -1,8 +1,8 @@
 diff --git a/python/CMakeLists.txt b/python/CMakeLists.txt
-index 2229e89..55c2dc4 100644
+index cdfbf55..ecd6eb3 100644
 --- a/python/CMakeLists.txt
 +++ b/python/CMakeLists.txt
-@@ -1,20 +1,13 @@
+@@ -1,16 +1,9 @@
  cmake_minimum_required(VERSION 3.18)
  
 -Include(FetchContent)
@@ -18,14 +18,18 @@ index 2229e89..55c2dc4 100644
 -FetchContent_MakeAvailable(dlpack)
 +find_package(dlpack REQUIRED)
  
+ # Find python
  find_package(Python 3.8 COMPONENTS Interpreter Development.Module REQUIRED)
+@@ -18,7 +11,7 @@ find_package(Python 3.8 COMPONENTS Interpreter Development.Module REQUIRED)
+ # Find cudnn
+ include(${CMAKE_SOURCE_DIR}/cmake/cuDNN.cmake)
  
 -option(CUDNN_FRONTEND_FETCH_PYBINDS_IN_CMAKE "Whether cmake build system should fetch pybinds." ON)
 +option(CUDNN_FRONTEND_FETCH_PYBINDS_IN_CMAKE "Whether cmake build system should fetch pybinds." OFF)
  if(CUDNN_FRONTEND_FETCH_PYBINDS_IN_CMAKE)
      FetchContent_Declare(
          pybind11
-@@ -55,7 +48,7 @@ target_compile_definitions(_compiled_module PRIVATE NV_CUDNN_FRONTEND_USE_DYNAMI
+@@ -60,7 +53,7 @@ target_compile_definitions(_compiled_module PRIVATE NV_CUDNN_FRONTEND_USE_DYNAMI
  target_link_libraries(
      _compiled_module
      
