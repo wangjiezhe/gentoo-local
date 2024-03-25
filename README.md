@@ -9,7 +9,7 @@ Mainly maintained packages
 - Pytorch
 - Tensorflow
 - Some NVIDIA SDKs, such as `cudnn`, `nccl`, `cusparselt` and `tensorrt`.
-- and relative packages (`torchvision`, `pytorch-lightning`, ...)
+- and relative packages (`torchvision`, `lightning`, ...)
 
 Difference from offical overlay
 -------------------------------
@@ -22,4 +22,4 @@ Difference from offical overlay
 Notations about Tensorflow
 --------------------------
 
-There is something strange with tensorflow-2.14 and tensorflow-2.15, see [#62002](https://github.com/tensorflow/tensorflow/issues/62002) and [#62075](https://github.com/tensorflow/tensorflow/issues/62075). This will not prevent tensorflow from running, and seems not to be significant. But tensorboard starts really slow with version 2.15.0 due to this error. So the current suggestion is to stick to version 2.13.
+There is something strange with tensorflow-2.14 and tensorflow-2.15, see [#62002](https://github.com/tensorflow/tensorflow/issues/62002) and [#62075](https://github.com/tensorflow/tensorflow/issues/62075). This will not prevent tensorflow from running, and seems not to be significant. But tensorboard starts really slow with version 2.15.0 due to this error. So the current suggestion is to stick to version 2.13 (with keras 2) or update to version 2.16 (with keras 3).
