@@ -181,11 +181,11 @@ github = "catchorg/Catch2"
 use_latest_release = true
 prefix = "v"
 
-["dev-python/statsmodels"]
-source = "github"
-github = "statsmodels/statsmodels"
-use_latest_release = true
-prefix = "v"
+# ["dev-python/statsmodels"]
+# source = "github"
+# github = "statsmodels/statsmodels"
+# use_latest_release = true
+# prefix = "v"
 
 ["net-libs/google-cloud-cpp"]
 source = "github"
