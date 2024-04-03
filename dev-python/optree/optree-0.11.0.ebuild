@@ -26,6 +26,10 @@ BDEPEND="
 distutils_enable_tests pytest
 
 python_test() {
+	local EPYTEST_DESELECT=(
+		# test_treespec.py is not installed, so it cannot be find in test here.
+		tests/test_treespec.py::test_treespec_pickle_missing_registration
+	)
 	rm -rf optree || die
 	epytest
 }
