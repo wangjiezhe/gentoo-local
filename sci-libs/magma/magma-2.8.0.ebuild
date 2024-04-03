@@ -1,4 +1,4 @@
-# Copyright 1999-2022 Gentoo Authors
+# Copyright 1999-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -37,14 +37,14 @@ DEPEND="
 "
 BDEPEND="
 	virtual/pkgconfig
-	doc? ( >=app-doc/doxygen-1.8.14-r1[dot] )
+	doc? ( >=app-text/doxygen-1.8.14-r1[dot] )
 "
 
 RESTRICT="!test? ( test )"
 
 PATCHES=(
-	"${FILESDIR}/${P}-gentoo.patch"
-	"${FILESDIR}/${P}-cuda.patch"
+	"${FILESDIR}/${PN}-2.7.2-gentoo.patch"
+	"${FILESDIR}/${PN}-2.7.2-cuda.patch"
 )
 
 pkg_setup() {
