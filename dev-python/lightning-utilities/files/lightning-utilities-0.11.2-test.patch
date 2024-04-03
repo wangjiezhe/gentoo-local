@@ -43,7 +43,7 @@ index 0622d7d..36c982b 100644
 -    ['sphinx<6.0,>=4.0', ...]
 +    >>> path_req = os.path.join(_PROJECT_ROOT, "../requirements")
 +    >>> load_requirements(path_req, "_docs.txt", unfreeze="major")  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-+    ['sphinx<8.0,>=6.0', ...]
++    ['sphinx<7.0,>=5.0', ...]
  
      """
      if unfreeze not in {"none", "major", "all"}:
