@@ -24,7 +24,7 @@ SLOT="0"
 KEYWORDS="~amd64"
 
 DEPEND="
-	<dev-python/numpy-2[${PYTHON_USEDEP}]
+	dev-python/numpy[${PYTHON_USEDEP}]
 "
 BDEPEND="
 	dev-python/pybind11[${PYTHON_USEDEP}]
@@ -33,13 +33,13 @@ BDEPEND="
 python_prepare_all() {
 	rmdir third_party/eigen || die
 	cp -r "${WORKDIR}/eigen-${EIGEN_CommitId}" third_party/eigen || die
-	sed -i "s/include_package_data=True/include_package_data=False/" setup.py || die
 	distutils-r1_python_prepare_all
 }
 
 distutils_enable_tests pytest
 
 python_test() {
+	cp -r ml_dtypes/tests tests || die
 	rm -rf ml_dtypes || die
-	epytest --pyargs ml_dtypes
+	epytest
 }
