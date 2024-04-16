@@ -9,6 +9,7 @@ HOMEPAGE="https://developer.nvidia.com/nccl/"
 SRC_URI="https://github.com/NVIDIA/nccl/archive/refs/tags/v${PV}-1.tar.gz
 	-> ${P}.tar.gz"
 
+S="${WORKDIR}/${P}-1"
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64"
@@ -16,7 +17,6 @@ KEYWORDS="~amd64"
 DEPEND="dev-util/nvidia-cuda-toolkit"
 RDEPEND="${DEPEND}"
 
-S="${WORKDIR}/${P}-1"
 DOCS=( README.md LICENSE.txt )
 
 QA_PREBUILT="/opt/cuda/targets/x86_64-linux/lib/*"
