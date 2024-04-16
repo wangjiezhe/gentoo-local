@@ -3,6 +3,7 @@
 
 EAPI=8
 
+# dev-python/sentry-sdk does not support python3.10
 PYTHON_COMPAT=( python3_{11..12} )
 DISTUTILS_USE_PEP517=setuptools
 inherit distutils-r1
