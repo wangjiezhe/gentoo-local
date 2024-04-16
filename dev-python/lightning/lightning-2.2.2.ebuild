@@ -20,7 +20,7 @@ RESTRICT="test"		# Need fastapi, etc.
 
 RDEPEND="
 	dev-python/lightning-utilities[${PYTHON_SINGLE_USEDEP}]
-	dev-python/pytorch-lightning[${PYTHON_SINGLE_USEDEP}]
+	~dev-python/pytorch-lightning-${PV}[${PYTHON_SINGLE_USEDEP}]
 	sci-libs/pytorch[${PYTHON_SINGLE_USEDEP}]
 	sci-libs/torchmetrics[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
