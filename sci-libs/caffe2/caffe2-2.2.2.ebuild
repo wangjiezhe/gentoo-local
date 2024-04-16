@@ -15,6 +15,8 @@ HOMEPAGE="https://pytorch.org/"
 SRC_URI="https://github.com/pytorch/${MYPN}/archive/refs/tags/v${PV}.tar.gz
 	-> ${MYP}.tar.gz"
 
+S="${WORKDIR}"/${MYP}
+
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64"
@@ -119,8 +121,6 @@ DEPEND="
 BDEPEND="
 	dev-util/patchelf
 "
-
-S="${WORKDIR}"/${MYP}
 
 PATCHES=(
 	"${FILESDIR}"/${PN}-2.2.0-gentoo.patch
