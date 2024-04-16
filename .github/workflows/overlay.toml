@@ -175,11 +175,11 @@ github = "dmlc/dlpack"
 use_latest_release = true
 prefix = "v"
 
-["dev-libs/catch2"]
-source = "github"
-github = "catchorg/Catch2"
-use_latest_release = true
-prefix = "v"
+# ["dev-cpp/catch"]
+# source = "github"
+# github = "catchorg/Catch2"
+# use_latest_release = true
+# prefix = "v"
 
 # ["dev-python/statsmodels"]
 # source = "github"
