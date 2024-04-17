@@ -9,6 +9,7 @@ inherit distutils-r1 pypi
 
 DESCRIPTION="Deep Learning for humans"
 HOMEPAGE="https://keras.io/"
+# Use pypi source to support traditional `tf.keras` module
 # SRC_URI="https://github.com/keras-team/${PN}/archive/v${PV}.tar.gz -> ${P}.gh.tar.gz"
 
 LICENSE="Apache-2.0"
