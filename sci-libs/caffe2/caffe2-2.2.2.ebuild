@@ -52,6 +52,7 @@ RDEPEND="
 		=dev-libs/cudnn-8*
 		>=dev-libs/cudnn-frontend-0.9.2:0/8
 		<dev-util/nvidia-cuda-toolkit-12.4.0:=[profiler]
+		dev-libs/nccl
 		!=dev-libs/nccl-2.19.4*
 		dev-libs/cusparselt
 	)
