@@ -9,16 +9,16 @@ inherit bazel distutils-r1
 DESCRIPTION="Deep Learning for humans"
 HOMEPAGE="https://keras.io/"
 
-LICENSE="Apache-2.0"
-SLOT="0"
-KEYWORDS="~amd64"
-
 bazel_external_uris="
 	https://github.com/bazelbuild/rules_cc/releases/download/0.0.2/rules_cc-0.0.2.tar.gz -> bazelbuild-rules_cc-0.0.2.tar.gz
 	https://github.com/bazelbuild/rules_java/archive/7cf3cefd652008d0a64a419c34c13bdca6c8f178.zip -> bazelbuild-rules_java-7cf3cefd652008d0a64a419c34c13bdca6c8f178.zip"
 
 SRC_URI="https://github.com/keras-team/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz
 	${bazel_external_uris}"
+
+LICENSE="Apache-2.0"
+SLOT="0"
+KEYWORDS="~amd64"
 
 RDEPEND="
 	>=dev-libs/protobuf-3.13.0:=
