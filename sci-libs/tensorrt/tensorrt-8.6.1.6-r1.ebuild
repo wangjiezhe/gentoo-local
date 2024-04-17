@@ -17,6 +17,7 @@ UFF_VER="0.6.9"
 DESCRIPTION="An SDK for high-performance deep learning inference"
 HOMEPAGE="https://developer.nvidia.com/tensorrt"
 SRC_URI="https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/secure/${BASE_VER}/tars/tensorrt-${PV}.linux.x86_64-gnu.cuda-${CUDA_VER}.tar.gz"
+S="${WORKDIR}/TensorRT-${PV}"
 
 LICENSE="NVIDIA-TensorRT"
 SLOT="0"
@@ -34,7 +35,6 @@ RDEPEND="
 BDEPEND="
 	dev-util/patchelf
 "
-S="${WORKDIR}/TensorRT-${PV}"
 
 src_install() {
 	into /opt/cuda

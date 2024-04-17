@@ -15,6 +15,7 @@ ONNX_GRAPHSURGEON_VER="0.4.0"
 DESCRIPTION="An SDK for high-performance deep learning inference"
 HOMEPAGE="https://developer.nvidia.com/tensorrt"
 SRC_URI="https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/${BASE_VER}/tensorrt-${PV}.linux.x86_64-gnu.cuda-${CUDA_VER}.tar.gz"
+S="${WORKDIR}/TensorRT-${PV}"
 
 LICENSE="NVIDIA-TensorRT"
 SLOT="0"
@@ -32,7 +33,6 @@ RDEPEND="
 BDEPEND="
 	dev-util/patchelf
 "
-S="${WORKDIR}/TensorRT-${PV}"
 
 src_install() {
 	into /opt/cuda
