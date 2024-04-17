@@ -24,13 +24,14 @@ BDEPEND="
 		dev-python/pybind11
 		dev-libs/dlpack
 		test? (
+			dev-python/looseversion
 			sci-libs/pytorch
 			sci-libs/caffe2[cuda]
 		)
 	)
 "
 
-PATCHES=("${FILESDIR}/${P}-cmake.patch")
+PATCHES=("${FILESDIR}/${PN}-1.2.1-cmake.patch")
 
 src_prepare() {
 	eapply_user
