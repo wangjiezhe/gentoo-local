@@ -98,8 +98,11 @@ RDEPEND="
 # pytorch-2.2.0/aten/src/ATen/native/transformers/cuda/flash_attn/flash_bwd_kernel.h:
 # error: no instance of constructor "Tensor" matches the argument list
 # error: cannot deduce class template arguments
-# Failed with cutlass-3.4.1:
+# Failed with cutlass-3.4.1/3.5.0:
 # fatal error: cutlass/gemm/device/gemm_sparse_row_broadcast.h: No such file or directory
+# Due to https://github.com/NVIDIA/cutlass/commit/ca37d632c9e31e0bc32f876ef92cc383c07ceb2f
+# Solved by https://github.com/pytorch/pytorch/commit/36c1cc962aaef854d2388a5ecfde230d40bcc1d6
+# Would be fixed in the release of v2.3.0
 DEPEND="
 	${RDEPEND}
 	cuda? (
