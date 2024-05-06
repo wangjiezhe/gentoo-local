@@ -4,3 +4,6 @@ sci-libs/tensorflow
 sci-libs/tensorflow-estimator
 sci-visualization/tensorboard
 dev-python/astunparse
+dev-python/grpcio
+dev-python/grpcio-tools
+dev-python/grpcio-testing
