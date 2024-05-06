@@ -1,4 +1,4 @@
-# Copyright 2023 Gentoo Authors
+# Copyright 2023-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -37,9 +37,9 @@ RDEPEND="
 		')
 	)
 	text? (
+		sci-libs/transformers[${PYTHON_SINGLE_USEDEP}]
 		$(python_gen_cond_dep '
 			sci-libs/nltk[${PYTHON_USEDEP}]
-			sci-libs/transformers[${PYTHON_USEDEP}]
 			dev-python/regex[${PYTHON_USEDEP}]
 			dev-python/tqdm[${PYTHON_USEDEP}]
 		')
