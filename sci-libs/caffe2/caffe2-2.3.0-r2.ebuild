@@ -107,6 +107,7 @@ DEPEND="
 	$(python_gen_cond_dep '
 		dev-python/pyyaml[${PYTHON_USEDEP}]
 		dev-python/pybind11[${PYTHON_USEDEP}]
+		dev-python/typing-extensions[${PYTHON_USEDEP}]
 	')
 "
 
