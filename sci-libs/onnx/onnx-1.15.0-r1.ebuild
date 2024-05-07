@@ -49,6 +49,7 @@ BDEPEND="
 PATCHES=(
 	"${FILESDIR}/${P}-cxx_17.patch"
 	"${FILESDIR}/${P}-test.patch"
+	"${FILESDIR}/${P}-hidden.patch"
 )
 
 src_prepare() {
@@ -63,6 +64,7 @@ src_configure() {
 	mycmakeargs=(
 		-DONNX_USE_PROTOBUF_SHARED_LIBS=ON
 		-DONNX_USE_LITE_PROTO=ON
+		-DONNX_BUILD_SHARED_LIBS=ON
 		-DONNX_BUILD_TESTS=$(usex test ON OFF)
 	)
 	cmake_src_configure
@@ -82,8 +84,6 @@ src_install() {
 distutils_enable_tests pytest
 
 src_test() {
-	# FIXME: libonnx.so: undefined reference to
-	# `onnx::AttributeProto_AttributeType_Name[abi:cxx11](onnx::AttributeProto_AttributeType)'
 	cmake_src_test
 	use python && distutils-r1_src_test
 }
