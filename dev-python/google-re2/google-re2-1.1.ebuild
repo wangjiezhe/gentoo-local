@@ -14,7 +14,7 @@ HOMEPAGE="https://github.com/google/re2 https://pypi.org/project/google-re2/"
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~riscv"
 # RESTRICT="test"
 
 DEPEND="
