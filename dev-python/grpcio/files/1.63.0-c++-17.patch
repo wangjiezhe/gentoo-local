@@ -1,0 +1,66 @@
+diff -ur grpcio-1.63.0/Makefile grpcio-1.63.0_modified/Makefile
+--- grpcio-1.63.0/Makefile	2024-04-26 14:29:20.000000000 +0800
++++ grpcio-1.63.0_modified/Makefile	2024-05-07 17:19:18.947259533 +0800
+@@ -279,7 +279,7 @@
+ HOST_LDXX ?= $(LDXX)
+ 
+ CFLAGS += -std=c11
+-CXXFLAGS += -std=c++14
++CXXFLAGS += -std=c++17
+ ifeq ($(SYSTEM),Darwin)
+ CXXFLAGS += -stdlib=libc++
+ LDFLAGS += -framework CoreFoundation
+diff -ur grpcio-1.63.0/setup.py grpcio-1.63.0_modified/setup.py
+--- grpcio-1.63.0/setup.py	2024-04-26 14:29:21.000000000 +0800
++++ grpcio-1.63.0_modified/setup.py	2024-05-07 17:19:46.737260582 +0800
+@@ -213,7 +213,7 @@
+     )
+     cxx = shlex.split(os.environ.get("CXX", "c++"))
+     cpp_test = subprocess.Popen(
+-        cxx + ["-x", "c++", "-std=c++14", "-"],
++        cxx + ["-x", "c++", "-std=c++17", "-"],
+         stdin=PIPE,
+         stdout=PIPE,
+         stderr=PIPE,
+@@ -224,7 +224,7 @@
+     # Double-check to see if -latomic actually can solve the problem.
+     # https://github.com/grpc/grpc/issues/22491
+     cpp_test = subprocess.Popen(
+-        cxx + ["-x", "c++", "-std=c++14", "-", "-latomic"],
++        cxx + ["-x", "c++", "-std=c++17", "-", "-latomic"],
+         stdin=PIPE,
+         stdout=PIPE,
+         stderr=PIPE,
+@@ -252,7 +252,7 @@
+         EXTRA_ENV_COMPILE_ARGS += " /MT"
+     elif "linux" in sys.platform:
+         # GCC by defaults uses C17 so only C++14 needs to be specified.
+-        EXTRA_ENV_COMPILE_ARGS += " -std=c++14"
++        EXTRA_ENV_COMPILE_ARGS += " -std=c++17"
+         EXTRA_ENV_COMPILE_ARGS += (
+             " -fvisibility=hidden -fno-wrapv -fno-exceptions"
+         )
+diff -ur grpcio-1.63.0/src/python/grpcio/commands.py grpcio-1.63.0_modified/src/python/grpcio/commands.py
+--- grpcio-1.63.0/src/python/grpcio/commands.py	2024-04-26 14:29:21.000000000 +0800
++++ grpcio-1.63.0_modified/src/python/grpcio/commands.py	2024-05-07 17:20:10.797261917 +0800
+@@ -256,7 +256,7 @@
+                 # TODO(lidiz) Remove the generated a.out for success tests.
+                 cc = os.environ.get("CC", "cc")
+                 cc_test = subprocess.Popen(
+-                    [cc, "-x", "c", "-std=c++14", "-"],
++                    [cc, "-x", "c", "-std=c++17", "-"],
+                     stdin=subprocess.PIPE,
+                     stdout=subprocess.PIPE,
+                     stderr=subprocess.PIPE,
+diff -ur grpcio-1.63.0/src/python/grpcio/grpc/_cython/cygrpc.cpp grpcio-1.63.0_modified/src/python/grpcio/grpc/_cython/cygrpc.cpp
+--- grpcio-1.63.0/src/python/grpcio/grpc/_cython/cygrpc.cpp	2024-04-26 14:29:40.000000000 +0800
++++ grpcio-1.63.0_modified/src/python/grpcio/grpc/_cython/cygrpc.cpp	2024-05-07 17:20:18.087262542 +0800
+@@ -60,7 +60,7 @@
+             "src/core/lib/surface/call.h"
+         ],
+         "extra_compile_args": [
+-            "-std=c++14",
++            "-std=c++17",
+             "-fvisibility=hidden",
+             "-fno-wrapv",
+             "-fno-exceptions"
