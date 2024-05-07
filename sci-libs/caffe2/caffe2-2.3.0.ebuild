@@ -32,9 +32,6 @@ REQUIRED_USE="
 "
 
 #		sci-libs/tensorrt
-# Failed with onnx-1.15.0:
-# /usr/lib64/libonnx.so: undefined reference to
-# `onnx::AttributeProto_AttributeType_Name[abi:cxx11](onnx::AttributeProto_AttributeType)'
 RDEPEND="
 	${PYTHON_DEPS}
 	dev-cpp/gflags:=
@@ -45,12 +42,11 @@ RDEPEND="
 	dev-libs/pthreadpool
 	dev-libs/sleef
 	virtual/lapack
-	>=sci-libs/onnx-1.12.0
-	<sci-libs/onnx-1.15.0
+	sci-libs/onnx
 	sci-libs/foxi
 	cuda? (
 		=dev-libs/cudnn-8*
-		>=dev-libs/cudnn-frontend-0.9.2:0/8
+		>=dev-libs/cudnn-frontend-1.0.3:0/8
 		<dev-util/nvidia-cuda-toolkit-12.4.0:=[profiler]
 		dev-libs/nccl
 		!=dev-libs/nccl-2.19.4*
@@ -91,23 +87,15 @@ RDEPEND="
 	mkl? ( sci-libs/mkl )
 	openblas? ( sci-libs/openblas )
 "
-# Failed with cutlass-3.4.0:
-# /usr/include/cutlass/bfloat16.h(94): error: name followed by "::" must be a class or namespace name
-#        static_assert(cutlass::platform::is_integral<T>::value && sizeof(T) == 4, "Requires 32-bit integer");
-# After apply patches:
-# pytorch-2.2.0/aten/src/ATen/native/transformers/cuda/flash_attn/flash_bwd_kernel.h:
-# error: no instance of constructor "Tensor" matches the argument list
-# error: cannot deduce class template arguments
-# Failed with cutlass-3.4.1/3.5.0:
-# fatal error: cutlass/gemm/device/gemm_sparse_row_broadcast.h: No such file or directory
-# Due to https://github.com/NVIDIA/cutlass/commit/ca37d632c9e31e0bc32f876ef92cc383c07ceb2f
-# Solved by https://github.com/pytorch/pytorch/commit/36c1cc962aaef854d2388a5ecfde230d40bcc1d6
-# Would be fixed in the release of v2.3.0
+# Failed with cutlass-3.5.0:
+# error: namespace "cute::detail" has no member "is_prefetch"
+# See https://github.com/NVIDIA/cutlass/issues/1484
+# and https://github.com/NVIDIA/cutlass/issues/1508
 DEPEND="
 	${RDEPEND}
 	cuda? (
-		>=dev-libs/cutlass-3.1.0
-		<dev-libs/cutlass-3.4.0
+		>=dev-libs/cutlass-3.4.1
+		<dev-libs/cutlass-3.5.0
 	)
 	onednn? ( sci-libs/ideep )
 	dev-libs/psimd
@@ -137,10 +125,12 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.1.1-protobuf.patch
 	"${FILESDIR}"/${PN}-2.1.1-lite-proto.patch
 	"${FILESDIR}"/${PN}-2.1.1-opencl.patch
-	"${FILESDIR}"/${PN}-2.2.0-cuSPARSELt.patch
 	"${FILESDIR}"/${PN}-2.1.2-fix-rpath.patch
 	"${FILESDIR}"/${PN}-2.1.2-fix-openmp-link.patch
-	"${FILESDIR}"/${PN}-2.1.2-rocm-fix-std-cpp17.patch
+	"${FILESDIR}"/${P}-rocm-fix-std-cpp17.patch
+	"${FILESDIR}"/${PN}-2.2.2-musl.patch
+	"${FILESDIR}"/${P}-CMakeFix.patch
+	"${FILESDIR}"/${P}-cudnn_include_fix.patch
 )
 
 src_prepare() {

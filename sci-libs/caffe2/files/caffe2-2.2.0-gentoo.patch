@@ -133,15 +133,6 @@ index acc95842b63..9c03e5bc527 100644
    caffe2_update_option(USE_FBGEMM ON)
  else()
    caffe2_update_option(USE_FBGEMM OFF)
-@@ -1207,7 +1213,7 @@ if(USE_LLVM)
- endif(USE_LLVM)
- 
- # ---[ cuDNN
--if(USE_CUDNN)
-+if(FALSE)
-   set(CUDNN_FRONTEND_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/../third_party/cudnn_frontend/include)
-   target_include_directories(torch::cudnn INTERFACE ${CUDNN_FRONTEND_INCLUDE_DIR})
- endif()
 @@ -1529,7 +1535,6 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
        set_target_properties(onnx_proto PROPERTIES CXX_STANDARD 17)
      endif()
