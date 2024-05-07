@@ -13,13 +13,13 @@ DESCRIPTION="A collection of high-performance PyTorch GPU operator libraries for
 HOMEPAGE="https://github.com/pytorch/FBGEMM"
 SRC_URI="https://github.com/pytorch/FBGEMM/archive/v${PV}.tar.gz -> ${P}.gh.tar.gz"
 
+S="${WORKDIR}/FBGEMM-${PV}/fbgemm_gpu"
+
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64"
 IUSE="cuda"
 RESTRICT="test"
-
-S="${WORKDIR}/FBGEMM-${PV}/fbgemm_gpu"
 
 RDEPEND="
 	>=sci-libs/pytorch-2.3[${PYTHON_SINGLE_USEDEP}]
