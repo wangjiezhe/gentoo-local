@@ -36,10 +36,9 @@ RDEPEND="
 "
 
 PATCHES=(
-	"${FILESDIR}/${P}-0001-Register-a-shutdown-delete-for-C-feature-defaults.patch"
-	"${FILESDIR}/${P}-0002-Disable-32-bit-tests.patch"
-	"${FILESDIR}/${P}-0003-Fix-static_assert-failure.patch"
-	"${FILESDIR}/${P}-0004-Workaround-false-positive-warning-in-MSVC.patch"
+	"${FILESDIR}/${PN}-25.1-0002-Disable-32-bit-tests.patch"
+	"${FILESDIR}/${PN}-25.1-0003-Fix-static_assert-failure.patch"
+	"${FILESDIR}/${PN}-25.1-0004-Workaround-false-positive-warning-in-MSVC.patch"
 )
 
 DOCS=( CONTRIBUTORS.txt README.md )
