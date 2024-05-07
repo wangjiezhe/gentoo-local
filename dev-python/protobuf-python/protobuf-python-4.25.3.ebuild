@@ -34,7 +34,7 @@ HOMEPAGE="
 "
 
 LICENSE="BSD"
-SLOT="0/25.1.0"
+SLOT="0/25.3.0"
 
 S="${WORKDIR}/${PARENT_P}/python"
 
