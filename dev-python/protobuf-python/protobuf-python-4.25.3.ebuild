@@ -33,10 +33,10 @@ HOMEPAGE="
 	https://pypi.org/project/protobuf/
 "
 
+S="${WORKDIR}/${PARENT_P}/python"
+
 LICENSE="BSD"
 SLOT="0/25.3.0"
-
-S="${WORKDIR}/${PARENT_P}/python"
 
 DEPEND="
 	${PYTHON_DEPS}
