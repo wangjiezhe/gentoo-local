@@ -43,10 +43,6 @@ DEPEND="${RDEPEND}"
 
 # distutils_enable_tests pytest
 
-PATCHES=(
-	"${FILESDIR}"/8096-fix-build-with-ffmpeg-6.0.patch
-)
-
 src_prepare() {
 	distutils-r1_src_prepare
 
