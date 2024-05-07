@@ -29,6 +29,7 @@ src_configure() {
 	)
 	cuda_add_sandbox -w
 	addpredict /dev/char
+	addpredict /proc/self/task
 	cmake_src_configure
 }
 
