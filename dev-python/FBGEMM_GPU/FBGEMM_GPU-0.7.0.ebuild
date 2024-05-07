@@ -22,7 +22,7 @@ RESTRICT="test"
 S="${WORKDIR}/FBGEMM-${PV}/fbgemm_gpu"
 
 RDEPEND="
-	>=sci-libs/pytorch-2.2[${PYTHON_SINGLE_USEDEP}]
+	>=sci-libs/pytorch-2.3[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		dev-python/numpy[${PYTHON_USEDEP}]
 	')
