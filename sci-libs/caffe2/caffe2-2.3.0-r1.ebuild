@@ -83,7 +83,7 @@ RDEPEND="
 		>=dev-util/roctracer-5.7[${ROCM_USEDEP}]
 	)
 	distributed? ( sci-libs/tensorpipe[cuda?] )
-	xnnpack? ( >=sci-libs/XNNPACK-2022.12.22 )
+	xnnpack? ( >=sci-libs/XNNPACK-2024.02.29 )
 	mkl? ( sci-libs/mkl )
 	openblas? ( sci-libs/openblas )
 "
