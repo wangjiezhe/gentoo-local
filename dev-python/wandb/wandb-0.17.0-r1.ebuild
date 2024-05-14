@@ -21,7 +21,10 @@ SLOT="0"
 KEYWORDS="~amd64"
 RESTRICT="test"
 
-BDEPEND="dev-util/patchelf"
+BDEPEND="
+	sys-devel/binutils[gold]
+	dev-util/patchelf
+"
 
 RDEPEND="
 	$(python_gen_cond_dep '
@@ -39,7 +42,6 @@ RDEPEND="
 "
 
 PATCHES=(
-	"${FILESDIR}/${P}-ld.patch"
 	"${FILESDIR}/${P}-hatch.patch"
 )
 
@@ -49,7 +51,13 @@ src_unpack() {
 	S="${WORKDIR}/${P}/core" go-module_src_unpack
 }
 
+src_prepare() {
+	export CGO_LDFLAGS=$(echo "$CGO_LDFLAGS" | sed 's/-Wl,-z,pack-relative-relocs//g')
+	distutils-r1_src_prepare
+}
+
 src_install() {
 	distutils-r1_src_install
-	patchelf --add-needed libnvidia-ml.so.1 "${D}/$(python_get_sitedir)"/wandb/bin/wandb-core
+	ldconfig -p | grep libnvidia-ml.so.1 &&
+		patchelf --add-needed libnvidia-ml.so.1 "${D}/$(python_get_sitedir)"/wandb/bin/wandb-core
 }
