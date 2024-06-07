@@ -21,6 +21,8 @@ RDEPEND="
 	sci-libs/torchmetrics[${PYTHON_SINGLE_USEDEP}]
 	dev-python/FBGEMM_GPU[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
+		dev-python/iopath[${PYTHON_USEDEP}]
+		dev-python/pyre-extensions[${PYTHON_USEDEP}]
 		dev-python/tqdm[${PYTHON_USEDEP}]
 	')
 "
