@@ -123,6 +123,7 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-1.13.0-install-dirs.patch
 	"${FILESDIR}"/${PN}-1.12.0-glog-0.6.0.patch
 	"${FILESDIR}"/${PN}-1.13.1-tensorpipe.patch
+	"${FILESDIR}"/${PN}-2.3.0-cudnn_include_fix.patch
 	"${FILESDIR}"/${PN}-2.0.1-functorch.patch
 	"${FILESDIR}"/${PN}-2.1.1-fbgemm.patch
 	"${FILESDIR}"/${PN}-2.1.1-ffmpeg6.patch
@@ -131,10 +132,9 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.1.1-opencl.patch
 	"${FILESDIR}"/${PN}-2.1.2-fix-rpath.patch
 	"${FILESDIR}"/${PN}-2.1.2-fix-openmp-link.patch
-	"${FILESDIR}"/${P}-rocm-fix-std-cpp17.patch
+	"${FILESDIR}"/${PN}-2.3.0-rocm-fix-std-cpp17.patch
 	"${FILESDIR}"/${PN}-2.2.2-musl.patch
-	"${FILESDIR}"/${P}-CMakeFix.patch
-	"${FILESDIR}"/${P}-cudnn_include_fix.patch
+	"${FILESDIR}"/${PN}-2.3.0-CMakeFix.patch
 )
 
 src_prepare() {
