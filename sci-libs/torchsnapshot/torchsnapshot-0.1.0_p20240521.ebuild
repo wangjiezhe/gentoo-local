@@ -8,7 +8,7 @@ DISTUTILS_USE_PEP517=setuptools
 DISTUTILS_SINGLE_IMPL=1
 inherit distutils-r1
 
-CommitId="5a7c96f1f14773fa9f915c0d5dc4f155b730834a"
+CommitId="e8a1fc097b4138493f05e5cac986730d116d0063"
 
 DESCRIPTION="A performant, memory-efficient checkpointing library for PyTorch applications"
 HOMEPAGE="https://github.com/pytorch/torchsnapshot"
@@ -55,8 +55,6 @@ python_test() {
 		tests/test_pg_wrapper.py::TestPGWrapper::test_scatter_obj_list_nccl
 		tests/test_uvm_tensor.py::test_uvm_tensor
 		tests/gpu_tests
-		## stuck
-		tests/test_sharded_tensor_resharding.py::test_sharded_tensor_resharding
 	)
 	epytest
 }
