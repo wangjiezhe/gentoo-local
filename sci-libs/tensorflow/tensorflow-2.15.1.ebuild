@@ -14,16 +14,6 @@ inherit bazel check-reqs cuda distutils-r1 flag-o-matic multibuild prefix toolch
 DESCRIPTION="Computation framework using data flow graphs for scalable machine learning"
 HOMEPAGE="https://www.tensorflow.org/"
 
-RESTRICT="test" # Tests need GPU access
-LICENSE="Apache-2.0"
-SLOT="0"
-KEYWORDS="~amd64"
-IUSE="cuda mpi +python xla"
-CPU_USE_FLAGS_X86="sse sse2 sse3 sse4_1 sse4_2 avx avx2 fma3 fma4"
-for i in $CPU_USE_FLAGS_X86; do
-	IUSE+=" cpu_flags_x86_${i}"
-done
-
 # distfiles that bazel uses for the workspace, will be copied to basel-distdir
 # pkgcheck complains but do NOT change the .zip to .tar.gz, bazel requires the exact tarball (basename and sha256).
 # the build will fail if different archives are used.
@@ -91,6 +81,18 @@ bazel_external_uris="
 
 SRC_URI="https://github.com/${PN}/${PN}/archive/v${MY_PV}.tar.gz -> ${P}.tar.gz
 		${bazel_external_uris}"
+
+S="${WORKDIR}/${MY_P}"
+
+LICENSE="Apache-2.0"
+SLOT="0"
+KEYWORDS="~amd64"
+IUSE="cuda mpi +python xla"
+CPU_USE_FLAGS_X86="sse sse2 sse3 sse4_1 sse4_2 avx avx2 fma3 fma4"
+for i in $CPU_USE_FLAGS_X86; do
+	IUSE+=" cpu_flags_x86_${i}"
+done
+RESTRICT="test" # Tests need GPU access
 
 # abseil-cpp-20211102.0-r0 does not work with NVCC
 # check flatbuffers version in tensorflow/lite/schema/schema_generated.h
@@ -177,8 +179,6 @@ BDEPEND="
 	)
 	dev-util/patchelf"
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
-
-S="${WORKDIR}/${MY_P}"
 
 DOCS=( AUTHORS CONTRIBUTING.md ISSUE_TEMPLATE.md README.md RELEASE.md )
 CHECKREQS_MEMORY="5G"
