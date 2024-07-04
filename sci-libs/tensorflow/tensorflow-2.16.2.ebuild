@@ -27,7 +27,7 @@ done
 # distfiles that bazel uses for the workspace, will be copied to basel-distdir
 # pkgcheck complains but do NOT change the .zip to .tar.gz, bazel requires the exact tarball (basename and sha256).
 # the build will fail if different archives are used.
-	bazel_external_uris="
+bazel_external_uris="
 	https://github.com/Maratyszcza/FP16/archive/4dfe081cf6bcd15db339cf2680b9281b8451eeb3.zip -> FP16-4dfe081cf6bcd15db339cf2680b9281b8451eeb3.zip
 	https://github.com/Maratyszcza/FXdiv/archive/63058eff77e11aa15bf531df5dd34395ec3017c8.zip -> FXdiv-63058eff77e11aa15bf531df5dd34395ec3017c8.zip
 	https://github.com/Maratyszcza/pthreadpool/archive/4fe0e1e183925bf8cfa6aae24237e724a96479b8.zip -> pthreadpool-4fe0e1e183925bf8cfa6aae24237e724a96479b8.zip
@@ -177,20 +177,20 @@ CHECKREQS_MEMORY="5G"
 CHECKREQS_DISK_BUILD="10G"
 
 PATCHES=(
-	"${FILESDIR}/${P}-0001-WORKSPACE-add-rules-docker-http_archive-bazel-toolch.patch"
-	"${FILESDIR}/${P}-0002-systemlib-Latest-absl-LTS-has-split-cord-libs.patch"
-	"${FILESDIR}/${P}-0003-mkl_dnn-Must-link-against-libm-for-round-and-log2.patch"
-	"${FILESDIR}/${P}-0004-tensorflow_cc-Add-systemlib-nsync-linkopts.patch"
-	"${FILESDIR}/${P}-0005-systemlib-Updates-for-Abseil-20220623-LTS.patch"
-	"${FILESDIR}/${P}-0006-systemlib-Update-targets-for-absl_py.patch"
-	"${FILESDIR}/${P}-0007-systemlib-Add-well_known_types_py_pb2-target.patch"
-	"${FILESDIR}/${P}-0008-Relax-setup.py-version-requirements.patch"
-	"${FILESDIR}/${P}-0009-systemlib-update-targets-for-absl.patch"
-	"${FILESDIR}/${P}-0010-systemlib-fix-missing-osx-in-pybind11.patch"
-	"${FILESDIR}/${P}-0011-systemlib-fix-missing-LICENSE-in-flatbuffers.patch"
-	"${FILESDIR}/${P}-0012-installation-remove-cp_local_config_python.patch"
-	"${FILESDIR}/${P}-0013-build-use-non-hermetic-python.patch"
-	"${FILESDIR}/${P}-0014-systemlibs-Add-missing-targets-for-absl.patch"
+	"${FILESDIR}/${PN}-2.16.1-0001-WORKSPACE-add-rules-docker-http_archive-bazel-toolch.patch"
+	"${FILESDIR}/${PN}-2.16.1-0002-systemlib-Latest-absl-LTS-has-split-cord-libs.patch"
+	"${FILESDIR}/${PN}-2.16.1-0003-mkl_dnn-Must-link-against-libm-for-round-and-log2.patch"
+	"${FILESDIR}/${PN}-2.16.1-0004-tensorflow_cc-Add-systemlib-nsync-linkopts.patch"
+	"${FILESDIR}/${PN}-2.16.1-0005-systemlib-Updates-for-Abseil-20220623-LTS.patch"
+	"${FILESDIR}/${PN}-2.16.1-0006-systemlib-Update-targets-for-absl_py.patch"
+	"${FILESDIR}/${PN}-2.16.1-0007-systemlib-Add-well_known_types_py_pb2-target.patch"
+	"${FILESDIR}/${PN}-2.16.1-0008-Relax-setup.py-version-requirements.patch"
+	"${FILESDIR}/${PN}-2.16.1-0009-systemlib-update-targets-for-absl.patch"
+	"${FILESDIR}/${PN}-2.16.1-0010-systemlib-fix-missing-osx-in-pybind11.patch"
+	"${FILESDIR}/${PN}-2.16.1-0011-systemlib-fix-missing-LICENSE-in-flatbuffers.patch"
+	"${FILESDIR}/${PN}-2.16.1-0012-installation-remove-cp_local_config_python.patch"
+	"${FILESDIR}/${PN}-2.16.1-0013-build-use-non-hermetic-python.patch"
+	"${FILESDIR}/${PN}-2.16.1-0014-systemlibs-Add-missing-targets-for-absl.patch"
 )
 
 get-cpu-flags() {
