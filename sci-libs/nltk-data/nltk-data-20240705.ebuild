@@ -124,6 +124,7 @@ SRC_URI="
 	https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/taggers/averaged_perceptron_tagger_rus.zip
 "
 
+S="${WORKDIR}"
 LICENSE="Unlicense"
 SLOT="0"
 KEYWORDS="~amd64"
@@ -134,7 +135,6 @@ RDEPEND="
 	dev-python/six
 "
 BDEPEND="app-arch/unzip"
-S="${WORKDIR}"
 
 src_install() {
 	for uri in ${SRC_URI}; do
