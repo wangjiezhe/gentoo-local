@@ -1,0 +1,23 @@
+From a38dc1d8d016e407f7da48df2fc52bd3011af0cb Mon Sep 17 00:00:00 2001
+From: haaris <haarisrahman@gmail.com>
+Date: Tue, 25 Jun 2024 12:03:07 -0700
+Subject: [PATCH] Fix for getting socket name for IPv4 addresses
+
+---
+ torchsnapshot/dist_store.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/torchsnapshot/dist_store.py b/torchsnapshot/dist_store.py
+index 1417129..6dc8b1c 100644
+--- a/torchsnapshot/dist_store.py
++++ b/torchsnapshot/dist_store.py
+@@ -66,7 +66,8 @@ def create_store(pg_wrapper: PGWrapper) -> dist.Store:
+     if pg_wrapper.get_rank() == 0:
+         # Find a free port
+         sock = get_socket_with_port()
+-        master_addr, master_port, _, _ = sock.getsockname()
++        address = sock.getsockname()
++        master_addr, master_port = address[0], address[1]
+         sock.close()
+         # Broadcast master address/port to peers
+         obj_list = [master_addr, master_port]

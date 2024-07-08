@@ -43,6 +43,8 @@ BDEPEND="
 	)
 "
 
+PATCHES=( "${FILESDIR}/179-Fix-for-getting-socket-name-for-IPv4-addresses.patch" )
+
 distutils_enable_tests pytest
 
 python_test() {
