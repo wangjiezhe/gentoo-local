@@ -42,7 +42,7 @@ RDEPEND="
 "
 
 PATCHES=(
-	"${FILESDIR}/${P}-hatch.patch"
+	"${FILESDIR}/${PN}-0.17.0-hatch.patch"
 )
 
 DOC=( package_readme.md )
