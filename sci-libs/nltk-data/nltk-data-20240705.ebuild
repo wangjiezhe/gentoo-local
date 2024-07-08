@@ -119,6 +119,9 @@ SRC_URI="
 	https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/corpora/indian.zip
 	https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/corpora/conll2002.zip
 	https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/help/tagsets.zip
+	https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/help/tagsets_json.zip
+	https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/taggers/averaged_perceptron_tagger_eng.zip
+	https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/taggers/averaged_perceptron_tagger_rus.zip
 "
 
 LICENSE="Unlicense"
