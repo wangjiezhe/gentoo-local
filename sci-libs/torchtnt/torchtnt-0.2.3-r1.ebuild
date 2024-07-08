@@ -37,6 +37,7 @@ RDEPEND="
 BDEPEND="
 	test? (
 		sci-libs/torchvision[${PYTHON_SINGLE_USEDEP}]
+		sci-libs/torchsnapshot[${PYTHON_SINGLE_USEDEP}]
 		$(python_gen_cond_dep '
 			dev-python/pytest-cov
 		')
@@ -84,12 +85,9 @@ python_test() {
 		tests/utils/test_module_summary.py::ModuleSummaryTest::test_alexnet_with_input_tensor
 		tests/utils/test_module_summary.py::ModuleSummaryTest::test_forward_elapsed_time
 		tests/utils/test_module_summary.py::ModuleSummaryTest::test_resnet_max_depth
-		## RuntimeError: TorchSnapshotSaver support requires torchsnapshot.
-		## Please make sure ``torchsnapshot`` is installed.
-		## Installation: https://github.com/pytorch/torchsnapshot#install
-		## However, recent torchsnapshot depend on torch-2.2.0, which is at RC release now.
-		tests/framework/callbacks/test_torchsnapshot_saver.py
 		## RuntimeError: The local rank is larger than the number of available GPUs.
+		tests/framework/callbacks/test_torchsnapshot_saver.py::TorchSnapshotSaverTest::test_save_restore_ddp
+		tests/framework/callbacks/test_torchsnapshot_saver.py::TorchSnapshotSaverTest::test_save_restore_fsdp
 		tests/framework/test_auto_unit.py::TestAutoUnit::test_auto_unit_ddp
 		tests/framework/test_auto_unit.py::TestAutoUnit::test_fsdp_fp16
 		tests/framework/test_auto_unit.py::TestAutoUnit::test_no_sync
