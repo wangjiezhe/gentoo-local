@@ -4,7 +4,7 @@ app-misc/cheat 4.4.2: cheat allows you to create and view interactive cheatsheet
 app-office/qtikz 0.13.2: A nice user interface for making pictures using TikZ
 app-vim/vimcdoc 2.4.0: online vim documentation translated into Chinese
 dev-build/bazel 5.4.1 6.1.2 6.2.1 6.3.2 6.4.0 6.5.0 7.0.1: Fast and correct automated build system
-dev-cpp/abseil-cpp 20230802.2: Abseil Common Libraries (C++), LTS Branch
+dev-cpp/abseil-cpp 20230802.2 20240116.2-r2: Abseil Common Libraries (C++), LTS Branch
 dev-haskell/plam 2.2.0 2.2.1: An interpreter for learning and exploring pure λ-calculus
 dev-libs/FBGEMM 2023.11.03: Facebook GEneral Matrix Multiplication
 dev-libs/cudnn 8.9.7.29 9.0.0.312 9.1.0.70: NVIDIA Accelerated Deep Learning on GPU library
@@ -19,7 +19,7 @@ dev-libs/re2 0.2023.11.01-r1: An efficient, principled regular expression librar
 dev-libs/sentencepiece 0.2.0: Unsupervised text tokenizer for Neural Network-based text generation
 dev-python/FBGEMM_GPU 0.7.0: A collection of high-performance PyTorch GPU operator libraries for training and inference
 dev-python/astunparse 1.6.3-r2: Astun parser for python
-dev-python/cuda-python 12.3.0 12.4.0: CUDA Python Low-level Bindings
+dev-python/cuda-python 12.3.0 12.4.0 12.5.0: CUDA Python Low-level Bindings
 dev-python/cutlass 3.3.0 3.4.1 3.5.0: Python packages associated with CUTLASS
 dev-python/dm-tree 0.1.8: A library for working with nested data structures
 dev-python/docker-pycreds 0.4.0: Python bindings for the docker credentials store API
@@ -27,22 +27,22 @@ dev-python/expecttest 0.2.1: This library implements expect tests
 dev-python/flatbuffers 23.1.21 23.5.26: RFC 7049 - Concise Binary Object Representation
 dev-python/google-re2 1.1: RE2 Python bindings
 dev-python/gql 3.5.0: A GraphQL client in Python
-dev-python/grpcio 1.63.0: High-performance RPC framework (python libraries)
-dev-python/grpcio-testing 1.63.0: Testing utilities for gRPC Python
-dev-python/grpcio-tools 1.63.0: Protobuf code generator for gRPC
+dev-python/grpcio 1.63.0 1.65.0: High-performance RPC framework (python libraries)
+dev-python/grpcio-testing 1.63.0 1.65.0: Testing utilities for gRPC Python
+dev-python/grpcio-tools 1.63.0 1.65.0: Protobuf code generator for gRPC
 dev-python/h5py 3.10.0-r2: Simple Python interface to HDF5 files
 dev-python/hf-doc-builder 0.5.0: Used to build the documentation of our Hugging Face repos
 dev-python/iopath 0.1.10: A lightweight library for PyTorch training tools and utilities
-dev-python/lightning 2.3.1: Lightweight PyTorch wrapper for ML researchers
+dev-python/lightning 2.3.3: Lightweight PyTorch wrapper for ML researchers
 dev-python/lightning-utilities 0.11.2: Common Python utilities and GitHub Actions in Lightning Ecosystem
 dev-python/ml-dtypes 0.2.0 0.3.2 0.4.0: A stand-alone implementation of several NumPy dtype extensions
 dev-python/namex 0.0.8: A simple utility to separate the implementation of your Python package and its public API surface
-dev-python/optree 0.11.0: Optimized PyTree Utilities
+dev-python/optree 0.12.1: Optimized PyTree Utilities
 dev-python/protobuf-python 4.25.3: Google's Protocol Buffers - Python bindings
 dev-python/pyclibrary 0.2.2: C parser and ctypes automation for python
 dev-python/pyre-extensions 0.0.30: Type system extensions for use with the pyre type checker
 dev-python/pystoi 0.4.1: Python implementation of the Short Term Objective Intelligibility measure
-dev-python/pytorch-lightning 2.3.1: Lightweight PyTorch wrapper for ML researchers
+dev-python/pytorch-lightning 2.3.3: Lightweight PyTorch wrapper for ML researchers
 dev-python/revtok 0.0.3: Reversible tokenization in Python
 dev-python/rjieba 0.1.12: jieba-rs Python binding
 dev-python/rouge-score 0.1.2: Pure python implementation of ROUGE-1.5.5
@@ -53,13 +53,14 @@ dev-python/setuptools-git-version 1.0.4: Automatically set package version from 
 dev-python/setuptools-git-versioning 1.13.6 2.0.0: Use git repo data for building a version number according PEP-440
 dev-python/torchinfo 1.8.0-r1: View model summaries in PyTorch
 dev-python/treelib 1.7.0: An efficient implementation of tree data structure
-dev-python/wandb 0.16.6-r1 0.17.0-r1: A tool for visualizing and tracking your machine learning experiments
+dev-python/wandb 0.16.6-r1 0.17.4: A tool for visualizing and tracking your machine learning experiments
 dev-python/watermark 2.4.3: IPython magic function to print date/time stamps and various system information
+dev-util/evcxr-repl 0.17.0: A REPL for Rust
 media-libs/opencv 4.8.1-r2: A collection of algorithms and sample code for various computer vision problems
 net-libs/google-cloud-cpp 2.26.0: Google Cloud Client Library for C++
 net-libs/grpc 1.59.3 1.60.1 1.62.1: Modern open source high performance RPC framework
 net-misc/mosh 1.4.0: Mobile shell that supports roaming and intelligent local echo
-sci-libs/accelerate 0.31.0: A simple way to train and use PyTorch models with multi-GPU, TPU, mixed-precision
+sci-libs/accelerate 0.32.0: A simple way to train and use PyTorch models with multi-GPU, TPU, mixed-precision
 sci-libs/aocl-blas 4.2: AMD's optimized version of BLAS targeted for AMD EPYC and Ryzen CPUs
 sci-libs/aocl-lapack 4.2: AMD optimized high-performance object-based library for DLA computations
 sci-libs/aocl-utils 4.2: A uniform interface to all AOCL libraries to access CPU features
@@ -78,14 +79,14 @@ sci-libs/kineto 0.4.0_p20231104-r1: part of the PyTorch Profiler
 sci-libs/lpips 0.1.4: Perceptual Similarity Metric and Dataset
 sci-libs/magma 2.8.0: Matrix Algebra on GPU and Multicore Architectures
 sci-libs/nltk 3.8.1: Natural Language Toolkit
-sci-libs/nltk-data 20230202: Data Distribution for NLTK
+sci-libs/nltk-data 20240705: Data Distribution for NLTK
 sci-libs/onnx 1.14.1-r2 1.15.0-r1 1.16.0-r1: Open Neural Network Exchange (ONNX)
 sci-libs/openblas 0.3.26: Optimized BLAS library based on GotoBLAS2
 sci-libs/pytorch 2.3.1: Tensors and Dynamic neural networks in Python
 sci-libs/pytorch-image-models 1.0.7: PyTorch image models, scripts, pretrained weights
 sci-libs/pytorch-msssim 1.0.0: Fast and differentiable MS-SSIM and SSIM for pytorch
 sci-libs/safetensors 0.4.2: Simple, safe way to store and distribute tensors
-sci-libs/tensorflow 2.13.1 2.14.1 2.15.1 2.16.2: Computation framework using data flow graphs for scalable machine learning
+sci-libs/tensorflow 2.13.1 2.14.1 2.15.1 2.16.2 2.17.0: Computation framework using data flow graphs for scalable machine learning
 sci-libs/tensorflow-estimator 2.13.0 2.14.0 2.15.0: A high-level TensorFlow API that greatly simplifies machine learning programming
 sci-libs/tensorrt 8.6.1.6-r1 9.1.0.4 9.2.0.5 9.3.0.1 10.0.0.6: An SDK for high-performance deep learning inference
 sci-libs/torch-fidelity 0.3.0_p20231026: High-fidelity performance metrics for generative models in PyTorch
@@ -94,10 +95,11 @@ sci-libs/torchdata 0.7.1: A library of common modular data loading primitives
 sci-libs/torcheval 0.0.6: A library that contains a rich collection of performant PyTorch model metrics
 sci-libs/torchmetrics 1.4.0: Machine learning metrics for distributed, scalable PyTorch applications
 sci-libs/torchrec 0.7.0-r1: Pytorch domain library for recommendation systems
-sci-libs/torchsnapshot 0.1.0_p20230721 0.1.0_p20240521: A performant, memory-efficient checkpointing library for PyTorch applications
+sci-libs/torchsnapshot 0.1.0_p20230721 0.1.0_p20240521-r1: A performant, memory-efficient checkpointing library for PyTorch applications
 sci-libs/torchtext 0.18.0: Data manipulation and transformation for audio signal processing
-sci-libs/torchtnt 0.2.3 0.2.4: A lightweight library for PyTorch training tools and utilities
+sci-libs/torchtnt 0.2.3-r1 0.2.4: A lightweight library for PyTorch training tools and utilities
 sci-libs/torchvision 0.18.1: Datasets, transforms and models to specific to computer vision
-sci-libs/transformers 4.38.2-r1 4.39.3-r1 4.40.2 4.42.3: State-of-the-art Machine Learning for JAX, PyTorch and TensorFlow
+sci-libs/transformers 4.38.2-r1 4.39.3-r1 4.40.2 4.42.4: State-of-the-art Machine Learning for JAX, PyTorch and TensorFlow
 sci-mathematics/mathematica 14.0.0: Wolfram Mathematica
-sci-visualization/tensorboard 2.13.0 2.14.1 2.15.2 2.16.2: TensorFlow's Visualization Toolkit
+sci-visualization/tensorboard 2.13.0 2.14.1 2.15.2 2.16.2 2.17.0: TensorFlow's Visualization Toolkit
+sys-devel/rust-std 1.79.0: Rust standard library, standalone (for crossdev)
