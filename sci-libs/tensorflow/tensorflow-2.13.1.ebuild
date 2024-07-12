@@ -94,6 +94,7 @@ RESTRICT="test" # Tests need GPU access
 RDEPEND="
 	app-arch/snappy
 	>=dev-cpp/abseil-cpp-20220623:=
+	<dev-cpp/abseil-cpp-20240116
 	dev-db/sqlite
 	dev-libs/double-conversion
 	dev-libs/icu:=

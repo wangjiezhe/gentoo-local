@@ -98,7 +98,8 @@ RESTRICT="test" # Tests need GPU access
 # check flatbuffers version in tensorflow/lite/schema/schema_generated.h
 RDEPEND="
 	app-arch/snappy
-	>=dev-cpp/abseil-cpp-20220623:=
+	>=dev-cpp/abseil-cpp-20230802.1:=
+	<dev-cpp/abseil-cpp-20240116
 	dev-db/sqlite
 	dev-libs/double-conversion
 	dev-libs/icu:=
