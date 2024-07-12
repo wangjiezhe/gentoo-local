@@ -504,3 +504,9 @@ use_latest_release = true
 source = "github"
 github = "fhackenberger/ktikz"
 use_latest_tag = true
+
+["dev-util/evcxr-repl"]
+source = "github"
+github = "evcxr/evcxr"
+use_latest_release = true
+prefix = "v"
