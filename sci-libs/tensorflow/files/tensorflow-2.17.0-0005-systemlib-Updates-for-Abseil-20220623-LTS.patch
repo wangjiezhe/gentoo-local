@@ -1,0 +1,66 @@
+From adb2c6ebe55551f4f43d52bba82f462b4fe7fe1f Mon Sep 17 00:00:00 2001
+From: Jason Zaman <jason@perfinion.com>
+Date: Tue, 30 May 2023 09:10:03 -0700
+Subject: [PATCH 05/17] systemlib: Updates for Abseil 20220623 LTS
+
+These targets are header-only and just need stub bazel targets
+---
+ third_party/absl/system.absl.functional.BUILD | 18 ++++++++++++++++++
+ third_party/absl/system.absl.random.BUILD     |  8 ++++++++
+ 2 files changed, 26 insertions(+)
+
+diff --git a/third_party/absl/system.absl.functional.BUILD b/third_party/absl/system.absl.functional.BUILD
+index 9439bd0ba22..579181dec07 100644
+--- a/third_party/absl/system.absl.functional.BUILD
++++ b/third_party/absl/system.absl.functional.BUILD
+@@ -4,12 +4,30 @@ package(default_visibility = ["//visibility:public"])
+ 
+ cc_library(
+     name = "any_invocable",
++    deps = [
++        "//absl/base:base_internal",
++        "//absl/base:config",
++        "//absl/base:core_headers",
++        "//absl/meta:type_traits",
++        "//absl/utility",
++    ],
+ )
+ 
+ cc_library(
+     name = "bind_front",
++    deps = [
++        "//absl/base:base_internal",
++        "//absl/container:compressed_tuple",
++        "//absl/meta:type_traits",
++        "//absl/utility",
++    ],
+ )
+ 
+ cc_library(
+     name = "function_ref",
++    deps = [
++        "//absl/base:base_internal",
++        "//absl/base:core_headers",
++        "//absl/meta:type_traits",
++    ],
+ )
+diff --git a/third_party/absl/system.absl.random.BUILD b/third_party/absl/system.absl.random.BUILD
+index ac17ce6343b..5ebd656be8e 100644
+--- a/third_party/absl/system.absl.random.BUILD
++++ b/third_party/absl/system.absl.random.BUILD
+@@ -54,4 +54,12 @@ cc_library(
+ 
+ cc_library(
+     name = "bit_gen_ref",
++    deps = [
++        ":random",
++        "//absl/base:core_headers",
++        "//absl/base:fast_type_id",
++        "//absl/meta:type_traits",
++        "//absl/random/internal:distribution_caller",
++        "//absl/random/internal:fast_uniform_bits",
++    ],
+ )
+-- 
+2.44.2
+

@@ -1,0 +1,25 @@
+From 9b4721782a18413a3fa691b998502bd8a1ebd7ee Mon Sep 17 00:00:00 2001
+From: wangjiezhe <wangjiezhe@gmail.com>
+Date: Thu, 21 Dec 2023 22:22:35 +0800
+Subject: [PATCH 10/17] systemlib: fix missing `:osx` in pybind11
+
+---
+ third_party/systemlibs/pybind11.BUILD | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/third_party/systemlibs/pybind11.BUILD b/third_party/systemlibs/pybind11.BUILD
+index 44e7496fc25..41d054c84ce 100644
+--- a/third_party/systemlibs/pybind11.BUILD
++++ b/third_party/systemlibs/pybind11.BUILD
+@@ -6,3 +6,8 @@ cc_library(
+         "@local_tsl//third_party/python_runtime:headers",
+     ],
+ )
++
++config_setting(
++    name = "osx",
++    constraint_values = ["@platforms//os:osx"],
++)
+-- 
+2.44.2
+

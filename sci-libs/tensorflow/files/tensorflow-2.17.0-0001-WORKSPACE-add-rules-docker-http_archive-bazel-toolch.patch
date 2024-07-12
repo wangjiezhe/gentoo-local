@@ -1,0 +1,38 @@
+From bf99242d10da3a35dcb0f08dafef2cb542bfe8cf Mon Sep 17 00:00:00 2001
+From: wangjiezhe <wangjiezhe@gmail.com>
+Date: Fri, 24 Nov 2023 16:34:44 +0800
+Subject: [PATCH 01/17] WORKSPACE: add rules-docker http_archive,
+ bazel-toolchains uses git_repo
+
+git_repository() rules cannot pull from --distdir and fail when building
+without internet access. Use http_archive instead and pin the sha256
+hash as well.
+---
+ WORKSPACE | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/WORKSPACE b/WORKSPACE
+index cb024a13a19..f70b21bcf42 100644
+--- a/WORKSPACE
++++ b/WORKSPACE
+@@ -2,6 +2,17 @@
+ 
+ workspace(name = "org_tensorflow")
+ 
++load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
++
++http_archive(
++    name = "io_bazel_rules_docker",
++    sha256 = "7d453450e1eb70e238eea6b31f4115607ec1200e91afea01c25f9804f37e39c8",
++    strip_prefix = "rules_docker-0.10.0",
++    urls = [
++        "https://github.com/bazelbuild/rules_docker/releases/download/v0.10.0/rules_docker-v0.10.0.tar.gz",
++    ],
++)
++
+ # buildifier: disable=load-on-top
+ 
+ # We must initialize hermetic python first.
+-- 
+2.44.2
+

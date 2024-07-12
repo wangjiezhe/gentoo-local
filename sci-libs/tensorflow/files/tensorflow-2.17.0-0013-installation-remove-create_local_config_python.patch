@@ -1,0 +1,46 @@
+From 9bf103ed2434bebc8c77968a3fffd49af85d7d79 Mon Sep 17 00:00:00 2001
+From: wangjiezhe <wangjiezhe@gmail.com>
+Date: Wed, 10 Jul 2024 22:53:13 +0800
+Subject: [PATCH 13/17] installation: remove `create_local_config_python`
+
+---
+ .../tools/pip_package/build_pip_package.py       | 16 ----------------
+ 1 file changed, 16 deletions(-)
+
+diff --git a/tensorflow/tools/pip_package/build_pip_package.py b/tensorflow/tools/pip_package/build_pip_package.py
+index 9588fc19e3d..a42311578cd 100644
+--- a/tensorflow/tools/pip_package/build_pip_package.py
++++ b/tensorflow/tools/pip_package/build_pip_package.py
+@@ -101,9 +101,6 @@ def prepare_headers(headers: list[str], srcs_dir: str) -> None:
+     else:
+       copy_file(file, srcs_dir)
+ 
+-  create_local_config_python(os.path.join(srcs_dir,
+-                                          "external/local_config_python"))
+-
+   shutil.copytree(os.path.join(srcs_dir, "external/local_config_cuda/cuda"),
+                   os.path.join(srcs_dir, "third_party/gpus"))
+   shutil.copytree(os.path.join(srcs_dir, "tensorflow/compiler/xla"),
+@@ -289,19 +286,6 @@ def rename_libtensorflow(srcs_dir: str, version: str):
+     )
+ 
+ 
+-def create_local_config_python(dst_dir: str) -> None:
+-  """Copy python and numpy header files to the destination directory."""
+-  shutil.copytree(
+-      "external/pypi_numpy/site-packages/numpy/core/include",
+-      os.path.join(dst_dir, "numpy_include"),
+-  )
+-  if is_windows():
+-    path = "external/python_*/include"
+-  else:
+-    path = "external/python_*/include/python*"
+-  shutil.copytree(glob.glob(path)[0], os.path.join(dst_dir, "python_include"))
+-
+-
+ def build_wheel(dir_path: str, cwd: str, project_name: str,
+                 collab: str = False) -> None:
+   """Build the wheel in the target directory.
+-- 
+2.44.2
+

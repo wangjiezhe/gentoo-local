@@ -1,0 +1,28 @@
+From c5b3e9616981d7dc69b271d731391892c56adeab Mon Sep 17 00:00:00 2001
+From: Jason Zaman <jason@perfinion.com>
+Date: Sat, 3 Jun 2023 16:23:51 -0700
+Subject: [PATCH 07/17] systemlib: Add well_known_types_py_pb2 target
+
+Bug: https://github.com/tensorflow/tensorflow/issues/60667
+---
+ third_party/systemlibs/protobuf.BUILD | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/third_party/systemlibs/protobuf.BUILD b/third_party/systemlibs/protobuf.BUILD
+index c7d940605f9..504bc81af0d 100644
+--- a/third_party/systemlibs/protobuf.BUILD
++++ b/third_party/systemlibs/protobuf.BUILD
+@@ -111,3 +111,10 @@ py_library(
+     visibility = ["//visibility:public"],
+     deps = [dep + "_proto" for dep in proto[1][1]],
+ ) for proto in WELL_KNOWN_PROTO_MAP.items()]
++
++py_proto_library(
++    name = "well_known_types_py_pb2",
++    include = ".",
++    srcs = [proto[1][0] for proto in WELL_KNOWN_PROTO_MAP.items()],
++    visibility = ["//visibility:public"],
++)
+-- 
+2.44.2
+

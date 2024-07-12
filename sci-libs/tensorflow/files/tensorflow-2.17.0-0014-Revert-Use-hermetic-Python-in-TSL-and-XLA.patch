@@ -1,0 +1,2811 @@
+From 09ec91f008df1faeeeea0afaccc454bd184a6fd0 Mon Sep 17 00:00:00 2001
+From: wangjiezhe <wangjiezhe@gmail.com>
+Date: Thu, 11 Jul 2024 06:54:51 +0800
+Subject: [PATCH 14/17] Revert "Use hermetic Python in TSL and XLA"
+
+This reverts commit 3bf2ac3b776c05471f1b4f14f50dddfbcc79b38b.
+---
+ tensorflow/opensource_only.files              |   9 +-
+ third_party/llvm/toolchains.patch             |   8 +-
+ third_party/py/BUILD                          |  40 ---
+ third_party/py/non_hermetic/BUILD             |   0
+ third_party/py/non_hermetic/BUILD.tpl         |  80 +++++
+ third_party/py/non_hermetic/README            |   3 +
+ .../py/non_hermetic/python_configure.bzl      | 312 +++++++++++++++++
+ third_party/py/python_init_pip.bzl            |  34 --
+ third_party/py/python_init_repositories.bzl   |  19 -
+ third_party/py/python_init_rules.bzl          |  11 -
+ third_party/py/python_init_toolchains.bzl     |  13 -
+ third_party/xla/WORKSPACE                     |  26 --
+ third_party/xla/opensource_only.files         |  18 +-
+ third_party/xla/requirements_lock_3_11.txt    |  49 ---
+ third_party/xla/third_party/py/BUILD          |  40 ---
+ .../xla/third_party/py/non_hermetic/BUILD     |   0
+ .../xla/third_party/py/non_hermetic/BUILD.tpl |  80 +++++
+ .../xla/third_party/py/non_hermetic/README    |   3 +
+ .../py/non_hermetic/python_configure.bzl      | 312 +++++++++++++++++
+ .../xla/third_party/py/python_init_pip.bzl    |  34 --
+ .../py/python_init_repositories.bzl           |  19 -
+ .../xla/third_party/py/python_init_rules.bzl  |  11 -
+ .../third_party/py/python_init_toolchains.bzl |  13 -
+ .../xla/third_party/py/python_repo.bzl        | 324 ------------------
+ third_party/xla/third_party/tsl/WORKSPACE     |  25 --
+ .../xla/third_party/tsl/opensource_only.files |  18 +-
+ .../tsl/requirements_lock_3_11.txt            |  49 ---
+ .../xla/third_party/tsl/third_party/py/BUILD  |  40 ---
+ .../tsl/third_party/py/non_hermetic/BUILD     |   0
+ .../tsl/third_party/py/non_hermetic/BUILD.tpl |  80 +++++
+ .../tsl/third_party/py/non_hermetic/README    |   3 +
+ .../py/non_hermetic/python_configure.bzl      | 312 +++++++++++++++++
+ .../tsl/third_party/py/python_init_pip.bzl    |  34 --
+ .../py/python_init_repositories.bzl           |  19 -
+ .../tsl/third_party/py/python_init_rules.bzl  |  11 -
+ .../third_party/py/python_init_toolchains.bzl |  13 -
+ .../tsl/third_party/py/python_repo.bzl        | 324 ------------------
+ .../xla/third_party/tsl/workspace2.bzl        |   7 +-
+ third_party/xla/xla/lit.bzl                   |  21 +-
+ third_party/xla/xla/mlir_hlo/tests/BUILD      |   1 -
+ 40 files changed, 1213 insertions(+), 1202 deletions(-)
+ create mode 100644 third_party/py/non_hermetic/BUILD
+ create mode 100644 third_party/py/non_hermetic/BUILD.tpl
+ create mode 100644 third_party/py/non_hermetic/README
+ create mode 100644 third_party/py/non_hermetic/python_configure.bzl
+ delete mode 100644 third_party/py/python_init_pip.bzl
+ delete mode 100644 third_party/py/python_init_repositories.bzl
+ delete mode 100644 third_party/py/python_init_rules.bzl
+ delete mode 100644 third_party/py/python_init_toolchains.bzl
+ delete mode 100644 third_party/xla/requirements_lock_3_11.txt
+ create mode 100644 third_party/xla/third_party/py/non_hermetic/BUILD
+ create mode 100644 third_party/xla/third_party/py/non_hermetic/BUILD.tpl
+ create mode 100644 third_party/xla/third_party/py/non_hermetic/README
+ create mode 100644 third_party/xla/third_party/py/non_hermetic/python_configure.bzl
+ delete mode 100644 third_party/xla/third_party/py/python_init_pip.bzl
+ delete mode 100644 third_party/xla/third_party/py/python_init_repositories.bzl
+ delete mode 100644 third_party/xla/third_party/py/python_init_rules.bzl
+ delete mode 100644 third_party/xla/third_party/py/python_init_toolchains.bzl
+ delete mode 100644 third_party/xla/third_party/py/python_repo.bzl
+ delete mode 100644 third_party/xla/third_party/tsl/requirements_lock_3_11.txt
+ create mode 100644 third_party/xla/third_party/tsl/third_party/py/non_hermetic/BUILD
+ create mode 100644 third_party/xla/third_party/tsl/third_party/py/non_hermetic/BUILD.tpl
+ create mode 100644 third_party/xla/third_party/tsl/third_party/py/non_hermetic/README
+ create mode 100644 third_party/xla/third_party/tsl/third_party/py/non_hermetic/python_configure.bzl
+ delete mode 100644 third_party/xla/third_party/tsl/third_party/py/python_init_pip.bzl
+ delete mode 100644 third_party/xla/third_party/tsl/third_party/py/python_init_repositories.bzl
+ delete mode 100644 third_party/xla/third_party/tsl/third_party/py/python_init_rules.bzl
+ delete mode 100644 third_party/xla/third_party/tsl/third_party/py/python_init_toolchains.bzl
+ delete mode 100644 third_party/xla/third_party/tsl/third_party/py/python_repo.bzl
+
+diff --git a/tensorflow/opensource_only.files b/tensorflow/opensource_only.files
+index 78dad95a9c4..2682c16bc27 100644
+--- a/tensorflow/opensource_only.files
++++ b/tensorflow/opensource_only.files
+@@ -301,16 +301,15 @@ tf_staging/third_party/py/BUILD.tpl:
+ tf_staging/third_party/py/BUILD:
+ tf_staging/third_party/py/ml_dtypes/BUILD:
+ tf_staging/third_party/py/ml_dtypes/LICENSE:
++tf_staging/third_party/py/non_hermetic/BUILD.tpl:
++tf_staging/third_party/py/non_hermetic/BUILD:
++tf_staging/third_party/py/non_hermetic/README:
+ tf_staging/third_party/py/non_hermetic/ml_dtypes/BUILD:
+ tf_staging/third_party/py/non_hermetic/ml_dtypes/LICENSE:
+ tf_staging/third_party/py/non_hermetic/numpy/BUILD:
++tf_staging/third_party/py/non_hermetic/python_configure.bzl:
+ tf_staging/third_party/py/numpy/BUILD:
+ tf_staging/third_party/py/python_configure.bzl:
+-tf_staging/third_party/py/python_init_pip.bzl:
+-tf_staging/third_party/py/python_init_repositories.bzl:
+-tf_staging/third_party/py/python_init_rules.bzl:
+-tf_staging/third_party/py/python_init_toolchains.bzl:
+-tf_staging/third_party/py/python_repo.bzl:
+ tf_staging/third_party/pybind11.BUILD:
+ tf_staging/third_party/pybind11_bazel/BUILD:
+ tf_staging/third_party/pybind11_protobuf/BUILD:
+diff --git a/third_party/llvm/toolchains.patch b/third_party/llvm/toolchains.patch
+index 1cbcfe31d3d..a4de4eaaff3 100644
+--- a/third_party/llvm/toolchains.patch
++++ b/third_party/llvm/toolchains.patch
+@@ -2,7 +2,7 @@ diff --git a/utils/bazel/llvm-project-overlay/llvm/BUILD.bazel b/utils/bazel/llv
+ index c43ab727e285..7d848d2dffae 100644
+ --- a/utils/bazel/llvm-project-overlay/llvm/BUILD.bazel
+ +++ b/utils/bazel/llvm-project-overlay/llvm/BUILD.bazel
+-@@ -30,6 +30,36 @@ exports_files([
++@@ -30,6 +30,30 @@ exports_files([
+      "utils/lit/lit.py",
+  ])
+  
+@@ -22,12 +22,6 @@ index c43ab727e285..7d848d2dffae 100644
+ +    },
+ +)
+ +
+-+py_library(
+-+    name = "lit_lib",
+-+    testonly = True,
+-+    srcs = ["utils/lit/lit.py"] + glob(["utils/lit/lit/**/*.py"]),
+-+)
+-+
+ +config_setting(
+ +    name = "macos_x86_64",
+ +    values = {
+diff --git a/third_party/py/BUILD b/third_party/py/BUILD
+index 84eba77ce1a..e69de29bb2d 100644
+--- a/third_party/py/BUILD
++++ b/third_party/py/BUILD
+@@ -1,40 +0,0 @@
+-load("@python//:defs.bzl", "compile_pip_requirements")
+-load("@python_version_repo//:py_version.bzl", "REQUIREMENTS")
+-
+-compile_pip_requirements(
+-    name = "requirements",
+-    extra_args = [
+-        "--allow-unsafe",
+-        "--build-isolation",
+-    ],
+-    generate_hashes = True,
+-    requirements_in = "requirements.in",
+-    requirements_txt = REQUIREMENTS,
+-)
+-
+-compile_pip_requirements(
+-    name = "requirements_nightly",
+-    data = ["test-requirements.txt"],
+-    extra_args = [
+-        "--allow-unsafe",
+-        "--build-isolation",
+-        "--extra-index-url=https://pypi.anaconda.org/scientific-python-nightly-wheels/simple",
+-        "--pre",
+-        "--upgrade",
+-    ],
+-    generate_hashes = False,
+-    requirements_in = "requirements.in",
+-    requirements_txt = REQUIREMENTS,
+-)
+-
+-compile_pip_requirements(
+-    name = "requirements_dev",
+-    extra_args = [
+-        "--allow-unsafe",
+-        "--build-isolation",
+-        "--upgrade",
+-    ],
+-    generate_hashes = False,
+-    requirements_in = "requirements.in",
+-    requirements_txt = REQUIREMENTS,
+-)
+diff --git a/third_party/py/non_hermetic/BUILD b/third_party/py/non_hermetic/BUILD
+new file mode 100644
+index 00000000000..e69de29bb2d
+diff --git a/third_party/py/non_hermetic/BUILD.tpl b/third_party/py/non_hermetic/BUILD.tpl
+new file mode 100644
+index 00000000000..45480bd4a31
+--- /dev/null
++++ b/third_party/py/non_hermetic/BUILD.tpl
+@@ -0,0 +1,80 @@
++licenses(["restricted"])
++
++package(default_visibility = ["//visibility:public"])
++
++# Point both runtimes to the same python binary to ensure we always
++# use the python binary specified by ./configure.py script.
++load("@bazel_tools//tools/python:toolchain.bzl", "py_runtime_pair")
++
++py_runtime(
++    name = "py2_runtime",
++    interpreter_path = "%{PYTHON_BIN_PATH}",
++    python_version = "PY2",
++)
++
++py_runtime(
++    name = "py3_runtime",
++    interpreter_path = "%{PYTHON_BIN_PATH}",
++    python_version = "PY3",
++)
++
++py_runtime_pair(
++    name = "py_runtime_pair",
++    py2_runtime = ":py2_runtime",
++    py3_runtime = ":py3_runtime",
++)
++
++toolchain(
++    name = "py_toolchain",
++    toolchain = ":py_runtime_pair",
++    toolchain_type = "@bazel_tools//tools/python:toolchain_type",
++    target_compatible_with = [%{PLATFORM_CONSTRAINT}],
++    exec_compatible_with = [%{PLATFORM_CONSTRAINT}],
++)
++
++# To build Python C/C++ extension on Windows, we need to link to python import library pythonXY.lib
++# See https://docs.python.org/3/extending/windows.html
++cc_import(
++    name = "python_lib",
++    interface_library = select({
++        ":windows": ":python_import_lib",
++        # A placeholder for Unix platforms which makes --no_build happy.
++        "//conditions:default": "not-existing.lib",
++    }),
++    system_provided = 1,
++)
++
++cc_library(
++    name = "python_headers",
++    hdrs = [":python_include"],
++    deps = select({
++        ":windows": [":python_lib"],
++        "//conditions:default": [],
++    }),
++    includes = ["python_include"],
++)
++
++# This alias is exists for the use of targets in the @llvm-project dependency,
++# which expect a python_headers target called @python_runtime//:headers. We use
++# a repo_mapping to alias python_runtime to this package, and an alias to create
++# the correct target.
++alias(
++    name = "headers",
++    actual = ":python_headers",
++)
++
++cc_library(
++    name = "numpy_headers",
++    hdrs = [":numpy_include"],
++    includes = ["numpy_include"],
++)
++
++config_setting(
++    name = "windows",
++    values = {"cpu": "x64_windows"},
++    visibility = ["//visibility:public"],
++)
++
++%{PYTHON_INCLUDE_GENRULE}
++%{NUMPY_INCLUDE_GENRULE}
++%{PYTHON_IMPORT_LIB_GENRULE}
+\ No newline at end of file
+diff --git a/third_party/py/non_hermetic/README b/third_party/py/non_hermetic/README
+new file mode 100644
+index 00000000000..62188a5817a
+--- /dev/null
++++ b/third_party/py/non_hermetic/README
+@@ -0,0 +1,3 @@
++This is a temporary copy of python_configure repository rule. It allows
++XLA and TSL to keep non-hermetic Python while TF uses hermetic Python.
++DO NOT DEPEND ON THIS COPY as it will be deleted soon.
+\ No newline at end of file
+diff --git a/third_party/py/non_hermetic/python_configure.bzl b/third_party/py/non_hermetic/python_configure.bzl
+new file mode 100644
+index 00000000000..89732c3e33d
+--- /dev/null
++++ b/third_party/py/non_hermetic/python_configure.bzl
+@@ -0,0 +1,312 @@
++"""Repository rule for Python autoconfiguration.
++
++`python_configure` depends on the following environment variables:
++
++  * `PYTHON_BIN_PATH`: location of python binary.
++  * `PYTHON_LIB_PATH`: Location of python libraries.
++"""
++
++load(
++    "//third_party/remote_config:common.bzl",
++    "BAZEL_SH",
++    "PYTHON_BIN_PATH",
++    "PYTHON_LIB_PATH",
++    "TF_PYTHON_CONFIG_REPO",
++    "auto_config_fail",
++    "config_repo_label",
++    "execute",
++    "get_bash_bin",
++    "get_host_environ",
++    "get_python_bin",
++    "is_windows",
++    "raw_exec",
++    "read_dir",
++)
++
++def _genrule(src_dir, genrule_name, command, outs):
++    """Returns a string with a genrule.
++
++    Genrule executes the given command and produces the given outputs.
++    """
++    return (
++        "genrule(\n" +
++        '    name = "' +
++        genrule_name + '",\n' +
++        "    outs = [\n" +
++        outs +
++        "\n    ],\n" +
++        '    cmd = """\n' +
++        command +
++        '\n   """,\n' +
++        ")\n"
++    )
++
++def _norm_path(path):
++    """Returns a path with '/' and remove the trailing slash."""
++    path = path.replace("\\", "/")
++    if path[-1] == "/":
++        path = path[:-1]
++    return path
++
++def _symlink_genrule_for_dir(
++        repository_ctx,
++        src_dir,
++        dest_dir,
++        genrule_name,
++        src_files = [],
++        dest_files = []):
++    """Returns a genrule to symlink(or copy if on Windows) a set of files.
++
++    If src_dir is passed, files will be read from the given directory; otherwise
++    we assume files are in src_files and dest_files
++    """
++    if src_dir != None:
++        src_dir = _norm_path(src_dir)
++        dest_dir = _norm_path(dest_dir)
++        files = "\n".join(read_dir(repository_ctx, src_dir))
++
++        # Create a list with the src_dir stripped to use for outputs.
++        dest_files = files.replace(src_dir, "").splitlines()
++        src_files = files.splitlines()
++    command = []
++    outs = []
++    for i in range(len(dest_files)):
++        if dest_files[i] != "":
++            # If we have only one file to link we do not want to use the dest_dir, as
++            # $(@D) will include the full path to the file.
++            dest = "$(@D)/" + dest_dir + dest_files[i] if len(dest_files) != 1 else "$(@D)/" + dest_files[i]
++
++            # Copy the headers to create a sandboxable setup.
++            cmd = "cp -f"
++            command.append(cmd + ' "%s" "%s"' % (src_files[i], dest))
++            outs.append('        "' + dest_dir + dest_files[i] + '",')
++    genrule = _genrule(
++        src_dir,
++        genrule_name,
++        " && ".join(command),
++        "\n".join(outs),
++    )
++    return genrule
++
++def _get_python_lib(repository_ctx, python_bin):
++    """Gets the python lib path."""
++    python_lib = get_host_environ(repository_ctx, PYTHON_LIB_PATH)
++    if python_lib != None:
++        return python_lib
++
++    # The interesting program to execute.
++    print_lib = [
++        "from __future__ import print_function",
++        "import site",
++        "import os",
++        "python_paths = []",
++        "if os.getenv('PYTHONPATH') is not None:",
++        "  python_paths = os.getenv('PYTHONPATH').split(':')",
++        "try:",
++        "  library_paths = site.getsitepackages()",
++        "except AttributeError:",
++        "  from distutils.sysconfig import get_python_lib",
++        "  library_paths = [get_python_lib()]",
++        "all_paths = set(python_paths + library_paths)",
++        "paths = []",
++        "for path in all_paths:",
++        "  if os.path.isdir(path):",
++        "    paths.append(path)",
++        "if len(paths) >=1:",
++        "  print(paths[0])",
++    ]
++
++    # The below script writes the above program to a file
++    # and executes it. This is to work around the limitation
++    # of not being able to upload files as part of execute.
++    cmd = "from os import linesep;"
++    cmd += "f = open('script.py', 'w');"
++    for line in print_lib:
++        cmd += "f.write(\"%s\" + linesep);" % line
++    cmd += "f.close();"
++    cmd += "from subprocess import call;"
++    cmd += "call([\"%s\", \"script.py\"]);" % python_bin
++
++    result = execute(repository_ctx, [python_bin, "-c", cmd])
++    return result.stdout.strip()
++
++def _check_python_lib(repository_ctx, python_lib):
++    """Checks the python lib path."""
++    cmd = 'test -d "%s" -a -x "%s"' % (python_lib, python_lib)
++    result = raw_exec(repository_ctx, [get_bash_bin(repository_ctx), "-c", cmd])
++    if result.return_code == 1:
++        auto_config_fail("Invalid python library path: %s" % python_lib)
++
++def _check_python_bin(repository_ctx, python_bin):
++    """Checks the python bin path."""
++    cmd = '[[ -x "%s" ]] && [[ ! -d "%s" ]]' % (python_bin, python_bin)
++    result = raw_exec(repository_ctx, [get_bash_bin(repository_ctx), "-c", cmd])
++    if result.return_code == 1:
++        auto_config_fail("--define %s='%s' is not executable. Is it the python binary?" % (
++            PYTHON_BIN_PATH,
++            python_bin,
++        ))
++
++def _get_python_include(repository_ctx, python_bin):
++    """Gets the python include path."""
++    result = execute(
++        repository_ctx,
++        [
++            python_bin,
++            "-Wignore",
++            "-c",
++            "import sysconfig; " +
++            "print(sysconfig.get_path('include'))",
++        ],
++        error_msg = "Problem getting python include path.",
++        error_details = ("Is the Python binary path set up right? " +
++                         "(See ./configure or " + PYTHON_BIN_PATH + ".) " +
++                         "Is distutils installed?"),
++    )
++    return result.stdout.splitlines()[0]
++
++def _get_python_import_lib_name(repository_ctx, python_bin):
++    """Get Python import library name (pythonXY.lib) on Windows."""
++    result = execute(
++        repository_ctx,
++        [
++            python_bin,
++            "-c",
++            "import sys;" +
++            'print("python" + str(sys.version_info[0]) + ' +
++            '      str(sys.version_info[1]) + ".lib")',
++        ],
++        error_msg = "Problem getting python import library.",
++        error_details = ("Is the Python binary path set up right? " +
++                         "(See ./configure or " + PYTHON_BIN_PATH + ".) "),
++    )
++    return result.stdout.splitlines()[0]
++
++def _get_numpy_include(repository_ctx, python_bin):
++    """Gets the numpy include path."""
++    return execute(
++        repository_ctx,
++        [
++            python_bin,
++            "-c",
++            "from __future__ import print_function;" +
++            "import numpy;" +
++            " print(numpy.get_include());",
++        ],
++        error_msg = "Problem getting numpy include path.",
++        error_details = "Is numpy installed?",
++    ).stdout.splitlines()[0]
++
++def _create_local_python_repository(repository_ctx):
++    """Creates the repository containing files set up to build with Python."""
++
++    # Resolve all labels before doing any real work. Resolving causes the
++    # function to be restarted with all previous state being lost. This
++    # can easily lead to a O(n^2) runtime in the number of labels.
++    build_tpl = repository_ctx.path(Label("//third_party/py:BUILD.tpl"))
++
++    python_bin = get_python_bin(repository_ctx)
++    _check_python_bin(repository_ctx, python_bin)
++    python_lib = _get_python_lib(repository_ctx, python_bin)
++    _check_python_lib(repository_ctx, python_lib)
++    python_include = _get_python_include(repository_ctx, python_bin)
++    numpy_include = _get_numpy_include(repository_ctx, python_bin) + "/numpy"
++    python_include_rule = _symlink_genrule_for_dir(
++        repository_ctx,
++        python_include,
++        "python_include",
++        "python_include",
++    )
++    python_import_lib_genrule = ""
++
++    # To build Python C/C++ extension on Windows, we need to link to python import library pythonXY.lib
++    # See https://docs.python.org/3/extending/windows.html
++    if is_windows(repository_ctx):
++        python_bin = python_bin.replace("\\", "/")
++        python_include = _norm_path(python_include)
++        python_import_lib_name = _get_python_import_lib_name(repository_ctx, python_bin)
++        python_import_lib_src = python_include.rsplit("/", 1)[0] + "/libs/" + python_import_lib_name
++        python_import_lib_genrule = _symlink_genrule_for_dir(
++            repository_ctx,
++            None,
++            "",
++            "python_import_lib",
++            [python_import_lib_src],
++            [python_import_lib_name],
++        )
++    numpy_include_rule = _symlink_genrule_for_dir(
++        repository_ctx,
++        numpy_include,
++        "numpy_include/numpy",
++        "numpy_include",
++    )
++
++    platform_constraint = ""
++    if repository_ctx.attr.platform_constraint:
++        platform_constraint = "\"%s\"" % repository_ctx.attr.platform_constraint
++    repository_ctx.template("BUILD", build_tpl, {
++        "%{PYTHON_BIN_PATH}": python_bin,
++        "%{PYTHON_INCLUDE_GENRULE}": python_include_rule,
++        "%{PYTHON_IMPORT_LIB_GENRULE}": python_import_lib_genrule,
++        "%{NUMPY_INCLUDE_GENRULE}": numpy_include_rule,
++        "%{PLATFORM_CONSTRAINT}": platform_constraint,
++    })
++
++def _create_remote_python_repository(repository_ctx, remote_config_repo):
++    """Creates pointers to a remotely configured repo set up to build with Python.
++    """
++    repository_ctx.template("BUILD", config_repo_label(remote_config_repo, ":BUILD"), {})
++
++def _python_autoconf_impl(repository_ctx):
++    """Implementation of the python_autoconf repository rule."""
++    if get_host_environ(repository_ctx, TF_PYTHON_CONFIG_REPO) != None:
++        _create_remote_python_repository(
++            repository_ctx,
++            get_host_environ(repository_ctx, TF_PYTHON_CONFIG_REPO),
++        )
++    else:
++        _create_local_python_repository(repository_ctx)
++
++_ENVIRONS = [
++    BAZEL_SH,
++    PYTHON_BIN_PATH,
++    PYTHON_LIB_PATH,
++]
++
++local_python_configure = repository_rule(
++    implementation = _create_local_python_repository,
++    environ = _ENVIRONS,
++    attrs = {
++        "environ": attr.string_dict(),
++        "platform_constraint": attr.string(),
++    },
++)
++
++remote_python_configure = repository_rule(
++    implementation = _create_local_python_repository,
++    environ = _ENVIRONS,
++    remotable = True,
++    attrs = {
++        "environ": attr.string_dict(),
++        "platform_constraint": attr.string(),
++    },
++)
++
++python_configure = repository_rule(
++    implementation = _python_autoconf_impl,
++    environ = _ENVIRONS + [TF_PYTHON_CONFIG_REPO],
++    attrs = {
++        "platform_constraint": attr.string(),
++    },
++)
++"""Detects and configures the local Python.
++
++Add the following to your WORKSPACE FILE:
++
++```python
++python_configure(name = "local_config_python")
++```
++
++Args:
++  name: A unique name for this workspace rule.
++"""
+diff --git a/third_party/py/python_init_pip.bzl b/third_party/py/python_init_pip.bzl
+deleted file mode 100644
+index 5a0bdb674c6..00000000000
+--- a/third_party/py/python_init_pip.bzl
++++ /dev/null
+@@ -1,34 +0,0 @@
+-"""Hermetic Python initialization. Consult the WORKSPACE on how to use it."""
+-
+-load("@python//:defs.bzl", "interpreter")
+-load("@python_version_repo//:py_version.bzl", "REQUIREMENTS_WITH_LOCAL_WHEELS")
+-load("@rules_python//python:pip.bzl", "package_annotation", "pip_parse")
+-
+-def python_init_pip():
+-    numpy_annotations = {
+-        "numpy": package_annotation(
+-            additive_build_content = """\
+-cc_library(
+-    name = "numpy_headers_2",
+-    hdrs = glob(["site-packages/numpy/_core/include/**/*.h"]),
+-    strip_include_prefix="site-packages/numpy/_core/include/",
+-)
+-cc_library(
+-    name = "numpy_headers_1",
+-    hdrs = glob(["site-packages/numpy/core/include/**/*.h"]),
+-    strip_include_prefix="site-packages/numpy/core/include/",
+-)
+-cc_library(
+-    name = "numpy_headers",
+-    deps = [":numpy_headers_2", ":numpy_headers_1"],
+-)
+-""",
+-        ),
+-    }
+-
+-    pip_parse(
+-        name = "pypi",
+-        annotations = numpy_annotations,
+-        python_interpreter_target = interpreter,
+-        requirements_lock = REQUIREMENTS_WITH_LOCAL_WHEELS,
+-    )
+diff --git a/third_party/py/python_init_repositories.bzl b/third_party/py/python_init_repositories.bzl
+deleted file mode 100644
+index 32c340cd83a..00000000000
+--- a/third_party/py/python_init_repositories.bzl
++++ /dev/null
+@@ -1,19 +0,0 @@
+-"""Hermetic Python initialization. Consult the WORKSPACE on how to use it."""
+-
+-load("@rules_python//python:repositories.bzl", "py_repositories")
+-load("//third_party/py:python_repo.bzl", "python_repository")
+-
+-def python_init_repositories(
+-        requirements = {},
+-        local_wheel_workspaces = [],
+-        local_wheel_dist_folder = None,
+-        default_python_version = None):
+-    python_repository(
+-        name = "python_version_repo",
+-        requirements_versions = requirements.keys(),
+-        requirements_locks = requirements.values(),
+-        local_wheel_workspaces = local_wheel_workspaces,
+-        local_wheel_dist_folder = local_wheel_dist_folder,
+-        default_python_version = default_python_version,
+-    )
+-    py_repositories()
+diff --git a/third_party/py/python_init_rules.bzl b/third_party/py/python_init_rules.bzl
+deleted file mode 100644
+index 98a7b8bc3c3..00000000000
+--- a/third_party/py/python_init_rules.bzl
++++ /dev/null
+@@ -1,11 +0,0 @@
+-"""Hermetic Python initialization. Consult the WORKSPACE on how to use it."""
+-
+-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+-
+-def python_init_rules():
+-    http_archive(
+-        name = "rules_python",
+-        sha256 = "9d04041ac92a0985e344235f5d946f71ac543f1b1565f2cdbc9a2aaee8adf55b",
+-        strip_prefix = "rules_python-0.26.0",
+-        url = "https://github.com/bazelbuild/rules_python/releases/download/0.26.0/rules_python-0.26.0.tar.gz",
+-    )
+diff --git a/third_party/py/python_init_toolchains.bzl b/third_party/py/python_init_toolchains.bzl
+deleted file mode 100644
+index c1f800db4c0..00000000000
+--- a/third_party/py/python_init_toolchains.bzl
++++ /dev/null
+@@ -1,13 +0,0 @@
+-"""Hermetic Python initialization. Consult the WORKSPACE on how to use it."""
+-
+-load("@python_version_repo//:py_version.bzl", "HERMETIC_PYTHON_VERSION")
+-load("@rules_python//python:repositories.bzl", "python_register_toolchains")
+-load("@rules_python//python:versions.bzl", "MINOR_MAPPING")
+-
+-def python_init_toolchains():
+-    if HERMETIC_PYTHON_VERSION in MINOR_MAPPING:
+-        python_register_toolchains(
+-            name = "python",
+-            ignore_root_user_error = True,
+-            python_version = HERMETIC_PYTHON_VERSION,
+-        )
+diff --git a/third_party/xla/WORKSPACE b/third_party/xla/WORKSPACE
+index 9d046e22949..7ba74d6276c 100644
+--- a/third_party/xla/WORKSPACE
++++ b/third_party/xla/WORKSPACE
+@@ -7,32 +7,6 @@ workspace(name = "xla")
+ # restriction that load() statements need to be at the top of .bzl files.
+ # E.g. we can not retrieve a new repository with http_archive and then load()
+ # a macro from that repository in the same file.
+-
+-# Initialize hermetic Python
+-load("//third_party/py:python_init_rules.bzl", "python_init_rules")
+-
+-python_init_rules()
+-
+-load("//third_party/py:python_init_repositories.bzl", "python_init_repositories")
+-
+-python_init_repositories(
+-    requirements = {
+-        "3.11": "//:requirements_lock_3_11.txt",
+-    },
+-)
+-
+-load("//third_party/py:python_init_toolchains.bzl", "python_init_toolchains")
+-
+-python_init_toolchains()
+-
+-load("//third_party/py:python_init_pip.bzl", "python_init_pip")
+-
+-python_init_pip()
+-
+-load("@pypi//:requirements.bzl", "install_deps")
+-
+-install_deps()
+-
+ load(":workspace4.bzl", "xla_workspace4")
+ 
+ xla_workspace4()
+diff --git a/third_party/xla/opensource_only.files b/third_party/xla/opensource_only.files
+index 666a858f3e4..7655cabdafe 100644
+--- a/third_party/xla/opensource_only.files
++++ b/third_party/xla/opensource_only.files
+@@ -19,17 +19,13 @@ third_party/llvm_openmp/openmp.bzl:
+ third_party/ortools/BUILD:
+ third_party/ortools/glpk.BUILD:
+ third_party/ortools/ortools.patch:
+-third_party/py/BUILD.tpl:
+-third_party/py/BUILD:
+-third_party/py/ml_dtypes/BUILD:
+-third_party/py/ml_dtypes/LICENSE:
+-third_party/py/numpy/BUILD:
+-third_party/py/python_configure.bzl:
+-third_party/py/python_init_pip.bzl:
+-third_party/py/python_init_repositories.bzl:
+-third_party/py/python_init_rules.bzl:
+-third_party/py/python_init_toolchains.bzl:
+-third_party/py/python_repo.bzl:
++third_party/py/non_hermetic/BUILD.tpl:
++third_party/py/non_hermetic/BUILD:
++third_party/py/non_hermetic/README:
++third_party/py/non_hermetic/ml_dtypes/BUILD:
++third_party/py/non_hermetic/ml_dtypes/LICENSE:
++third_party/py/non_hermetic/numpy/BUILD:
++third_party/py/non_hermetic/python_configure.bzl:
+ third_party/python_runtime/BUILD:
+ third_party/repo.bzl:
+ third_party/stablehlo/BUILD:
+diff --git a/third_party/xla/requirements_lock_3_11.txt b/third_party/xla/requirements_lock_3_11.txt
+deleted file mode 100644
+index 5c4bb687dfe..00000000000
+--- a/third_party/xla/requirements_lock_3_11.txt
++++ /dev/null
+@@ -1,49 +0,0 @@
+-numpy==1.24.3 \
+-    --hash=sha256:0ec87a7084caa559c36e0a2309e4ecb1baa03b687201d0a847c8b0ed476a7187 \
+-    --hash=sha256:1a7d6acc2e7524c9955e5c903160aa4ea083736fde7e91276b0e5d98e6332812 \
+-    --hash=sha256:202de8f38fc4a45a3eea4b63e2f376e5f2dc64ef0fa692838e31a808520efaf7 \
+-    --hash=sha256:210461d87fb02a84ef243cac5e814aad2b7f4be953b32cb53327bb49fd77fbb4 \
+-    --hash=sha256:2d926b52ba1367f9acb76b0df6ed21f0b16a1ad87c6720a1121674e5cf63e2b6 \
+-    --hash=sha256:352ee00c7f8387b44d19f4cada524586f07379c0d49270f87233983bc5087ca0 \
+-    --hash=sha256:35400e6a8d102fd07c71ed7dcadd9eb62ee9a6e84ec159bd48c28235bbb0f8e4 \
+-    --hash=sha256:3c1104d3c036fb81ab923f507536daedc718d0ad5a8707c6061cdfd6d184e570 \
+-    --hash=sha256:4719d5aefb5189f50887773699eaf94e7d1e02bf36c1a9d353d9f46703758ca4 \
+-    --hash=sha256:4749e053a29364d3452c034827102ee100986903263e89884922ef01a0a6fd2f \
+-    --hash=sha256:5342cf6aad47943286afa6f1609cad9b4266a05e7f2ec408e2cf7aea7ff69d80 \
+-    --hash=sha256:56e48aec79ae238f6e4395886b5eaed058abb7231fb3361ddd7bfdf4eed54289 \
+-    --hash=sha256:76e3f4e85fc5d4fd311f6e9b794d0c00e7002ec122be271f2019d63376f1d385 \
+-    --hash=sha256:7776ea65423ca6a15255ba1872d82d207bd1e09f6d0894ee4a64678dd2204078 \
+-    --hash=sha256:784c6da1a07818491b0ffd63c6bbe5a33deaa0e25a20e1b3ea20cf0e43f8046c \
+-    --hash=sha256:8535303847b89aa6b0f00aa1dc62867b5a32923e4d1681a35b5eef2d9591a463 \
+-    --hash=sha256:9a7721ec204d3a237225db3e194c25268faf92e19338a35f3a224469cb6039a3 \
+-    --hash=sha256:a1d3c026f57ceaad42f8231305d4653d5f05dc6332a730ae5c0bea3513de0950 \
+-    --hash=sha256:ab344f1bf21f140adab8e47fdbc7c35a477dc01408791f8ba00d018dd0bc5155 \
+-    --hash=sha256:ab5f23af8c16022663a652d3b25dcdc272ac3f83c3af4c02eb8b824e6b3ab9d7 \
+-    --hash=sha256:ae8d0be48d1b6ed82588934aaaa179875e7dc4f3d84da18d7eae6eb3f06c242c \
+-    --hash=sha256:c91c4afd8abc3908e00a44b2672718905b8611503f7ff87390cc0ac3423fb096 \
+-    --hash=sha256:d5036197ecae68d7f491fcdb4df90082b0d4960ca6599ba2659957aafced7c17 \
+-    --hash=sha256:d6cc757de514c00b24ae8cf5c876af2a7c3df189028d68c0cb4eaa9cd5afc2bf \
+-    --hash=sha256:d933fabd8f6a319e8530d0de4fcc2e6a61917e0b0c271fded460032db42a0fe4 \
+-    --hash=sha256:ea8282b9bcfe2b5e7d491d0bf7f3e2da29700cec05b49e64d6246923329f2b02 \
+-    --hash=sha256:ecde0f8adef7dfdec993fd54b0f78183051b6580f606111a6d789cd14c61ea0c \
+-    --hash=sha256:f21c442fdd2805e91799fbe044a7b999b8571bb0ab0f7850d0cb9641a687092b
+-lit==17.0.6 \
+-    --hash=sha256:dfa9af9b55fc4509a56be7bf2346f079d7f4a242d583b9f2e0b078fd0abae31b
+-ml-dtypes==0.3.2 \
+-    --hash=sha256:2c34f2ba9660b21fe1034b608308a01be82bbef2a92fb8199f24dc6bad0d5226 \
+-    --hash=sha256:3a17ef2322e60858d93584e9c52a5be7dd6236b056b7fa1ec57f1bb6ba043e33 \
+-    --hash=sha256:533059bc5f1764fac071ef54598db358c167c51a718f68f5bb55e3dee79d2967 \
+-    --hash=sha256:6604877d567a29bfe7cc02969ae0f2425260e5335505cf5e7fefc3e5465f5655 \
+-    --hash=sha256:6b35c4e8ca957c877ac35c79ffa77724ecc3702a1e4b18b08306c03feae597bb \
+-    --hash=sha256:763697ab8a88d47443997a7cdf3aac7340049aed45f7521f6b0ec8a0594821fe \
+-    --hash=sha256:7a4c3fcbf86fa52d0204f07cfd23947ef05b4ad743a1a988e163caa34a201e5e \
+-    --hash=sha256:7afde548890a92b41c0fed3a6c525f1200a5727205f73dc21181a2726571bb53 \
+-    --hash=sha256:7ba8e1fafc7fff3e643f453bffa7d082df1678a73286ce8187d3e825e776eb94 \
+-    --hash=sha256:91f8783fd1f2c23fd3b9ee5ad66b785dafa58ba3cdb050c4458021fa4d1eb226 \
+-    --hash=sha256:93b78f53431c93953f7850bb1b925a17f0ab5d97527e38a7e865b5b4bc5cfc18 \
+-    --hash=sha256:961134ea44c7b8ca63eda902a44b58cd8bd670e21d62e255c81fba0a8e70d9b7 \
+-    --hash=sha256:b89b194e9501a92d289c1ffd411380baf5daafb9818109a4f49b0a1b6dce4462 \
+-    --hash=sha256:c7b3fb3d4f6b39bcd4f6c4b98f406291f0d681a895490ee29a0f95bab850d53c \
+-    --hash=sha256:d1a746fe5fb9cd974a91070174258f0be129c592b93f9ce7df6cc336416c3fbd \
+-    --hash=sha256:e8505946df1665db01332d885c2020b4cb9e84a8b1241eb4ba69d59591f65855 \
+-    --hash=sha256:f47619d978ab1ae7dfdc4052ea97c636c6263e1f19bd1be0e42c346b98d15ff4
+\ No newline at end of file
+diff --git a/third_party/xla/third_party/py/BUILD b/third_party/xla/third_party/py/BUILD
+index 84eba77ce1a..e69de29bb2d 100644
+--- a/third_party/xla/third_party/py/BUILD
++++ b/third_party/xla/third_party/py/BUILD
+@@ -1,40 +0,0 @@
+-load("@python//:defs.bzl", "compile_pip_requirements")
+-load("@python_version_repo//:py_version.bzl", "REQUIREMENTS")
+-
+-compile_pip_requirements(
+-    name = "requirements",
+-    extra_args = [
+-        "--allow-unsafe",
+-        "--build-isolation",
+-    ],
+-    generate_hashes = True,
+-    requirements_in = "requirements.in",
+-    requirements_txt = REQUIREMENTS,
+-)
+-
+-compile_pip_requirements(
+-    name = "requirements_nightly",
+-    data = ["test-requirements.txt"],
+-    extra_args = [
+-        "--allow-unsafe",
+-        "--build-isolation",
+-        "--extra-index-url=https://pypi.anaconda.org/scientific-python-nightly-wheels/simple",
+-        "--pre",
+-        "--upgrade",
+-    ],
+-    generate_hashes = False,
+-    requirements_in = "requirements.in",
+-    requirements_txt = REQUIREMENTS,
+-)
+-
+-compile_pip_requirements(
+-    name = "requirements_dev",
+-    extra_args = [
+-        "--allow-unsafe",
+-        "--build-isolation",
+-        "--upgrade",
+-    ],
+-    generate_hashes = False,
+-    requirements_in = "requirements.in",
+-    requirements_txt = REQUIREMENTS,
+-)
+diff --git a/third_party/xla/third_party/py/non_hermetic/BUILD b/third_party/xla/third_party/py/non_hermetic/BUILD
+new file mode 100644
+index 00000000000..e69de29bb2d
+diff --git a/third_party/xla/third_party/py/non_hermetic/BUILD.tpl b/third_party/xla/third_party/py/non_hermetic/BUILD.tpl
+new file mode 100644
+index 00000000000..45480bd4a31
+--- /dev/null
++++ b/third_party/xla/third_party/py/non_hermetic/BUILD.tpl
+@@ -0,0 +1,80 @@
++licenses(["restricted"])
++
++package(default_visibility = ["//visibility:public"])
++
++# Point both runtimes to the same python binary to ensure we always
++# use the python binary specified by ./configure.py script.
++load("@bazel_tools//tools/python:toolchain.bzl", "py_runtime_pair")
++
++py_runtime(
++    name = "py2_runtime",
++    interpreter_path = "%{PYTHON_BIN_PATH}",
++    python_version = "PY2",
++)
++
++py_runtime(
++    name = "py3_runtime",
++    interpreter_path = "%{PYTHON_BIN_PATH}",
++    python_version = "PY3",
++)
++
++py_runtime_pair(
++    name = "py_runtime_pair",
++    py2_runtime = ":py2_runtime",
++    py3_runtime = ":py3_runtime",
++)
++
++toolchain(
++    name = "py_toolchain",
++    toolchain = ":py_runtime_pair",
++    toolchain_type = "@bazel_tools//tools/python:toolchain_type",
++    target_compatible_with = [%{PLATFORM_CONSTRAINT}],
++    exec_compatible_with = [%{PLATFORM_CONSTRAINT}],
++)
++
++# To build Python C/C++ extension on Windows, we need to link to python import library pythonXY.lib
++# See https://docs.python.org/3/extending/windows.html
++cc_import(
++    name = "python_lib",
++    interface_library = select({
++        ":windows": ":python_import_lib",
++        # A placeholder for Unix platforms which makes --no_build happy.
++        "//conditions:default": "not-existing.lib",
++    }),
++    system_provided = 1,
++)
++
++cc_library(
++    name = "python_headers",
++    hdrs = [":python_include"],
++    deps = select({
++        ":windows": [":python_lib"],
++        "//conditions:default": [],
++    }),
++    includes = ["python_include"],
++)
++
++# This alias is exists for the use of targets in the @llvm-project dependency,
++# which expect a python_headers target called @python_runtime//:headers. We use
++# a repo_mapping to alias python_runtime to this package, and an alias to create
++# the correct target.
++alias(
++    name = "headers",
++    actual = ":python_headers",
++)
++
++cc_library(
++    name = "numpy_headers",
++    hdrs = [":numpy_include"],
++    includes = ["numpy_include"],
++)
++
++config_setting(
++    name = "windows",
++    values = {"cpu": "x64_windows"},
++    visibility = ["//visibility:public"],
++)
++
++%{PYTHON_INCLUDE_GENRULE}
++%{NUMPY_INCLUDE_GENRULE}
++%{PYTHON_IMPORT_LIB_GENRULE}
+\ No newline at end of file
+diff --git a/third_party/xla/third_party/py/non_hermetic/README b/third_party/xla/third_party/py/non_hermetic/README
+new file mode 100644
+index 00000000000..62188a5817a
+--- /dev/null
++++ b/third_party/xla/third_party/py/non_hermetic/README
+@@ -0,0 +1,3 @@
++This is a temporary copy of python_configure repository rule. It allows
++XLA and TSL to keep non-hermetic Python while TF uses hermetic Python.
++DO NOT DEPEND ON THIS COPY as it will be deleted soon.
+\ No newline at end of file
+diff --git a/third_party/xla/third_party/py/non_hermetic/python_configure.bzl b/third_party/xla/third_party/py/non_hermetic/python_configure.bzl
+new file mode 100644
+index 00000000000..89732c3e33d
+--- /dev/null
++++ b/third_party/xla/third_party/py/non_hermetic/python_configure.bzl
+@@ -0,0 +1,312 @@
++"""Repository rule for Python autoconfiguration.
++
++`python_configure` depends on the following environment variables:
++
++  * `PYTHON_BIN_PATH`: location of python binary.
++  * `PYTHON_LIB_PATH`: Location of python libraries.
++"""
++
++load(
++    "//third_party/remote_config:common.bzl",
++    "BAZEL_SH",
++    "PYTHON_BIN_PATH",
++    "PYTHON_LIB_PATH",
++    "TF_PYTHON_CONFIG_REPO",
++    "auto_config_fail",
++    "config_repo_label",
++    "execute",
++    "get_bash_bin",
++    "get_host_environ",
++    "get_python_bin",
++    "is_windows",
++    "raw_exec",
++    "read_dir",
++)
++
++def _genrule(src_dir, genrule_name, command, outs):
++    """Returns a string with a genrule.
++
++    Genrule executes the given command and produces the given outputs.
++    """
++    return (
++        "genrule(\n" +
++        '    name = "' +
++        genrule_name + '",\n' +
++        "    outs = [\n" +
++        outs +
++        "\n    ],\n" +
++        '    cmd = """\n' +
++        command +
++        '\n   """,\n' +
++        ")\n"
++    )
++
++def _norm_path(path):
++    """Returns a path with '/' and remove the trailing slash."""
++    path = path.replace("\\", "/")
++    if path[-1] == "/":
++        path = path[:-1]
++    return path
++
++def _symlink_genrule_for_dir(
++        repository_ctx,
++        src_dir,
++        dest_dir,
++        genrule_name,
++        src_files = [],
++        dest_files = []):
++    """Returns a genrule to symlink(or copy if on Windows) a set of files.
++
++    If src_dir is passed, files will be read from the given directory; otherwise
++    we assume files are in src_files and dest_files
++    """
++    if src_dir != None:
++        src_dir = _norm_path(src_dir)
++        dest_dir = _norm_path(dest_dir)
++        files = "\n".join(read_dir(repository_ctx, src_dir))
++
++        # Create a list with the src_dir stripped to use for outputs.
++        dest_files = files.replace(src_dir, "").splitlines()
++        src_files = files.splitlines()
++    command = []
++    outs = []
++    for i in range(len(dest_files)):
++        if dest_files[i] != "":
++            # If we have only one file to link we do not want to use the dest_dir, as
++            # $(@D) will include the full path to the file.
++            dest = "$(@D)/" + dest_dir + dest_files[i] if len(dest_files) != 1 else "$(@D)/" + dest_files[i]
++
++            # Copy the headers to create a sandboxable setup.
++            cmd = "cp -f"
++            command.append(cmd + ' "%s" "%s"' % (src_files[i], dest))
++            outs.append('        "' + dest_dir + dest_files[i] + '",')
++    genrule = _genrule(
++        src_dir,
++        genrule_name,
++        " && ".join(command),
++        "\n".join(outs),
++    )
++    return genrule
++
++def _get_python_lib(repository_ctx, python_bin):
++    """Gets the python lib path."""
++    python_lib = get_host_environ(repository_ctx, PYTHON_LIB_PATH)
++    if python_lib != None:
++        return python_lib
++
++    # The interesting program to execute.
++    print_lib = [
++        "from __future__ import print_function",
++        "import site",
++        "import os",
++        "python_paths = []",
++        "if os.getenv('PYTHONPATH') is not None:",
++        "  python_paths = os.getenv('PYTHONPATH').split(':')",
++        "try:",
++        "  library_paths = site.getsitepackages()",
++        "except AttributeError:",
++        "  from distutils.sysconfig import get_python_lib",
++        "  library_paths = [get_python_lib()]",
++        "all_paths = set(python_paths + library_paths)",
++        "paths = []",
++        "for path in all_paths:",
++        "  if os.path.isdir(path):",
++        "    paths.append(path)",
++        "if len(paths) >=1:",
++        "  print(paths[0])",
++    ]
++
++    # The below script writes the above program to a file
++    # and executes it. This is to work around the limitation
++    # of not being able to upload files as part of execute.
++    cmd = "from os import linesep;"
++    cmd += "f = open('script.py', 'w');"
++    for line in print_lib:
++        cmd += "f.write(\"%s\" + linesep);" % line
++    cmd += "f.close();"
++    cmd += "from subprocess import call;"
++    cmd += "call([\"%s\", \"script.py\"]);" % python_bin
++
++    result = execute(repository_ctx, [python_bin, "-c", cmd])
++    return result.stdout.strip()
++
++def _check_python_lib(repository_ctx, python_lib):
++    """Checks the python lib path."""
++    cmd = 'test -d "%s" -a -x "%s"' % (python_lib, python_lib)
++    result = raw_exec(repository_ctx, [get_bash_bin(repository_ctx), "-c", cmd])
++    if result.return_code == 1:
++        auto_config_fail("Invalid python library path: %s" % python_lib)
++
++def _check_python_bin(repository_ctx, python_bin):
++    """Checks the python bin path."""
++    cmd = '[[ -x "%s" ]] && [[ ! -d "%s" ]]' % (python_bin, python_bin)
++    result = raw_exec(repository_ctx, [get_bash_bin(repository_ctx), "-c", cmd])
++    if result.return_code == 1:
++        auto_config_fail("--define %s='%s' is not executable. Is it the python binary?" % (
++            PYTHON_BIN_PATH,
++            python_bin,
++        ))
++
++def _get_python_include(repository_ctx, python_bin):
++    """Gets the python include path."""
++    result = execute(
++        repository_ctx,
++        [
++            python_bin,
++            "-Wignore",
++            "-c",
++            "import sysconfig; " +
++            "print(sysconfig.get_path('include'))",
++        ],
++        error_msg = "Problem getting python include path.",
++        error_details = ("Is the Python binary path set up right? " +
++                         "(See ./configure or " + PYTHON_BIN_PATH + ".) " +
++                         "Is distutils installed?"),
++    )
++    return result.stdout.splitlines()[0]
++
++def _get_python_import_lib_name(repository_ctx, python_bin):
++    """Get Python import library name (pythonXY.lib) on Windows."""
++    result = execute(
++        repository_ctx,
++        [
++            python_bin,
++            "-c",
++            "import sys;" +
++            'print("python" + str(sys.version_info[0]) + ' +
++            '      str(sys.version_info[1]) + ".lib")',
++        ],
++        error_msg = "Problem getting python import library.",
++        error_details = ("Is the Python binary path set up right? " +
++                         "(See ./configure or " + PYTHON_BIN_PATH + ".) "),
++    )
++    return result.stdout.splitlines()[0]
++
++def _get_numpy_include(repository_ctx, python_bin):
++    """Gets the numpy include path."""
++    return execute(
++        repository_ctx,
++        [
++            python_bin,
++            "-c",
++            "from __future__ import print_function;" +
++            "import numpy;" +
++            " print(numpy.get_include());",
++        ],
++        error_msg = "Problem getting numpy include path.",
++        error_details = "Is numpy installed?",
++    ).stdout.splitlines()[0]
++
++def _create_local_python_repository(repository_ctx):
++    """Creates the repository containing files set up to build with Python."""
++
++    # Resolve all labels before doing any real work. Resolving causes the
++    # function to be restarted with all previous state being lost. This
++    # can easily lead to a O(n^2) runtime in the number of labels.
++    build_tpl = repository_ctx.path(Label("//third_party/py:BUILD.tpl"))
++
++    python_bin = get_python_bin(repository_ctx)
++    _check_python_bin(repository_ctx, python_bin)
++    python_lib = _get_python_lib(repository_ctx, python_bin)
++    _check_python_lib(repository_ctx, python_lib)
++    python_include = _get_python_include(repository_ctx, python_bin)
++    numpy_include = _get_numpy_include(repository_ctx, python_bin) + "/numpy"
++    python_include_rule = _symlink_genrule_for_dir(
++        repository_ctx,
++        python_include,
++        "python_include",
++        "python_include",
++    )
++    python_import_lib_genrule = ""
++
++    # To build Python C/C++ extension on Windows, we need to link to python import library pythonXY.lib
++    # See https://docs.python.org/3/extending/windows.html
++    if is_windows(repository_ctx):
++        python_bin = python_bin.replace("\\", "/")
++        python_include = _norm_path(python_include)
++        python_import_lib_name = _get_python_import_lib_name(repository_ctx, python_bin)
++        python_import_lib_src = python_include.rsplit("/", 1)[0] + "/libs/" + python_import_lib_name
++        python_import_lib_genrule = _symlink_genrule_for_dir(
++            repository_ctx,
++            None,
++            "",
++            "python_import_lib",
++            [python_import_lib_src],
++            [python_import_lib_name],
++        )
++    numpy_include_rule = _symlink_genrule_for_dir(
++        repository_ctx,
++        numpy_include,
++        "numpy_include/numpy",
++        "numpy_include",
++    )
++
++    platform_constraint = ""
++    if repository_ctx.attr.platform_constraint:
++        platform_constraint = "\"%s\"" % repository_ctx.attr.platform_constraint
++    repository_ctx.template("BUILD", build_tpl, {
++        "%{PYTHON_BIN_PATH}": python_bin,
++        "%{PYTHON_INCLUDE_GENRULE}": python_include_rule,
++        "%{PYTHON_IMPORT_LIB_GENRULE}": python_import_lib_genrule,
++        "%{NUMPY_INCLUDE_GENRULE}": numpy_include_rule,
++        "%{PLATFORM_CONSTRAINT}": platform_constraint,
++    })
++
++def _create_remote_python_repository(repository_ctx, remote_config_repo):
++    """Creates pointers to a remotely configured repo set up to build with Python.
++    """
++    repository_ctx.template("BUILD", config_repo_label(remote_config_repo, ":BUILD"), {})
++
++def _python_autoconf_impl(repository_ctx):
++    """Implementation of the python_autoconf repository rule."""
++    if get_host_environ(repository_ctx, TF_PYTHON_CONFIG_REPO) != None:
++        _create_remote_python_repository(
++            repository_ctx,
++            get_host_environ(repository_ctx, TF_PYTHON_CONFIG_REPO),
++        )
++    else:
++        _create_local_python_repository(repository_ctx)
++
++_ENVIRONS = [
++    BAZEL_SH,
++    PYTHON_BIN_PATH,
++    PYTHON_LIB_PATH,
++]
++
++local_python_configure = repository_rule(
++    implementation = _create_local_python_repository,
++    environ = _ENVIRONS,
++    attrs = {
++        "environ": attr.string_dict(),
++        "platform_constraint": attr.string(),
++    },
++)
++
++remote_python_configure = repository_rule(
++    implementation = _create_local_python_repository,
++    environ = _ENVIRONS,
++    remotable = True,
++    attrs = {
++        "environ": attr.string_dict(),
++        "platform_constraint": attr.string(),
++    },
++)
++
++python_configure = repository_rule(
++    implementation = _python_autoconf_impl,
++    environ = _ENVIRONS + [TF_PYTHON_CONFIG_REPO],
++    attrs = {
++        "platform_constraint": attr.string(),
++    },
++)
++"""Detects and configures the local Python.
++
++Add the following to your WORKSPACE FILE:
++
++```python
++python_configure(name = "local_config_python")
++```
++
++Args:
++  name: A unique name for this workspace rule.
++"""
+diff --git a/third_party/xla/third_party/py/python_init_pip.bzl b/third_party/xla/third_party/py/python_init_pip.bzl
+deleted file mode 100644
+index 5a0bdb674c6..00000000000
+--- a/third_party/xla/third_party/py/python_init_pip.bzl
++++ /dev/null
+@@ -1,34 +0,0 @@
+-"""Hermetic Python initialization. Consult the WORKSPACE on how to use it."""
+-
+-load("@python//:defs.bzl", "interpreter")
+-load("@python_version_repo//:py_version.bzl", "REQUIREMENTS_WITH_LOCAL_WHEELS")
+-load("@rules_python//python:pip.bzl", "package_annotation", "pip_parse")
+-
+-def python_init_pip():
+-    numpy_annotations = {
+-        "numpy": package_annotation(
+-            additive_build_content = """\
+-cc_library(
+-    name = "numpy_headers_2",
+-    hdrs = glob(["site-packages/numpy/_core/include/**/*.h"]),
+-    strip_include_prefix="site-packages/numpy/_core/include/",
+-)
+-cc_library(
+-    name = "numpy_headers_1",
+-    hdrs = glob(["site-packages/numpy/core/include/**/*.h"]),
+-    strip_include_prefix="site-packages/numpy/core/include/",
+-)
+-cc_library(
+-    name = "numpy_headers",
+-    deps = [":numpy_headers_2", ":numpy_headers_1"],
+-)
+-""",
+-        ),
+-    }
+-
+-    pip_parse(
+-        name = "pypi",
+-        annotations = numpy_annotations,
+-        python_interpreter_target = interpreter,
+-        requirements_lock = REQUIREMENTS_WITH_LOCAL_WHEELS,
+-    )
+diff --git a/third_party/xla/third_party/py/python_init_repositories.bzl b/third_party/xla/third_party/py/python_init_repositories.bzl
+deleted file mode 100644
+index 32c340cd83a..00000000000
+--- a/third_party/xla/third_party/py/python_init_repositories.bzl
++++ /dev/null
+@@ -1,19 +0,0 @@
+-"""Hermetic Python initialization. Consult the WORKSPACE on how to use it."""
+-
+-load("@rules_python//python:repositories.bzl", "py_repositories")
+-load("//third_party/py:python_repo.bzl", "python_repository")
+-
+-def python_init_repositories(
+-        requirements = {},
+-        local_wheel_workspaces = [],
+-        local_wheel_dist_folder = None,
+-        default_python_version = None):
+-    python_repository(
+-        name = "python_version_repo",
+-        requirements_versions = requirements.keys(),
+-        requirements_locks = requirements.values(),
+-        local_wheel_workspaces = local_wheel_workspaces,
+-        local_wheel_dist_folder = local_wheel_dist_folder,
+-        default_python_version = default_python_version,
+-    )
+-    py_repositories()
+diff --git a/third_party/xla/third_party/py/python_init_rules.bzl b/third_party/xla/third_party/py/python_init_rules.bzl
+deleted file mode 100644
+index 98a7b8bc3c3..00000000000
+--- a/third_party/xla/third_party/py/python_init_rules.bzl
++++ /dev/null
+@@ -1,11 +0,0 @@
+-"""Hermetic Python initialization. Consult the WORKSPACE on how to use it."""
+-
+-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+-
+-def python_init_rules():
+-    http_archive(
+-        name = "rules_python",
+-        sha256 = "9d04041ac92a0985e344235f5d946f71ac543f1b1565f2cdbc9a2aaee8adf55b",
+-        strip_prefix = "rules_python-0.26.0",
+-        url = "https://github.com/bazelbuild/rules_python/releases/download/0.26.0/rules_python-0.26.0.tar.gz",
+-    )
+diff --git a/third_party/xla/third_party/py/python_init_toolchains.bzl b/third_party/xla/third_party/py/python_init_toolchains.bzl
+deleted file mode 100644
+index c1f800db4c0..00000000000
+--- a/third_party/xla/third_party/py/python_init_toolchains.bzl
++++ /dev/null
+@@ -1,13 +0,0 @@
+-"""Hermetic Python initialization. Consult the WORKSPACE on how to use it."""
+-
+-load("@python_version_repo//:py_version.bzl", "HERMETIC_PYTHON_VERSION")
+-load("@rules_python//python:repositories.bzl", "python_register_toolchains")
+-load("@rules_python//python:versions.bzl", "MINOR_MAPPING")
+-
+-def python_init_toolchains():
+-    if HERMETIC_PYTHON_VERSION in MINOR_MAPPING:
+-        python_register_toolchains(
+-            name = "python",
+-            ignore_root_user_error = True,
+-            python_version = HERMETIC_PYTHON_VERSION,
+-        )
+diff --git a/third_party/xla/third_party/py/python_repo.bzl b/third_party/xla/third_party/py/python_repo.bzl
+deleted file mode 100644
+index 051e45aae37..00000000000
+--- a/third_party/xla/third_party/py/python_repo.bzl
++++ /dev/null
+@@ -1,324 +0,0 @@
+-"""
+-Repository rule to manage hermetic Python interpreter under Bazel.
+-
+-Version can be set via build parameter "--repo_env=HERMETIC_PYTHON_VERSION=3.11"
+-Defaults to 3.11.
+-
+-To set wheel name, add "--repo_env=WHEEL_NAME=tensorflow_cpu"
+-"""
+-
+-DEFAULT_VERSION = "3.11"
+-
+-def _python_repository_impl(ctx):
+-    version = _get_python_version(ctx)
+-
+-    ctx.file("BUILD", "")
+-    wheel_name = ctx.os.environ.get("WHEEL_NAME", "tensorflow")
+-    wheel_collab = ctx.os.environ.get("WHEEL_COLLAB", False)
+-
+-    requirements = None
+-    for i in range(0, len(ctx.attr.requirements_locks)):
+-        if ctx.attr.requirements_versions[i] == version:
+-            requirements = ctx.attr.requirements_locks[i]
+-            break
+-
+-    if not requirements:
+-        fail("""
+-Could not find requirements_lock.txt file matching specified Python version.
+-Specified python version: {version}
+-Python versions with available requirement_lock.txt files: {versions}
+-Please check python_init_repositories() in your WORKSPACE file.
+-""".format(
+-            version = version,
+-            versions = ", ".join(ctx.attr.requirements_versions),
+-        ))
+-
+-    requirements_with_local_wheels = str(requirements)
+-
+-    local_wheels_dir = ctx.os.environ.get("LOCAL_WHEELS_DIR", "")
+-    if ctx.attr.local_wheel_workspaces or local_wheels_dir:
+-        local_wheel_requirements = _get_injected_local_wheels(
+-            ctx,
+-            version,
+-            ctx.attr.local_wheel_workspaces,
+-            local_wheels_dir,
+-        )
+-        requirements_content = [ctx.read(requirements)] + local_wheel_requirements
+-        merged_requirements_content = "\n".join(requirements_content)
+-        requirements_with_local_wheels = requirements_with_local_wheels.replace(
+-            "@" + requirements.repo_name,
+-            "@" + ctx.name,
+-        )
+-
+-        ctx.file(
+-            requirements.name,
+-            merged_requirements_content,
+-        )
+-
+-    ctx.file(
+-        "py_version.bzl",
+-        """
+-TF_PYTHON_VERSION = "{version}"
+-HERMETIC_PYTHON_VERSION = "{version}"
+-WHEEL_NAME = "{wheel_name}"
+-WHEEL_COLLAB = "{wheel_collab}"
+-REQUIREMENTS = "{requirements}"
+-REQUIREMENTS_WITH_LOCAL_WHEELS = "{requirements_with_local_wheels}"
+-""".format(
+-            version = version,
+-            wheel_name = wheel_name,
+-            wheel_collab = wheel_collab,
+-            requirements = str(requirements),
+-            requirements_with_local_wheels = requirements_with_local_wheels,
+-        ),
+-    )
+-
+-def _get_python_version(ctx):
+-    print_warning = False
+-
+-    version = ctx.os.environ.get("HERMETIC_PYTHON_VERSION", "")
+-    if not version:
+-        version = ctx.os.environ.get("TF_PYTHON_VERSION", "")
+-    if not version:
+-        print_warning = True
+-        if ctx.attr.default_python_version == "system":
+-            python_version_result = ctx.execute(["python3", "--version"])
+-            if python_version_result.return_code == 0:
+-                version = python_version_result.stdout
+-            else:
+-                fail("""
+-Cannot match hermetic Python version to system Python version.
+-System Python was not found.""")
+-        else:
+-            version = ctx.attr.default_python_version
+-
+-    version = _parse_python_version(version)
+-
+-    if print_warning:
+-        print("""
+-HERMETIC_PYTHON_VERSION variable was not set correctly, using default version.
+-Python {} will be used.
+-To select Python version, either set HERMETIC_PYTHON_VERSION env variable in
+-your shell:
+-  export HERMETIC_PYTHON_VERSION=3.12
+-OR pass it as an argument to bazel command directly or inside your .bazelrc
+-file:
+-  --repo_env=HERMETIC_PYTHON_VERSION=3.12
+-""".format(version))  # buildifier: disable=print
+-
+-    print("Using hermetic Python %s" % version)  # buildifier: disable=print
+-    return version
+-
+-def _parse_python_version(version_str):
+-    if version_str.startswith("Python "):
+-        py_ver_chunks = version_str[7:].split(".")
+-        return "%s.%s" % (py_ver_chunks[0], py_ver_chunks[1])
+-    return version_str
+-
+-def _get_injected_local_wheels(
+-        ctx,
+-        py_version,
+-        local_wheel_workspaces,
+-        local_wheels_dir):
+-    local_wheel_requirements = []
+-    py_ver_marker = "-cp%s-" % py_version.replace(".", "")
+-    wheels = {}
+-
+-    if local_wheel_workspaces:
+-        for local_wheel_workspace in local_wheel_workspaces:
+-            local_wheel_workspace_path = ctx.path(local_wheel_workspace)
+-            dist_folder = ctx.attr.local_wheel_dist_folder
+-            dist_folder_path = local_wheel_workspace_path.dirname.get_child(dist_folder)
+-            if dist_folder_path.exists:
+-                dist_wheels = dist_folder_path.readdir()
+-                _process_dist_wheels(dist_wheels, wheels, py_ver_marker)
+-    if local_wheels_dir:
+-        dist_folder_path = ctx.path(local_wheels_dir)
+-        if dist_folder_path.exists:
+-            dist_wheels = dist_folder_path.readdir()
+-            _process_dist_wheels(dist_wheels, wheels, py_ver_marker)
+-
+-    for wheel_name, wheel_path in wheels.items():
+-        local_wheel_requirements.append(
+-            "{wheel_name} @ file://{wheel_path}".format(
+-                wheel_name = wheel_name,
+-                wheel_path = wheel_path.realpath,
+-            ),
+-        )
+-
+-    return local_wheel_requirements
+-
+-python_repository = repository_rule(
+-    implementation = _python_repository_impl,
+-    attrs = {
+-        "requirements_versions": attr.string_list(
+-            mandatory = False,
+-            default = [],
+-        ),
+-        "requirements_locks": attr.label_list(
+-            mandatory = False,
+-            default = [],
+-        ),
+-        "local_wheel_workspaces": attr.label_list(
+-            mandatory = False,
+-            default = [],
+-        ),
+-        "local_wheel_dist_folder": attr.string(
+-            mandatory = False,
+-            default = "dist",
+-        ),
+-        "default_python_version": attr.string(
+-            mandatory = False,
+-            default = DEFAULT_VERSION,
+-        ),
+-    },
+-    environ = [
+-        "TF_PYTHON_VERSION",
+-        "HERMETIC_PYTHON_VERSION",
+-        "WHEEL_NAME",
+-        "WHEEL_COLLAB",
+-    ],
+-)
+-
+-def _process_dist_wheels(dist_wheels, wheels, py_ver_marker):
+-    for wheel in dist_wheels:
+-        bn = wheel.basename
+-        if not bn.endswith(".whl") or bn.find(py_ver_marker) < 0:
+-            continue
+-
+-        name_components = bn.split("-")
+-        package_name = name_components[0]
+-        for name_component in name_components[1:]:
+-            if name_component[0].isdigit():
+-                break
+-            package_name += "-" + name_component
+-
+-        latest_wheel = wheels.get(package_name, None)
+-
+-        if not latest_wheel or latest_wheel.basename < wheel.basename:
+-            wheels[package_name] = wheel
+-
+-def _custom_python_interpreter_impl(ctx):
+-    version = ctx.attr.version
+-    strip_prefix = ctx.attr.strip_prefix.format(version = version)
+-    urls = [url.format(version = version) for url in ctx.attr.urls]
+-    binary_name = ctx.attr.binary_name
+-    if not binary_name:
+-        ver_chunks = version.split(".")
+-        binary_name = "python%s.%s" % (ver_chunks[0], ver_chunks[1])
+-
+-    install_dir = "{name}-{version}".format(name = ctx.attr.name, version = version)
+-    _exec_and_check(ctx, ["mkdir", install_dir])
+-    install_path = ctx.path(install_dir)
+-    srcs_dir = "srcs"
+-    ctx.download_and_extract(
+-        url = urls,
+-        stripPrefix = strip_prefix,
+-        output = srcs_dir,
+-    )
+-
+-    configure_params = []
+-    if "CC" in ctx.os.environ:
+-        configure_params.append("CC={}".format(ctx.os.environ["CC"]))
+-    if "CXX" in ctx.os.environ:
+-        configure_params.append("CXX={}".format(ctx.os.environ["CXX"]))
+-
+-    configure_params.append("--enable-optimizations")
+-    configure_params.append("--prefix=%s" % install_path.realpath)
+-    _exec_and_check(
+-        ctx,
+-        ["./configure"] + configure_params,
+-        working_directory = srcs_dir,
+-        quiet = False,
+-    )
+-    res = _exec_and_check(ctx, ["nproc"])
+-    cores = 12 if res.return_code != 0 else max(1, int(res.stdout.strip()) - 1)
+-    _exec_and_check(ctx, ["make", "-j%s" % cores], working_directory = srcs_dir)
+-    _exec_and_check(ctx, ["make", "altinstall"], working_directory = srcs_dir)
+-    _exec_and_check(ctx, ["ln", "-s", binary_name, "python3"], working_directory = install_dir + "/bin")
+-    tar = "{install_dir}.tgz".format(install_dir = install_dir)
+-    _exec_and_check(ctx, ["tar", "czpf", tar, install_dir])
+-    _exec_and_check(ctx, ["rm", "-rf", srcs_dir])
+-    res = _exec_and_check(ctx, ["sha256sum", tar])
+-
+-    sha256 = res.stdout.split(" ")[0].strip()
+-    tar_path = ctx.path(tar)
+-
+-    example = """\n\n
+-To use newly built Python interpreter add the following code snippet RIGHT AFTER
+-python_init_toolchains() in your WORKSPACE file. The code sample should work as
+-is but it may need some tuning, if you have special requirements.
+-
+-```
+-load("@rules_python//python:repositories.bzl", "python_register_toolchains")
+-python_register_toolchains(
+-    name = "python",
+-    # By default assume the interpreter is on the local file system, replace
+-    # with proper URL if it is not the case.
+-    base_url = "file://",
+-    ignore_root_user_error = True,
+-    python_version = "{version}",
+-    tool_versions = {{
+-        "{version}": {{
+-            # Path to .tar.gz with Python binary. By default it points to .tgz
+-            # file in cache where it was built originally; replace with proper
+-            # file location, if you moved it somewhere else.
+-            "url": "{tar_path}",
+-            "sha256": {{
+-                # By default we assume Linux x86_64 architecture, eplace with
+-                # proper architecture if you were building on a different platform.
+-                "x86_64-unknown-linux-gnu": "{sha256}",
+-            }},
+-            "strip_prefix": "{install_dir}",
+-        }},
+-    }},
+-)
+-```
+-\n\n""".format(version = version, tar_path = tar_path, sha256 = sha256, install_dir = install_dir)
+-
+-    instructions = "INSTRUCTIONS-{version}.md".format(version = version)
+-    ctx.file(instructions + ".tmpl", example, executable = False)
+-    ctx.file(
+-        "BUILD.bazel",
+-        """
+-genrule(
+-    name = "{name}",
+-    srcs = ["{tar}", "{instructions}.tmpl"],
+-    outs = ["{install_dir}.tar.gz", "{instructions}"],
+-    cmd = "cp $(location {tar}) $(location {install_dir}.tar.gz); cp $(location {instructions}.tmpl) $(location {instructions})",
+-    visibility = ["//visibility:public"],
+-)
+-     """.format(
+-            name = ctx.attr.name,
+-            tar = tar,
+-            install_dir = install_dir,
+-            instructions = instructions,
+-        ),
+-        executable = False,
+-    )
+-
+-    print(example)  # buildifier: disable=print
+-
+-custom_python_interpreter = repository_rule(
+-    implementation = _custom_python_interpreter_impl,
+-    attrs = {
+-        "urls": attr.string_list(),
+-        "strip_prefix": attr.string(),
+-        "binary_name": attr.string(mandatory = False),
+-        "version": attr.string(),
+-    },
+-)
+-
+-def _exec_and_check(ctx, command, fail_on_error = True, quiet = False, **kwargs):
+-    res = ctx.execute(command, quiet = quiet, **kwargs)
+-    if fail_on_error and res.return_code != 0:
+-        fail("""
+-Failed to execute command: `{command}`
+-Exit Code: {code}
+-STDERR: {stderr}
+-        """.format(
+-            command = command,
+-            code = res.return_code,
+-            stderr = res.stderr,
+-        ))
+-    return res
+diff --git a/third_party/xla/third_party/tsl/WORKSPACE b/third_party/xla/third_party/tsl/WORKSPACE
+index 19350e3dbba..6ad0d6e0e2b 100644
+--- a/third_party/xla/third_party/tsl/WORKSPACE
++++ b/third_party/xla/third_party/tsl/WORKSPACE
+@@ -10,31 +10,6 @@ workspace(name = "tsl")
+ 
+ # buildifier: disable=load-on-top
+ 
+-# Initialize hermetic Python
+-load("//third_party/py:python_init_rules.bzl", "python_init_rules")
+-
+-python_init_rules()
+-
+-load("//third_party/py:python_init_repositories.bzl", "python_init_repositories")
+-
+-python_init_repositories(
+-    requirements = {
+-        "3.11": "//:requirements_lock_3_11.txt",
+-    },
+-)
+-
+-load("//third_party/py:python_init_toolchains.bzl", "python_init_toolchains")
+-
+-python_init_toolchains()
+-
+-load("//third_party/py:python_init_pip.bzl", "python_init_pip")
+-
+-python_init_pip()
+-
+-load("@pypi//:requirements.bzl", "install_deps")
+-
+-install_deps()
+-
+ load(":workspace3.bzl", "tsl_workspace3")
+ 
+ tsl_workspace3()
+diff --git a/third_party/xla/third_party/tsl/opensource_only.files b/third_party/xla/third_party/tsl/opensource_only.files
+index 709cacf5c17..3f2bcf8431e 100644
+--- a/third_party/xla/third_party/tsl/opensource_only.files
++++ b/third_party/xla/third_party/tsl/opensource_only.files
+@@ -73,17 +73,13 @@ third_party/nccl/system.BUILD.tpl:
+ third_party/nvtx/BUILD:
+ third_party/nvtx/LICENSE:
+ third_party/protobuf/BUILD:
+-third_party/py/BUILD.tpl:
+-third_party/py/BUILD:
+-third_party/py/ml_dtypes/BUILD:
+-third_party/py/ml_dtypes/LICENSE:
+-third_party/py/numpy/BUILD:
+-third_party/py/python_configure.bzl:
+-third_party/py/python_init_pip.bzl:
+-third_party/py/python_init_repositories.bzl:
+-third_party/py/python_init_rules.bzl:
+-third_party/py/python_init_toolchains.bzl:
+-third_party/py/python_repo.bzl:
++third_party/py/non_hermetic/BUILD.tpl:
++third_party/py/non_hermetic/BUILD:
++third_party/py/non_hermetic/README:
++third_party/py/non_hermetic/ml_dtypes/BUILD:
++third_party/py/non_hermetic/ml_dtypes/LICENSE:
++third_party/py/non_hermetic/numpy/BUILD:
++third_party/py/non_hermetic/python_configure.bzl:
+ third_party/pybind11.BUILD:
+ third_party/pybind11_bazel/BUILD:
+ third_party/python_runtime/BUILD:
+diff --git a/third_party/xla/third_party/tsl/requirements_lock_3_11.txt b/third_party/xla/third_party/tsl/requirements_lock_3_11.txt
+deleted file mode 100644
+index 5c4bb687dfe..00000000000
+--- a/third_party/xla/third_party/tsl/requirements_lock_3_11.txt
++++ /dev/null
+@@ -1,49 +0,0 @@
+-numpy==1.24.3 \
+-    --hash=sha256:0ec87a7084caa559c36e0a2309e4ecb1baa03b687201d0a847c8b0ed476a7187 \
+-    --hash=sha256:1a7d6acc2e7524c9955e5c903160aa4ea083736fde7e91276b0e5d98e6332812 \
+-    --hash=sha256:202de8f38fc4a45a3eea4b63e2f376e5f2dc64ef0fa692838e31a808520efaf7 \
+-    --hash=sha256:210461d87fb02a84ef243cac5e814aad2b7f4be953b32cb53327bb49fd77fbb4 \
+-    --hash=sha256:2d926b52ba1367f9acb76b0df6ed21f0b16a1ad87c6720a1121674e5cf63e2b6 \
+-    --hash=sha256:352ee00c7f8387b44d19f4cada524586f07379c0d49270f87233983bc5087ca0 \
+-    --hash=sha256:35400e6a8d102fd07c71ed7dcadd9eb62ee9a6e84ec159bd48c28235bbb0f8e4 \
+-    --hash=sha256:3c1104d3c036fb81ab923f507536daedc718d0ad5a8707c6061cdfd6d184e570 \
+-    --hash=sha256:4719d5aefb5189f50887773699eaf94e7d1e02bf36c1a9d353d9f46703758ca4 \
+-    --hash=sha256:4749e053a29364d3452c034827102ee100986903263e89884922ef01a0a6fd2f \
+-    --hash=sha256:5342cf6aad47943286afa6f1609cad9b4266a05e7f2ec408e2cf7aea7ff69d80 \
+-    --hash=sha256:56e48aec79ae238f6e4395886b5eaed058abb7231fb3361ddd7bfdf4eed54289 \
+-    --hash=sha256:76e3f4e85fc5d4fd311f6e9b794d0c00e7002ec122be271f2019d63376f1d385 \
+-    --hash=sha256:7776ea65423ca6a15255ba1872d82d207bd1e09f6d0894ee4a64678dd2204078 \
+-    --hash=sha256:784c6da1a07818491b0ffd63c6bbe5a33deaa0e25a20e1b3ea20cf0e43f8046c \
+-    --hash=sha256:8535303847b89aa6b0f00aa1dc62867b5a32923e4d1681a35b5eef2d9591a463 \
+-    --hash=sha256:9a7721ec204d3a237225db3e194c25268faf92e19338a35f3a224469cb6039a3 \
+-    --hash=sha256:a1d3c026f57ceaad42f8231305d4653d5f05dc6332a730ae5c0bea3513de0950 \
+-    --hash=sha256:ab344f1bf21f140adab8e47fdbc7c35a477dc01408791f8ba00d018dd0bc5155 \
+-    --hash=sha256:ab5f23af8c16022663a652d3b25dcdc272ac3f83c3af4c02eb8b824e6b3ab9d7 \
+-    --hash=sha256:ae8d0be48d1b6ed82588934aaaa179875e7dc4f3d84da18d7eae6eb3f06c242c \
+-    --hash=sha256:c91c4afd8abc3908e00a44b2672718905b8611503f7ff87390cc0ac3423fb096 \
+-    --hash=sha256:d5036197ecae68d7f491fcdb4df90082b0d4960ca6599ba2659957aafced7c17 \
+-    --hash=sha256:d6cc757de514c00b24ae8cf5c876af2a7c3df189028d68c0cb4eaa9cd5afc2bf \
+-    --hash=sha256:d933fabd8f6a319e8530d0de4fcc2e6a61917e0b0c271fded460032db42a0fe4 \
+-    --hash=sha256:ea8282b9bcfe2b5e7d491d0bf7f3e2da29700cec05b49e64d6246923329f2b02 \
+-    --hash=sha256:ecde0f8adef7dfdec993fd54b0f78183051b6580f606111a6d789cd14c61ea0c \
+-    --hash=sha256:f21c442fdd2805e91799fbe044a7b999b8571bb0ab0f7850d0cb9641a687092b
+-lit==17.0.6 \
+-    --hash=sha256:dfa9af9b55fc4509a56be7bf2346f079d7f4a242d583b9f2e0b078fd0abae31b
+-ml-dtypes==0.3.2 \
+-    --hash=sha256:2c34f2ba9660b21fe1034b608308a01be82bbef2a92fb8199f24dc6bad0d5226 \
+-    --hash=sha256:3a17ef2322e60858d93584e9c52a5be7dd6236b056b7fa1ec57f1bb6ba043e33 \
+-    --hash=sha256:533059bc5f1764fac071ef54598db358c167c51a718f68f5bb55e3dee79d2967 \
+-    --hash=sha256:6604877d567a29bfe7cc02969ae0f2425260e5335505cf5e7fefc3e5465f5655 \
+-    --hash=sha256:6b35c4e8ca957c877ac35c79ffa77724ecc3702a1e4b18b08306c03feae597bb \
+-    --hash=sha256:763697ab8a88d47443997a7cdf3aac7340049aed45f7521f6b0ec8a0594821fe \
+-    --hash=sha256:7a4c3fcbf86fa52d0204f07cfd23947ef05b4ad743a1a988e163caa34a201e5e \
+-    --hash=sha256:7afde548890a92b41c0fed3a6c525f1200a5727205f73dc21181a2726571bb53 \
+-    --hash=sha256:7ba8e1fafc7fff3e643f453bffa7d082df1678a73286ce8187d3e825e776eb94 \
+-    --hash=sha256:91f8783fd1f2c23fd3b9ee5ad66b785dafa58ba3cdb050c4458021fa4d1eb226 \
+-    --hash=sha256:93b78f53431c93953f7850bb1b925a17f0ab5d97527e38a7e865b5b4bc5cfc18 \
+-    --hash=sha256:961134ea44c7b8ca63eda902a44b58cd8bd670e21d62e255c81fba0a8e70d9b7 \
+-    --hash=sha256:b89b194e9501a92d289c1ffd411380baf5daafb9818109a4f49b0a1b6dce4462 \
+-    --hash=sha256:c7b3fb3d4f6b39bcd4f6c4b98f406291f0d681a895490ee29a0f95bab850d53c \
+-    --hash=sha256:d1a746fe5fb9cd974a91070174258f0be129c592b93f9ce7df6cc336416c3fbd \
+-    --hash=sha256:e8505946df1665db01332d885c2020b4cb9e84a8b1241eb4ba69d59591f65855 \
+-    --hash=sha256:f47619d978ab1ae7dfdc4052ea97c636c6263e1f19bd1be0e42c346b98d15ff4
+\ No newline at end of file
+diff --git a/third_party/xla/third_party/tsl/third_party/py/BUILD b/third_party/xla/third_party/tsl/third_party/py/BUILD
+index 84eba77ce1a..e69de29bb2d 100644
+--- a/third_party/xla/third_party/tsl/third_party/py/BUILD
++++ b/third_party/xla/third_party/tsl/third_party/py/BUILD
+@@ -1,40 +0,0 @@
+-load("@python//:defs.bzl", "compile_pip_requirements")
+-load("@python_version_repo//:py_version.bzl", "REQUIREMENTS")
+-
+-compile_pip_requirements(
+-    name = "requirements",
+-    extra_args = [
+-        "--allow-unsafe",
+-        "--build-isolation",
+-    ],
+-    generate_hashes = True,
+-    requirements_in = "requirements.in",
+-    requirements_txt = REQUIREMENTS,
+-)
+-
+-compile_pip_requirements(
+-    name = "requirements_nightly",
+-    data = ["test-requirements.txt"],
+-    extra_args = [
+-        "--allow-unsafe",
+-        "--build-isolation",
+-        "--extra-index-url=https://pypi.anaconda.org/scientific-python-nightly-wheels/simple",
+-        "--pre",
+-        "--upgrade",
+-    ],
+-    generate_hashes = False,
+-    requirements_in = "requirements.in",
+-    requirements_txt = REQUIREMENTS,
+-)
+-
+-compile_pip_requirements(
+-    name = "requirements_dev",
+-    extra_args = [
+-        "--allow-unsafe",
+-        "--build-isolation",
+-        "--upgrade",
+-    ],
+-    generate_hashes = False,
+-    requirements_in = "requirements.in",
+-    requirements_txt = REQUIREMENTS,
+-)
+diff --git a/third_party/xla/third_party/tsl/third_party/py/non_hermetic/BUILD b/third_party/xla/third_party/tsl/third_party/py/non_hermetic/BUILD
+new file mode 100644
+index 00000000000..e69de29bb2d
+diff --git a/third_party/xla/third_party/tsl/third_party/py/non_hermetic/BUILD.tpl b/third_party/xla/third_party/tsl/third_party/py/non_hermetic/BUILD.tpl
+new file mode 100644
+index 00000000000..45480bd4a31
+--- /dev/null
++++ b/third_party/xla/third_party/tsl/third_party/py/non_hermetic/BUILD.tpl
+@@ -0,0 +1,80 @@
++licenses(["restricted"])
++
++package(default_visibility = ["//visibility:public"])
++
++# Point both runtimes to the same python binary to ensure we always
++# use the python binary specified by ./configure.py script.
++load("@bazel_tools//tools/python:toolchain.bzl", "py_runtime_pair")
++
++py_runtime(
++    name = "py2_runtime",
++    interpreter_path = "%{PYTHON_BIN_PATH}",
++    python_version = "PY2",
++)
++
++py_runtime(
++    name = "py3_runtime",
++    interpreter_path = "%{PYTHON_BIN_PATH}",
++    python_version = "PY3",
++)
++
++py_runtime_pair(
++    name = "py_runtime_pair",
++    py2_runtime = ":py2_runtime",
++    py3_runtime = ":py3_runtime",
++)
++
++toolchain(
++    name = "py_toolchain",
++    toolchain = ":py_runtime_pair",
++    toolchain_type = "@bazel_tools//tools/python:toolchain_type",
++    target_compatible_with = [%{PLATFORM_CONSTRAINT}],
++    exec_compatible_with = [%{PLATFORM_CONSTRAINT}],
++)
++
++# To build Python C/C++ extension on Windows, we need to link to python import library pythonXY.lib
++# See https://docs.python.org/3/extending/windows.html
++cc_import(
++    name = "python_lib",
++    interface_library = select({
++        ":windows": ":python_import_lib",
++        # A placeholder for Unix platforms which makes --no_build happy.
++        "//conditions:default": "not-existing.lib",
++    }),
++    system_provided = 1,
++)
++
++cc_library(
++    name = "python_headers",
++    hdrs = [":python_include"],
++    deps = select({
++        ":windows": [":python_lib"],
++        "//conditions:default": [],
++    }),
++    includes = ["python_include"],
++)
++
++# This alias is exists for the use of targets in the @llvm-project dependency,
++# which expect a python_headers target called @python_runtime//:headers. We use
++# a repo_mapping to alias python_runtime to this package, and an alias to create
++# the correct target.
++alias(
++    name = "headers",
++    actual = ":python_headers",
++)
++
++cc_library(
++    name = "numpy_headers",
++    hdrs = [":numpy_include"],
++    includes = ["numpy_include"],
++)
++
++config_setting(
++    name = "windows",
++    values = {"cpu": "x64_windows"},
++    visibility = ["//visibility:public"],
++)
++
++%{PYTHON_INCLUDE_GENRULE}
++%{NUMPY_INCLUDE_GENRULE}
++%{PYTHON_IMPORT_LIB_GENRULE}
+\ No newline at end of file
+diff --git a/third_party/xla/third_party/tsl/third_party/py/non_hermetic/README b/third_party/xla/third_party/tsl/third_party/py/non_hermetic/README
+new file mode 100644
+index 00000000000..62188a5817a
+--- /dev/null
++++ b/third_party/xla/third_party/tsl/third_party/py/non_hermetic/README
+@@ -0,0 +1,3 @@
++This is a temporary copy of python_configure repository rule. It allows
++XLA and TSL to keep non-hermetic Python while TF uses hermetic Python.
++DO NOT DEPEND ON THIS COPY as it will be deleted soon.
+\ No newline at end of file
+diff --git a/third_party/xla/third_party/tsl/third_party/py/non_hermetic/python_configure.bzl b/third_party/xla/third_party/tsl/third_party/py/non_hermetic/python_configure.bzl
+new file mode 100644
+index 00000000000..89732c3e33d
+--- /dev/null
++++ b/third_party/xla/third_party/tsl/third_party/py/non_hermetic/python_configure.bzl
+@@ -0,0 +1,312 @@
++"""Repository rule for Python autoconfiguration.
++
++`python_configure` depends on the following environment variables:
++
++  * `PYTHON_BIN_PATH`: location of python binary.
++  * `PYTHON_LIB_PATH`: Location of python libraries.
++"""
++
++load(
++    "//third_party/remote_config:common.bzl",
++    "BAZEL_SH",
++    "PYTHON_BIN_PATH",
++    "PYTHON_LIB_PATH",
++    "TF_PYTHON_CONFIG_REPO",
++    "auto_config_fail",
++    "config_repo_label",
++    "execute",
++    "get_bash_bin",
++    "get_host_environ",
++    "get_python_bin",
++    "is_windows",
++    "raw_exec",
++    "read_dir",
++)
++
++def _genrule(src_dir, genrule_name, command, outs):
++    """Returns a string with a genrule.
++
++    Genrule executes the given command and produces the given outputs.
++    """
++    return (
++        "genrule(\n" +
++        '    name = "' +
++        genrule_name + '",\n' +
++        "    outs = [\n" +
++        outs +
++        "\n    ],\n" +
++        '    cmd = """\n' +
++        command +
++        '\n   """,\n' +
++        ")\n"
++    )
++
++def _norm_path(path):
++    """Returns a path with '/' and remove the trailing slash."""
++    path = path.replace("\\", "/")
++    if path[-1] == "/":
++        path = path[:-1]
++    return path
++
++def _symlink_genrule_for_dir(
++        repository_ctx,
++        src_dir,
++        dest_dir,
++        genrule_name,
++        src_files = [],
++        dest_files = []):
++    """Returns a genrule to symlink(or copy if on Windows) a set of files.
++
++    If src_dir is passed, files will be read from the given directory; otherwise
++    we assume files are in src_files and dest_files
++    """
++    if src_dir != None:
++        src_dir = _norm_path(src_dir)
++        dest_dir = _norm_path(dest_dir)
++        files = "\n".join(read_dir(repository_ctx, src_dir))
++
++        # Create a list with the src_dir stripped to use for outputs.
++        dest_files = files.replace(src_dir, "").splitlines()
++        src_files = files.splitlines()
++    command = []
++    outs = []
++    for i in range(len(dest_files)):
++        if dest_files[i] != "":
++            # If we have only one file to link we do not want to use the dest_dir, as
++            # $(@D) will include the full path to the file.
++            dest = "$(@D)/" + dest_dir + dest_files[i] if len(dest_files) != 1 else "$(@D)/" + dest_files[i]
++
++            # Copy the headers to create a sandboxable setup.
++            cmd = "cp -f"
++            command.append(cmd + ' "%s" "%s"' % (src_files[i], dest))
++            outs.append('        "' + dest_dir + dest_files[i] + '",')
++    genrule = _genrule(
++        src_dir,
++        genrule_name,
++        " && ".join(command),
++        "\n".join(outs),
++    )
++    return genrule
++
++def _get_python_lib(repository_ctx, python_bin):
++    """Gets the python lib path."""
++    python_lib = get_host_environ(repository_ctx, PYTHON_LIB_PATH)
++    if python_lib != None:
++        return python_lib
++
++    # The interesting program to execute.
++    print_lib = [
++        "from __future__ import print_function",
++        "import site",
++        "import os",
++        "python_paths = []",
++        "if os.getenv('PYTHONPATH') is not None:",
++        "  python_paths = os.getenv('PYTHONPATH').split(':')",
++        "try:",
++        "  library_paths = site.getsitepackages()",
++        "except AttributeError:",
++        "  from distutils.sysconfig import get_python_lib",
++        "  library_paths = [get_python_lib()]",
++        "all_paths = set(python_paths + library_paths)",
++        "paths = []",
++        "for path in all_paths:",
++        "  if os.path.isdir(path):",
++        "    paths.append(path)",
++        "if len(paths) >=1:",
++        "  print(paths[0])",
++    ]
++
++    # The below script writes the above program to a file
++    # and executes it. This is to work around the limitation
++    # of not being able to upload files as part of execute.
++    cmd = "from os import linesep;"
++    cmd += "f = open('script.py', 'w');"
++    for line in print_lib:
++        cmd += "f.write(\"%s\" + linesep);" % line
++    cmd += "f.close();"
++    cmd += "from subprocess import call;"
++    cmd += "call([\"%s\", \"script.py\"]);" % python_bin
++
++    result = execute(repository_ctx, [python_bin, "-c", cmd])
++    return result.stdout.strip()
++
++def _check_python_lib(repository_ctx, python_lib):
++    """Checks the python lib path."""
++    cmd = 'test -d "%s" -a -x "%s"' % (python_lib, python_lib)
++    result = raw_exec(repository_ctx, [get_bash_bin(repository_ctx), "-c", cmd])
++    if result.return_code == 1:
++        auto_config_fail("Invalid python library path: %s" % python_lib)
++
++def _check_python_bin(repository_ctx, python_bin):
++    """Checks the python bin path."""
++    cmd = '[[ -x "%s" ]] && [[ ! -d "%s" ]]' % (python_bin, python_bin)
++    result = raw_exec(repository_ctx, [get_bash_bin(repository_ctx), "-c", cmd])
++    if result.return_code == 1:
++        auto_config_fail("--define %s='%s' is not executable. Is it the python binary?" % (
++            PYTHON_BIN_PATH,
++            python_bin,
++        ))
++
++def _get_python_include(repository_ctx, python_bin):
++    """Gets the python include path."""
++    result = execute(
++        repository_ctx,
++        [
++            python_bin,
++            "-Wignore",
++            "-c",
++            "import sysconfig; " +
++            "print(sysconfig.get_path('include'))",
++        ],
++        error_msg = "Problem getting python include path.",
++        error_details = ("Is the Python binary path set up right? " +
++                         "(See ./configure or " + PYTHON_BIN_PATH + ".) " +
++                         "Is distutils installed?"),
++    )
++    return result.stdout.splitlines()[0]
++
++def _get_python_import_lib_name(repository_ctx, python_bin):
++    """Get Python import library name (pythonXY.lib) on Windows."""
++    result = execute(
++        repository_ctx,
++        [
++            python_bin,
++            "-c",
++            "import sys;" +
++            'print("python" + str(sys.version_info[0]) + ' +
++            '      str(sys.version_info[1]) + ".lib")',
++        ],
++        error_msg = "Problem getting python import library.",
++        error_details = ("Is the Python binary path set up right? " +
++                         "(See ./configure or " + PYTHON_BIN_PATH + ".) "),
++    )
++    return result.stdout.splitlines()[0]
++
++def _get_numpy_include(repository_ctx, python_bin):
++    """Gets the numpy include path."""
++    return execute(
++        repository_ctx,
++        [
++            python_bin,
++            "-c",
++            "from __future__ import print_function;" +
++            "import numpy;" +
++            " print(numpy.get_include());",
++        ],
++        error_msg = "Problem getting numpy include path.",
++        error_details = "Is numpy installed?",
++    ).stdout.splitlines()[0]
++
++def _create_local_python_repository(repository_ctx):
++    """Creates the repository containing files set up to build with Python."""
++
++    # Resolve all labels before doing any real work. Resolving causes the
++    # function to be restarted with all previous state being lost. This
++    # can easily lead to a O(n^2) runtime in the number of labels.
++    build_tpl = repository_ctx.path(Label("//third_party/py:BUILD.tpl"))
++
++    python_bin = get_python_bin(repository_ctx)
++    _check_python_bin(repository_ctx, python_bin)
++    python_lib = _get_python_lib(repository_ctx, python_bin)
++    _check_python_lib(repository_ctx, python_lib)
++    python_include = _get_python_include(repository_ctx, python_bin)
++    numpy_include = _get_numpy_include(repository_ctx, python_bin) + "/numpy"
++    python_include_rule = _symlink_genrule_for_dir(
++        repository_ctx,
++        python_include,
++        "python_include",
++        "python_include",
++    )
++    python_import_lib_genrule = ""
++
++    # To build Python C/C++ extension on Windows, we need to link to python import library pythonXY.lib
++    # See https://docs.python.org/3/extending/windows.html
++    if is_windows(repository_ctx):
++        python_bin = python_bin.replace("\\", "/")
++        python_include = _norm_path(python_include)
++        python_import_lib_name = _get_python_import_lib_name(repository_ctx, python_bin)
++        python_import_lib_src = python_include.rsplit("/", 1)[0] + "/libs/" + python_import_lib_name
++        python_import_lib_genrule = _symlink_genrule_for_dir(
++            repository_ctx,
++            None,
++            "",
++            "python_import_lib",
++            [python_import_lib_src],
++            [python_import_lib_name],
++        )
++    numpy_include_rule = _symlink_genrule_for_dir(
++        repository_ctx,
++        numpy_include,
++        "numpy_include/numpy",
++        "numpy_include",
++    )
++
++    platform_constraint = ""
++    if repository_ctx.attr.platform_constraint:
++        platform_constraint = "\"%s\"" % repository_ctx.attr.platform_constraint
++    repository_ctx.template("BUILD", build_tpl, {
++        "%{PYTHON_BIN_PATH}": python_bin,
++        "%{PYTHON_INCLUDE_GENRULE}": python_include_rule,
++        "%{PYTHON_IMPORT_LIB_GENRULE}": python_import_lib_genrule,
++        "%{NUMPY_INCLUDE_GENRULE}": numpy_include_rule,
++        "%{PLATFORM_CONSTRAINT}": platform_constraint,
++    })
++
++def _create_remote_python_repository(repository_ctx, remote_config_repo):
++    """Creates pointers to a remotely configured repo set up to build with Python.
++    """
++    repository_ctx.template("BUILD", config_repo_label(remote_config_repo, ":BUILD"), {})
++
++def _python_autoconf_impl(repository_ctx):
++    """Implementation of the python_autoconf repository rule."""
++    if get_host_environ(repository_ctx, TF_PYTHON_CONFIG_REPO) != None:
++        _create_remote_python_repository(
++            repository_ctx,
++            get_host_environ(repository_ctx, TF_PYTHON_CONFIG_REPO),
++        )
++    else:
++        _create_local_python_repository(repository_ctx)
++
++_ENVIRONS = [
++    BAZEL_SH,
++    PYTHON_BIN_PATH,
++    PYTHON_LIB_PATH,
++]
++
++local_python_configure = repository_rule(
++    implementation = _create_local_python_repository,
++    environ = _ENVIRONS,
++    attrs = {
++        "environ": attr.string_dict(),
++        "platform_constraint": attr.string(),
++    },
++)
++
++remote_python_configure = repository_rule(
++    implementation = _create_local_python_repository,
++    environ = _ENVIRONS,
++    remotable = True,
++    attrs = {
++        "environ": attr.string_dict(),
++        "platform_constraint": attr.string(),
++    },
++)
++
++python_configure = repository_rule(
++    implementation = _python_autoconf_impl,
++    environ = _ENVIRONS + [TF_PYTHON_CONFIG_REPO],
++    attrs = {
++        "platform_constraint": attr.string(),
++    },
++)
++"""Detects and configures the local Python.
++
++Add the following to your WORKSPACE FILE:
++
++```python
++python_configure(name = "local_config_python")
++```
++
++Args:
++  name: A unique name for this workspace rule.
++"""
+diff --git a/third_party/xla/third_party/tsl/third_party/py/python_init_pip.bzl b/third_party/xla/third_party/tsl/third_party/py/python_init_pip.bzl
+deleted file mode 100644
+index 5a0bdb674c6..00000000000
+--- a/third_party/xla/third_party/tsl/third_party/py/python_init_pip.bzl
++++ /dev/null
+@@ -1,34 +0,0 @@
+-"""Hermetic Python initialization. Consult the WORKSPACE on how to use it."""
+-
+-load("@python//:defs.bzl", "interpreter")
+-load("@python_version_repo//:py_version.bzl", "REQUIREMENTS_WITH_LOCAL_WHEELS")
+-load("@rules_python//python:pip.bzl", "package_annotation", "pip_parse")
+-
+-def python_init_pip():
+-    numpy_annotations = {
+-        "numpy": package_annotation(
+-            additive_build_content = """\
+-cc_library(
+-    name = "numpy_headers_2",
+-    hdrs = glob(["site-packages/numpy/_core/include/**/*.h"]),
+-    strip_include_prefix="site-packages/numpy/_core/include/",
+-)
+-cc_library(
+-    name = "numpy_headers_1",
+-    hdrs = glob(["site-packages/numpy/core/include/**/*.h"]),
+-    strip_include_prefix="site-packages/numpy/core/include/",
+-)
+-cc_library(
+-    name = "numpy_headers",
+-    deps = [":numpy_headers_2", ":numpy_headers_1"],
+-)
+-""",
+-        ),
+-    }
+-
+-    pip_parse(
+-        name = "pypi",
+-        annotations = numpy_annotations,
+-        python_interpreter_target = interpreter,
+-        requirements_lock = REQUIREMENTS_WITH_LOCAL_WHEELS,
+-    )
+diff --git a/third_party/xla/third_party/tsl/third_party/py/python_init_repositories.bzl b/third_party/xla/third_party/tsl/third_party/py/python_init_repositories.bzl
+deleted file mode 100644
+index 32c340cd83a..00000000000
+--- a/third_party/xla/third_party/tsl/third_party/py/python_init_repositories.bzl
++++ /dev/null
+@@ -1,19 +0,0 @@
+-"""Hermetic Python initialization. Consult the WORKSPACE on how to use it."""
+-
+-load("@rules_python//python:repositories.bzl", "py_repositories")
+-load("//third_party/py:python_repo.bzl", "python_repository")
+-
+-def python_init_repositories(
+-        requirements = {},
+-        local_wheel_workspaces = [],
+-        local_wheel_dist_folder = None,
+-        default_python_version = None):
+-    python_repository(
+-        name = "python_version_repo",
+-        requirements_versions = requirements.keys(),
+-        requirements_locks = requirements.values(),
+-        local_wheel_workspaces = local_wheel_workspaces,
+-        local_wheel_dist_folder = local_wheel_dist_folder,
+-        default_python_version = default_python_version,
+-    )
+-    py_repositories()
+diff --git a/third_party/xla/third_party/tsl/third_party/py/python_init_rules.bzl b/third_party/xla/third_party/tsl/third_party/py/python_init_rules.bzl
+deleted file mode 100644
+index 98a7b8bc3c3..00000000000
+--- a/third_party/xla/third_party/tsl/third_party/py/python_init_rules.bzl
++++ /dev/null
+@@ -1,11 +0,0 @@
+-"""Hermetic Python initialization. Consult the WORKSPACE on how to use it."""
+-
+-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+-
+-def python_init_rules():
+-    http_archive(
+-        name = "rules_python",
+-        sha256 = "9d04041ac92a0985e344235f5d946f71ac543f1b1565f2cdbc9a2aaee8adf55b",
+-        strip_prefix = "rules_python-0.26.0",
+-        url = "https://github.com/bazelbuild/rules_python/releases/download/0.26.0/rules_python-0.26.0.tar.gz",
+-    )
+diff --git a/third_party/xla/third_party/tsl/third_party/py/python_init_toolchains.bzl b/third_party/xla/third_party/tsl/third_party/py/python_init_toolchains.bzl
+deleted file mode 100644
+index c1f800db4c0..00000000000
+--- a/third_party/xla/third_party/tsl/third_party/py/python_init_toolchains.bzl
++++ /dev/null
+@@ -1,13 +0,0 @@
+-"""Hermetic Python initialization. Consult the WORKSPACE on how to use it."""
+-
+-load("@python_version_repo//:py_version.bzl", "HERMETIC_PYTHON_VERSION")
+-load("@rules_python//python:repositories.bzl", "python_register_toolchains")
+-load("@rules_python//python:versions.bzl", "MINOR_MAPPING")
+-
+-def python_init_toolchains():
+-    if HERMETIC_PYTHON_VERSION in MINOR_MAPPING:
+-        python_register_toolchains(
+-            name = "python",
+-            ignore_root_user_error = True,
+-            python_version = HERMETIC_PYTHON_VERSION,
+-        )
+diff --git a/third_party/xla/third_party/tsl/third_party/py/python_repo.bzl b/third_party/xla/third_party/tsl/third_party/py/python_repo.bzl
+deleted file mode 100644
+index 051e45aae37..00000000000
+--- a/third_party/xla/third_party/tsl/third_party/py/python_repo.bzl
++++ /dev/null
+@@ -1,324 +0,0 @@
+-"""
+-Repository rule to manage hermetic Python interpreter under Bazel.
+-
+-Version can be set via build parameter "--repo_env=HERMETIC_PYTHON_VERSION=3.11"
+-Defaults to 3.11.
+-
+-To set wheel name, add "--repo_env=WHEEL_NAME=tensorflow_cpu"
+-"""
+-
+-DEFAULT_VERSION = "3.11"
+-
+-def _python_repository_impl(ctx):
+-    version = _get_python_version(ctx)
+-
+-    ctx.file("BUILD", "")
+-    wheel_name = ctx.os.environ.get("WHEEL_NAME", "tensorflow")
+-    wheel_collab = ctx.os.environ.get("WHEEL_COLLAB", False)
+-
+-    requirements = None
+-    for i in range(0, len(ctx.attr.requirements_locks)):
+-        if ctx.attr.requirements_versions[i] == version:
+-            requirements = ctx.attr.requirements_locks[i]
+-            break
+-
+-    if not requirements:
+-        fail("""
+-Could not find requirements_lock.txt file matching specified Python version.
+-Specified python version: {version}
+-Python versions with available requirement_lock.txt files: {versions}
+-Please check python_init_repositories() in your WORKSPACE file.
+-""".format(
+-            version = version,
+-            versions = ", ".join(ctx.attr.requirements_versions),
+-        ))
+-
+-    requirements_with_local_wheels = str(requirements)
+-
+-    local_wheels_dir = ctx.os.environ.get("LOCAL_WHEELS_DIR", "")
+-    if ctx.attr.local_wheel_workspaces or local_wheels_dir:
+-        local_wheel_requirements = _get_injected_local_wheels(
+-            ctx,
+-            version,
+-            ctx.attr.local_wheel_workspaces,
+-            local_wheels_dir,
+-        )
+-        requirements_content = [ctx.read(requirements)] + local_wheel_requirements
+-        merged_requirements_content = "\n".join(requirements_content)
+-        requirements_with_local_wheels = requirements_with_local_wheels.replace(
+-            "@" + requirements.repo_name,
+-            "@" + ctx.name,
+-        )
+-
+-        ctx.file(
+-            requirements.name,
+-            merged_requirements_content,
+-        )
+-
+-    ctx.file(
+-        "py_version.bzl",
+-        """
+-TF_PYTHON_VERSION = "{version}"
+-HERMETIC_PYTHON_VERSION = "{version}"
+-WHEEL_NAME = "{wheel_name}"
+-WHEEL_COLLAB = "{wheel_collab}"
+-REQUIREMENTS = "{requirements}"
+-REQUIREMENTS_WITH_LOCAL_WHEELS = "{requirements_with_local_wheels}"
+-""".format(
+-            version = version,
+-            wheel_name = wheel_name,
+-            wheel_collab = wheel_collab,
+-            requirements = str(requirements),
+-            requirements_with_local_wheels = requirements_with_local_wheels,
+-        ),
+-    )
+-
+-def _get_python_version(ctx):
+-    print_warning = False
+-
+-    version = ctx.os.environ.get("HERMETIC_PYTHON_VERSION", "")
+-    if not version:
+-        version = ctx.os.environ.get("TF_PYTHON_VERSION", "")
+-    if not version:
+-        print_warning = True
+-        if ctx.attr.default_python_version == "system":
+-            python_version_result = ctx.execute(["python3", "--version"])
+-            if python_version_result.return_code == 0:
+-                version = python_version_result.stdout
+-            else:
+-                fail("""
+-Cannot match hermetic Python version to system Python version.
+-System Python was not found.""")
+-        else:
+-            version = ctx.attr.default_python_version
+-
+-    version = _parse_python_version(version)
+-
+-    if print_warning:
+-        print("""
+-HERMETIC_PYTHON_VERSION variable was not set correctly, using default version.
+-Python {} will be used.
+-To select Python version, either set HERMETIC_PYTHON_VERSION env variable in
+-your shell:
+-  export HERMETIC_PYTHON_VERSION=3.12
+-OR pass it as an argument to bazel command directly or inside your .bazelrc
+-file:
+-  --repo_env=HERMETIC_PYTHON_VERSION=3.12
+-""".format(version))  # buildifier: disable=print
+-
+-    print("Using hermetic Python %s" % version)  # buildifier: disable=print
+-    return version
+-
+-def _parse_python_version(version_str):
+-    if version_str.startswith("Python "):
+-        py_ver_chunks = version_str[7:].split(".")
+-        return "%s.%s" % (py_ver_chunks[0], py_ver_chunks[1])
+-    return version_str
+-
+-def _get_injected_local_wheels(
+-        ctx,
+-        py_version,
+-        local_wheel_workspaces,
+-        local_wheels_dir):
+-    local_wheel_requirements = []
+-    py_ver_marker = "-cp%s-" % py_version.replace(".", "")
+-    wheels = {}
+-
+-    if local_wheel_workspaces:
+-        for local_wheel_workspace in local_wheel_workspaces:
+-            local_wheel_workspace_path = ctx.path(local_wheel_workspace)
+-            dist_folder = ctx.attr.local_wheel_dist_folder
+-            dist_folder_path = local_wheel_workspace_path.dirname.get_child(dist_folder)
+-            if dist_folder_path.exists:
+-                dist_wheels = dist_folder_path.readdir()
+-                _process_dist_wheels(dist_wheels, wheels, py_ver_marker)
+-    if local_wheels_dir:
+-        dist_folder_path = ctx.path(local_wheels_dir)
+-        if dist_folder_path.exists:
+-            dist_wheels = dist_folder_path.readdir()
+-            _process_dist_wheels(dist_wheels, wheels, py_ver_marker)
+-
+-    for wheel_name, wheel_path in wheels.items():
+-        local_wheel_requirements.append(
+-            "{wheel_name} @ file://{wheel_path}".format(
+-                wheel_name = wheel_name,
+-                wheel_path = wheel_path.realpath,
+-            ),
+-        )
+-
+-    return local_wheel_requirements
+-
+-python_repository = repository_rule(
+-    implementation = _python_repository_impl,
+-    attrs = {
+-        "requirements_versions": attr.string_list(
+-            mandatory = False,
+-            default = [],
+-        ),
+-        "requirements_locks": attr.label_list(
+-            mandatory = False,
+-            default = [],
+-        ),
+-        "local_wheel_workspaces": attr.label_list(
+-            mandatory = False,
+-            default = [],
+-        ),
+-        "local_wheel_dist_folder": attr.string(
+-            mandatory = False,
+-            default = "dist",
+-        ),
+-        "default_python_version": attr.string(
+-            mandatory = False,
+-            default = DEFAULT_VERSION,
+-        ),
+-    },
+-    environ = [
+-        "TF_PYTHON_VERSION",
+-        "HERMETIC_PYTHON_VERSION",
+-        "WHEEL_NAME",
+-        "WHEEL_COLLAB",
+-    ],
+-)
+-
+-def _process_dist_wheels(dist_wheels, wheels, py_ver_marker):
+-    for wheel in dist_wheels:
+-        bn = wheel.basename
+-        if not bn.endswith(".whl") or bn.find(py_ver_marker) < 0:
+-            continue
+-
+-        name_components = bn.split("-")
+-        package_name = name_components[0]
+-        for name_component in name_components[1:]:
+-            if name_component[0].isdigit():
+-                break
+-            package_name += "-" + name_component
+-
+-        latest_wheel = wheels.get(package_name, None)
+-
+-        if not latest_wheel or latest_wheel.basename < wheel.basename:
+-            wheels[package_name] = wheel
+-
+-def _custom_python_interpreter_impl(ctx):
+-    version = ctx.attr.version
+-    strip_prefix = ctx.attr.strip_prefix.format(version = version)
+-    urls = [url.format(version = version) for url in ctx.attr.urls]
+-    binary_name = ctx.attr.binary_name
+-    if not binary_name:
+-        ver_chunks = version.split(".")
+-        binary_name = "python%s.%s" % (ver_chunks[0], ver_chunks[1])
+-
+-    install_dir = "{name}-{version}".format(name = ctx.attr.name, version = version)
+-    _exec_and_check(ctx, ["mkdir", install_dir])
+-    install_path = ctx.path(install_dir)
+-    srcs_dir = "srcs"
+-    ctx.download_and_extract(
+-        url = urls,
+-        stripPrefix = strip_prefix,
+-        output = srcs_dir,
+-    )
+-
+-    configure_params = []
+-    if "CC" in ctx.os.environ:
+-        configure_params.append("CC={}".format(ctx.os.environ["CC"]))
+-    if "CXX" in ctx.os.environ:
+-        configure_params.append("CXX={}".format(ctx.os.environ["CXX"]))
+-
+-    configure_params.append("--enable-optimizations")
+-    configure_params.append("--prefix=%s" % install_path.realpath)
+-    _exec_and_check(
+-        ctx,
+-        ["./configure"] + configure_params,
+-        working_directory = srcs_dir,
+-        quiet = False,
+-    )
+-    res = _exec_and_check(ctx, ["nproc"])
+-    cores = 12 if res.return_code != 0 else max(1, int(res.stdout.strip()) - 1)
+-    _exec_and_check(ctx, ["make", "-j%s" % cores], working_directory = srcs_dir)
+-    _exec_and_check(ctx, ["make", "altinstall"], working_directory = srcs_dir)
+-    _exec_and_check(ctx, ["ln", "-s", binary_name, "python3"], working_directory = install_dir + "/bin")
+-    tar = "{install_dir}.tgz".format(install_dir = install_dir)
+-    _exec_and_check(ctx, ["tar", "czpf", tar, install_dir])
+-    _exec_and_check(ctx, ["rm", "-rf", srcs_dir])
+-    res = _exec_and_check(ctx, ["sha256sum", tar])
+-
+-    sha256 = res.stdout.split(" ")[0].strip()
+-    tar_path = ctx.path(tar)
+-
+-    example = """\n\n
+-To use newly built Python interpreter add the following code snippet RIGHT AFTER
+-python_init_toolchains() in your WORKSPACE file. The code sample should work as
+-is but it may need some tuning, if you have special requirements.
+-
+-```
+-load("@rules_python//python:repositories.bzl", "python_register_toolchains")
+-python_register_toolchains(
+-    name = "python",
+-    # By default assume the interpreter is on the local file system, replace
+-    # with proper URL if it is not the case.
+-    base_url = "file://",
+-    ignore_root_user_error = True,
+-    python_version = "{version}",
+-    tool_versions = {{
+-        "{version}": {{
+-            # Path to .tar.gz with Python binary. By default it points to .tgz
+-            # file in cache where it was built originally; replace with proper
+-            # file location, if you moved it somewhere else.
+-            "url": "{tar_path}",
+-            "sha256": {{
+-                # By default we assume Linux x86_64 architecture, eplace with
+-                # proper architecture if you were building on a different platform.
+-                "x86_64-unknown-linux-gnu": "{sha256}",
+-            }},
+-            "strip_prefix": "{install_dir}",
+-        }},
+-    }},
+-)
+-```
+-\n\n""".format(version = version, tar_path = tar_path, sha256 = sha256, install_dir = install_dir)
+-
+-    instructions = "INSTRUCTIONS-{version}.md".format(version = version)
+-    ctx.file(instructions + ".tmpl", example, executable = False)
+-    ctx.file(
+-        "BUILD.bazel",
+-        """
+-genrule(
+-    name = "{name}",
+-    srcs = ["{tar}", "{instructions}.tmpl"],
+-    outs = ["{install_dir}.tar.gz", "{instructions}"],
+-    cmd = "cp $(location {tar}) $(location {install_dir}.tar.gz); cp $(location {instructions}.tmpl) $(location {instructions})",
+-    visibility = ["//visibility:public"],
+-)
+-     """.format(
+-            name = ctx.attr.name,
+-            tar = tar,
+-            install_dir = install_dir,
+-            instructions = instructions,
+-        ),
+-        executable = False,
+-    )
+-
+-    print(example)  # buildifier: disable=print
+-
+-custom_python_interpreter = repository_rule(
+-    implementation = _custom_python_interpreter_impl,
+-    attrs = {
+-        "urls": attr.string_list(),
+-        "strip_prefix": attr.string(),
+-        "binary_name": attr.string(mandatory = False),
+-        "version": attr.string(),
+-    },
+-)
+-
+-def _exec_and_check(ctx, command, fail_on_error = True, quiet = False, **kwargs):
+-    res = ctx.execute(command, quiet = quiet, **kwargs)
+-    if fail_on_error and res.return_code != 0:
+-        fail("""
+-Failed to execute command: `{command}`
+-Exit Code: {code}
+-STDERR: {stderr}
+-        """.format(
+-            command = command,
+-            code = res.return_code,
+-            stderr = res.stderr,
+-        ))
+-    return res
+diff --git a/third_party/xla/third_party/tsl/workspace2.bzl b/third_party/xla/third_party/tsl/workspace2.bzl
+index 67011d3d2bb..001ce018d87 100644
+--- a/third_party/xla/third_party/tsl/workspace2.bzl
++++ b/third_party/xla/third_party/tsl/workspace2.bzl
+@@ -505,6 +505,12 @@ def _tf_repositories():
+         urls = tf_mirror_urls("https://github.com/google/double-conversion/archive/v3.2.0.tar.gz"),
+     )
+ 
++    tf_http_archive(
++        name = "rules_python",
++        sha256 = "aa96a691d3a8177f3215b14b0edc9641787abaaa30363a080165d06ab65e1161",
++        urls = tf_mirror_urls("https://github.com/bazelbuild/rules_python/releases/download/0.0.1/rules_python-0.0.1.tar.gz"),
++    )
++
+     tf_http_archive(
+         name = "build_bazel_rules_android",
+         sha256 = "cd06d15dd8bb59926e4d65f9003bfc20f9da4b2519985c27e190cddc8b7a7806",
+@@ -591,7 +597,6 @@ def _tf_repositories():
+         urls = tf_mirror_urls("https://github.com/google/glog/archive/refs/tags/v0.4.0.tar.gz"),
+     )
+ 
+-# buildifier: disable=unnamed-macro
+ def workspace():
+     # Check the bazel version before executing any repository rules, in case
+     # those rules rely on the version we require here.
+diff --git a/third_party/xla/xla/lit.bzl b/third_party/xla/xla/lit.bzl
+index 962baf4181d..57d25fff261 100644
+--- a/third_party/xla/xla/lit.bzl
++++ b/third_party/xla/xla/lit.bzl
+@@ -178,25 +178,10 @@ def lit_test(
+         visibility = ["//visibility:private"],
+         **kwargs
+     )
+-    lit_name = "//third_party/py/lit:lit"
+-
+-    # copybara:comment_begin(oss-only)
+-    lit_name = "lit_custom_" + name
+-    native.py_binary(
+-        name = lit_name,
+-        main = "@llvm-project//llvm:utils/lit/lit.py",
+-        srcs = ["@llvm-project//llvm:utils/lit/lit.py"],
+-        testonly = True,
+-        deps = [
+-            "@llvm-project//llvm:lit_lib",
+-            "@pypi_lit//:pkg",
+-        ],
+-    )
+ 
+-    # copybara:comment_end
+     native_test(
+         name = name,
+-        src = lit_name,
++        src = "@llvm-project//llvm:lit",
+         args = [
+             "-a",
+             "--path",
+@@ -204,14 +189,14 @@ def lit_test(
+             "$(location {})".format(test_file),
+         ] + args,
+         data = [
+-            lit_name,
++            "@llvm-project//llvm:lit",
+             test_file,
+ 
+             # TODO(cheshire): Config is not passed properly when it's not
+             # called lit.cfg.py
+             cfg,
+             tools_on_path_target_name,
+-        ] + data + ["@pypi_lit//:pkg"],
++        ] + data,
+         visibility = visibility,
+         env = env,
+         timeout = timeout,
+diff --git a/third_party/xla/xla/mlir_hlo/tests/BUILD b/third_party/xla/xla/mlir_hlo/tests/BUILD
+index 08df267d05a..4db81efeb2d 100644
+--- a/third_party/xla/xla/mlir_hlo/tests/BUILD
++++ b/third_party/xla/xla/mlir_hlo/tests/BUILD
+@@ -27,7 +27,6 @@ package(
+             "nomsan",  # The execution engine doesn't work with msan, see b/248097619.
+         ],
+         deps = ["@pypi_lit//:pkg"],
+-        deps = ["@pypi_lit//:pkg"],
+     )
+     for src in glob(["**/*.mlir"])
+ ]
+-- 
+2.44.2
+

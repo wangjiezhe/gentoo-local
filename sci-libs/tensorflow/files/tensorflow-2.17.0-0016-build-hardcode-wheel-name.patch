@@ -1,0 +1,35 @@
+From be352bc6bc01f5eb28df0fd14384b4b6d102b6fd Mon Sep 17 00:00:00 2001
+From: wangjiezhe <wangjiezhe@gmail.com>
+Date: Fri, 12 Jul 2024 16:21:15 +0800
+Subject: [PATCH 16/17] build: hardcode wheel name
+
+---
+ tensorflow/tools/pip_package/utils/tf_wheel.bzl | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/tensorflow/tools/pip_package/utils/tf_wheel.bzl b/tensorflow/tools/pip_package/utils/tf_wheel.bzl
+index 01f878410e4..5d430e464df 100644
+--- a/tensorflow/tools/pip_package/utils/tf_wheel.bzl
++++ b/tensorflow/tools/pip_package/utils/tf_wheel.bzl
+@@ -23,7 +23,6 @@ Should be set via --repo_env=WHEEL_NAME=tensorflow_cpu.
+ 6) `--xla_aot` - paths to files that should be in xla_aot directory. 
+ """
+ 
+-load("@python_version_repo//:py_version.bzl", "WHEEL_COLLAB", "WHEEL_NAME")
+ load("//tensorflow:tensorflow.bzl", "VERSION")
+ 
+ def _tf_wheel_impl(ctx):
+@@ -31,8 +30,8 @@ def _tf_wheel_impl(ctx):
+ 
+     output = ctx.actions.declare_directory("wheel_house")
+     args = ctx.actions.args()
+-    args.add("--project-name", WHEEL_NAME)
+-    args.add("--collab", str(WHEEL_COLLAB))
++    args.add("--project-name", "tensorflow")
++    args.add("--collab", "False")
+     args.add("--output-name", output.path)
+     args.add("--version", VERSION)
+ 
+-- 
+2.44.2
+
