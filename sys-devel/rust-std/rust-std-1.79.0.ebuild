@@ -15,11 +15,11 @@ LICENSE="|| ( MIT Apache-2.0 ) BSD-1 BSD-2 BSD-4"
 SLOT="stable/$(ver_cut 1-2)"
 # please do not keyword
 #KEYWORDS="" #nowarn
-IUSE="debug"
+IUSE="debug lto"
 
 BDEPEND="
 	${PYTHON_DEPS}
-	~dev-lang/rust-${PV}:=
+	~dev-lang/rust-${PV}:=[lto?]
 "
 
 DEPEND="||
@@ -124,6 +124,7 @@ src_configure() {
 		dist-src = false
 		remap-debuginfo = true
 		jemalloc = false
+		lto = "$(usex lto thin off)"
 		[dist]
 		src-tarball = false
 		[target.${rtarget}]
