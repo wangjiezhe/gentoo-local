@@ -129,6 +129,7 @@ RDEPEND="
 		>=dev-python/gast-0.3.3[${PYTHON_USEDEP}]
 		dev-python/h5py[${PYTHON_USEDEP}]
 		>=dev-python/numpy-1.19[${PYTHON_USEDEP}]
+		<dev-python/numpy-2[${PYTHON_USEDEP}]
 		>=dev-python/google-pasta-0.1.8[${PYTHON_USEDEP}]
 		>=dev-python/opt-einsum-3.3.0[${PYTHON_USEDEP}]
 		>=dev-python/protobuf-python-3.13.0[${PYTHON_USEDEP}]
