@@ -1,0 +1,13 @@
+#!/sbin/openrc-run
+
+description="Frp Client"
+command="/bin/frpc"
+command_args="-c ${FRPC_CONFIG}"
+command_background=yes
+pidfile=/run/frpc.pid
+output_log="/var/log/frp/frpc.log"
+error_log="/var/log/frp/frpc.log"
+
+start_pre() {
+  checkpath -q -d -m 0755 /var/log/frp
+}

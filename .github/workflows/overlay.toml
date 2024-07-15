@@ -510,3 +510,9 @@ source = "github"
 github = "evcxr/evcxr"
 use_latest_release = true
 prefix = "v"
+
+["net-vpn/frp"]
+source = "github"
+github = "fatedier/frp"
+use_latest_release = true
+prefix = "v"
