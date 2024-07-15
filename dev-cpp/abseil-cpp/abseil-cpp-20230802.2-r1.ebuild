@@ -16,16 +16,22 @@ SLOT="0/${PV%%.*}.0"
 KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~loong ~ppc64 ~riscv ~sparc ~x86"
 IUSE="test"
 
+RDEPEND=">=dev-cpp/gtest-1.13.0[${MULTILIB_USEDEP}]"
+DEPEND="${RDEPEND}"
 BDEPEND="
 	${PYTHON_DEPS}
 	test? (
-		>=dev-cpp/gtest-1.13.0
 		sys-libs/timezone-data
 	)
 "
 
 RESTRICT="!test? ( test )"
-PATCHES=( "${FILESDIR}/${PN}-20230802.0-sdata-tests.patch" )
+
+PATCHES=(
+	"${FILESDIR}/${PN}-20230802.0-sdata-tests.patch"
+	"${FILESDIR}/${PN}-random-tests.patch" #935417
+	"${FILESDIR}/${PN}-20230802.0-conditional-use-of-lzcnt.patch" #934337
+)
 
 src_prepare() {
 	cmake_src_prepare
@@ -49,7 +55,8 @@ multilib_src_configure() {
 		-DABSL_ENABLE_INSTALL=TRUE
 		-DABSL_USE_EXTERNAL_GOOGLETEST=ON
 		-DABSL_PROPAGATE_CXX_STD=TRUE
-		-DABSL_BUILD_TEST_HELPERS=$(usex test ON OFF)
+		# TEST_HELPERS needed for protobuf (bug #915902)
+		-DABSL_BUILD_TEST_HELPERS=ON
 		-DABSL_BUILD_TESTING=$(usex test ON OFF)
 		$(usex test -DBUILD_TESTING=ON '') # intentional usex, it used both variables for tests.
 	)
