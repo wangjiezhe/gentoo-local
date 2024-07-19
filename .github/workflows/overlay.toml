@@ -516,3 +516,15 @@ source = "github"
 github = "fatedier/frp"
 use_latest_release = true
 prefix = "v"
+
+["perl-gcpan/Neovim-Ext"]
+source = "cpan"
+cpan = "Neovim::Ext"
+
+["perl-gcpan/MsgPack-Raw"]
+source = "cpan"
+cpan = "MsgPack::Raw"
+
+["perl-gcpan/Eval-Safe"]
+source = "cpan"
+cpan = "Eval::Safe"
