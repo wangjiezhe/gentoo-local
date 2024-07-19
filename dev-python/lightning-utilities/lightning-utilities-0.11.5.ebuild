@@ -13,13 +13,13 @@ HOMEPAGE="https://github.com/Lightning-AI/utilities"
 SRC_URI="https://github.com/Lightning-AI/utilities/archive/refs/tags/v${PV}.tar.gz
 	-> ${P}.gh.tar.gz"
 
+S="${WORKDIR}/utilities-${PV}"
+
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~amd64"
 
 PATCHES=( "${FILESDIR}/${P}-test.patch" )
-
-S="${WORKDIR}/utilities-${PV}"
 
 RDEPEND="
 	sci-libs/pytorch[${PYTHON_SINGLE_USEDEP}]
