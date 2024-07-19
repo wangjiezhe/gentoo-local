@@ -519,12 +519,12 @@ prefix = "v"
 
 ["perl-gcpan/Neovim-Ext"]
 source = "cpan"
-cpan = "Neovim::Ext"
+cpan = "Neovim-Ext"
 
 ["perl-gcpan/MsgPack-Raw"]
 source = "cpan"
-cpan = "MsgPack::Raw"
+cpan = "MsgPack-Raw"
 
 ["perl-gcpan/Eval-Safe"]
 source = "cpan"
-cpan = "Eval::Safe"
+cpan = "Eval-Safe"
