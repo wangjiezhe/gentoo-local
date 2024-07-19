@@ -28,3 +28,4 @@ DEPEND="dev-perl/IO-Async
 	>=dev-perl/Archive-Zip-1.680.0
 	>=dev-perl/Proc-Background-1.320.0
 	dev-lang/perl"
+RDEPEND="dev-perl/App-cpanminus"
