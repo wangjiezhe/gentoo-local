@@ -528,3 +528,9 @@ cpan = "MsgPack-Raw"
 ["perl-gcpan/Eval-Safe"]
 source = "cpan"
 cpan = "Eval-Safe"
+
+["net-misc/piping-server"]
+source = "github"
+github = "nwtgck/piping-server-rust"
+use_latest_release = true
+prefix = "v"
