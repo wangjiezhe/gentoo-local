@@ -1,0 +1,16 @@
+diff --git a/binaries/CMakeLists.txt b/binaries/CMakeLists.txt
+index 273353128ba..9c0aaf6ca8b 100644
+--- a/binaries/CMakeLists.txt
++++ b/binaries/CMakeLists.txt
+@@ -35,11 +35,6 @@ if(USE_ROCM)
+ 
+ endif()
+ 
+-if(USE_MPI)
+-  caffe2_binary_target("run_plan_mpi.cc")
+-  target_link_libraries(run_plan_mpi ${MPI_CXX_LIBRARIES})
+-endif()
+-
+ 
+ caffe2_binary_target("dump_operator_names.cc")
+ caffe2_binary_target("optimize_for_mobile.cc")

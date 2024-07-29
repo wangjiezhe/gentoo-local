@@ -20,11 +20,10 @@ S="${WORKDIR}"/${MYP}
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="cuda distributed fbgemm ffmpeg flash gloo magma mkl mpi nnpack +numpy onednn openblas opencl opencv openmp qnnpack rocm xnnpack"
+IUSE="cuda distributed fbgemm flash gloo magma mkl mpi nnpack +numpy onednn openblas opencl openmp qnnpack rocm xnnpack"
 RESTRICT="test"
 REQUIRED_USE="
 	${PYTHON_REQUIRED_USE}
-	ffmpeg? ( opencv )
 	mpi? ( distributed )
 	gloo? ( distributed )
 	?? ( cuda rocm )
@@ -32,6 +31,7 @@ REQUIRED_USE="
 		|| ( ${ROCM_REQUIRED_USE} )
 		!flash
 	)
+	?? ( mkl openblas )
 "
 
 #		sci-libs/tensorrt
@@ -56,7 +56,6 @@ RDEPEND="
 		dev-libs/cusparselt
 	)
 	fbgemm? ( >=dev-libs/FBGEMM-2023.12.01 )
-	ffmpeg? ( media-video/ffmpeg:= )
 	gloo? ( sci-libs/gloo[cuda?] )
 	magma? ( sci-libs/magma[cuda?] )
 	mpi? ( virtual/mpi )
@@ -66,10 +65,9 @@ RDEPEND="
 		') )
 	onednn? ( dev-libs/oneDNN )
 	opencl? ( virtual/opencl )
-	opencv? ( media-libs/opencv:= )
 	qnnpack? (
-		sci-libs/QNNPACK
 		dev-cpp/gemmlowp
+		dev-libs/clog
 	)
 	rocm? (
 		>=dev-util/hip-5.7
@@ -101,12 +99,14 @@ DEPEND="
 		<dev-libs/cutlass-3.5.0
 	)
 	onednn? ( sci-libs/ideep )
+	dev-cpp/cpp-httplib
+	dev-cpp/opentelemetry-cpp
 	dev-libs/psimd
 	dev-libs/FP16
 	dev-libs/FXdiv
 	dev-libs/pocketfft
 	dev-libs/flatbuffers
-	>=sci-libs/kineto-0.4.0_p20231031
+	>=sci-libs/kineto-0.4.0_p20240525
 	$(python_gen_cond_dep '
 		dev-python/pyyaml[${PYTHON_USEDEP}]
 		dev-python/pybind11[${PYTHON_USEDEP}]
@@ -119,22 +119,18 @@ BDEPEND="
 "
 
 PATCHES=(
-	"${FILESDIR}"/${PN}-2.2.0-gentoo.patch
-	"${FILESDIR}"/${PN}-1.13.0-install-dirs.patch
+	"${FILESDIR}"/${P}-gentoo.patch
+	"${FILESDIR}"/${P}-install-dirs.patch
 	"${FILESDIR}"/${PN}-1.12.0-glog-0.6.0.patch
 	"${FILESDIR}"/${PN}-1.13.1-tensorpipe.patch
 	"${FILESDIR}"/${PN}-2.3.0-cudnn_include_fix.patch
 	"${FILESDIR}"/${PN}-2.0.1-functorch.patch
-	"${FILESDIR}"/${PN}-2.1.1-fbgemm.patch
-	"${FILESDIR}"/${PN}-2.1.1-ffmpeg6.patch
-	"${FILESDIR}"/${PN}-2.1.1-protobuf.patch
-	"${FILESDIR}"/${PN}-2.1.1-lite-proto.patch
-	"${FILESDIR}"/${PN}-2.1.1-opencl.patch
 	"${FILESDIR}"/${PN}-2.1.2-fix-rpath.patch
-	"${FILESDIR}"/${PN}-2.1.2-fix-openmp-link.patch
-	"${FILESDIR}"/${PN}-2.3.0-rocm-fix-std-cpp17.patch
+	"${FILESDIR}"/${P}-fix-openmp-link.patch
+	"${FILESDIR}"/${P}-rocm-fix-std-cpp17.patch
 	"${FILESDIR}"/${PN}-2.2.2-musl.patch
-	"${FILESDIR}"/${PN}-2.3.0-CMakeFix.patch
+	"${FILESDIR}"/${P}-missing-binaries.patch
+	"${FILESDIR}"/${P}-qnnpack.patch
 )
 
 src_prepare() {
@@ -161,6 +157,8 @@ src_prepare() {
 		cmake/Dependencies.cmake \
 		torch/CMakeLists.txt \
 		CMakeLists.txt
+
+	sed -i "s|@LIBDIR@|$(get_libdir)|g" aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt || die
 
 	if use rocm; then
 		sed -e "s:/opt/rocm:/usr:" \
@@ -189,11 +187,11 @@ src_configure() {
 	fi
 
 	local mycmakeargs=(
-		-DBUILD_CAFFE2=ON
-		-DBUILD_BINARY=ON
+		-DBUILD_BINARY=OFF
 		-DBUILD_CUSTOM_PROTOBUF=OFF
 		-DUSE_LITE_PROTO=ON
 		-DBUILD_SHARED_LIBS=ON
+		-DUSE_SYSTEM_LIBS=ON
 
 		-DUSE_CCACHE=OFF
 		-DUSE_CUDA=$(usex cuda)
@@ -201,44 +199,26 @@ src_configure() {
 		-DUSE_MPI=$(usex mpi)
 		-DUSE_FAKELOWP=OFF
 		-DUSE_FBGEMM=$(usex fbgemm)
-		-DUSE_FFMPEG=$(usex ffmpeg)
 		-DUSE_FLASH_ATTENTION=$(usex flash)
 		-DUSE_GFLAGS=ON
 		-DUSE_GLOG=ON
 		-DUSE_GLOO=$(usex gloo)
 		-DUSE_KINETO=OFF # TODO
-		-DUSE_LEVELDB=OFF
 		-DUSE_MAGMA=$(usex magma)
 		-DMAGMA_V2=$(usex magma)
 		-DUSE_MKLDNN=$(usex onednn)
 		-DUSE_NNPACK=$(usex nnpack)
-		-DUSE_QNNPACK=$(usex qnnpack)
 		-DUSE_XNNPACK=$(usex xnnpack)
-		-DUSE_SYSTEM_XNNPACK=$(usex xnnpack)
 		-DUSE_TENSORPIPE=$(usex distributed)
-		-DUSE_PYTORCH_QNNPACK=OFF
+		-DUSE_PYTORCH_QNNPACK=$(usex qnnpack)
 		-DUSE_NUMPY=$(usex numpy)
 		-DUSE_OPENCL=$(usex opencl)
-		-DUSE_OPENCV=$(usex opencv)
 		-DUSE_OPENMP=$(usex openmp)
 		-DUSE_ROCM=$(usex rocm)
-		-DUSE_SYSTEM_CPUINFO=ON
-		-DUSE_SYSTEM_PYBIND11=ON
 		-DUSE_UCC=OFF
 		-DUSE_VALGRIND=OFF
-		-DPYBIND11_PYTHON_VERSION="${EPYTHON#python}"
-		-DPYTHON_EXECUTABLE="${PYTHON}"
 		-DUSE_ITT=OFF
-		-DUSE_SYSTEM_EIGEN_INSTALL=ON
-		-DUSE_SYSTEM_PTHREADPOOL=ON
-		-DUSE_SYSTEM_FXDIV=ON
-		-DUSE_SYSTEM_FP16=ON
-		-DUSE_SYSTEM_GLOO=ON
-		-DUSE_SYSTEM_ONNX=ON
 		-DONNX_PROTO_LIBRARY="${EPREFIX}"/usr/$(get_libdir)/libonnx_proto.so
-		-DUSE_SYSTEM_PSIMD=ON
-		-DUSE_SYSTEM_SLEEF=ON
-		-DUSE_METAL=OFF
 
 		-Wno-dev
 		-DTORCH_INSTALL_LIB_DIR="${EPREFIX}"/usr/$(get_libdir)
@@ -265,14 +245,12 @@ src_configure() {
 			-DBUILD_NVFUSER=ON
 			-DCMAKE_CUDA_FLAGS="$(cuda_gccdir -f | tr -d \")"
 			-DUSE_NCCL=ON
-			-DUSE_SYSTEM_NCCL=ON
 		)
 	elif use rocm; then
 		export PYTORCH_ROCM_ARCH="$(get_amdgpu_flags)"
 
 		mycmakeargs+=(
 			-DUSE_NCCL=ON
-			-DUSE_SYSTEM_NCCL=ON
 		)
 	fi
 
@@ -301,8 +279,6 @@ src_install() {
 
 	rm -rf python || die
 	mkdir -p python/torch || die
-	mv "${D}/$(python_get_sitedir)"/caffe2 python/ || die
 	cp torch/version.py python/torch/ || die
-	python_domodule python/caffe2
 	python_domodule python/torch
 }
