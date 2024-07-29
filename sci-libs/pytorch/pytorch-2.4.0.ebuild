@@ -42,11 +42,13 @@ DEPEND="${RDEPEND}
 	')
 "
 
+QA_PREBUILT="usr/lib/python*/site-packages/functorch/_C.*.so"
+
 PATCHES=(
-	"${FILESDIR}"/${PN}-2.1.0-don-t-build-libtorch-again.patch
+	"${FILESDIR}"/${P}-don-t-build-libtorch-again.patch
 	"${FILESDIR}"/${PN}-1.9.0-Change-library-directory-according-to-CMake-build.patch
-	"${FILESDIR}"/${PN}-2.0.0-global-dlopen.patch
-	"${FILESDIR}"/${PN}-1.7.1-torch_shm_manager.patch
+	"${FILESDIR}"/${P}-global-dlopen.patch
+	"${FILESDIR}"/${P}-torch_shm_manager.patch
 	"${FILESDIR}"/${PN}-1.13.0-setup.patch
 )
 
@@ -76,8 +78,6 @@ python_compile() {
 python_install() {
 	USE_SYSTEM_LIBS=ON distutils-r1_python_install
 
-	rm -rf "${ED}/usr/lib/${EPYTHON}/site-packages"/caffe2 || die
-
-	dosym "../../../../../../usr/include/torch" "$(python_get_sitedir)/torch/include/torch"
-	dosym "../../../../../usr/lib64" "$(python_get_sitedir)/torch/lib"
+	dosym -r "/usr/include/torch" "$(python_get_sitedir)/torch/include/torch"
+	dosym -r "/usr/lib64" "$(python_get_sitedir)/torch/lib"
 }

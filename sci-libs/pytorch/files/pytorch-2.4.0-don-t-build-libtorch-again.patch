@@ -1,14 +1,15 @@
-diff -ur pytorch-2.1.0.orig/setup.py pytorch-2.1.0/setup.py
---- pytorch-2.1.0.orig/setup.py	2023-09-22 00:25:09.000000000 +0200
-+++ pytorch-2.1.0/setup.py	2023-10-05 18:58:27.375600262 +0200
-@@ -455,15 +455,6 @@
-     check_submodules()
+diff --git a/setup.py b/setup.py
+index 9ec41cd37cd..d9819c7db9a 100644
+--- a/setup.py
++++ b/setup.py
+@@ -473,15 +472,6 @@ def build_deps():
      check_pydep("yaml", "pyyaml")
+     build_python = not BUILD_LIBTORCH_WHL
  
 -    build_caffe2(
 -        version=version,
 -        cmake_python_library=cmake_python_library,
--        build_python=True,
+-        build_python=build_python,
 -        rerun_cmake=RERUN_CMAKE,
 -        cmake_only=CMAKE_ONLY,
 -        cmake=cmake,
