@@ -1,0 +1,60 @@
+diff --git a/fbgemm_gpu/FbgemmGpu.cmake b/fbgemm_gpu/FbgemmGpu.cmake
+index c96b911c..cb402a68 100644
+--- a/fbgemm_gpu/FbgemmGpu.cmake
++++ b/fbgemm_gpu/FbgemmGpu.cmake
+@@ -25,7 +25,6 @@ set(fbgemm_sources_include_directories
+   ${CMAKE_CURRENT_SOURCE_DIR}/include
+   ${CMAKE_CURRENT_SOURCE_DIR}/../include
+   # PyTorch
+-  ${TORCH_INCLUDE_DIRS}
+   # Third-party
+   ${THIRDPARTY}/asmjit/src
+   ${THIRDPARTY}/cpuinfo/include
+@@ -674,7 +673,6 @@ endif()
+ 
+ # Add PyTorch include/
+ target_include_directories(fbgemm_gpu_py PRIVATE
+-  ${TORCH_INCLUDE_DIRS}
+   ${NCCL_INCLUDE_DIRS})
+ 
+ # Remove `lib` from the output artifact name `libfbgemm_gpu_py.so`
+diff --git a/fbgemm_gpu/experimental/example/CMakeLists.txt b/fbgemm_gpu/experimental/example/CMakeLists.txt
+index d5c9fd2a..08e1bfa6 100644
+--- a/fbgemm_gpu/experimental/example/CMakeLists.txt
++++ b/fbgemm_gpu/experimental/example/CMakeLists.txt
+@@ -18,7 +18,6 @@ set(fbgemm_sources_include_directories
+   ${CMAKE_CURRENT_SOURCE_DIR}../../include
+   ${CMAKE_CURRENT_SOURCE_DIR}../../../include
+   # PyTorch
+-  ${TORCH_INCLUDE_DIRS}
+   # Third-party
+   ${THIRDPARTY}/asmjit/src
+   ${THIRDPARTY}/cpuinfo/include
+@@ -48,7 +47,6 @@ add_library(fbgemm_gpu_experimental_example_py MODULE
+     ${experimental_example_cpp_source_files})
+ 
+ target_include_directories(fbgemm_gpu_experimental_example_py PRIVATE
+-    ${TORCH_INCLUDE_DIRS}
+     ${NCCL_INCLUDE_DIRS})
+ 
+ target_link_libraries(fbgemm_gpu_experimental_example_py
+diff --git a/fbgemm_gpu/experimental/gen_ai/CMakeLists.txt b/fbgemm_gpu/experimental/gen_ai/CMakeLists.txt
+index 60a3920a..d6b76ad5 100644
+--- a/fbgemm_gpu/experimental/gen_ai/CMakeLists.txt
++++ b/fbgemm_gpu/experimental/gen_ai/CMakeLists.txt
+@@ -16,7 +16,6 @@ set(fbgemm_sources_include_directories
+   ${CMAKE_CURRENT_SOURCE_DIR}/../../include
+   ${CMAKE_CURRENT_SOURCE_DIR}/../../../include
+   # PyTorch
+-  ${TORCH_INCLUDE_DIRS}
+   # Third-party
+   ${THIRDPARTY}/asmjit/src
+   ${THIRDPARTY}/cpuinfo/include
+@@ -101,7 +100,6 @@ else()
+ endif()
+ 
+ target_include_directories(fbgemm_gpu_experimental_gen_ai_py PRIVATE
+-  ${TORCH_INCLUDE_DIRS}
+   ${NCCL_INCLUDE_DIRS})
+ 
+ target_link_libraries(fbgemm_gpu_experimental_gen_ai_py

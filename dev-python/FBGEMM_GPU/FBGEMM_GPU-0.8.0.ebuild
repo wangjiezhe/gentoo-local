@@ -28,10 +28,12 @@ RDEPEND="
 	')
 "
 DEPEND="
+	dev-cpp/glog
 	cuda? (
 		dev-util/nvidia-cuda-toolkit
 		dev-libs/cudnn
-		sci-libs/caffe2[cuda?]
+		sci-libs/caffe2:=[cuda?]
+		dev-libs/nccl
 	)
 "
 BDEPEND="
@@ -49,18 +51,27 @@ BDEPEND="
 	# 	dev-python/hypothesis[${PYTHON_USEDEP}]
 	# )
 
-# PARENT_PATCHES=( "${FILESDIR}/${P}-version.patch" )
+PARENT_PATCHES=(
+	"${FILESDIR}/${P}-version.patch"
+	"${FILESDIR}/${P}-gentoo.patch"
+)
 
 src_prepare() {
 	[[ -n "${PARENT_PATCHES[@]}" ]] && eapply -p2 -- "${PARENT_PATCHES[@]}"
+
+	sed -i "s@CMAKE_PREFIX_PATH={torch_root}@CMAKE_PREFIX_PATH=${EPREFIX}/usr@" setup.py
+
 	use cuda && cuda_src_prepare
 	distutils-r1_src_prepare
 }
 
 python_configure_all() {
-		use cuda || DISTUTILS_ARGS=(
-			--cpu_only
-		)
+	DISTUTILS_ARGS=(
+		--package_channel release
+	)
+	use cuda && DISTUTILS_ARGS+=(
+		--nccl_lib_path "${EPREFIX}"/opt/cuda/targets/x86_64-linux/lib/libnccl.so.2
+	) || DISTUTILS_ARGS+=(--package_variant cpu)
 }
 
 # distutils_enable_tests pytest
