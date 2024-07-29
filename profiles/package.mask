@@ -1,6 +1,3 @@
-# Need https://github.com/pytorch/pytorch/commit/af9acc416852cfadc1274a715039b7a5ea501e93
-~sci-libs/torchtnt-0.2.4
-
 # Seems failed to build
 # Constructing Python tuple not allowed without gil
 >=dev-python/cuda-python-12.4.0

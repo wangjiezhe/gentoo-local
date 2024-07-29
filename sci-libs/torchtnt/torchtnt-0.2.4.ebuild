@@ -100,6 +100,16 @@ python_test() {
 		tests/framework/callbacks/test_base_checkpointer.py::BaseCheckpointerTest::test_directory_sync_collective
 		tests/framework/callbacks/test_dcp_saver.py::DistributedCheckpointSaverTest::test_save_restore_ddp
 		tests/framework/callbacks/test_dcp_saver.py::DistributedCheckpointSaverTest::test_save_restore_fsdp
+		tests/framework/callbacks/test_dcp_saver_gpu.py::DistributedCheckpointSaverGPUTest::test_save_restore_fsdp
+		tests/framework/callbacks/test_progress_reporter.py::ProgressReporterTest::test_log_with_rank
+		tests/framework/callbacks/test_slow_rank_detector.py::SlowRankDetectorTest::test_sync_times
+		tests/framework/callbacks/test_torchsnapshot_saver_gpu.py::TorchSnapshotSaverGPUTest::test_save_restore_fsdp
+		tests/framework/test_auto_unit_gpu.py::TestAutoUnitGPU::test_fsdp_fp16
+		tests/framework/test_auto_unit_gpu.py::TestAutoUnitGPU::test_no_sync
+		tests/framework/test_auto_unit_gpu.py::TestAutoUnitGPU::test_stochastic_weight_averaging_fsdp
+		tests/framework/test_unit_utils_gpu.py::UnitUtilsGPUTest::test_find_optimizers_for_FSDP_module
+		tests/utils/test_checkpoint.py::CheckpointUtilsTest::test_distributed_get_checkpoint_dirpaths
+		tests/utils/test_checkpoint_gpu.py::TestCheckpointUtilsGPU::test_get_checkpoint_dirpaths_distributed
 		tests/utils/test_distributed_gpu.py::DistributedGPUTest::test_gather_uneven_multidim_nccl
 		tests/utils/test_distributed_gpu.py::DistributedGPUTest::test_pg_wrapper_scatter_object_list_nccl
 		tests/utils/test_env.py::EnvTest::test_init_from_env_dup
@@ -110,10 +120,16 @@ python_test() {
 		tests/utils/test_prepare_module.py::PrepareModelTest::test_prepare_fsdp
 		tests/utils/test_prepare_module.py::PrepareModelTest::test_prepare_module_with_ddp
 		tests/utils/test_prepare_module.py::PrepareModelTest::test_prepare_module_with_fsdp
+		tests/utils/test_prepare_module_gpu.py::PrepareModelGPUTest::test_fdsp_precision
+		tests/utils/test_prepare_module_gpu.py::PrepareModelGPUTest::test_prepare_ddp
+		tests/utils/test_prepare_module_gpu.py::PrepareModelGPUTest::test_prepare_fsdp
+		tests/utils/test_prepare_module_gpu.py::PrepareModelGPUTest::test_prepare_module_with_fsdp
 		## RuntimeError: [/var/tmp/portage/sci-libs/gloo-2023.07.15-r1/work/gloo-c6f3a5bcf568dafc9a8ae482e8cc900633dd6db1/gloo/transport/tcp/pair.cc:525] Read error [127.0.0.1]:55523: Connection reset by peer
 		tests/framework/callbacks/test_checkpoint_utils.py::BaseCheckpointerTest::test_directory_sync_collective
 		tests/framework/callbacks/test_checkpoint_utils.py::CheckpointUtilsTest::test_distributed_get_checkpoint_dirpaths
 		tests/framework/callbacks/test_checkpoint_utils.py::CheckpointUtilsTest::test_rank_zero_read_and_broadcast
+		## AssertionError: 'cuda' != 'cpu'
+		tests/utils/test_device.py::DeviceTest::test_get_cpu_device
 	)
 	epytest tests
 }
