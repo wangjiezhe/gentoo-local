@@ -16,7 +16,7 @@ SRC_URI="https://github.com/onnx/${PN}/archive/refs/tags/v${PV}.tar.gz
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~amd64 ~riscv"
-IUSE="python test"
+IUSE="disableStaticReg +python test"
 RESTRICT="!test? ( test )"
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
@@ -28,7 +28,8 @@ RDEPEND="
 	)
 	>=dev-libs/protobuf-4.22.0:=
 "
-DEPEND="${RDEPEND}"
+DEPEND="${RDEPEND}
+	dev-cpp/abseil-cpp"
 
 BDEPEND="
 	python? ( ${DISTUTILS_DEPS} )
@@ -63,6 +64,7 @@ src_configure() {
 		-DONNX_USE_PROTOBUF_SHARED_LIBS=ON
 		-DONNX_USE_LITE_PROTO=ON
 		-DONNX_BUILD_SHARED_LIBS=ON
+		-DONNX_DISABLE_STATIC_REGISTRATION=$(usex disableStaticReg ON OFF)
 		-DONNX_BUILD_TESTS=$(usex test ON OFF)
 	)
 	cmake_src_configure
