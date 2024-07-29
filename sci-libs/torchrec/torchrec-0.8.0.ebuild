@@ -19,10 +19,14 @@ RESTRICT="test"		# need torchx
 
 RDEPEND="
 	sci-libs/torchmetrics[${PYTHON_SINGLE_USEDEP}]
-	dev-python/FBGEMM_GPU[${PYTHON_SINGLE_USEDEP}]
+	>=dev-python/FBGEMM_GPU-0.8.0[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		dev-python/iopath[${PYTHON_USEDEP}]
 		dev-python/pyre-extensions[${PYTHON_USEDEP}]
 		dev-python/tqdm[${PYTHON_USEDEP}]
 	')
 "
+
+PATCHES=(
+	"${FILESDIR}"/${P}-0001-Revert-Replace-oudated-imports-with-fbgemm_gpu.tbe.s.patch
+)
