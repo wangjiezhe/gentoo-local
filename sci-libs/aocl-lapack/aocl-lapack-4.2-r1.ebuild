@@ -11,14 +11,14 @@ HOMEPAGE="https://developer.amd.com/amd-aocl/"
 SRC_URI="https://github.com/amd/libflame/archive/${PV}.tar.gz -> ${P}.tar.gz"
 S="${WORKDIR}/libflame-${PV}"
 
-KEYWORDS="~amd64"
 LICENSE="BSD"
 SLOT="0"
-RESTRICT="test"		# There are some linking issue
+KEYWORDS="~amd64"
 
 CPU_FLAGS=( sse3 )
 IUSE_CPU_FLAGS_X86="${CPU_FLAGS[@]/#/cpu_flags_x86_}"
 IUSE="eselect-ldso scc static-libs supermatrix ${IUSE_CPU_FLAGS_X86[@]}"
+RESTRICT="test"		# There are some linking issue
 
 DEPEND="
 	virtual/cblas
@@ -44,17 +44,23 @@ src_configure() {
 	export LIBAOCLUTILS_INCLUDE_PATH="${EPREFIX}/usr/include/alci"
 	export ENABLE_EMBED_AOCLUTILS=1
 
+	## Disable cblas-interfaces to avoid redefinition error when include
+	## FLAME.h together with blis.h.
+	##
+	## Use vector-intrinsics with cblas-interfaces disabled
+	## will cause redefinition error when include FLAME.h:
+	## error: typedef redefinition with different types ('union v2df_t' vs 'union v2df_t')
 	local myconf=(
 		--includedir="${EPREFIX}"/usr/include/flame
 		--disable-optimizations
 		--enable-multithreading=openmp
 		--enable-verbose-make-output
 		--enable-lapack2flame
-		--enable-cblas-interfaces
+		# --enable-cblas-interfaces
 		--enable-max-arg-list-hack
 		$(use_enable static-libs static-build)
 		--enable-dynamic-build
-		--enable-vector-intrinsics=$(usex cpu_flags_x86_sse3 sse none)
+		# --enable-vector-intrinsics=$(usex cpu_flags_x86_sse3 sse none)
 		--enable-amd-flags
 		--enable-amd-opt
 		$(use_enable scc)
