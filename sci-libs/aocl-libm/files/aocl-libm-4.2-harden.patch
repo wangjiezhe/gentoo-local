@@ -1,0 +1,15 @@
+diff --git a/src/isa/avx2/gas/logf_fma3.S b/src/isa/avx2/gas/logf_fma3.S
+index f56ef2a..6fc65af 100755
+--- a/src/isa/avx2/gas/logf_fma3.S
++++ b/src/isa/avx2/gas/logf_fma3.S
+@@ -313,10 +313,8 @@ Lg3:
+ Lg4:
+ 	.long	0x3e789e26
+ 	.data
+-#ifdef __GNU_ASM__
+ 	.section .note.GNU-stack, ""
+ 	.section .eh_frame,"a",@progbits
+-#endif
+ .eh_frame_seg:
+ 	.align 8
+ # End
