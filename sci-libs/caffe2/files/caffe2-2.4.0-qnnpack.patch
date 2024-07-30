@@ -14,7 +14,7 @@ index fd6b7ff551d..8206a671dc6 100644
 -  # We build static version of clog but a dynamic library may indirectly depend on it
 -  set_property(TARGET clog PROPERTY POSITION_INDEPENDENT_CODE ON)
 +  find_path(CLOG_INCLUDE_DIR clog.h PATHS /usr/include)
-+  find_library(CLOG_LIBRARY clog PATHS @LIBDIR@)
++  find_library(CLOG_LIBRARY clog PATHS /usr/@LIBDIR@)
 +  if (NOT CLOG_LIBRARY)
 +    message(FATAL_ERROR "Cannot find clog")
 +  endif()

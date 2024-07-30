@@ -20,7 +20,7 @@ S="${WORKDIR}"/${MYP}
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="cuda distributed fbgemm flash gloo magma mkl mpi nnpack +numpy onednn openblas opencl openmp qnnpack rocm xnnpack"
+IUSE="blis cuda distributed fbgemm flash gloo magma mkl mpi nnpack +numpy onednn openblas opencl openmp qnnpack rocm xnnpack"
 RESTRICT="test"
 REQUIRED_USE="
 	${PYTHON_REQUIRED_USE}
@@ -31,7 +31,7 @@ REQUIRED_USE="
 		|| ( ${ROCM_REQUIRED_USE} )
 		!flash
 	)
-	?? ( mkl openblas )
+	?? ( blis mkl openblas )
 "
 
 #		sci-libs/tensorrt
@@ -87,6 +87,7 @@ RDEPEND="
 	xnnpack? ( >=sci-libs/XNNPACK-2024.02.29 )
 	mkl? ( sci-libs/mkl )
 	openblas? ( sci-libs/openblas )
+	blis? ( || ( sci-libs/blis sci-libs/aocl-blas ) )
 "
 # Failed with cutlass-3.5.0:
 # error: namespace "cute::detail" has no member "is_prefetch"
@@ -131,6 +132,7 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.2.2-musl.patch
 	"${FILESDIR}"/${P}-missing-binaries.patch
 	"${FILESDIR}"/${P}-qnnpack.patch
+	"${FILESDIR}"/${P}-blis.patch
 )
 
 src_prepare() {
@@ -143,6 +145,12 @@ src_prepare() {
 	pushd torch/csrc/jit/serialization || die
 	flatc --cpp --gen-mutable --scoped-enums mobile_bytecode.fbs || die
 	popd
+
+	sed -i "s|@LIBDIR@|$(get_libdir)|g" \
+		aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt \
+		cmake/Modules/FindBLIS.cmake \
+		|| die
+
 	# prefixify the hardcoded paths, after all patches are applied
 	hprefixify \
 		aten/CMakeLists.txt \
@@ -157,8 +165,6 @@ src_prepare() {
 		cmake/Dependencies.cmake \
 		torch/CMakeLists.txt \
 		CMakeLists.txt
-
-	sed -i "s|@LIBDIR@|$(get_libdir)|g" aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt || die
 
 	if use rocm; then
 		sed -e "s:/opt/rocm:/usr:" \
@@ -229,6 +235,8 @@ src_configure() {
 		mycmakeargs+=(-DBLAS=MKL)
 	elif use openblas; then
 		mycmakeargs+=(-DBLAS=OpenBLAS)
+	elif use blis; then
+		mycmakeargs+=(-DBLAS=BLIS)
 	else
 		mycmakeargs+=(-DBLAS=Generic -DBLAS_LIBRARIES=)
 	fi

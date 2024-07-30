@@ -1,0 +1,30 @@
+diff --git a/cmake/Modules/FindBLIS.cmake b/cmake/Modules/FindBLIS.cmake
+index 3be90c19ea1..59d33deb782 100644
+--- a/cmake/Modules/FindBLIS.cmake
++++ b/cmake/Modules/FindBLIS.cmake
+@@ -11,6 +11,7 @@
+ 
+ 
+ SET(BLIS_INCLUDE_SEARCH_PATHS
++  /usr/include
+   /usr/include/blis
+   /usr/local/include
+   /usr/local/include/blis
+@@ -21,6 +22,7 @@ SET(BLIS_INCLUDE_SEARCH_PATHS
+ )
+ 
+ SET(BLIS_LIB_SEARCH_PATHS
++  /usr/@LIBDIR@
+   /lib/blis
+   /lib64/blis
+   /usr/lib/blis
+@@ -42,6 +44,9 @@ ENDIF()
+ 
+ 
+ FIND_LIBRARY(BLIS_LIB NAMES blis PATHS ${BLIS_LIB_SEARCH_PATHS})
++IF(NOT BLIS_LIB)
++        FIND_LIBRARY(BLIS_LIB NAMES blis-mt PATHS ${BLIS_LIB_SEARCH_PATHS})
++ENDIF()
+ #    Check libraries
+ IF(NOT BLIS_LIB)
+         SET(BLIS_FOUND OFF)
