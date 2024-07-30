@@ -34,7 +34,6 @@ REQUIRED_USE="
 	?? ( blis mkl openblas )
 "
 
-#		sci-libs/tensorrt
 RDEPEND="
 	${PYTHON_DEPS}
 	dev-cpp/gflags:=
@@ -248,9 +247,7 @@ src_configure() {
 
 		mycmakeargs+=(
 			-DUSE_CUDNN=ON
-			# -DUSE_TENSORRT=$(usex cuda)
 			-DTORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST:-3.5 7.0}"
-			-DBUILD_NVFUSER=ON
 			-DCMAKE_CUDA_FLAGS="$(cuda_gccdir -f | tr -d \")"
 			-DUSE_NCCL=ON
 		)
