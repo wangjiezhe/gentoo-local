@@ -88,16 +88,10 @@ RDEPEND="
 	openblas? ( sci-libs/openblas )
 	blis? ( || ( sci-libs/blis sci-libs/aocl-blas ) )
 "
-# Failed with cutlass-3.5.0:
-# error: namespace "cute::detail" has no member "is_prefetch"
-# See https://github.com/NVIDIA/cutlass/issues/1484
-# and https://github.com/NVIDIA/cutlass/issues/1508
+
 DEPEND="
 	${RDEPEND}
-	cuda? (
-		>=dev-libs/cutlass-3.4.1
-		<dev-libs/cutlass-3.5.0
-	)
+	cuda? ( >=dev-libs/cutlass-3.4.1 )
 	onednn? ( sci-libs/ideep )
 	dev-cpp/cpp-httplib
 	dev-cpp/opentelemetry-cpp
@@ -132,6 +126,7 @@ PATCHES=(
 	"${FILESDIR}"/${P}-missing-binaries.patch
 	"${FILESDIR}"/${P}-qnnpack.patch
 	"${FILESDIR}"/${P}-blis.patch
+	"${FILESDIR}"/${P}-cutlass-3.5.0.patch
 )
 
 src_prepare() {

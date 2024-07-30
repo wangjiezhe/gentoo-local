@@ -1,0 +1,81 @@
+https://github.com/NVIDIA/cutlass/issues/1484
+
+diff --git a/aten/src/ATen/native/transformers/cuda/flash_attn/flash_bwd_kernel.h b/aten/src/ATen/native/transformers/cuda/flash_attn/flash_bwd_kernel.h
+index 5089fb2e294..0798387054e 100644
+--- a/aten/src/ATen/native/transformers/cuda/flash_attn/flash_bwd_kernel.h
++++ b/aten/src/ATen/native/transformers/cuda/flash_attn/flash_bwd_kernel.h
+@@ -5,7 +5,7 @@
+ #pragma once
+ 
+ #include <ATen/cuda/PhiloxUtils.cuh>
+-#include <cute/algorithm/copy.hpp>
++#include <cute/tensor.hpp>
+ 
+ #include <cutlass/cutlass.h>
+ #include <cutlass/array.h>
+diff --git a/aten/src/ATen/native/transformers/cuda/flash_attn/flash_bwd_preprocess_kernel.h b/aten/src/ATen/native/transformers/cuda/flash_attn/flash_bwd_preprocess_kernel.h
+index 7811984b7e6..166446e047f 100644
+--- a/aten/src/ATen/native/transformers/cuda/flash_attn/flash_bwd_preprocess_kernel.h
++++ b/aten/src/ATen/native/transformers/cuda/flash_attn/flash_bwd_preprocess_kernel.h
+@@ -4,7 +4,7 @@
+ 
+ #pragma once
+ 
+-#include <cute/algorithm/copy.hpp>
++#include <cute/tensor.hpp>
+ 
+ #include <cutlass/cutlass.h>
+ #include <cutlass/array.h>
+diff --git a/aten/src/ATen/native/transformers/cuda/flash_attn/flash_fwd_kernel.h b/aten/src/ATen/native/transformers/cuda/flash_attn/flash_fwd_kernel.h
+index 9d97abb5eb9..f7281a3c221 100644
+--- a/aten/src/ATen/native/transformers/cuda/flash_attn/flash_fwd_kernel.h
++++ b/aten/src/ATen/native/transformers/cuda/flash_attn/flash_fwd_kernel.h
+@@ -4,7 +4,7 @@
+ 
+ #pragma once
+ 
+-#include <cute/algorithm/copy.hpp>
++#include <cute/tensor.hpp>
+ 
+ #include <cutlass/cutlass.h>
+ #include <cutlass/array.h>
+diff --git a/aten/src/ATen/native/transformers/cuda/flash_attn/kernel_traits.h b/aten/src/ATen/native/transformers/cuda/flash_attn/kernel_traits.h
+index ef1c3b91c94..28560382fa5 100644
+--- a/aten/src/ATen/native/transformers/cuda/flash_attn/kernel_traits.h
++++ b/aten/src/ATen/native/transformers/cuda/flash_attn/kernel_traits.h
+@@ -4,7 +4,7 @@
+ 
+ #pragma once
+ 
+-#include <cute/algorithm/copy.hpp>
++#include <cute/tensor.hpp>
+ 
+ #include <cutlass/cutlass.h>
+ #include <cutlass/layout/layout.h>
+diff --git a/aten/src/ATen/native/transformers/cuda/flash_attn/rotary.h b/aten/src/ATen/native/transformers/cuda/flash_attn/rotary.h
+index 12dc1746c80..9597aa42087 100644
+--- a/aten/src/ATen/native/transformers/cuda/flash_attn/rotary.h
++++ b/aten/src/ATen/native/transformers/cuda/flash_attn/rotary.h
+@@ -4,7 +4,7 @@
+ 
+ #pragma once
+ 
+-#include <cute/algorithm/copy.hpp>
++#include <cute/tensor.hpp>
+ 
+ #include <ATen/native/transformers/cuda/flash_attn/utils.h>
+ 
+diff --git a/aten/src/ATen/native/transformers/cuda/flash_attn/utils.h b/aten/src/ATen/native/transformers/cuda/flash_attn/utils.h
+index 2c8add31836..6e4a26d4ac2 100644
+--- a/aten/src/ATen/native/transformers/cuda/flash_attn/utils.h
++++ b/aten/src/ATen/native/transformers/cuda/flash_attn/utils.h
+@@ -14,8 +14,7 @@
+ #include <cuda_bf16.h>
+ #endif
+ 
+-#include <cute/algorithm/copy.hpp>
+-#include <cute/algorithm/gemm.hpp>
++#include <cute/tensor.hpp>
+ 
+ #include <cutlass/array.h>
+ #include <cutlass/cutlass.h>
