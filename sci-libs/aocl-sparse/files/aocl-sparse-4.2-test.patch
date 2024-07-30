@@ -1,0 +1,31 @@
+diff --git a/tests/unit_tests/CMakeLists.txt b/tests/unit_tests/CMakeLists.txt
+index 582a63c..4067688 100644
+--- a/tests/unit_tests/CMakeLists.txt
++++ b/tests/unit_tests/CMakeLists.txt
+@@ -21,25 +21,7 @@
+ #
+ # ########################################################################
+ 
+-include(FetchContent)
+-set(FETCHCONTENT_QUIET off)
+-get_filename_component(fc_base "./external"
+-                       REALPATH BASE_DIR "${CMAKE_BINARY_DIR}")
+-set(FETCHCONTENT_BASE_DIR ${fc_base})
+-FetchContent_Declare(
+-  googletest
+-  GIT_REPOSITORY https://github.com/google/googletest.git
+-  GIT_TAG v1.14.0
+-)
+-# For Windows: Prevent overriding the parent project's compiler/linker settings
+-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+-
+-FetchContent_GetProperties(googletest)
+-if(NOT googletest_POPULATED)
+-  FetchContent_Populate(googletest)
+-  # Avoid installing gtest libs/headers by default
+-  add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR} EXCLUDE_FROM_ALL)
+-endif()
++find_package(GTest REQUIRED)
+ 
+ set(utils_source common_data_utils.cpp ../common/aoclsparse_template_specialization.cpp ../common/aoclsparse_utility.cpp)
+ include_directories(${CMAKE_SOURCE_DIR}/library/src/include
