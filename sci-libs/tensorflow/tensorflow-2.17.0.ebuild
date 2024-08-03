@@ -96,6 +96,8 @@ done
 RESTRICT="test" # Tests need GPU access
 
 # check flatbuffers version in tensorflow/lite/schema/schema_generated.h
+# check compatible tensorrt version in third_party/tensorrt/tensorrt_configure.bzl
+# and tensorflow/compiler/tf2tensorrt/stub/nvinfer_stub.cc
 RDEPEND="
 	app-arch/snappy
 	>=dev-cpp/abseil-cpp-20230802.1:=
@@ -119,7 +121,7 @@ RDEPEND="
 		dev-util/nvidia-cuda-toolkit:=[profiler]
 		=dev-libs/cudnn-8*
 		dev-libs/nccl
-		=sci-libs/tensorrt-8*
+		=sci-libs/tensorrt-8*:=
 	)
 	mpi? ( virtual/mpi )
 	python? (
@@ -163,6 +165,7 @@ BDEPEND="
 	app-arch/unzip
 	=dev-build/bazel-6*
 	dev-java/java-config
+	dev-util/patchelf
 	cuda? (
 		>=dev-util/nvidia-cuda-toolkit-9.1[profiler]
 	)
@@ -195,8 +198,6 @@ PATCHES=(
 	"${FILESDIR}/${P}-0014-Revert-Use-hermetic-Python-in-TSL-and-XLA.patch"
 	"${FILESDIR}/${P}-0015-build-use-non-hermetic-python.patch"
 	"${FILESDIR}/${P}-0016-build-hardcode-wheel-name.patch"
-	# "${FILESDIR}/${P}-0017-systemlib-Updates-for-Abseil-20240116-LTS.patch"
-	# "${FILESDIR}/temp.patch"
 )
 
 get-cpu-flags() {
@@ -432,6 +433,9 @@ src_install() {
 		# libtensorflow_framework.so and libtensorflow_cc.so is in /usr/lib already
 		rm -f "${D}/$(python_get_sitedir)"/${PN}/lib${PN}_framework.so* || die
 		rm -f "${D}/$(python_get_sitedir)"/${PN}/lib${PN}_cc.so* || die
+
+		# Fix: TF-TRT Warning: Could not find TensorRT
+		patchelf --add-rpath /opt/cuda/lib64 "${D}/$(python_get_sitedir)"/${PN}/compiler/tf2tensorrt/_pywrap_py_utils.so
 	}
 
 	if use python; then
