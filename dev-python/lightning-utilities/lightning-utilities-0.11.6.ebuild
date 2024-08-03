@@ -19,7 +19,7 @@ LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~amd64"
 
-PATCHES=( "${FILESDIR}/${P}-test.patch" )
+PATCHES=( "${FILESDIR}/${PN}-0.11.5-test.patch" )
 
 RDEPEND="
 	sci-libs/pytorch[${PYTHON_SINGLE_USEDEP}]
