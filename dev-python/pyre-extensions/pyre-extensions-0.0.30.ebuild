@@ -16,7 +16,7 @@ SLOT="0"
 KEYWORDS="~amd64"
 
 DEPEND="
-	dev-python/typing_inspect[${PYTHON_USEDEP}]
+	dev-python/typing-inspect[${PYTHON_USEDEP}]
 	dev-python/typing-extensions[${PYTHON_USEDEP}]
 	dev-python/mypy_extensions[${PYTHON_USEDEP}]
 "
