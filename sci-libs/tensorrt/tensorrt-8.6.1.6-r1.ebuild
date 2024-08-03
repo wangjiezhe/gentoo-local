@@ -20,7 +20,7 @@ SRC_URI="https://developer.nvidia.com/downloads/compute/machine-learning/tensorr
 S="${WORKDIR}/TensorRT-${PV}"
 
 LICENSE="NVIDIA-TensorRT"
-SLOT="0"
+SLOT="0/${BASE_VER}"
 KEYWORDS="~amd64"
 IUSE="data samples"
 RESTRICT="mirror test"
