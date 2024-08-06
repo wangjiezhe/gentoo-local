@@ -534,3 +534,9 @@ source = "github"
 github = "nwtgck/piping-server-rust"
 use_latest_release = true
 prefix = "v"
+
+["sys-apps/bat-extras"]
+source = "github"
+github = "eth-p/bat-extras"
+use_latest_release = true
+prefix = "v"
