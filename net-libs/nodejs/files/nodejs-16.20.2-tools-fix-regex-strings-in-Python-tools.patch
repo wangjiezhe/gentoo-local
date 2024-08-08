@@ -1,0 +1,57 @@
+From af935fc9a9f2d38a2e6b21d5e70ce074767be98b Mon Sep 17 00:00:00 2001
+From: Jan Osusky <Jan.Osusky@iblsoft.com>
+Date: Thu, 9 Feb 2023 11:49:31 +0100
+Subject: [PATCH] tools: fix regex strings in Python tools
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+PR-URL: https://github.com/nodejs/node/pull/46671
+Reviewed-By: Darshan Sen <raisinten@gmail.com>
+Reviewed-By: Luigi Pinca <luigipinca@gmail.com>
+Reviewed-By: Tobias Nießen <tniessen@tnie.de>
+---
+ tools/getsharedopensslhasquic.py | 2 +-
+ tools/js2c.py                    | 2 +-
+ tools/v8_gypfiles/GN-scraper.py  | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tools/getsharedopensslhasquic.py b/tools/getsharedopensslhasquic.py
+index a0ad809db21266..f4349285e2f125 100644
+--- a/tools/getsharedopensslhasquic.py
++++ b/tools/getsharedopensslhasquic.py
+@@ -14,7 +14,7 @@ def get_has_quic(include_path):
+     except OSError:
+       return False
+ 
+-    regex = '^#\s*define OPENSSL_INFO_QUIC'
++    regex = r'^#\s*define OPENSSL_INFO_QUIC'
+ 
+     for line in f:
+       if (re.match(regex, line)):
+diff --git a/tools/js2c.py b/tools/js2c.py
+index b8b26efc882a6d..504345e7894a85 100755
+--- a/tools/js2c.py
++++ b/tools/js2c.py
+@@ -92,7 +92,7 @@ def ReadFile(filename):
+ 
+ CONFIG_GYPI_ID = 'config_raw'
+ 
+-SLUGGER_RE =re.compile('[.\-/]')
++SLUGGER_RE = re.compile(r'[.\-/]')
+ 
+ is_verbose = False
+ 
+diff --git a/tools/v8_gypfiles/GN-scraper.py b/tools/v8_gypfiles/GN-scraper.py
+index ec72f1d47ea4a0..1c9f2a7c4b2205 100644
+--- a/tools/v8_gypfiles/GN-scraper.py
++++ b/tools/v8_gypfiles/GN-scraper.py
+@@ -3,7 +3,7 @@
+ import re
+ import os
+ 
+-PLAIN_SOURCE_RE = re.compile('\s*"([^/$].+)"\s*')
++PLAIN_SOURCE_RE = re.compile(r'\s*"([^/$].+)"\s*')
+ def DoMain(args):
+   gn_filename, pattern = args
+   src_root = os.path.dirname(gn_filename)

@@ -1,0 +1,38 @@
+From ae4f041cdbe8b7f9b0fa764417f90b09d1e2aef9 Mon Sep 17 00:00:00 2001
+From: Mohammed Keyvanzadeh <mohammadkeyvanzade94@gmail.com>
+Date: Wed, 29 Mar 2023 23:04:58 +0330
+Subject: [PATCH] build: avoid usage of pipes library
+
+Python's `pipes` library is deprecated and will be removed in Python
+version 3.13, so remove it's import and replace `pipes.quote()` with
+`shlex.quote()`.
+
+PR-URL: https://github.com/nodejs/node/pull/47271
+Reviewed-By: Luigi Pinca <luigipinca@gmail.com>
+Reviewed-By: Yagiz Nizipli <yagiz@nizipli.com>
+Reviewed-By: Debadree Chatterjee <debadree333@gmail.com>
+---
+ configure.py | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/configure.py b/configure.py
+index 1e3a59dd711bbb..a0deed59c1f3df 100755
+--- a/configure.py
++++ b/configure.py
+@@ -5,7 +5,6 @@
+ import errno
+ import argparse
+ import os
+-import pipes
+ import pprint
+ import re
+ import shlex
+@@ -2074,7 +2073,7 @@ def make_bin_override():
+       pprint.pformat(output, indent=2, width=1024) + '\n')
+ 
+ write('config.status', '#!/bin/sh\nset -x\nexec ./configure ' +
+-      ' '.join([pipes.quote(arg) for arg in original_argv]) + '\n')
++      ' '.join([shlex.quote(arg) for arg in original_argv]) + '\n')
+ os.chmod('config.status', 0o775)
+ 
+ 
