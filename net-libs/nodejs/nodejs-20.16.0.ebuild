@@ -37,11 +37,13 @@ RDEPEND=">=app-arch/brotli-1.0.9:=
 	>=dev-libs/libuv-1.46.0:=
 	>=net-dns/c-ares-1.18.1:=
 	>=net-libs/nghttp2-1.41.0:=
-	>=net-libs/ngtcp2-1.1.0:=
 	sys-libs/zlib
 	corepack? ( !sys-apps/yarn )
 	system-icu? ( >=dev-libs/icu-73:= )
-	system-ssl? ( >=dev-libs/openssl-1.1.1:0= )
+	system-ssl? (
+		>=dev-libs/openssl-1.1.1:0=
+		>=net-libs/ngtcp2-1.1.0:=
+	)
 	sys-devel/gcc:*"
 BDEPEND="${PYTHON_DEPS}
 	app-alternatives/ninja
@@ -126,7 +128,6 @@ src_configure() {
 		--shared-cares
 		--shared-libuv
 		--shared-nghttp2
-		--shared-ngtcp2
 		--shared-zlib
 	)
 	use debug && myconf+=( --debug )
@@ -143,7 +144,11 @@ src_configure() {
 	use npm || myconf+=( --without-npm )
 	use snapshot || myconf+=( --without-node-snapshot )
 	if use ssl; then
-		use system-ssl && myconf+=( --shared-openssl --openssl-use-def-ca-store )
+		use system-ssl && myconf+=(
+			--shared-openssl
+			--openssl-use-def-ca-store
+			--shared-ngtcp2
+		)
 	else
 		myconf+=( --without-ssl )
 	fi
