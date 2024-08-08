@@ -162,6 +162,12 @@ src_configure() {
 		*) myarch="${ABI}";;
 	esac
 
+	use mips && myconf+=(
+		--with-mips-arch-variant=loongson
+		# --with-mips-fpu-mode=fp64
+		# --with-mips-float-abi=hard
+	)
+
 	GYP_DEFINES="linux_use_gold_flags=0
 		linux_use_bundled_binutils=0
 		linux_use_bundled_gold=0" \

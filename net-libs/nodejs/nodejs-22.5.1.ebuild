@@ -165,6 +165,12 @@ src_configure() {
 		myconf+=( --without-ssl )
 	fi
 
+	use mips && myconf+=(
+		--with-mips-arch-variant=loongson
+		# --with-mips-fpu-mode=fp64
+		# --with-mips-float-abi=hard
+	)
+
 	local myarch=""
 	case "${ARCH}:${ABI}" in
 		*:amd64) myarch="x64";;
