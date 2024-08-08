@@ -1,0 +1,46 @@
+diff '--color=auto' -ur node-v16.20.2/common.gypi node-v16.20.2_modified/common.gypi
+--- node-v16.20.2/common.gypi	2023-08-09 06:32:47.000000000 +0800
++++ node-v16.20.2_modified/common.gypi	2024-08-08 23:39:33.671264863 +0800
+@@ -280,7 +280,10 @@
+     ],
+     'msvs_settings': {
+       'VCCLCompilerTool': {
+-        'AdditionalOptions': ['/Zc:__cplusplus'],
++        'AdditionalOptions': [
++          '/Zc:__cplusplus',
++          '-std:c++17'
++        ],
+         'BufferSecurityCheck': 'true',
+         'target_conditions': [
+           ['_toolset=="target"', {
+@@ -402,7 +405,7 @@
+       }],
+       [ 'OS in "linux freebsd openbsd solaris android aix cloudabi"', {
+         'cflags': [ '-Wall', '-Wextra', '-Wno-unused-parameter', ],
+-        'cflags_cc': [ '-fno-rtti', '-fno-exceptions', '-std=gnu++14' ],
++        'cflags_cc': [ '-fno-rtti', '-fno-exceptions', '-std=gnu++17' ],
+         'defines': [ '__STDC_FORMAT_MACROS' ],
+         'ldflags': [ '-rdynamic' ],
+         'target_conditions': [
+@@ -542,7 +545,7 @@
+           ['clang==1', {
+             'xcode_settings': {
+               'GCC_VERSION': 'com.apple.compilers.llvm.clang.1_0',
+-              'CLANG_CXX_LANGUAGE_STANDARD': 'gnu++14',  # -std=gnu++14
++              'CLANG_CXX_LANGUAGE_STANDARD': 'gnu++17',  # -std=gnu++17
+               'CLANG_CXX_LIBRARY': 'libc++',
+             },
+           }],
+diff '--color=auto' -ur node-v16.20.2/deps/v8/src/objects/fixed-array.h node-v16.20.2_modified/deps/v8/src/objects/fixed-array.h
+--- node-v16.20.2/deps/v8/src/objects/fixed-array.h	2023-08-09 06:32:51.000000000 +0800
++++ node-v16.20.2_modified/deps/v8/src/objects/fixed-array.h	2024-08-08 23:39:33.671264863 +0800
+@@ -138,7 +138,9 @@
+   inline void set(int index, Smi value);
+ #else
+   inline void set(int index, Smi value) {
++#if !defined(_WIN32)
+     DCHECK_NE(map(), GetReadOnlyRoots().fixed_cow_array_map());
++#endif
+     DCHECK_LT(static_cast<unsigned>(index), static_cast<unsigned>(length()));
+     DCHECK(Object(value).IsSmi());
+     int offset = OffsetOfElementAt(index);
