@@ -1,0 +1,44 @@
+https://github.com/nodejs/node/commit/5df0f35bf6e9cd556e6223a351535e90a8fecfb3
+https://github.com/nodejs/node/commit/95534ad82f4e33f53fd50efe633d43f8da70cba6
+
+diff '--color=auto' -ur node-v12.22.6/configure.py node-v12.22.6_modified/configure.py
+--- node-v12.22.6/configure.py	2021-08-31 01:53:53.000000000 +0800
++++ node-v12.22.6_modified/configure.py	2024-08-09 10:45:43.302201356 +0800
+@@ -13,8 +13,12 @@
+ import shutil
+ import io
+ 
+-from distutils.spawn import find_executable as which
+-from distutils.version import StrictVersion
++# Fallback to find_executable from distutils.spawn is a stopgap for
++# supporting V8 builds, which do not yet support Python 3.
++try:
++  from shutil import which
++except ImportError:
++  from distutils.spawn import find_executable as which
+ 
+ # If not run from node/, cd to node/.
+ os.chdir(os.path.dirname(__file__) or '.')
+@@ -28,6 +32,7 @@
+ 
+ sys.path.insert(0, os.path.join('tools', 'gyp', 'pylib'))
+ from gyp.common import GetFlavor
++from packaging.version import Version
+ 
+ # imports in tools/configure.d
+ sys.path.insert(0, os.path.join('tools', 'configure.d'))
+@@ -1326,10 +1331,10 @@
+     # supported asm compiler for AVX2. See https://github.com/openssl/openssl/
+     # blob/OpenSSL_1_1_0-stable/crypto/modes/asm/aesni-gcm-x86_64.pl#L52-L69
+     openssl110_asm_supported = \
+-      ('gas_version' in variables and StrictVersion(variables['gas_version']) >= StrictVersion('2.23')) or \
+-      ('xcode_version' in variables and StrictVersion(variables['xcode_version']) >= StrictVersion('5.0')) or \
+-      ('llvm_version' in variables and StrictVersion(variables['llvm_version']) >= StrictVersion('3.3')) or \
+-      ('nasm_version' in variables and StrictVersion(variables['nasm_version']) >= StrictVersion('2.10'))
++      ('gas_version' in variables and Version(variables['gas_version']) >= Version('2.23')) or \
++      ('xcode_version' in variables and Version(variables['xcode_version']) >= Version('5.0')) or \
++      ('llvm_version' in variables and Version(variables['llvm_version']) >= Version('3.3')) or \
++      ('nasm_version' in variables and Version(variables['nasm_version']) >= Version('2.10'))
+ 
+     if is_x86 and not openssl110_asm_supported:
+       error('''Did not find a new enough assembler, install one or build with

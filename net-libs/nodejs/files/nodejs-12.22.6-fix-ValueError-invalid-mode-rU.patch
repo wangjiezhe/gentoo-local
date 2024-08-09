@@ -1,0 +1,12 @@
+diff '--color=auto' -ur node-v12.22.6/tools/gyp/pylib/gyp/input.py node-v12.22.6_modified/tools/gyp/pylib/gyp/input.py
+--- node-v12.22.6/tools/gyp/pylib/gyp/input.py	2021-08-31 01:53:57.000000000 +0800
++++ node-v12.22.6_modified/tools/gyp/pylib/gyp/input.py	2024-08-09 10:56:58.021369898 +0800
+@@ -226,7 +226,7 @@
+     # Open the build file for read ('r') with universal-newlines mode ('U')
+     # to make sure platform specific newlines ('\r\n' or '\r') are converted to '\n'
+     # which otherwise will fail eval()
+-    if sys.platform == 'zos':
++    if PY3 or sys.platform == 'zos':
+       # On z/OS, universal-newlines mode treats the file as an ascii file. But since
+       # node-gyp produces ebcdic files, do not use that mode.
+       build_file_contents = open(build_file_path, 'r').read()
