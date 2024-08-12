@@ -1,0 +1,11 @@
+diff '--color=auto' -ur wandb-0.17.6/nvidia_gpu_stats/hatch.py wandb-0.17.6_modified/nvidia_gpu_stats/hatch.py
+--- wandb-0.17.6/nvidia_gpu_stats/hatch.py	2024-08-08 08:42:42.000000000 +0800
++++ wandb-0.17.6_modified/nvidia_gpu_stats/hatch.py	2024-08-12 14:44:54.091667677 +0800
+@@ -45,6 +45,6 @@
+         ) from e
+ 
+     output_path.parent.mkdir(parents=True, exist_ok=True)
+-    source_path = source_path / "target" / "release" / "nvidia_gpu_stats"
++    source_path = source_path / "target" / "@RUST_ABI@" / "release" / "nvidia_gpu_stats"
+     source_path.replace(output_path)
+     output_path.chmod(0o755)
