@@ -40,6 +40,7 @@ RDEPEND="
 	>=dev-cpp/glog-0.5.0
 	dev-libs/cpuinfo
 	dev-libs/libfmt
+	dev-cpp/opentelemetry-cpp
 	dev-libs/protobuf:=
 	dev-libs/pthreadpool
 	dev-libs/sleef
@@ -65,6 +66,7 @@ RDEPEND="
 	onednn? ( dev-libs/oneDNN )
 	opencl? ( virtual/opencl )
 	qnnpack? (
+		!sci-libs/QNNPACK
 		dev-cpp/gemmlowp
 		dev-libs/clog
 	)
@@ -100,7 +102,6 @@ DEPEND="
 	cuda? ( >=dev-libs/cutlass-3.4.1 )
 	onednn? ( sci-libs/ideep )
 	>=dev-cpp/cpp-httplib-0.16.0
-	dev-cpp/opentelemetry-cpp
 	dev-libs/psimd
 	dev-libs/FP16
 	dev-libs/FXdiv
@@ -252,8 +253,8 @@ src_configure() {
 		mycmakeargs+=(
 			-DUSE_CUDNN=ON
 			-DTORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST:-3.5 7.0}"
-			-DCMAKE_CUDA_FLAGS="$(cuda_gccdir -f | tr -d \")"
 			-DUSE_NCCL=ON
+			-DCMAKE_CUDA_FLAGS="$(cuda_gccdir -f | tr -d \")"
 		)
 	elif use rocm; then
 		export PYTORCH_ROCM_ARCH="$(get_amdgpu_flags)"
