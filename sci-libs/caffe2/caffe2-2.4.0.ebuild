@@ -4,8 +4,8 @@
 EAPI=8
 
 PYTHON_COMPAT=( python3_{10..12} )
-ROCM_VERSION=5.7
-inherit python-single-r1 cmake cuda flag-o-matic prefix rocm
+ROCM_VERSION=6.1
+inherit python-single-r1 cmake cuda flag-o-matic prefix rocm toolchain-funcs
 
 MYPN=pytorch
 MYP=${MYPN}-${PV}
@@ -69,18 +69,24 @@ RDEPEND="
 		dev-libs/clog
 	)
 	rocm? (
-		>=dev-util/hip-5.7
-		>=dev-libs/rccl-5.7[${ROCM_USEDEP}]
-		>=sci-libs/rocThrust-5.7[${ROCM_USEDEP}]
-		>=sci-libs/rocPRIM-5.7[${ROCM_USEDEP}]
-		>=sci-libs/hipBLAS-5.7[${ROCM_USEDEP}]
-		>=sci-libs/hipFFT-5.7[${ROCM_USEDEP}]
-		>=sci-libs/hipSPARSE-5.7[${ROCM_USEDEP}]
-		>=sci-libs/hipRAND-5.7[${ROCM_USEDEP}]
-		>=sci-libs/hipCUB-5.7[${ROCM_USEDEP}]
-		>=sci-libs/hipSOLVER-5.7[${ROCM_USEDEP}]
-		>=sci-libs/miopen-5.7[${ROCM_USEDEP}]
-		>=dev-util/roctracer-5.7[${ROCM_USEDEP}]
+		=dev-util/hip-6.1*
+		=dev-libs/rccl-6.1*[${ROCM_USEDEP}]
+		=sci-libs/rocThrust-6.1*[${ROCM_USEDEP}]
+		=sci-libs/rocPRIM-6.1*[${ROCM_USEDEP}]
+		=sci-libs/hipBLAS-6.1*[${ROCM_USEDEP}]
+		=sci-libs/hipFFT-6.1*[${ROCM_USEDEP}]
+		=sci-libs/hipSPARSE-6.1*[${ROCM_USEDEP}]
+		=sci-libs/hipRAND-6.1*[${ROCM_USEDEP}]
+		=sci-libs/hipCUB-6.1*[${ROCM_USEDEP}]
+		=sci-libs/hipSOLVER-6.1*[${ROCM_USEDEP}]
+		=sci-libs/miopen-6.1*[${ROCM_USEDEP}]
+		=dev-util/roctracer-6.1*[${ROCM_USEDEP}]
+
+		=sci-libs/hipBLASLt-6.1*
+		amdgpu_targets_gfx90a? ( =sci-libs/hipBLASLt-6.1*[amdgpu_targets_gfx90a] )
+		amdgpu_targets_gfx940? ( =sci-libs/hipBLASLt-6.1*[amdgpu_targets_gfx940] )
+		amdgpu_targets_gfx941? ( =sci-libs/hipBLASLt-6.1*[amdgpu_targets_gfx941] )
+		amdgpu_targets_gfx942? ( =sci-libs/hipBLASLt-6.1*[amdgpu_targets_gfx942] )
 	)
 	distributed? ( sci-libs/tensorpipe[cuda?] )
 	xnnpack? ( >=sci-libs/XNNPACK-2024.02.29 )
@@ -118,11 +124,14 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-1.12.0-glog-0.6.0.patch
 	"${FILESDIR}"/${PN}-1.13.1-tensorpipe.patch
 	"${FILESDIR}"/${PN}-2.3.0-cudnn_include_fix.patch
-	"${FILESDIR}"/${PN}-2.0.1-functorch.patch
 	"${FILESDIR}"/${PN}-2.1.2-fix-rpath.patch
 	"${FILESDIR}"/${P}-fix-openmp-link.patch
 	"${FILESDIR}"/${P}-rocm-fix-std-cpp17.patch
 	"${FILESDIR}"/${PN}-2.2.2-musl.patch
+	"${FILESDIR}"/${P}-exclude-aotriton.patch
+	"${FILESDIR}"/${PN}-2.3.0-fix-rocm-gcc14-clamp.patch
+	"${FILESDIR}"/${PN}-2.3.0-fix-libcpp.patch
+	"${FILESDIR}"/${PN}-2.0.1-functorch.patch
 	"${FILESDIR}"/${P}-missing-binaries.patch
 	"${FILESDIR}"/${P}-qnnpack.patch
 	"${FILESDIR}"/${P}-blis.patch
@@ -252,6 +261,14 @@ src_configure() {
 		mycmakeargs+=(
 			-DUSE_NCCL=ON
 		)
+
+		# ROCm libraries produce too much warnings
+		append-cxxflags -Wno-deprecated-declarations -Wno-unused-result
+
+		if tc-is-clang; then
+			# fix mangling in LLVM: https://github.com/llvm/llvm-project/issues/85656
+			append-cxxflags -fclang-abi-compat=17
+		fi
 	fi
 
 	if use onednn; then
