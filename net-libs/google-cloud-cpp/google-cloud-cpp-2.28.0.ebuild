@@ -6,7 +6,7 @@ EAPI=8
 inherit cmake
 
 # From cmake/GoogleapisConfig.cmake
-GOOGLEAPIS_COMMIT="e3838fbf057c3b69efc1e0b8e1a5a288ee91a00d"
+GOOGLEAPIS_COMMIT="0a250ef2318e97b1b3153423e7af0fdbe5731741"
 
 DESCRIPTION="Google Cloud Client Library for C++"
 HOMEPAGE="https://cloud.google.com/"
