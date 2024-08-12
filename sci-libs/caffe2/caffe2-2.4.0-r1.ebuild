@@ -99,7 +99,7 @@ DEPEND="
 	${RDEPEND}
 	cuda? ( >=dev-libs/cutlass-3.4.1 )
 	onednn? ( sci-libs/ideep )
-	dev-cpp/cpp-httplib
+	>=dev-cpp/cpp-httplib-0.16.0
 	dev-cpp/opentelemetry-cpp
 	dev-libs/psimd
 	dev-libs/FP16
@@ -119,7 +119,7 @@ BDEPEND="
 "
 
 PATCHES=(
-	"${FILESDIR}"/${P}-gentoo.patch
+	"${FILESDIR}"/${PF}-gentoo.patch
 	"${FILESDIR}"/${P}-install-dirs.patch
 	"${FILESDIR}"/${PN}-1.12.0-glog-0.6.0.patch
 	"${FILESDIR}"/${PN}-1.13.1-tensorpipe.patch
