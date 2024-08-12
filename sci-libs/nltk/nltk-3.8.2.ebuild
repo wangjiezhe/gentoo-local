@@ -1,4 +1,4 @@
-# Copyright 1999-2023 Gentoo Authors
+# Copyright 1999-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -17,7 +17,7 @@ SLOT="0"
 KEYWORDS="~amd64"
 IUSE="data"
 
-PATCHES=( "${FILESDIR}/${P}-test.patch" )
+PATCHES=( "${FILESDIR}/${PN}-3.8.1-test.patch" )
 
 RDEPEND="
 	data? ( sci-libs/nltk-data )
@@ -31,6 +31,8 @@ BDEPEND="
 	test? (
 		dev-lang/python[tk]
 		dev-python/pytest-mock[${PYTHON_USEDEP}]
+		dev-python/twython[${PYTHON_USEDEP}]
+		>=sci-libs/nltk-data-20240729
 	)
 "
 
