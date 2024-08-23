@@ -6,7 +6,7 @@ EAPI=8
 PYTHON_COMPAT=( python3_{10..12} )
 DISTUTILS_USE_PEP517=setuptools
 DISTUTILS_EXT=1
-inherit distutils-r1
+inherit distutils-r1 flag-o-matic
 
 DESCRIPTION="A c++ wrapper for the cudnn backend API"
 HOMEPAGE="https://github.com/NVIDIA/cudnn-frontend"
@@ -35,6 +35,8 @@ PATCHES=("${FILESDIR}/${P}-cmake.patch")
 src_prepare() {
 	eapply_user
 	use python && distutils-r1_src_prepare
+	append-flags -Wno-array-bounds
+	append-flags -Wno-stringop-overread
 }
 
 src_configure() {
