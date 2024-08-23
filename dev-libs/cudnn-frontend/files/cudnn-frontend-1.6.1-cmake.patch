@@ -1,0 +1,40 @@
+diff --git a/python/CMakeLists.txt b/python/CMakeLists.txt
+index 39c01f1..35fd913 100644
+--- a/python/CMakeLists.txt
++++ b/python/CMakeLists.txt
+@@ -1,16 +1,9 @@
+ cmake_minimum_required(VERSION 3.18)
+ 
+-Include(FetchContent)
+-
+ # Fetch and build dlpack
+ set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+ set(BUILD_MOCK OFF)
+-FetchContent_Declare(
+-  dlpack
+-  GIT_REPOSITORY https://github.com/dmlc/dlpack
+-  GIT_TAG        v0.8
+-)
+-FetchContent_MakeAvailable(dlpack)
++find_package(dlpack REQUIRED)
+ 
+ # Find python
+ find_package(Python 3.8 COMPONENTS Interpreter Development.Module REQUIRED)
+@@ -18,7 +11,7 @@ find_package(Python 3.8 COMPONENTS Interpreter Development.Module REQUIRED)
+ # Find cudnn
+ include(${PROJECT_SOURCE_DIR}/cmake/cuDNN.cmake)
+ 
+-option(CUDNN_FRONTEND_FETCH_PYBINDS_IN_CMAKE "Whether cmake build system should fetch pybinds." ON)
++option(CUDNN_FRONTEND_FETCH_PYBINDS_IN_CMAKE "Whether cmake build system should fetch pybinds." OFF)
+ 
+ if(CUDNN_FRONTEND_FETCH_PYBINDS_IN_CMAKE)
+     FetchContent_Declare(
+@@ -64,7 +57,7 @@ target_compile_definitions(_compiled_module PRIVATE NV_CUDNN_FRONTEND_USE_DYNAMI
+ target_link_libraries(
+     _compiled_module
+     
+-    PRIVATE dlpack
++    # PRIVATE dlpack
+ )
+ 
+ set_target_properties(
