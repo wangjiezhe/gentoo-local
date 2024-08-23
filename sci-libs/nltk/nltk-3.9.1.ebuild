@@ -39,6 +39,9 @@ BDEPEND="
 distutils_enable_tests pytest
 
 python_test() {
-	rm -f nltk/test/unit/test_downloader.py || die		# Need network access
+	local EPYTEST_IGNORE=(
+		## Need network access
+		nltk/test/unit/test_downloader.py
+	)
 	epytest --doctest-modules
 }
