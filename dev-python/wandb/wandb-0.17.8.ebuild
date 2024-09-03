@@ -211,7 +211,7 @@ CRATES="
 PYTHON_COMPAT=( python3_{11..12} )
 DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_USE_PEP517=hatchling
-inherit cargo distutils-r1 go-module
+inherit cargo distutils-r1 go-module rust-toolchain
 
 DESCRIPTION="A tool for visualizing and tracking your machine learning experiments"
 HOMEPAGE="https://github.com/wandb/wandb https://wandb.ai/"
@@ -228,9 +228,9 @@ SLOT="0"
 KEYWORDS="~amd64"
 RESTRICT="test"
 
+#	sys-devel/binutils[gold]
 BDEPEND="
 	>=dev-lang/go-1.22.5:=
-	sys-devel/binutils[gold]
 	dev-util/patchelf
 "
 
