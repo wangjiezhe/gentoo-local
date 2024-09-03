@@ -540,3 +540,9 @@ source = "github"
 github = "eth-p/bat-extras"
 use_latest_release = true
 prefix = "v"
+
+["app-misc/cmd-wrapped"]
+source = "github"
+github = "YiNNx/cmd-wrapped"
+use_latest_release = true
+prefix = "v"
