@@ -88,7 +88,7 @@ CRATES="
 	powerfmt@0.2.0
 	ppv-lite86@0.2.20
 	proc-macro2@1.0.86
-	quinn-proto@0.11.6
+	quinn-proto@0.11.8
 	quinn-udp@0.5.4
 	quinn@0.11.3
 	quote@1.0.36
