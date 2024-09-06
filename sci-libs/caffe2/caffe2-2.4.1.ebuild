@@ -120,23 +120,23 @@ BDEPEND="
 "
 
 PATCHES=(
-	"${FILESDIR}"/${PF}-gentoo.patch
-	"${FILESDIR}"/${P}-install-dirs.patch
+	"${FILESDIR}"/${PN}-2.4.0-r1-gentoo.patch
+	"${FILESDIR}"/${PN}-2.4.0-install-dirs.patch
 	"${FILESDIR}"/${PN}-1.12.0-glog-0.6.0.patch
 	"${FILESDIR}"/${PN}-1.13.1-tensorpipe.patch
 	"${FILESDIR}"/${PN}-2.3.0-cudnn_include_fix.patch
 	"${FILESDIR}"/${PN}-2.1.2-fix-rpath.patch
-	"${FILESDIR}"/${P}-fix-openmp-link.patch
-	"${FILESDIR}"/${P}-rocm-fix-std-cpp17.patch
+	"${FILESDIR}"/${PN}-2.4.0-fix-openmp-link.patch
+	"${FILESDIR}"/${PN}-2.4.0-rocm-fix-std-cpp17.patch
 	"${FILESDIR}"/${PN}-2.2.2-musl.patch
-	"${FILESDIR}"/${P}-exclude-aotriton.patch
+	"${FILESDIR}"/${PN}-2.4.0-exclude-aotriton.patch
 	"${FILESDIR}"/${PN}-2.3.0-fix-rocm-gcc14-clamp.patch
 	"${FILESDIR}"/${PN}-2.3.0-fix-libcpp.patch
 	"${FILESDIR}"/${PN}-2.0.1-functorch.patch
-	"${FILESDIR}"/${P}-missing-binaries.patch
-	"${FILESDIR}"/${P}-qnnpack.patch
-	"${FILESDIR}"/${P}-blis.patch
-	"${FILESDIR}"/${P}-cutlass-3.5.0.patch
+	"${FILESDIR}"/${PN}-2.4.0-missing-binaries.patch
+	"${FILESDIR}"/${PN}-2.4.0-qnnpack.patch
+	"${FILESDIR}"/${PN}-2.4.0-blis.patch
+	"${FILESDIR}"/${PN}-2.4.0-cutlass-3.5.0.patch
 )
 
 src_prepare() {
