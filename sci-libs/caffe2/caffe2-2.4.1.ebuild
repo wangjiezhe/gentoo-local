@@ -99,7 +99,10 @@ RDEPEND="
 
 DEPEND="
 	${RDEPEND}
-	cuda? ( >=dev-libs/cutlass-3.4.1 )
+	cuda? (
+		>=dev-libs/cutlass-3.4.1
+		<dev-libs/cutlass-3.5.1
+	)
 	onednn? ( sci-libs/ideep )
 	>=dev-cpp/cpp-httplib-0.16.0
 	dev-libs/psimd
