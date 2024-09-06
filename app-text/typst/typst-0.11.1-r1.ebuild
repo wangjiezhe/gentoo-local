@@ -265,8 +265,8 @@ CRATES="
 	thiserror-impl@1.0.57
 	thiserror@1.0.57
 	time-core@0.1.2
-	time-macros@0.2.17
-	time@0.3.34
+	time-macros@0.2.18
+	time@0.3.36
 	tiny-skia-path@0.11.4
 	tiny-skia@0.11.4
 	tinystr@0.7.5
@@ -390,6 +390,8 @@ BDEPEND="
 QA_FLAGS_IGNORED="usr/bin/typst"
 
 DOCS=( README.md )
+
+PATCHES=( "${FILESDIR}/${P}-4294-Bump-time-dependency.patch" )
 
 src_compile() {
 	local GIT_HASH=$(gunzip < "${DISTDIR}/${P}.tar.gz" | git get-tar-commit-id)
