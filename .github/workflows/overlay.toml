@@ -552,3 +552,7 @@ source = "github"
 github = "Enter-tainer/typstyle"
 use_latest_release = true
 prefix = "v"
+
+["dev-python/py3nvml"]
+source = "pypi"
+pypi = "py3nvml"
