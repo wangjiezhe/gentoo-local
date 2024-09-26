@@ -22,7 +22,7 @@ KEYWORDS="~amd64"
 RESTRICT="test" # Thousands of tests need network, especially in tests/models
 
 RDEPEND="
-	sci-libs/tokenizers[${PYTHON_SINGLE_USEDEP}]
+	=sci-libs/tokenizers-0.19*[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		dev-python/filelock[${PYTHON_USEDEP}]
 		dev-python/numpy[${PYTHON_USEDEP}]
