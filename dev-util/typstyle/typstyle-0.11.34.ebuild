@@ -16,7 +16,7 @@ CRATES="
 	anstyle-parse@0.2.4
 	anstyle-query@1.1.0
 	anstyle-wincon@3.0.3
-	anstyle@1.0.7
+	anstyle@1.0.8
 	anyhow@1.0.86
 	append-only-vec@0.1.3
 	approx@0.5.1
@@ -56,9 +56,10 @@ CRATES="
 	ciborium-ll@0.2.2
 	ciborium@0.2.2
 	citationberg@0.3.1
-	clap@4.5.7
-	clap_builder@4.5.7
-	clap_derive@4.5.5
+	clap@4.5.18
+	clap_builder@4.5.18
+	clap_complete@4.5.29
+	clap_derive@4.5.18
 	clap_lex@0.7.1
 	cobs@0.2.3
 	codespan-reporting@0.11.1
