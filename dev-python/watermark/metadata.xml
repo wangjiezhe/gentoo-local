@@ -9,4 +9,7 @@
 		<remote-id type="github">rasbt/watermark</remote-id>
 		<remote-id type="pypi">watermark</remote-id>
 	</upstream>
+	<use>
+		<flag name='gpu'>Display GPU information for NVIDIA chipsets</flag>
+	</use>
 </pkgmetadata>

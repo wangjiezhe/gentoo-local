@@ -3,7 +3,7 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{10..12} )
+PYTHON_COMPAT=( python3_{10..13} )
 DISTUTILS_USE_PEP517=setuptools
 inherit distutils-r1 pypi
 
@@ -13,8 +13,10 @@ HOMEPAGE="https://github.com/rasbt/watermark"
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64"
+IUSE="gpu"
 
 RDEPEND="
 	dev-python/ipython[${PYTHON_USEDEP}]
 	dev-python/importlib-metadata[${PYTHON_USEDEP}]
+	gpu? ( dev-python/py3nvml[${PYTHON_USEDEP}] )
 "
