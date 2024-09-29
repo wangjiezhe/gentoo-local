@@ -27,16 +27,11 @@ CRATES="
 	clap_derive@4.5.13
 	clap_lex@0.7.2
 	colorchoice@1.0.2
-	core-foundation-sys@0.8.6
-	crossbeam-deque@0.8.5
-	crossbeam-epoch@0.9.18
-	crossbeam-utils@0.8.20
 	darling@0.20.10
 	darling_core@0.20.10
 	darling_macro@0.20.10
 	debugid@0.8.0
 	deranged@0.3.11
-	either@1.13.0
 	fnv@1.0.7
 	form_urlencoded@1.2.1
 	futures-channel@0.3.30
@@ -73,7 +68,6 @@ CRATES="
 	miniz_oxide@0.7.4
 	mio@1.0.2
 	nix@0.29.0
-	ntapi@0.4.1
 	num-conv@0.1.0
 	nvml-wrapper-sys@0.8.0
 	nvml-wrapper@0.10.0
@@ -95,8 +89,6 @@ CRATES="
 	rand@0.8.5
 	rand_chacha@0.3.1
 	rand_core@0.6.4
-	rayon-core@1.12.1
-	rayon@1.10.0
 	regex-automata@0.4.7
 	regex-syntax@0.8.4
 	regex@1.10.6
@@ -134,7 +126,6 @@ CRATES="
 	subtle@2.6.1
 	syn@2.0.72
 	sync_wrapper@1.0.1
-	sysinfo@0.31.2
 	thiserror-impl@1.0.63
 	thiserror@1.0.63
 	time-core@0.1.2
@@ -171,20 +162,12 @@ CRATES="
 	wasm-bindgen@0.2.92
 	web-sys@0.3.69
 	webpki-roots@0.26.3
-	winapi-i686-pc-windows-gnu@0.4.0
-	winapi-x86_64-pc-windows-gnu@0.4.0
-	winapi@0.3.9
 	windows-core@0.52.0
-	windows-core@0.57.0
-	windows-implement@0.57.0
-	windows-interface@0.57.0
-	windows-result@0.1.2
 	windows-sys@0.48.0
 	windows-sys@0.52.0
 	windows-targets@0.48.5
 	windows-targets@0.52.6
 	windows@0.52.0
-	windows@0.57.0
 	windows_aarch64_gnullvm@0.48.5
 	windows_aarch64_gnullvm@0.52.6
 	windows_aarch64_msvc@0.48.5
