@@ -562,3 +562,15 @@ source = "github"
 github = "huggingface/tokenizers"
 use_latest_release = true
 prefix = "v"
+
+["dev-utils/minify-html"]
+source = "github"
+github = "wilsonzlin/minify-html"
+use_latest_release = true
+prefix = "v"
+
+["dev-utils/minify-js"]
+source = "github"
+github = "wilsonzlin/minify-js"
+use_max_tag = true
+prefix = "v"

@@ -1,0 +1,12 @@
+diff '--color=auto' -ur minify-js-0.6.0/Cargo.toml minify-js-0.6.0_modified/Cargo.toml
+--- minify-js-0.6.0/Cargo.toml	2023-12-25 11:29:52.000000000 +0800
++++ minify-js-0.6.0_modified/Cargo.toml	2024-10-04 15:16:59.879478253 +0800
+@@ -1,8 +1,6 @@
+ [workspace]
+ members = [
+-    "bench/minify-js",
+     "cli",
+-    "nodejs",
+     "rust",
+ ]
+ 
