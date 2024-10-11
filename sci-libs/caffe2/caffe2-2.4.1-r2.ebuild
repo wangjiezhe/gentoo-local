@@ -43,14 +43,16 @@ RDEPEND="
 	dev-cpp/opentelemetry-cpp
 	dev-libs/protobuf:=
 	dev-libs/pthreadpool
-	dev-libs/sleef
+	dev-libs/sleef[cpu_flags_x86_avx512f(+),cpu_flags_x86_avx(+)]
+	dev-libs/sleef[cpu_flags_x86_sse3(+),cpu_flags_x86_ssse3(+)]
+	dev-libs/sleef[cpu_flags_x86_sse4_1(+),cpu_flags_x86_sse4_2(+)]
 	virtual/lapack
 	sci-libs/onnx
 	sci-libs/foxi
 	cuda? (
 		=dev-libs/cudnn-8*
 		>=dev-libs/cudnn-frontend-1.0.3:0/8
-		<dev-util/nvidia-cuda-toolkit-12.4.0:=[profiler]
+		<dev-util/nvidia-cuda-toolkit-12.5:=[profiler]
 		dev-libs/nccl
 		!=dev-libs/nccl-2.19.4*
 		dev-libs/cusparselt
@@ -90,7 +92,10 @@ RDEPEND="
 		amdgpu_targets_gfx941? ( =sci-libs/hipBLASLt-6.1*[amdgpu_targets_gfx941] )
 		amdgpu_targets_gfx942? ( =sci-libs/hipBLASLt-6.1*[amdgpu_targets_gfx942] )
 	)
-	distributed? ( sci-libs/tensorpipe[cuda?] )
+	distributed? (
+		sci-libs/tensorpipe[cuda?]
+		>=dev-cpp/cpp-httplib-0.16.0
+	)
 	xnnpack? ( >=sci-libs/XNNPACK-2024.02.29 )
 	mkl? ( sci-libs/mkl )
 	openblas? ( sci-libs/openblas )
@@ -99,11 +104,8 @@ RDEPEND="
 
 DEPEND="
 	${RDEPEND}
-	cuda? (
-		>=dev-libs/cutlass-3.5.1
-	)
+	cuda? ( >=dev-libs/cutlass-3.5.1 )
 	onednn? ( sci-libs/ideep )
-	>=dev-cpp/cpp-httplib-0.16.0
 	dev-libs/psimd
 	dev-libs/FP16
 	dev-libs/FXdiv
