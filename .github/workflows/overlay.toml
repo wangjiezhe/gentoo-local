@@ -574,3 +574,13 @@ source = "github"
 github = "wilsonzlin/minify-js"
 use_max_tag = true
 prefix = "v"
+
+["sci-libs/aocl-libm"]
+source = "github"
+github = "amd/aocl-libm-ose"
+use_latest_release = true
+
+["sci-libs/aocl-sparse"]
+source = "github"
+github = "amd/aocl-sparse"
+use_latest_release = true
