@@ -36,6 +36,7 @@ REQUIRED_USE="
 
 RDEPEND="
 	${PYTHON_DEPS}
+	dev-cpp/abseil-cpp:=
 	dev-cpp/gflags:=
 	>=dev-cpp/glog-0.5.0
 	dev-libs/cpuinfo
