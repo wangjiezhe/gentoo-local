@@ -43,6 +43,10 @@ DEPEND="${RDEPEND}"
 
 # distutils_enable_tests pytest
 
+PATCHES=(
+	"${FILESDIR}"/${P}-fix-CUDA-build-with-NVCC_FLAGS-in-env-8692.patch
+)
+
 src_prepare() {
 	distutils-r1_src_prepare
 
