@@ -1,11 +1,11 @@
 diff --git a/setup.py b/setup.py
-index 9ec41cd37cd..d9819c7db9a 100644
+index 2b0cfa99d71..b9fd65d0e2b 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -473,15 +472,6 @@ def build_deps():
+@@ -470,14 +470,6 @@ def build_deps():
+     check_submodules()
      check_pydep("yaml", "pyyaml")
      build_python = not BUILD_LIBTORCH_WHL
- 
 -    build_caffe2(
 -        version=version,
 -        cmake_python_library=cmake_python_library,
@@ -14,7 +14,6 @@ index 9ec41cd37cd..d9819c7db9a 100644
 -        cmake_only=CMAKE_ONLY,
 -        cmake=cmake,
 -    )
--
+ 
      if CMAKE_ONLY:
          report(
-             'Finished running cmake. Run "ccmake build" or '

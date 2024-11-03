@@ -1,0 +1,14 @@
+diff --git a/setup.py b/setup.py
+index b9fd65d0e2b..a62f5cf2ef5 100644
+--- a/setup.py
++++ b/setup.py
+@@ -238,6 +238,9 @@ import setuptools.command.install
+ import setuptools.command.sdist
+ from setuptools import Extension, find_packages, setup
+ from setuptools.dist import Distribution
++
++sys.path[:0] = os.getcwd()
++
+ from tools.build_pytorch_libs import build_caffe2
+ from tools.generate_torch_version import get_torch_version
+ from tools.setup_helpers.cmake import CMake
