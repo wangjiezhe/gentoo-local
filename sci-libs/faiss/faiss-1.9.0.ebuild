@@ -14,7 +14,7 @@ SRC_URI="https://github.com/facebookresearch/faiss/archive/v${PV}.tar.gz -> ${P}
 LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64"
-CPU_FLAGS="cpu_flags_x86_avx2"
+CPU_FLAGS="cpu_flags_x86_avx512f cpu_flags_x86_avx2"
 IUSE="python cuda test ${CPU_FLAGS}"
 RESTRICT="!test? ( test )"
 
@@ -32,6 +32,7 @@ DEPEND="
 	)
 	test? (
 		dev-cpp/gtest
+		dev-cpp/benchmark
 	)
 "
 BDEPEND="python? ( ${DISTUTILS_DEPS} )"
@@ -39,7 +40,7 @@ BDEPEND="python? ( ${DISTUTILS_DEPS} )"
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
 PATCHES=(
-	"${FILESDIR}/${P}-test.patch"
+	"${FILESDIR}/${PN}-1.9.0-test.patch"
 )
 
 src_prepare() {
@@ -54,7 +55,7 @@ src_configure() {
 		-DFAISS_ENABLE_GPU=$(usex cuda ON OFF)
 		-DFAISS_ENABLE_PYTHON=$(usex python ON OFF)
 		-DBUILD_TESTING=$(usex test ON OFF)
-		-DFAISS_OPT_LEVEL=$(usex cpu_flags_x86_avx2 avx2 generic)
+		-DFAISS_OPT_LEVEL=$(usex cpu_flags_x86_avx512f avx512 $(usex cpu_flags_x86_avx2 avx2 generic))
 	)
 	if use python; then
 		python_foreach_impl run_in_build_dir cmake_src_configure
@@ -89,6 +90,10 @@ src_install() {
 	fi
 }
 
+# FIXME: 59% tests passed, 92 tests failed out of 222
+# Bus error: 1
+# Subprocess aborted: 91
+# However, only 1 test failed out of sandbox
 src_test() {
 	do_test() {
 		cmake_src_test
