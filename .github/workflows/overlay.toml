@@ -63,7 +63,7 @@ prefix = "v"
 
 ["dev-libs/cudnn"]
 source = "regex"
-url = "https://developer.download.nvidia.cn/compute/cudnn/redist/cudnn/linux-x86_64/"
+url = "https://developer.download.nvidia.com/compute/cudnn/redist/cudnn/linux-x86_64/"
 regex = "\\d\\.\\d\\.\\d\\.\\d+"
 
 ["dev-libs/cutlass"]
@@ -97,7 +97,7 @@ to_pattern = '\1.\2.\3'
 
 ["dev-libs/cusparselt"]
 source = "regex"
-url = "https://developer.download.nvidia.cn/compute/cusparselt/redist/libcusparse_lt/linux-x86_64/"
+url = "https://developer.download.nvidia.com/compute/cusparselt/redist/libcusparse_lt/linux-x86_64/"
 regex = "\\d\\.\\d\\.\\d\\.\\d+"
 
 ["dev-python/pystoi"]
@@ -584,3 +584,8 @@ use_latest_release = true
 source = "github"
 github = "amd/aocl-sparse"
 use_latest_release = true
+
+["dev-libs/cudss"]
+source = "regex"
+url = "https://developer.download.nvidia.com/compute/cudss/redist/libcudss/linux-x86_64/"
+regex = "\\d\\.\\d\\.\\d\\.\\d+"
