@@ -22,7 +22,7 @@ IUSE="cuda"
 RESTRICT="test"
 
 RDEPEND="
-	>=sci-libs/pytorch-2.3[${PYTHON_SINGLE_USEDEP}]
+	>=sci-libs/pytorch-2.5[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		dev-python/numpy[${PYTHON_USEDEP}]
 	')
@@ -53,7 +53,7 @@ BDEPEND="
 
 PARENT_PATCHES=(
 	"${FILESDIR}/${P}-version.patch"
-	"${FILESDIR}/${P}-gentoo.patch"
+	"${FILESDIR}/${PN}-0.8.0-gentoo.patch"
 )
 
 src_prepare() {
