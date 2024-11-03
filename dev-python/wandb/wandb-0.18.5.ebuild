@@ -12,7 +12,14 @@ CRATES="
 	anstyle-query@1.1.1
 	anstyle-wincon@3.0.4
 	anstyle@1.0.8
+	anyhow@1.0.89
+	async-stream-impl@0.3.6
+	async-stream@0.3.6
+	async-trait@0.1.83
+	atomic-waker@1.1.2
 	autocfg@1.3.0
+	axum-core@0.4.5
+	axum@0.7.5
 	backtrace@0.3.73
 	base64@0.22.1
 	bitflags@2.6.0
@@ -27,11 +34,20 @@ CRATES="
 	clap_derive@4.5.13
 	clap_lex@0.7.2
 	colorchoice@1.0.2
+	core-foundation-sys@0.8.7
+	core-foundation@0.10.0
 	darling@0.20.10
 	darling_core@0.20.10
 	darling_macro@0.20.10
 	debugid@0.8.0
 	deranged@0.3.11
+	either@1.13.0
+	env_filter@0.1.2
+	env_logger@0.11.5
+	equivalent@1.0.1
+	errno@0.3.9
+	fastrand@2.1.1
+	fixedbitset@0.4.2
 	fnv@1.0.7
 	form_urlencoded@1.2.1
 	futures-channel@0.3.30
@@ -42,6 +58,9 @@ CRATES="
 	futures-util@0.3.30
 	getrandom@0.2.15
 	gimli@0.29.0
+	h2@0.4.6
+	hashbrown@0.12.3
+	hashbrown@0.14.5
 	heck@0.5.0
 	hermit-abi@0.3.9
 	hex@0.4.3
@@ -51,22 +70,31 @@ CRATES="
 	http@1.1.0
 	httparse@1.9.4
 	httpdate@1.0.3
+	humantime@2.1.0
 	hyper-rustls@0.27.2
+	hyper-timeout@0.5.1
 	hyper-util@0.1.7
 	hyper@1.4.1
 	ident_case@1.0.1
 	idna@0.5.0
+	indexmap@1.9.3
+	indexmap@2.5.0
 	ipnet@2.9.0
 	is_terminal_polyfill@1.70.1
+	itertools@0.12.1
 	itoa@1.0.11
 	js-sys@0.3.69
-	libc@0.2.155
+	libc@0.2.159
 	libloading@0.8.5
+	linux-raw-sys@0.4.14
+	lock_api@0.4.12
 	log@0.4.22
+	matchit@0.7.3
 	memchr@2.7.4
 	mime@0.3.17
 	miniz_oxide@0.7.4
 	mio@1.0.2
+	multimap@0.10.0
 	nix@0.29.0
 	num-conv@0.1.0
 	nvml-wrapper-sys@0.8.0
@@ -74,14 +102,22 @@ CRATES="
 	object@0.36.3
 	once_cell@1.19.0
 	os_info@3.8.2
+	parking_lot@0.12.3
+	parking_lot_core@0.9.10
 	percent-encoding@2.3.1
+	petgraph@0.6.5
 	pin-project-internal@1.1.5
 	pin-project-lite@0.2.14
 	pin-project@1.1.5
 	pin-utils@0.1.0
 	powerfmt@0.2.0
 	ppv-lite86@0.2.20
+	prettyplease@0.2.22
 	proc-macro2@1.0.86
+	prost-build@0.13.3
+	prost-derive@0.13.3
+	prost-types@0.13.3
+	prost@0.13.3
 	quinn-proto@0.11.8
 	quinn-udp@0.5.4
 	quinn@0.11.3
@@ -89,6 +125,7 @@ CRATES="
 	rand@0.8.5
 	rand_chacha@0.3.1
 	rand_core@0.6.4
+	redox_syscall@0.5.3
 	regex-automata@0.4.7
 	regex-syntax@0.8.4
 	regex@1.10.6
@@ -97,12 +134,15 @@ CRATES="
 	rustc-demangle@0.1.24
 	rustc-hash@2.0.0
 	rustc_version@0.4.0
+	rustix@0.38.37
 	rustls-pemfile@2.1.3
 	rustls-pki-types@1.8.0
 	rustls-webpki@0.102.6
 	rustls@0.22.4
 	rustls@0.23.12
+	rustversion@1.0.17
 	ryu@1.0.18
+	scopeguard@1.2.0
 	semver@1.0.23
 	sentry-backtrace@0.34.0
 	sentry-contexts@0.34.0
@@ -116,7 +156,6 @@ CRATES="
 	serde_json@1.0.122
 	serde_urlencoded@0.7.1
 	signal-hook-registry@1.4.2
-	signal-hook@0.3.17
 	slab@0.4.9
 	smallvec@1.13.2
 	socket2@0.5.7
@@ -124,8 +163,9 @@ CRATES="
 	static_assertions@1.1.0
 	strsim@0.11.1
 	subtle@2.6.1
-	syn@2.0.72
+	syn@2.0.79
 	sync_wrapper@1.0.1
+	tempfile@3.13.0
 	thiserror-impl@1.0.63
 	thiserror@1.0.63
 	time-core@0.1.2
@@ -133,11 +173,18 @@ CRATES="
 	time@0.3.36
 	tinyvec@1.8.0
 	tinyvec_macros@0.1.1
+	tokio-macros@2.4.0
 	tokio-rustls@0.26.0
-	tokio@1.39.2
+	tokio-stream@0.1.16
+	tokio-util@0.7.12
+	tokio@1.40.0
+	tonic-build@0.12.3
+	tonic-reflection@0.12.3
+	tonic@0.12.3
 	tower-layer@0.3.2
 	tower-service@0.3.2
 	tower@0.4.13
+	tracing-attributes@0.1.27
 	tracing-core@0.1.32
 	tracing-subscriber@0.3.18
 	tracing@0.1.40
@@ -165,6 +212,7 @@ CRATES="
 	windows-core@0.52.0
 	windows-sys@0.48.0
 	windows-sys@0.52.0
+	windows-sys@0.59.0
 	windows-targets@0.48.5
 	windows-targets@0.52.6
 	windows@0.52.0
@@ -213,7 +261,7 @@ RESTRICT="test"
 
 #	sys-devel/binutils[gold]
 BDEPEND="
-	>=dev-lang/go-1.22.5:=
+	>=dev-lang/go-1.23.1:=
 	dev-util/patchelf
 "
 
@@ -233,19 +281,18 @@ RDEPEND="
 "
 
 PATCHES=(
-	"${FILESDIR}/${PN}-0.17.0-hatch.patch"
-	"${FILESDIR}/${PN}-0.17.6-nvidia_gpu_stats.patch"
+	"${FILESDIR}/${P}-hatch.patch"
+	"${FILESDIR}/${P}-go.patch"
 )
 
 DOC=( package_readme.md )
 
 src_unpack() {
 	S="${WORKDIR}/${P}/core" go-module_src_unpack
-	S="${WORKDIR}/${P}/nvidia_gpu_stats" cargo_src_unpack
+	S="${WORKDIR}/${P}/gpu_stats" cargo_src_unpack
 }
 
 src_prepare() {
 	export CGO_LDFLAGS=$(echo "$CGO_LDFLAGS" | sed 's/-Wl,-z,pack-relative-relocs//g')
 	distutils-r1_src_prepare
-	sed -i -e "s/@RUST_ABI@/$(rust_abi)/" "${S}"/nvidia_gpu_stats/hatch.py || die
 }

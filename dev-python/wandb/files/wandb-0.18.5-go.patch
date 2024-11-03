@@ -1,0 +1,12 @@
+diff --git a/core/go.mod b/core/go.mod
+index 08454fb62..ce3363ba3 100644
+--- a/core/go.mod
++++ b/core/go.mod
+@@ -1,6 +1,6 @@
+ module github.com/wandb/wandb/core
+ 
+-go 1.23.2
++go 1.23.1
+ 
+ require (
+ 	github.com/Khan/genqlient v0.7.0
