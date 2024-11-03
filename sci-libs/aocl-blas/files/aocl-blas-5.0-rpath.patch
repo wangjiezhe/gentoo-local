@@ -1,0 +1,16 @@
+diff --git a/common.mk b/common.mk
+index a3e21c626..dd26014ea 100644
+--- a/common.mk
++++ b/common.mk
+@@ -649,9 +649,9 @@ ifeq ($(MK_ENABLE_SHARED),yes)
+         LDFLAGS        += -Wl,-rpath,@executable_path/../../../$(BASE_LIB_PATH)
+       else
+         # rpath for any executables generated in the top level directory
+-        LDFLAGS        += -Wl,-rpath,'$$ORIGIN/$(BASE_LIB_PATH)'
++        # LDFLAGS        += -Wl,-rpath,'$$ORIGIN/$(BASE_LIB_PATH)'
+         # rpath for BLAS tests and test_libblis.x
+-        LDFLAGS        += -Wl,-rpath,'$$ORIGIN/../../../../$(BASE_LIB_PATH)'
++        # LDFLAGS        += -Wl,-rpath,'$$ORIGIN/../../../../$(BASE_LIB_PATH)'
+       endif
+     endif
+   endif

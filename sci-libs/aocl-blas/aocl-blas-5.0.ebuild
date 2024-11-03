@@ -32,8 +32,8 @@ BDEPEND="${PYTHON_DEPS}"
 PATCHES=(
 	"${FILESDIR}"/blis-0.6.0-blas-provider.patch
 	# to prevent QA Notice: pkg-config files with wrong LDFLAGS detected
-	"${FILESDIR}"/blis-0.8.1-pkg-config.patch
-	"${FILESDIR}"/${P}-rpath.patch
+	"${FILESDIR}"/${P}-pkg-config.patch
+	"${FILESDIR}"/${PN}-5.0-rpath.patch
 	"${FILESDIR}"/${PN}-4.1-python.patch
 )
 
