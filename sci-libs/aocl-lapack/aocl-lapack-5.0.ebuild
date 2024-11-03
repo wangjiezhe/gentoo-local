@@ -36,7 +36,7 @@ BDEPEND="
 "
 
 PATCHES=(
-	"${FILESDIR}/${P}-lapack-provider.patch"
+	"${FILESDIR}/${PN}-4.2-lapack-provider.patch"
 )
 
 src_configure() {
