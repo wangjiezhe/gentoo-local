@@ -21,7 +21,7 @@ LICENSE="NVIDIA-TensorRT"
 SLOT="0/${BASE_VER}"
 KEYWORDS="~amd64"
 IUSE="data samples"
-RESTRICT="mirror test"
+RESTRICT="bindist mirror test"
 
 RDEPEND="
 	=dev-util/nvidia-cuda-toolkit-12*
