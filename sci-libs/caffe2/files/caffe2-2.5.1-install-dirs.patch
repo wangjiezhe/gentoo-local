@@ -1,8 +1,8 @@
 diff --git a/c10/CMakeLists.txt b/c10/CMakeLists.txt
-index 82eb9690383..ebf4d261f7e 100644
+index 7dc13b4f0df..0524696ad4f 100644
 --- a/c10/CMakeLists.txt
 +++ b/c10/CMakeLists.txt
-@@ -157,7 +157,7 @@ if(NOT BUILD_LIBTORCHLESS)
+@@ -162,7 +162,7 @@ if(NOT BUILD_LIBTORCHLESS)
    # Note: for now, we will put all export path into one single Caffe2Targets group
    # to deal with the cmake deployment need. Inside the Caffe2Targets set, the
    # individual libraries like libc10.so and libcaffe2.so are still self-contained.
@@ -11,8 +11,15 @@ index 82eb9690383..ebf4d261f7e 100644
  endif()
  
  install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+@@ -172,5 +172,5 @@ install(FILES ${CMAKE_BINARY_DIR}/c10/macros/cmake_macros.h
+         DESTINATION include/c10/macros)
+ 
+ if(MSVC AND C10_BUILD_SHARED_LIBS)
+-  install(FILES $<TARGET_PDB_FILE:c10> DESTINATION lib OPTIONAL)
++  install(FILES $<TARGET_PDB_FILE:c10> DESTINATION ${CMAKE_INSTALL_LIBDIR} OPTIONAL)
+ endif()
 diff --git a/c10/cuda/CMakeLists.txt b/c10/cuda/CMakeLists.txt
-index 3327dab4779..5d2b57643a4 100644
+index 3327dab4779..a09cdde5800 100644
 --- a/c10/cuda/CMakeLists.txt
 +++ b/c10/cuda/CMakeLists.txt
 @@ -82,7 +82,7 @@ if(NOT BUILD_LIBTORCHLESS)
@@ -24,11 +31,18 @@ index 3327dab4779..5d2b57643a4 100644
  
  endif()
  
+@@ -96,5 +96,5 @@ install(FILES ${CMAKE_BINARY_DIR}/c10/cuda/impl/cuda_cmake_macros.h
+   DESTINATION include/c10/cuda/impl)
+ 
+ if(MSVC AND C10_CUDA_BUILD_SHARED_LIBS)
+-  install(FILES $<TARGET_PDB_FILE:c10_cuda> DESTINATION lib OPTIONAL)
++  install(FILES $<TARGET_PDB_FILE:c10_cuda> DESTINATION ${CMAKE_INSTALL_LIBDIR} OPTIONAL)
+ endif()
 diff --git a/c10/hip/CMakeLists.txt b/c10/hip/CMakeLists.txt
-index a6442e01d2e..027eadac28a 100644
+index f153030e793..004fd9ba8f8 100644
 --- a/c10/hip/CMakeLists.txt
 +++ b/c10/hip/CMakeLists.txt
-@@ -57,7 +57,7 @@ if(NOT BUILD_LIBTORCHLESS)
+@@ -55,7 +55,7 @@ if(NOT BUILD_LIBTORCHLESS)
        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../..>
        $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>
        $<INSTALL_INTERFACE:include>)
@@ -38,17 +52,24 @@ index a6442e01d2e..027eadac28a 100644
  endif()
  
 diff --git a/c10/xpu/CMakeLists.txt b/c10/xpu/CMakeLists.txt
-index b5c63d4f7cc..3a054e8c873 100644
+index 01f77d61713..ebd58fdfc1b 100644
 --- a/c10/xpu/CMakeLists.txt
 +++ b/c10/xpu/CMakeLists.txt
-@@ -45,7 +45,7 @@ target_include_directories(
-     $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>
-     $<INSTALL_INTERFACE:include>
-     )
+@@ -45,7 +45,7 @@ if(NOT BUILD_LIBTORCHLESS)
+       $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>
+       $<INSTALL_INTERFACE:include>
+       )
 -  install(TARGETS c10_xpu EXPORT Caffe2Targets DESTINATION lib)
 +  install(TARGETS c10_xpu EXPORT Caffe2Targets DESTINATION ${CMAKE_INSTALL_LIBDIR})
    set(C10_XPU_LIB c10_xpu)
    add_subdirectory(test)
+ endif()
+@@ -60,5 +60,5 @@ install(FILES ${CMAKE_BINARY_DIR}/c10/xpu/impl/xpu_cmake_macros.h
+   DESTINATION include/c10/xpu/impl)
+ 
+ if(MSVC AND C10_XPU_BUILD_SHARED_LIBS)
+-  install(FILES $<TARGET_PDB_FILE:c10_xpu> DESTINATION lib OPTIONAL)
++  install(FILES $<TARGET_PDB_FILE:c10_xpu> DESTINATION ${CMAKE_INSTALL_LIBDIR} OPTIONAL)
  endif()
 diff --git a/cmake/External/EigenBLAS.cmake b/cmake/External/EigenBLAS.cmake
 index 133712c4c18..0420da62840 100644
@@ -63,10 +84,10 @@ index 133712c4c18..0420da62840 100644
 +        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 diff --git a/test/cpp/c10d/CMakeLists.txt b/test/cpp/c10d/CMakeLists.txt
-index 5c8974836de..5f2a13492ad 100644
+index 0874852517e..597e1d5c4f0 100644
 --- a/test/cpp/c10d/CMakeLists.txt
 +++ b/test/cpp/c10d/CMakeLists.txt
-@@ -51,7 +51,7 @@ if(USE_CUDA)
+@@ -52,7 +52,7 @@ if(USE_CUDA)
      if(INSTALL_TEST)
        install(TARGETS ProcessGroupNCCLTest DESTINATION bin)
        install(TARGETS ProcessGroupNCCLErrorsTest DESTINATION bin)
@@ -75,7 +96,7 @@ index 5c8974836de..5f2a13492ad 100644
      endif()
    endif()
    if(USE_UCC AND USE_C10D_UCC)
-@@ -64,7 +64,7 @@ if(USE_CUDA)
+@@ -65,7 +65,7 @@ if(USE_CUDA)
        torch_cpu c10d_cuda_test gtest_main __caffe2_ucc)
      if(INSTALL_TEST)
        install(TARGETS ProcessGroupUCCTest DESTINATION bin)
@@ -101,3 +122,14 @@ index f0510d9c81f..ee6b5a1c159 100644
  endif()
  
  # Build the cpp gtest binary containing the cpp-only tests.
+diff --git a/test/inductor/CMakeLists.txt b/test/inductor/CMakeLists.txt
+index c27e8c77294..29c2c25c080 100644
+--- a/test/inductor/CMakeLists.txt
++++ b/test/inductor/CMakeLists.txt
+@@ -4,5 +4,5 @@ add_library(aoti_custom_ops SHARED custom_ops.cpp)
+ target_link_libraries(aoti_custom_ops torch)
+ 
+ if(INSTALL_TEST)
+-  install(TARGETS aoti_custom_ops DESTINATION lib)
++  install(TARGETS aoti_custom_ops DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ endif()

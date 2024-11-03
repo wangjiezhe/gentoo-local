@@ -1,0 +1,34 @@
+diff --git a/cmake/public/cuda.cmake b/cmake/public/cuda.cmake
+index afc1bc12abf..9bf18cbdef9 100644
+--- a/cmake/public/cuda.cmake
++++ b/cmake/public/cuda.cmake
+@@ -127,15 +127,18 @@ endif()
+ 
+ # ---[ CUDA libraries wrapper
+ 
+-# find lbnvrtc.so
++# find libnvrtc.so
+ set(CUDA_NVRTC_LIB "${CUDA_nvrtc_LIBRARY}" CACHE FILEPATH "")
+ if(CUDA_NVRTC_LIB AND NOT CUDA_NVRTC_SHORTHASH)
+   find_package(Python COMPONENTS Interpreter)
++  message(STATUS "CUDA_NVRTC_LIB is ${CUDA_NVRTC_LIB}")
+   execute_process(
+-    COMMAND Python::Interpreter -c
++    COMMAND "${Python_EXECUTABLE}" -c
+     "import hashlib;hash=hashlib.sha256();hash.update(open('${CUDA_NVRTC_LIB}','rb').read());print(hash.hexdigest()[:8])"
+     RESULT_VARIABLE _retval
+     OUTPUT_VARIABLE CUDA_NVRTC_SHORTHASH)
++  message(STATUS "_retval is ${_retval}")
++  message(STATUS "CUDA_NVRTC_SHORTHASH is ${CUDA_NVRTC_SHORTHASH}")
+   if(NOT _retval EQUAL 0)
+     message(WARNING "Failed to compute shorthash for libnvrtc.so")
+     set(CUDA_NVRTC_SHORTHASH "XXXXXXXX")
+@@ -170,7 +173,7 @@ else()
+ endif()
+ 
+ # nvToolsExt
+-find_path(nvtx3_dir NAMES nvtx3 PATHS "${PROJECT_SOURCE_DIR}/third_party/NVTX/c/include" NO_DEFAULT_PATH)
++find_path(nvtx3_dir NAMES nvtx3 PATHS "/opt/cuda/include" NO_DEFAULT_PATH)
+ find_package_handle_standard_args(nvtx3 DEFAULT_MSG nvtx3_dir)
+ if(nvtx3_FOUND)
+   add_library(torch::nvtx3 INTERFACE IMPORTED)

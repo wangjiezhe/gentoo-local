@@ -39,7 +39,7 @@ RDEPEND="
 	dev-cpp/abseil-cpp:=
 	dev-cpp/gflags:=
 	>=dev-cpp/glog-0.5.0
-	dev-libs/cpuinfo
+	>=dev-libs/cpuinfo-2024.03.28
 	dev-libs/libfmt
 	dev-cpp/opentelemetry-cpp
 	dev-libs/protobuf:=
@@ -57,6 +57,7 @@ RDEPEND="
 		dev-libs/nccl
 		!=dev-libs/nccl-2.19.4*
 		dev-libs/cusparselt
+		dev-libs/cudss
 	)
 	fbgemm? ( >=dev-libs/FBGEMM-2023.12.01 )
 	gloo? ( sci-libs/gloo[cuda?] )
@@ -95,7 +96,6 @@ RDEPEND="
 	)
 	distributed? (
 		sci-libs/tensorpipe[cuda?]
-		>=dev-cpp/cpp-httplib-0.16.0
 	)
 	xnnpack? ( >=sci-libs/XNNPACK-2024.02.29 )
 	mkl? ( sci-libs/mkl )
@@ -105,8 +105,13 @@ RDEPEND="
 
 DEPEND="
 	${RDEPEND}
-	cuda? ( >=dev-libs/cutlass-3.5.1 )
+	cuda? (
+		>=dev-libs/cutlass-3.4.1
+		<dev-libs/cutlass-3.5.0
+	)
 	onednn? ( sci-libs/ideep )
+	>=dev-cpp/cpp-httplib-0.16.0
+	dev-cpp/nlohmann_json
 	dev-libs/psimd
 	dev-libs/FP16
 	dev-libs/FXdiv
@@ -125,8 +130,8 @@ BDEPEND="
 "
 
 PATCHES=(
-	"${FILESDIR}"/${PN}-2.4.0-r1-gentoo.patch
-	"${FILESDIR}"/${PN}-2.4.0-install-dirs.patch
+	"${FILESDIR}"/${P}-gentoo.patch
+	"${FILESDIR}"/${P}-install-dirs.patch
 	"${FILESDIR}"/${PN}-1.12.0-glog-0.6.0.patch
 	"${FILESDIR}"/${PN}-1.13.1-tensorpipe.patch
 	"${FILESDIR}"/${PN}-2.3.0-cudnn_include_fix.patch
@@ -134,15 +139,14 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.4.0-fix-openmp-link.patch
 	"${FILESDIR}"/${PN}-2.4.0-rocm-fix-std-cpp17.patch
 	"${FILESDIR}"/${PN}-2.2.2-musl.patch
-	"${FILESDIR}"/${PN}-2.4.0-exclude-aotriton.patch
-	"${FILESDIR}"/${PN}-2.3.0-fix-rocm-gcc14-clamp.patch
 	"${FILESDIR}"/${PN}-2.3.0-fix-libcpp.patch
 	"${FILESDIR}"/${PN}-2.0.1-functorch.patch
 	"${FILESDIR}"/${PN}-2.4.0-missing-binaries.patch
 	"${FILESDIR}"/${PN}-2.4.0-qnnpack.patch
 	"${FILESDIR}"/${PN}-2.4.0-blis.patch
-	"${FILESDIR}"/${PN}-2.4.0-cutlass-3.5.0.patch
-	"${FILESDIR}"/${PN}-2.4.1-cutlass-3.5.1.patch
+	# "${FILESDIR}"/${PN}-2.4.0-cutlass-3.5.0.patch
+	# "${FILESDIR}"/${PN}-2.4.1-cutlass-3.5.1.patch
+	"${FILESDIR}"/${P}-cuda.patch
 )
 
 src_prepare() {
@@ -261,6 +265,8 @@ src_configure() {
 			-DTORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST:-3.5 7.0}"
 			-DUSE_NCCL=ON
 			-DCMAKE_CUDA_FLAGS="$(cuda_gccdir -f | tr -d \")"
+			-DUSE_NVRTC=ON
+			-DUSE_CUDSS=ON
 		)
 	elif use rocm; then
 		export PYTORCH_ROCM_ARCH="$(get_amdgpu_flags)"
