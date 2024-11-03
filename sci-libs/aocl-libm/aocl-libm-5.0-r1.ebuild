@@ -18,7 +18,7 @@ IUSE="examples static-libs test"
 RESTRICT="!test? ( test )"
 
 DEPEND="
-	sci-libs/aocl-utils[static-libs]
+	>=sci-libs/aocl-utils-${PV}[static-libs]
 "
 BDEPEND="
 	test? (
@@ -30,8 +30,8 @@ BDEPEND="
 DOCS=( README.md docs/ReleaseNotes_AMDLibM.txt )
 
 PATCHES=(
-	"${FILESDIR}"/${P}-harden.patch
-	"${FILESDIR}"/${P}-test.patch
+	"${FILESDIR}"/${PN}-4.2-harden.patch
+	"${FILESDIR}"/${PN}-4.2-test.patch
 )
 
 src_prepare() {
