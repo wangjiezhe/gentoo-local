@@ -26,7 +26,3 @@ RDEPEND="
 		dev-python/tqdm[${PYTHON_USEDEP}]
 	')
 "
-
-PATCHES=(
-	"${FILESDIR}"/${P}-0001-Revert-Replace-oudated-imports-with-fbgemm_gpu.tbe.s.patch
-)
