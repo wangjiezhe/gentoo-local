@@ -3,7 +3,7 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{10..11} )
+PYTHON_COMPAT=( python3_{10..12} )
 PYTHON_REQ_USE="threads(+)"
 
 inherit bash-completion-r1 flag-o-matic pax-utils python-any-r1 toolchain-funcs xdg-utils
@@ -118,6 +118,9 @@ src_prepare() {
 	fi
 
 	default
+
+	cd deps/v8
+	eapply "${FILESDIR}"/${P}-72a6e59.patch
 }
 
 src_configure() {
@@ -148,8 +151,8 @@ src_configure() {
 
 	use mips && myconf+=(
 		--with-mips-arch-variant=loongson
-		# --with-mips-fpu-mode=fp64
-		# --with-mips-float-abi=hard
+		--with-mips-fpu-mode=fp64
+		--with-mips-float-abi=hard
 	)
 
 	local myarch=""
