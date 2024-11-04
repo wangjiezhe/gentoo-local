@@ -3,4 +3,4 @@
 >=dev-python/cuda-python-12.4.0
 
 # WIP
-=sci-libs/tensorflow-2.18.0_rc*
+=sci-libs/tensorflow-2.18*

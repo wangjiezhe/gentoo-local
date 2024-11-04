@@ -1,0 +1,35 @@
+From b15905021e9bf0de1bb307239fc25d7698d4a54e Mon Sep 17 00:00:00 2001
+From: wangjiezhe <wangjiezhe@gmail.com>
+Date: Fri, 12 Jul 2024 16:21:15 +0800
+Subject: [PATCH 16/17] build: hardcode wheel name
+
+---
+ tensorflow/tools/pip_package/utils/tf_wheel.bzl | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/tensorflow/tools/pip_package/utils/tf_wheel.bzl b/tensorflow/tools/pip_package/utils/tf_wheel.bzl
+index 6053579a007..ca4847ffaf6 100644
+--- a/tensorflow/tools/pip_package/utils/tf_wheel.bzl
++++ b/tensorflow/tools/pip_package/utils/tf_wheel.bzl
+@@ -24,7 +24,6 @@ Should be set via --repo_env=WHEEL_NAME=tensorflow_cpu.
+ """
+ 
+ load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
+-load("@python_version_repo//:py_version.bzl", "WHEEL_COLLAB", "WHEEL_NAME")
+ load("//tensorflow:tensorflow.bzl", "VERSION")
+ 
+ def _tf_wheel_impl(ctx):
+@@ -39,8 +38,8 @@ def _tf_wheel_impl(ctx):
+ 
+     output = ctx.actions.declare_directory("wheel_house")
+     args = ctx.actions.args()
+-    args.add("--project-name", WHEEL_NAME)
+-    args.add("--collab", str(WHEEL_COLLAB))
++    args.add("--project-name", "tensorflow")
++    args.add("--collab", "False")
+     args.add("--output-name", output.path)
+     args.add("--version", VERSION)
+ 
+-- 
+2.45.2
+

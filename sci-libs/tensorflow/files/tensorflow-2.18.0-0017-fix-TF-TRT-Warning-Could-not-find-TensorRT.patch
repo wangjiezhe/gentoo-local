@@ -1,0 +1,37 @@
+From a7d278a7540ec7d5099943f61a94fd9ae20d8362 Mon Sep 17 00:00:00 2001
+From: wangjiezhe <wangjiezhe@gmail.com>
+Date: Sat, 3 Aug 2024 14:03:20 +0800
+Subject: [PATCH 17/17] fix `TF-TRT Warning: Could not find TensorRT`
+
+when LD_LIBRARY_PATH is not net
+---
+ .../third_party/tsl/tsl/platform/default/dso_loader.cc    | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/third_party/xla/third_party/tsl/tsl/platform/default/dso_loader.cc b/third_party/xla/third_party/tsl/tsl/platform/default/dso_loader.cc
+index 8c59f439ccc..aa2949f26f0 100644
+--- a/third_party/xla/third_party/tsl/tsl/platform/default/dso_loader.cc
++++ b/third_party/xla/third_party/tsl/tsl/platform/default/dso_loader.cc
+@@ -142,19 +142,11 @@ absl::StatusOr<void*> GetNcclDsoHandle() {
+ }
+ 
+ absl::StatusOr<void*> GetNvInferDsoHandle() {
+-#if defined(PLATFORM_WINDOWS)
+   return GetDsoHandle("nvinfer", "");
+-#else
+-  return GetDsoHandle("nvinfer", GetTensorRTVersion());
+-#endif
+ }
+ 
+ absl::StatusOr<void*> GetNvInferPluginDsoHandle() {
+-#if defined(PLATFORM_WINDOWS)
+   return GetDsoHandle("nvinfer_plugin", "");
+-#else
+-  return GetDsoHandle("nvinfer_plugin", GetTensorRTVersion());
+-#endif
+ }
+ 
+ absl::StatusOr<void*> GetRocblasDsoHandle() {
+-- 
+2.45.2
+
