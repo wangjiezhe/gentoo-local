@@ -27,6 +27,10 @@ RDEPEND="
 	${DEPEND}
 	app-admin/entr
 	app-shells/fzf
+	|| (
+		dev-lang/rust[rustfmt(+)]
+		dev-lang/rust-bin[rustfmt(+)]
+	)
 	dev-python/black
 	dev-util/git-delta
 	dev-vcs/git
@@ -34,7 +38,6 @@ RDEPEND="
 	sys-apps/ripgrep
 	sys-devel/clang[extra(+)]
 	sys-libs/ncurses
-	virtual/rust[rustfmt(+)]
 "
 
 src_unpack() {
