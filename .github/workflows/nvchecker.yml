@@ -32,7 +32,6 @@ jobs:
         egencache --jobs=$(nproc) --update --repo "$repo_name" &> /dev/null
         eix-update
         echo "::endgroup::"
-
         # eix
         echo "::group::eix search packages"
         pkgs=$(ACCEPT_LICENSE="*" ACCEPT_KEYWORDS="~amd64" EIX_LIMIT=0 NAMEVERSION="<category>/<name>-<version>\n" eix --pure-packages --in-overlay "$repo_name" --format '<bestversion:NAMEVERSION>')
@@ -68,12 +67,13 @@ jobs:
 
         cat new_ver.json
         echo "nvcmp=$(nvcmp --file overlay.toml --json --newer)" >> $GITHUB_OUTPUT
+
         echo "::endgroup::"
 
     - name: setup node
       uses: actions/setup-node@v4
       with:
-        node-version: 20
+        node-version: latest
 
     - name: install github-script depends
       run: |
