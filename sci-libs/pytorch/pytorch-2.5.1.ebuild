@@ -29,7 +29,7 @@ RDEPEND="
 	$(python_gen_cond_dep '
 		dev-python/filelock[${PYTHON_USEDEP}]
 		dev-python/fsspec[${PYTHON_USEDEP}]
-		dev-python/jinja[${PYTHON_USEDEP}]
+		dev-python/jinja2[${PYTHON_USEDEP}]
 		dev-python/networkx[${PYTHON_USEDEP}]
 		dev-python/opt-einsum[${PYTHON_USEDEP}]
 		dev-python/sympy[${PYTHON_USEDEP}]
