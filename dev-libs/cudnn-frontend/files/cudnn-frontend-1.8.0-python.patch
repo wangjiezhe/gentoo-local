@@ -1,0 +1,15 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index 9015e1e..062c4b0 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -14,8 +14,8 @@ classifiers = [
+ ]
+ 
+ [tool.setuptools]
+-packages = ["cudnn", "include"]
+-package-dir = {"" = "python", "include" = "include"}
++packages = ["cudnn"]
++package-dir = {"" = "python"}
+ include-package-data = true
+ 
+ [project.urls]
