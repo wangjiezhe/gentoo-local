@@ -20,7 +20,7 @@ S="${WORKDIR}"/${MYP}
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="blis cuda distributed fbgemm flash gloo magma mkl mpi nnpack +numpy onednn openblas opencl openmp qnnpack rocm xnnpack"
+IUSE="blis cuda distributed fbgemm flash gloo magma mkl mpi numa nnpack +numpy onednn openblas opencl openmp qnnpack rocm xnnpack"
 RESTRICT="test"
 REQUIRED_USE="
 	${PYTHON_REQUIRED_USE}
@@ -39,9 +39,9 @@ RDEPEND="
 	dev-cpp/abseil-cpp:=
 	dev-cpp/gflags:=
 	>=dev-cpp/glog-0.5.0
+	dev-cpp/opentelemetry-cpp
 	>=dev-libs/cpuinfo-2024.03.28
 	dev-libs/libfmt
-	dev-cpp/opentelemetry-cpp
 	dev-libs/protobuf:=
 	dev-libs/pthreadpool
 	dev-libs/sleef[cpu_flags_x86_avx512f(+),cpu_flags_x86_avx(+)]
@@ -101,6 +101,7 @@ RDEPEND="
 	mkl? ( sci-libs/mkl )
 	openblas? ( sci-libs/openblas )
 	blis? ( || ( sci-libs/blis sci-libs/aocl-blas ) )
+	numa? ( sys-process/numactl )
 "
 
 DEPEND="
@@ -209,6 +210,10 @@ src_configure() {
 	local mycmakeargs=(
 		-DBUILD_BINARY=OFF
 		-DBUILD_CUSTOM_PROTOBUF=OFF
+		-DLIBSHM_INSTALL_LIB_SUBDIR="${EPREFIX}"/usr/$(get_libdir)
+		-DONNX_PROTO_LIBRARY="${EPREFIX}"/usr/$(get_libdir)/libonnx_proto.so
+		-DPython_EXECUTABLE="${PYTHON}"
+		-DTORCH_INSTALL_LIB_DIR="${EPREFIX}"/usr/$(get_libdir)
 		-DUSE_LITE_PROTO=ON
 		-DBUILD_SHARED_LIBS=ON
 		-DUSE_SYSTEM_LIBS=ON
@@ -216,33 +221,33 @@ src_configure() {
 		-DUSE_CCACHE=OFF
 		-DUSE_CUDA=$(usex cuda)
 		-DUSE_DISTRIBUTED=$(usex distributed)
-		-DUSE_MPI=$(usex mpi)
 		-DUSE_FAKELOWP=OFF
 		-DUSE_FBGEMM=$(usex fbgemm)
 		-DUSE_FLASH_ATTENTION=$(usex flash)
 		-DUSE_GFLAGS=ON
 		-DUSE_GLOG=ON
 		-DUSE_GLOO=$(usex gloo)
+		-DUSE_ITT=OFF
 		-DUSE_KINETO=OFF # TODO
 		-DUSE_MAGMA=$(usex magma)
 		-DMAGMA_V2=$(usex magma)
+		-DUSE_MEM_EFF_ATTENTION=OFF
 		-DUSE_MKLDNN=$(usex onednn)
+		-DUSE_MPI=$(usex mpi)
 		-DUSE_NNPACK=$(usex nnpack)
-		-DUSE_XNNPACK=$(usex xnnpack)
-		-DUSE_TENSORPIPE=$(usex distributed)
-		-DUSE_PYTORCH_QNNPACK=$(usex qnnpack)
+		-DUSE_NUMA=$(usex numa)
 		-DUSE_NUMPY=$(usex numpy)
 		-DUSE_OPENCL=$(usex opencl)
 		-DUSE_OPENMP=$(usex openmp)
+		-DUSE_PYTORCH_QNNPACK=$(usex qnnpack)
+		-DUSE_PYTORCH_METAL=OFF
 		-DUSE_ROCM=$(usex rocm)
+		-DUSE_TENSORPIPE=$(usex distributed)
 		-DUSE_UCC=OFF
 		-DUSE_VALGRIND=OFF
-		-DUSE_ITT=OFF
-		-DONNX_PROTO_LIBRARY="${EPREFIX}"/usr/$(get_libdir)/libonnx_proto.so
-
+		-DUSE_XNNPACK=$(usex xnnpack)
+		-DUSE_XPU=OFF
 		-Wno-dev
-		-DTORCH_INSTALL_LIB_DIR="${EPREFIX}"/usr/$(get_libdir)
-		-DLIBSHM_INSTALL_LIB_SUBDIR="${EPREFIX}"/usr/$(get_libdir)
 	)
 
 	if use mkl; then
@@ -286,7 +291,6 @@ src_configure() {
 
 	if use onednn; then
 		mycmakeargs+=(
-			-DUSE_MKLDNN=ON
 			-DMKLDNN_FOUND=ON
 			-DMKLDNN_LIBRARIES=dnnl
 			-DMKLDNN_INCLUDE_DIR="${ESYSROOT}/usr/include/oneapi/dnnl"
@@ -297,6 +301,12 @@ src_configure() {
 
 	# do not rerun cmake and the build process in src_install
 	sed '/RERUN/,+1d' -i "${BUILD_DIR}"/build.ninja || die
+}
+
+src_compile() {
+	PYTORCH_BUILD_VERSION=${PV} \
+	PYTORCH_BUILD_NUMBER=0 \
+	cmake_src_compile
 }
 
 src_install() {
