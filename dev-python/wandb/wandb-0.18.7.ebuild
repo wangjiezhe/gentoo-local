@@ -242,7 +242,7 @@ CRATES="
 PYTHON_COMPAT=( python3_{11..12} )
 DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_USE_PEP517=hatchling
-inherit cargo distutils-r1 go-module rust-toolchain
+inherit cargo distutils-r1 go-module
 
 DESCRIPTION="A tool for visualizing and tracking your machine learning experiments"
 HOMEPAGE="https://github.com/wandb/wandb https://wandb.ai/"
@@ -281,8 +281,8 @@ RDEPEND="
 "
 
 PATCHES=(
-	"${FILESDIR}/${P}-hatch.patch"
-	"${FILESDIR}/${P}-go.patch"
+	"${FILESDIR}/${PN}-0.18.5-hatch.patch"
+	"${FILESDIR}/${PN}-0.18.5-go.patch"
 )
 
 DOC=( package_readme.md )
