@@ -27,7 +27,7 @@ RDEPEND="
 	dev-python/numpy[${PYTHON_USEDEP}]
 	dev-python/pandas[${PYTHON_USEDEP}]
 	dev-python/pillow[${PYTHON_USEDEP}]
-	>=dev-python/protobuf-python-3.13.0[${PYTHON_USEDEP}]
+	>=dev-python/protobuf-3.13.0[${PYTHON_USEDEP}]
 	dev-python/six[${PYTHON_USEDEP}]
 	>=sci-libs/keras-applications-1.0.8[${PYTHON_USEDEP}]
 	>=sci-libs/keras-preprocessing-1.1.2[${PYTHON_USEDEP}]

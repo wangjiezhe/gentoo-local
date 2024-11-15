@@ -138,7 +138,7 @@ RDEPEND="
 		<dev-python/numpy-2[${PYTHON_USEDEP}]
 		>=dev-python/google-pasta-0.1.8[${PYTHON_USEDEP}]
 		>=dev-python/opt-einsum-3.3.0[${PYTHON_USEDEP}]
-		>=dev-python/protobuf-python-3.13.0[${PYTHON_USEDEP}]
+		>=dev-python/protobuf-3.13.0[${PYTHON_USEDEP}]
 		dev-python/pybind11[${PYTHON_USEDEP}]
 		dev-python/six[${PYTHON_USEDEP}]
 		dev-python/tblib[${PYTHON_USEDEP}]

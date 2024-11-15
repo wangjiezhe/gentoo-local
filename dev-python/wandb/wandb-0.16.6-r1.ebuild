@@ -27,7 +27,7 @@ RDEPEND="
 		dev-python/psutil[${PYTHON_USEDEP}]
 		dev-python/sentry-sdk[${PYTHON_USEDEP}]
 		dev-python/docker-pycreds[${PYTHON_USEDEP}]
-		dev-python/protobuf-python[${PYTHON_USEDEP}]
+		dev-python/protobuf[${PYTHON_USEDEP}]
 		dev-python/pyyaml[${PYTHON_USEDEP}]
 		dev-python/setproctitle[${PYTHON_USEDEP}]
 		dev-python/appdirs[${PYTHON_USEDEP}]

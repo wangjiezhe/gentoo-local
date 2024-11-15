@@ -23,7 +23,7 @@ REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 RDEPEND="
 	python? (
 		${PYTHON_DEPS}
-		dev-python/protobuf-python[${PYTHON_USEDEP}]
+		dev-python/protobuf[${PYTHON_USEDEP}]
 		dev-python/pybind11[${PYTHON_USEDEP}]
 	)
 	>=dev-libs/protobuf-4.22.0:=
