@@ -1,17 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 134523e..5c4fdc3 100644
+index 0243f686..7f128d0b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -235,7 +235,7 @@ message(WARNING "CMAKE_CXX_FLAGS_DEBUG is ${CMAKE_CXX_FLAGS_DEBUG}")
+@@ -247,7 +247,7 @@ message(WARNING "CMAKE_CXX_FLAGS_DEBUG is ${CMAKE_CXX_FLAGS_DEBUG}")
  message(WARNING "CMAKE_CXX_FLAGS_RELEASE is ${CMAKE_CXX_FLAGS_RELEASE}")
  message(WARNING "==========")
  
 -if(NOT TARGET asmjit)
 +if(FALSE)
-   #Download asmjit from github if ASMJIT_SRC_DIR is not specified.
+   # Download asmjit from github if ASMJIT_SRC_DIR is not specified.
    if(NOT DEFINED ASMJIT_SRC_DIR)
-     set(ASMJIT_SRC_DIR "${FBGEMM_SOURCE_DIR}/third_party/asmjit"
-@@ -264,7 +264,7 @@ if(NOT TARGET asmjit)
+     set(ASMJIT_SRC_DIR "${FBGEMM_SOURCE_DIR}/external/asmjit"
+@@ -280,7 +280,7 @@ if(NOT TARGET asmjit)
    endif()
  endif()
  
@@ -19,8 +19,8 @@ index 134523e..5c4fdc3 100644
 +if(FALSE)
    #Download cpuinfo from github if CPUINFO_SOURCE_DIR is not specified.
    if(NOT DEFINED CPUINFO_SOURCE_DIR)
-     set(CPUINFO_SOURCE_DIR "${FBGEMM_SOURCE_DIR}/third_party/cpuinfo"
-@@ -340,9 +340,6 @@ target_include_directories(fbgemm BEFORE
+     set(CPUINFO_SOURCE_DIR "${FBGEMM_SOURCE_DIR}/external/cpuinfo"
+@@ -367,9 +367,6 @@ target_include_directories(fbgemm BEFORE
  target_link_libraries(fbgemm
    $<BUILD_INTERFACE:asmjit>
    $<BUILD_INTERFACE:cpuinfo>)
@@ -30,7 +30,7 @@ index 134523e..5c4fdc3 100644
  
  if(OpenMP_FOUND)
    target_link_libraries(fbgemm OpenMP::OpenMP_CXX)
-@@ -358,6 +355,8 @@ install(
+@@ -385,6 +382,8 @@ install(
  install(
    FILES ${FBGEMM_PUBLIC_HEADERS}
    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/fbgemm")
@@ -40,7 +40,7 @@ index 134523e..5c4fdc3 100644
  install(
    EXPORT fbgemmLibraryConfig
 diff --git a/src/PackMatrix.cc b/src/PackMatrix.cc
-index 8086ddd..59f5b14 100644
+index 8086ddda..59f5b148 100644
 --- a/src/PackMatrix.cc
 +++ b/src/PackMatrix.cc
 @@ -32,6 +32,7 @@ PackMatrix<PT, inpType, accType>::PackMatrix(
@@ -52,10 +52,10 @@ index 8086ddd..59f5b14 100644
      int rows,
      int cols,
 diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
-index 2cffddf..e2ca63b 100644
+index da0be7fe..f2f94f9e 100644
 --- a/test/CMakeLists.txt
 +++ b/test/CMakeLists.txt
-@@ -14,7 +14,7 @@ set(CMAKE_C_STANDARD 11)
+@@ -14,7 +14,7 @@ set(CMAKE_C_STANDARD 17)
  set(CMAKE_C_EXTENSIONS OFF)
  set(CMAKE_C_STANDARD_REQUIRED ON)
  

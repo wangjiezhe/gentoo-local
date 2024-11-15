@@ -1,25 +1,29 @@
-# Copyright 2022-2023 Gentoo Authors
+# Copyright 2022-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{9..11} )
+PYTHON_COMPAT=( python3_{10..12} )
 inherit python-any-r1 flag-o-matic cmake
 
-CommitId=824ef10481be8e871f66e4fdf34f7b27e735b968
+CommitId=73a64e75ff31be7ece6f68929ee5682b0bf9eb10
 
 DESCRIPTION="Facebook GEneral Matrix Multiplication"
 HOMEPAGE="https://github.com/pytorch/FBGEMM"
 SRC_URI="https://github.com/pytorch/${PN}/archive/${CommitId}.tar.gz
 	-> ${P}.tar.gz"
 
+S="${WORKDIR}"/${PN}-${CommitId}
+
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64"
 IUSE="doc test"
 
+## Rebuilding is needed if abi version of asmjit is changed.
+## See https://github.com/asmjit/asmjit/blob/master/src/asmjit/core/api-config.h#L30
 DEPEND="
-	>=dev-libs/asmjit-2022.07.02
+	>=dev-libs/asmjit-2022.07.02:=
 	dev-libs/cpuinfo
 "
 RDEPEND="${DEPEND}"
@@ -35,8 +39,6 @@ BDEPEND="
 	${PYTHON_DEPS}
 "
 RESTRICT="!test? ( test )"
-
-S="${WORKDIR}"/${PN}-${CommitId}
 
 python_check_deps() {
 	if use doc; then
