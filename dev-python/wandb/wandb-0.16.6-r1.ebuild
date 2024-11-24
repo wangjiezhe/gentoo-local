@@ -22,7 +22,7 @@ RESTRICT="test"
 RDEPEND="
 	$(python_gen_cond_dep '
 		dev-python/click[${PYTHON_USEDEP}]
-		dev-python/GitPython[${PYTHON_USEDEP}]
+		dev-python/gitpython[${PYTHON_USEDEP}]
 		dev-python/requests[${PYTHON_USEDEP}]
 		dev-python/psutil[${PYTHON_USEDEP}]
 		dev-python/sentry-sdk[${PYTHON_USEDEP}]
