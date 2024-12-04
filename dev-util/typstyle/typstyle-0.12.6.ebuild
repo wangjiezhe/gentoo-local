@@ -13,12 +13,13 @@ CRATES="
 	aho-corasick@1.1.3
 	android-tzdata@0.1.1
 	android_system_properties@0.1.5
-	anstream@0.6.15
-	anstyle-parse@0.2.5
-	anstyle-query@1.1.1
-	anstyle-wincon@3.0.4
-	anstyle@1.0.8
-	anyhow@1.0.90
+	anes@0.1.6
+	anstream@0.6.17
+	anstyle-parse@0.2.6
+	anstyle-query@1.1.2
+	anstyle-wincon@3.0.6
+	anstyle@1.0.10
+	anyhow@1.0.92
 	approx@0.5.1
 	archery@1.2.1
 	arrayref@0.3.9
@@ -43,12 +44,14 @@ CRATES="
 	bytemuck@1.19.0
 	byteorder-lite@0.1.0
 	byteorder@1.5.0
-	bytes@1.7.2
+	bytes@1.8.0
 	camino@1.1.9
 	cargo-platform@0.1.8
 	cargo_metadata@0.18.1
-	cc@1.1.30
+	cast@0.3.0
+	cc@1.1.34
 	cfg-if@1.0.0
+	cfg_aliases@0.2.1
 	chinese-number@0.7.7
 	chinese-variant@1.1.3
 	chrono@0.4.38
@@ -58,13 +61,13 @@ CRATES="
 	citationberg@0.4.0
 	clap@4.5.20
 	clap_builder@4.5.20
-	clap_complete@4.5.33
+	clap_complete@4.5.36
 	clap_derive@4.5.18
 	clap_lex@0.7.2
 	cobs@0.2.3
 	codespan-reporting@0.11.1
 	color_quant@1.1.0
-	colorchoice@1.0.2
+	colorchoice@1.0.3
 	comemo-macros@0.4.0
 	comemo@0.4.0
 	console@0.15.8
@@ -73,6 +76,8 @@ CRATES="
 	core_maths@0.1.0
 	cpufeatures@0.2.14
 	crc32fast@1.4.2
+	criterion-plot@0.5.0
+	criterion@0.5.1
 	crossbeam-channel@0.5.13
 	crossbeam-deque@0.8.5
 	crossbeam-epoch@0.9.18
@@ -94,7 +99,7 @@ CRATES="
 	dirs@5.0.1
 	displaydoc@0.2.5
 	downcast-rs@1.2.1
-	ecow@0.2.2
+	ecow@0.2.3
 	either@1.13.0
 	embedded-io@0.4.0
 	embedded-io@0.6.1
@@ -107,13 +112,12 @@ CRATES="
 	fancy-regex@0.11.0
 	fast-srgb8@1.0.0
 	fastrand@2.1.1
-	fdeflate@0.3.5
+	fdeflate@0.3.6
 	filetime@0.2.25
 	flate2@1.0.34
 	float-cmp@0.9.0
 	fnv@1.0.7
 	fontconfig-parser@0.5.7
-	fontdb@0.16.2
 	fontdb@0.21.0
 	foreign-types-shared@0.1.1
 	foreign-types@0.3.2
@@ -140,9 +144,9 @@ CRATES="
 	hashbrown@0.14.5
 	hashbrown@0.15.0
 	hayagriva@0.8.0
-	heck@0.4.1
 	heck@0.5.0
 	hermit-abi@0.3.9
+	hermit-abi@0.4.0
 	hex@0.4.3
 	http-body-util@0.1.2
 	http-body@1.0.1
@@ -150,7 +154,7 @@ CRATES="
 	httparse@1.9.5
 	hyper-rustls@0.27.3
 	hyper-tls@0.6.0
-	hyper-util@0.1.9
+	hyper-util@0.1.10
 	hyper@1.5.0
 	hypher@0.1.5
 	iana-time-zone-haiku@0.1.2
@@ -178,10 +182,12 @@ CRATES="
 	indexmap@2.6.0
 	inotify-sys@0.1.5
 	inotify@0.9.6
-	insta@1.40.0
+	insta@1.41.1
 	instant@0.1.13
 	ipnet@2.10.1
+	is-terminal@0.4.13
 	is_terminal_polyfill@1.70.1
+	itertools@0.10.5
 	itertools@0.13.0
 	itoa@1.0.11
 	jobserver@0.1.32
@@ -190,11 +196,10 @@ CRATES="
 	kqueue-sys@1.0.4
 	kqueue@1.0.8
 	kurbo@0.11.1
-	kurbo@0.9.5
 	lazy_static@1.5.0
 	libc@0.2.161
 	libgit2-sys@0.17.0+1.8.1
-	libm@0.2.8
+	libm@0.2.11
 	libredox@0.1.3
 	libtest-mimic@0.8.1
 	libz-sys@1.1.20
@@ -225,6 +230,7 @@ CRATES="
 	numerals@0.1.4
 	object@0.36.5
 	once_cell@1.20.2
+	oorandom@11.1.4
 	openssl-macros@0.1.1
 	openssl-probe@0.1.5
 	openssl-sys@0.9.104
@@ -244,11 +250,14 @@ CRATES="
 	phf_macros@0.11.2
 	phf_shared@0.11.2
 	pico-args@0.5.0
-	pin-project-lite@0.2.14
+	pin-project-lite@0.2.15
 	pin-utils@0.1.0
 	pixglyph@0.5.1
 	pkg-config@0.3.31
 	plist@1.7.0
+	plotters-backend@0.3.7
+	plotters-svg@0.3.7
+	plotters@0.3.7
 	png@0.17.14
 	portable-atomic@1.9.0
 	postcard@1.0.10
@@ -256,7 +265,7 @@ CRATES="
 	ppv-lite86@0.2.20
 	pretty@0.12.3
 	pretty_assertions@1.4.1
-	proc-macro2@1.0.88
+	proc-macro2@1.0.89
 	psm@0.1.23
 	ptr_meta@0.1.4
 	ptr_meta_derive@0.1.4
@@ -265,7 +274,7 @@ CRATES="
 	quick-xml@0.32.0
 	quick-xml@0.36.2
 	quinn-proto@0.11.8
-	quinn-udp@0.5.5
+	quinn-udp@0.5.6
 	quinn@0.11.5
 	quote@1.0.37
 	radium@0.7.0
@@ -276,11 +285,17 @@ CRATES="
 	rayon@1.10.0
 	redox_syscall@0.5.7
 	redox_users@0.4.6
+	reflexo-typst-shim@0.5.0
+	reflexo-typst2vec@0.5.0
+	reflexo-typst@0.5.0
+	reflexo-vfs@0.5.0
+	reflexo-world@0.5.0
+	reflexo@0.5.0
 	regex-automata@0.4.8
 	regex-syntax@0.8.5
-	regex@1.11.0
+	regex@1.11.1
 	rend@0.4.2
-	reqwest@0.12.8
+	reqwest@0.12.9
 	resvg@0.43.0
 	rgb@0.8.50
 	ring@0.17.8
@@ -292,11 +307,11 @@ CRATES="
 	rustc-demangle@0.1.24
 	rustc-hash@2.0.0
 	rustc_version@0.4.1
-	rustix@0.38.37
+	rustix@0.38.38
 	rustls-pemfile@2.2.0
 	rustls-pki-types@1.10.0
 	rustls-webpki@0.102.8
-	rustls@0.23.15
+	rustls@0.23.16
 	rustversion@1.0.18
 	rustybuzz@0.18.0
 	ryu@1.0.18
@@ -307,9 +322,9 @@ CRATES="
 	security-framework-sys@2.12.0
 	security-framework@2.11.1
 	semver@1.0.23
-	serde@1.0.210
-	serde_derive@1.0.210
-	serde_json@1.0.131
+	serde@1.0.214
+	serde_derive@1.0.214
+	serde_json@1.0.132
 	serde_repr@0.1.19
 	serde_spanned@0.6.8
 	serde_urlencoded@0.7.1
@@ -335,39 +350,37 @@ CRATES="
 	strict-num@0.1.1
 	string-interner@0.17.0
 	strsim@0.11.1
-	strum@0.25.0
 	strum@0.26.3
-	strum_macros@0.25.3
 	strum_macros@0.26.4
 	subsetter@0.2.0
 	subtle@2.6.1
 	svg2pdf@0.12.0
-	svgtypes@0.13.0
 	svgtypes@0.15.2
 	syn@1.0.109
-	syn@2.0.79
+	syn@2.0.87
 	sync_wrapper@1.0.1
 	synstructure@0.13.1
 	syntect@5.2.0
 	tap@1.0.1
-	tar@0.4.42
+	tar@0.4.43
 	tempfile@3.13.0
 	termcolor@1.4.1
 	thin-vec@0.2.13
-	thiserror-impl@1.0.64
-	thiserror@1.0.64
+	thiserror-impl@1.0.66
+	thiserror@1.0.66
 	time-core@0.1.2
 	time-macros@0.2.18
 	time@0.3.36
 	tiny-skia-path@0.11.4
 	tiny-skia@0.11.4
 	tinystr@0.7.6
+	tinytemplate@1.2.1
 	tinyvec@1.8.0
 	tinyvec_macros@0.1.1
 	tokio-macros@2.4.0
 	tokio-native-tls@0.3.1
 	tokio-rustls@0.26.0
-	tokio@1.40.0
+	tokio@1.41.0
 	toml@0.8.19
 	toml_datetime@0.6.8
 	toml_edit@0.22.22
@@ -376,7 +389,6 @@ CRATES="
 	tracing@0.1.40
 	triomphe@0.1.14
 	try-lock@0.2.5
-	ttf-parser@0.20.0
 	ttf-parser@0.24.1
 	two-face@0.4.0
 	typed-arena@2.0.2
@@ -477,15 +489,6 @@ CRATES="
 	zune-core@0.4.12
 	zune-jpeg@0.4.13
 "
-
-declare -A GIT_CRATES=(
-	[reflexo-typst-shim]='https://github.com/ParaN3xus/typst.ts;2f5bcd35e03c269097636db5996e9f8ab0c831da;typst.ts-%commit%/crates/reflexo-typst-shim'
-	[reflexo-typst2vec]='https://github.com/ParaN3xus/typst.ts;2f5bcd35e03c269097636db5996e9f8ab0c831da;typst.ts-%commit%/crates/conversion/typst2vec'
-	[reflexo-typst]='https://github.com/ParaN3xus/typst.ts;2f5bcd35e03c269097636db5996e9f8ab0c831da;typst.ts-%commit%/crates/reflexo-typst'
-	[reflexo-vfs]='https://github.com/ParaN3xus/typst.ts;2f5bcd35e03c269097636db5996e9f8ab0c831da;typst.ts-%commit%/crates/reflexo-vfs'
-	[reflexo-world]='https://github.com/ParaN3xus/typst.ts;2f5bcd35e03c269097636db5996e9f8ab0c831da;typst.ts-%commit%/crates/reflexo-world'
-	[reflexo]='https://github.com/ParaN3xus/typst.ts;2f5bcd35e03c269097636db5996e9f8ab0c831da;typst.ts-%commit%/crates/reflexo'
-)
 
 inherit cargo
 
