@@ -21,6 +21,7 @@ RESTRICT="test" #Several modules not yet packaged
 
 RDEPEND="
 	dev-python/filelock[${PYTHON_USEDEP}]
+	dev-python/fsspec[${PYTHON_USEDEP}]
 	dev-python/requests[${PYTHON_USEDEP}]
 	dev-python/tqdm[${PYTHON_USEDEP}]
 	dev-python/pyyaml[${PYTHON_USEDEP}]
