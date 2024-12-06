@@ -49,7 +49,7 @@ RDEPEND="
 	sci-libs/onnx
 	sci-libs/foxi
 	cuda? (
-		=dev-libs/cudnn-8*
+		dev-libs/cudnn
 		>=dev-libs/cudnn-frontend-1.0.3:0/8
 		<dev-util/nvidia-cuda-toolkit-12.5:=[profiler]
 		dev-libs/nccl
