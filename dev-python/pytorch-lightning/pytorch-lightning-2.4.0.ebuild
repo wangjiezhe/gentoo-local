@@ -21,12 +21,10 @@ RDEPEND="
 	dev-python/lightning-utilities[${PYTHON_SINGLE_USEDEP}]
 	sci-libs/torchmetrics[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
-		dev-python/numpy[${PYTHON_USEDEP}]
-		dev-python/tqdm[${PYTHON_USEDEP}]
-		dev-python/pyyaml[${PYTHON_USEDEP}]
 		dev-python/fsspec[${PYTHON_USEDEP}]
-		sci-visualization/tensorboard[${PYTHON_USEDEP}]
 		dev-python/packaging[${PYTHON_USEDEP}]
+		dev-python/pyyaml[${PYTHON_USEDEP}]
+		dev-python/tqdm[${PYTHON_USEDEP}]
 		dev-python/typing-extensions[${PYTHON_USEDEP}]
 	')
 "

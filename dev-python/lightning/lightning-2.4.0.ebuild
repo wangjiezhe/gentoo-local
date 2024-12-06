@@ -24,26 +24,10 @@ RDEPEND="
 	sci-libs/pytorch[${PYTHON_SINGLE_USEDEP}]
 	sci-libs/torchmetrics[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
-		dev-python/aiohttp[${PYTHON_USEDEP}]
 		dev-python/fsspec[${PYTHON_USEDEP}]
-		dev-python/numpy[${PYTHON_USEDEP}]
 		dev-python/packaging[${PYTHON_USEDEP}]
 		dev-python/pyyaml[${PYTHON_USEDEP}]
-		dev-python/ratelimit[${PYTHON_USEDEP}]
-		dev-python/requests[${PYTHON_USEDEP}]
 		dev-python/tqdm[${PYTHON_USEDEP}]
 		dev-python/typing-extensions[${PYTHON_USEDEP}]
-		sci-visualization/tensorboard[${PYTHON_USEDEP}]
 	')
 "
-
-# BDEPEND="
-# 	test? (
-# 		sci-libs/torchaudio[${PYTHON_SINGLE_USEDEP}]
-# 		$(python_gen_cond_dep '
-# 			dev-python/deepdiff[${PYTHON_USEDEP}]
-# 		')
-# 	)
-# "
-
-# distutils_enable_tests pytest
