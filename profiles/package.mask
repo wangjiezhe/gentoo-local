@@ -4,3 +4,6 @@
 
 # WIP
 =sci-libs/tensorflow-2.18*
+
+# Bazel 7 support is not ready
+=dev-build/bazel-7*
