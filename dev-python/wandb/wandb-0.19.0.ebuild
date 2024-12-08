@@ -7,6 +7,8 @@ CRATES="
 	addr2line@0.22.0
 	adler@1.0.2
 	aho-corasick@1.1.3
+	android-tzdata@0.1.1
+	android_system_properties@0.1.5
 	anstream@0.6.15
 	anstyle-parse@0.2.5
 	anstyle-query@1.1.1
@@ -29,6 +31,7 @@ CRATES="
 	cc@1.1.10
 	cfg-if@1.0.0
 	cfg_aliases@0.2.1
+	chrono@0.4.38
 	clap@4.5.13
 	clap_builder@4.5.13
 	clap_derive@4.5.13
@@ -75,6 +78,8 @@ CRATES="
 	hyper-timeout@0.5.1
 	hyper-util@0.1.7
 	hyper@1.4.1
+	iana-time-zone-haiku@0.1.2
+	iana-time-zone@0.1.61
 	ident_case@1.0.1
 	idna@0.5.0
 	indexmap@1.9.3
@@ -97,6 +102,7 @@ CRATES="
 	multimap@0.10.0
 	nix@0.29.0
 	num-conv@0.1.0
+	num-traits@0.2.19
 	nvml-wrapper-sys@0.8.0
 	nvml-wrapper@0.10.0
 	object@0.36.3
@@ -239,7 +245,7 @@ CRATES="
 "
 
 # dev-python/sentry-sdk does not support python3.10
-PYTHON_COMPAT=( python3_{11..12} )
+PYTHON_COMPAT=( python3_{11..13} )
 DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_USE_PEP517=hatchling
 inherit cargo distutils-r1 go-module
@@ -277,12 +283,13 @@ RDEPEND="
 		dev-python/pyyaml[${PYTHON_USEDEP}]
 		dev-python/setproctitle[${PYTHON_USEDEP}]
 		dev-python/platformdirs[${PYTHON_USEDEP}]
+		dev-python/pydantic[${PYTHON_USEDEP}]
 	')
 "
 
 PATCHES=(
 	"${FILESDIR}/${PN}-0.18.5-hatch.patch"
-	"${FILESDIR}/${PN}-0.18.5-go.patch"
+	"${FILESDIR}/${P}-go.patch"
 )
 
 DOC=( package_readme.md )
