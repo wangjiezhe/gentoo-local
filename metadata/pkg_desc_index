@@ -5,15 +5,17 @@ app-misc/cmd-wrapped 0.4.1: A CLI tool to view Unix shell history statistics, wi
 app-office/qtikz 0.13.2: A nice user interface for making pictures using TikZ
 app-text/typst 0.11.1-r1: A markup-based typesetting system for the sciences
 app-vim/vimcdoc 2.4.0: online vim documentation translated into Chinese
-dev-build/bazel 5.4.1 6.1.2 6.2.1 6.3.2 6.4.0 6.5.0 7.0.1: Fast and correct automated build system
+dev-build/bazel 5.4.1 6.2.1 6.5.0 7.0.1: Fast and correct automated build system
 dev-cpp/abseil-cpp 20230802.2-r1 20240116.2-r3: Abseil Common Libraries (C++), LTS Branch
 dev-debug/lldb 14.0.6: The LLVM debugger
 dev-haskell/plam 2.2.0 2.2.1: An interpreter for learning and exploring pure λ-calculus
 dev-lang/luajit 2.1.1720049189: Just-In-Time Compiler for the Lua programming language
-dev-libs/FBGEMM 2023.11.03: Facebook GEneral Matrix Multiplication
-dev-libs/cudnn 8.9.7.29 9.0.0.312 9.1.0.70: NVIDIA Accelerated Deep Learning on GPU library
-dev-libs/cudnn-frontend 1.2.1 1.3.0 1.4.0 1.5.2 1.6.1 1.7.0: A c++ wrapper for the cudnn backend API
-dev-libs/cusparselt 0.5.2.1 0.6.2.3: A High-Performance CUDA Library for Sparse Matrix-Matrix Multiplication
+dev-libs/FBGEMM 2024.10.20: Facebook GEneral Matrix Multiplication
+dev-libs/cpuinfo 2024.10.29: CPU INFOrmation library
+dev-libs/cudnn 8.9.7.29 9.6.0.74: NVIDIA Accelerated Deep Learning on GPU library
+dev-libs/cudnn-frontend 1.6.1 1.7.0 1.8.0: A c++ wrapper for the cudnn backend API
+dev-libs/cudss 0.3.0.9: A high-performance CUDA Library for Direct Sparse Solvers
+dev-libs/cusparselt 0.5.2.1 0.6.3.2: A High-Performance CUDA Library for Sparse Matrix-Matrix Multiplication
 dev-libs/cutlass 3.5.0 3.5.1: CUDA Templates for Linear Algebra Subroutines
 dev-libs/dlpack 0.8 1.0: common in-memory tensor structure
 dev-libs/flatbuffers 23.1.21 23.5.26: Memory efficient serialization library
@@ -23,7 +25,7 @@ dev-libs/protobuf 25.3: Google's Protocol Buffers - Extensible mechanism for ser
 dev-libs/re2 0.2023.11.01-r1: An efficient, principled regular expression library
 dev-libs/sentencepiece 0.2.0: Unsupervised text tokenizer for Neural Network-based text generation
 dev-ml/llvm-ocaml 14.0.6: OCaml bindings for LLVM
-dev-python/FBGEMM_GPU 0.8.0: A collection of high-performance PyTorch GPU operator libraries for training and inference
+dev-python/FBGEMM_GPU 1.0.0: A collection of high-performance PyTorch GPU operator libraries for training and inference
 dev-python/astunparse 1.6.3-r2: Astun parser for python
 dev-python/clang-python 14.0.6: Python bindings for sys-devel/clang
 dev-python/cuda-python 12.3.0 12.4.0 12.5.0: CUDA Python Low-level Bindings
@@ -34,23 +36,23 @@ dev-python/expecttest 0.2.1: This library implements expect tests
 dev-python/flatbuffers 23.1.21 23.5.26: RFC 7049 - Concise Binary Object Representation
 dev-python/google-re2 1.1: RE2 Python bindings
 dev-python/gql 3.5.0: A GraphQL client in Python
-dev-python/grpcio 1.63.0 1.65.0: High-performance RPC framework (python libraries)
-dev-python/grpcio-testing 1.63.0 1.65.0: Testing utilities for gRPC Python
-dev-python/grpcio-tools 1.63.0 1.65.0: Protobuf code generator for gRPC
+dev-python/grpcio 1.63.0 1.65.5: High-performance RPC framework (python libraries)
+dev-python/grpcio-testing 1.63.0 1.65.5: Testing utilities for gRPC Python
+dev-python/grpcio-tools 1.63.0 1.65.5: Protobuf code generator for gRPC
 dev-python/h5py 3.10.0-r2: Simple Python interface to HDF5 files
 dev-python/hf-doc-builder 0.5.0: Used to build the documentation of our Hugging Face repos
 dev-python/iopath 0.1.10: A lightweight library for PyTorch training tools and utilities
 dev-python/lightning 2.4.0: Lightweight PyTorch wrapper for ML researchers
-dev-python/lightning-utilities 0.11.7: Common Python utilities and GitHub Actions in Lightning Ecosystem
+dev-python/lightning-utilities 0.11.9: Common Python utilities and GitHub Actions in Lightning Ecosystem
 dev-python/lit 14.0.6: A stand-alone install of the LLVM suite testing tool
 dev-python/ml-dtypes 0.2.0 0.3.2 0.4.0: A stand-alone implementation of several NumPy dtype extensions
 dev-python/namex 0.0.8: A simple utility to separate the implementation of your Python package and its public API surface
 dev-python/neovim-remote 2.5.1 9999: A tool that helps control neovim processes
-dev-python/optree 0.12.1: Optimized PyTree Utilities
-dev-python/protobuf-python 4.25.3: Google's Protocol Buffers - Python bindings
+dev-python/optree 0.13.1: Optimized PyTree Utilities
+dev-python/protobuf 4.25.3: Google's Protocol Buffers - Python bindings
 dev-python/py3nvml 0.2.7: Python 3 Bindings for the NVIDIA Management Library
 dev-python/pyclibrary 0.2.2: C parser and ctypes automation for python
-dev-python/pyre-extensions 0.0.31: Type system extensions for use with the pyre type checker
+dev-python/pyre-extensions 0.0.32: Type system extensions for use with the pyre type checker
 dev-python/pystoi 0.4.1: Python implementation of the Short Term Objective Intelligibility measure
 dev-python/pytorch-lightning 2.4.0: Lightweight PyTorch wrapper for ML researchers
 dev-python/revtok 0.0.3: Reversible tokenization in Python
@@ -59,36 +61,39 @@ dev-python/rouge-score 0.1.2: Pure python implementation of ROUGE-1.5.5
 dev-python/sacrebleu 2.4.3: Hassle-free computation of shareable, comparable, and reproducible BLEU, chrF, and TER scores
 dev-python/sacremoses 0.1.1: Python port of Moses tokenizer, truecaser and normalizer
 dev-python/sentencepiece 0.2.0: Python wrapper for SentencePiece
+dev-python/sentry-sdk 1.45.1 2.13.0: Python client for Sentry
 dev-python/setuptools-git-version 1.0.4: Automatically set package version from Git
 dev-python/setuptools-git-versioning 1.13.6 2.0.0: Use git repo data for building a version number according PEP-440
 dev-python/torchinfo 1.8.0-r1: View model summaries in PyTorch
 dev-python/treelib 1.7.0: An efficient implementation of tree data structure
-dev-python/wandb 0.16.6-r1 0.18.1: A tool for visualizing and tracking your machine learning experiments
+dev-python/typing-inspect 0.9.0: Runtime inspection utilities for Python typing module
+dev-python/wandb 0.16.6-r1 0.19.0: A tool for visualizing and tracking your machine learning experiments
 dev-python/watermark 2.5.0: IPython magic function to print date/time stamps and various system information
 dev-util/evcxr-repl 0.17.0: A REPL for Rust
-dev-util/typstyle 0.11.34: Beautiful and reliable typst code formatter
-media-libs/opencv 4.8.1-r2: A collection of algorithms and sample code for various computer vision problems
-net-libs/google-cloud-cpp 2.29.0: Google Cloud Client Library for C++
+dev-util/minify-html 0.15.0: [CLI] Extremely fast and smart HTML + JS + CSS minifier
+dev-util/minify-js 0.6.0: Extremely fast JS minifier
+dev-util/typstyle 0.12.8: Beautiful and reliable typst code formatter
+net-libs/google-cloud-cpp 2.32.0: Google Cloud Client Library for C++
 net-libs/grpc 1.59.3 1.60.1 1.62.1: Modern open source high performance RPC framework
 net-libs/nodejs 12.22.6 14.21.3 16.20.2-r1 18.20.4 20.16.0 22.5.1: A JavaScript runtime built on Chrome's V8 JavaScript engine
 net-misc/mosh 1.4.0: Mobile shell that supports roaming and intelligent local echo
 net-misc/piping-server 0.18.0: Infinitely transfer between every device over pure HTTP with pipes or browsers
-net-vpn/frp 0.60.0: A reverse proxy that exposes a server behind a NAT or firewall to the internet
-sci-libs/accelerate 0.34.1: A simple way to train and use PyTorch models with multi-GPU, TPU, mixed-precision
-sci-libs/aocl-blas 4.2: AMD's optimized version of BLAS targeted for AMD EPYC and Ryzen CPUs
-sci-libs/aocl-lapack 4.2-r1: AMD optimized high-performance object-based library for DLA computations
-sci-libs/aocl-libm 4.2 4.2-r1: Optimized libm replacement from AMD for x86_64 architectures
-sci-libs/aocl-sparse 4.2: AMD library for optimized sparse BLAS operations
-sci-libs/aocl-utils 4.2: A uniform interface to all AOCL libraries to access CPU features
-sci-libs/caffe2 2.4.1 2.4.1-r1: A deep learning framework
+net-vpn/frp 0.61.0: A reverse proxy that exposes a server behind a NAT or firewall to the internet
+sci-libs/accelerate 0.34.1 1.1.0: A simple way to train and use PyTorch models with multi-GPU, TPU, mixed-precision
+sci-libs/aocl-blas 5.0: AMD's optimized version of BLAS targeted for AMD EPYC and Ryzen CPUs
+sci-libs/aocl-lapack 5.0: AMD optimized high-performance object-based library for DLA computations
+sci-libs/aocl-libm 5.0 5.0-r1: Optimized libm replacement from AMD for x86_64 architectures
+sci-libs/aocl-sparse 5.0: AMD library for optimized sparse BLAS operations
+sci-libs/aocl-utils 5.0: A uniform interface to all AOCL libraries to access CPU features
+sci-libs/caffe2 2.5.1-r4: A deep learning framework
 sci-libs/clean-fid 0.1.35: FID calculation with proper image resizing and quantization steps
 sci-libs/compressai 1.2.6: A PyTorch library and evaluation platform for end-to-end compression research
-sci-libs/datasets 2.17.1: Access and share datasets for Audio, Computer Vision, and NLP tasks
-sci-libs/faiss 1.8.0: A library for efficient similarity search and clustering of dense vectors
+sci-libs/datasets 2.21.0: Access and share datasets for Audio, Computer Vision, and NLP tasks
+sci-libs/faiss 1.9.0: A library for efficient similarity search and clustering of dense vectors
 sci-libs/framework-reproducibility 0.6.0: Providing reproducibility in deep learning frameworks
 sci-libs/gloo 2023.07.15-r1: library of floating-point neural network inference operators
-sci-libs/huggingface_hub 0.23.4 0.24.6: a client library to interact with the Hugging Face Hub
-sci-libs/keras 2.13.1 2.14.0 2.15.0 3.5.0: Deep Learning for humans
+sci-libs/huggingface_hub 0.26.3: a client library to interact with the Hugging Face Hub
+sci-libs/keras 2.13.1 2.14.0 2.15.0 3.7.0: Deep Learning for humans
 sci-libs/keras-applications 1.0.8-r2: Keras deep learning library reference implementations of deep learning models
 sci-libs/keras-preprocessing 1.1.2-r1: Easy data preprocessing and data augmentation for deep learning models
 sci-libs/kineto 0.4.0_p20240525: part of the PyTorch Profiler
@@ -96,30 +101,30 @@ sci-libs/lpips 0.1.4: Perceptual Similarity Metric and Dataset
 sci-libs/magma 2.8.0: Matrix Algebra on GPU and Multicore Architectures
 sci-libs/nltk 3.9.1: Natural Language Toolkit
 sci-libs/nltk-data 20240729: Data Distribution for NLTK
-sci-libs/onnx 1.14.1-r2 1.15.0-r1 1.16.0-r1 1.16.2: Open Neural Network Exchange (ONNX)
+sci-libs/onnx 1.16.2 1.17.0: Open Neural Network Exchange (ONNX)
 sci-libs/openblas 0.3.26: Optimized BLAS library based on GotoBLAS2
-sci-libs/pytorch 2.4.1: Tensors and Dynamic neural networks in Python
-sci-libs/pytorch-image-models 1.0.9: PyTorch image models, scripts, pretrained weights
+sci-libs/pytorch 2.5.1: Tensors and Dynamic neural networks in Python
+sci-libs/pytorch-image-models 1.0.12: PyTorch image models, scripts, pretrained weights
 sci-libs/pytorch-msssim 1.0.0: Fast and differentiable MS-SSIM and SSIM for pytorch
 sci-libs/safetensors 0.4.2: Simple, safe way to store and distribute tensors
-sci-libs/tensorflow 2.13.1 2.14.1 2.15.1 2.16.2 2.17.0: Computation framework using data flow graphs for scalable machine learning
+sci-libs/tensorflow 2.13.1 2.14.1 2.15.1 2.16.2 2.17.1 2.18.0: Computation framework using data flow graphs for scalable machine learning
 sci-libs/tensorflow-estimator 2.13.0 2.14.0 2.15.0: A high-level TensorFlow API that greatly simplifies machine learning programming
-sci-libs/tensorrt 8.6.1.6-r1 10.0.0.6: An SDK for high-performance deep learning inference
-sci-libs/tokenizers 0.19.1: Implementation of today's most used tokenizers
+sci-libs/tensorrt 8.6.1.6-r1 10.3.0.26 10.7.0.23: An SDK for high-performance deep learning inference
+sci-libs/tokenizers 0.20.1 0.21.0: Implementation of today's most used tokenizers
 sci-libs/torch-fidelity 0.3.0_p20231026: High-fidelity performance metrics for generative models in PyTorch
-sci-libs/torchaudio 2.4.1: Data manipulation and transformation for audio signal processing
-sci-libs/torchdata 0.7.1 0.8.0: A library of common modular data loading primitives
+sci-libs/torchaudio 2.5.0: Data manipulation and transformation for audio signal processing
+sci-libs/torchdata 0.7.1 0.9.0: A library of common modular data loading primitives
 sci-libs/torcheval 0.0.6: A library that contains a rich collection of performant PyTorch model metrics
-sci-libs/torchmetrics 1.4.2: Machine learning metrics for distributed, scalable PyTorch applications
-sci-libs/torchrec 0.8.0: Pytorch domain library for recommendation systems
+sci-libs/torchmetrics 1.6.0: Machine learning metrics for distributed, scalable PyTorch applications
+sci-libs/torchrec 1.0.0: Pytorch domain library for recommendation systems
 sci-libs/torchsnapshot 0.1.0_p20230721 0.1.0_p20240521-r1: A performant, memory-efficient checkpointing library for PyTorch applications
 sci-libs/torchtext 0.18.0: Data manipulation and transformation for audio signal processing
 sci-libs/torchtnt 0.2.3-r1 0.2.4: A lightweight library for PyTorch training tools and utilities
-sci-libs/torchvision 0.19.1: Datasets, transforms and models to specific to computer vision
-sci-libs/transformers 4.44.2-r1: State-of-the-art Machine Learning for JAX, PyTorch and TensorFlow
+sci-libs/torchvision 0.20.0: Datasets, transforms and models to specific to computer vision
+sci-libs/transformers 4.46.3: State-of-the-art Machine Learning for JAX, PyTorch and TensorFlow
 sci-mathematics/mathematica 14.0.0: Wolfram Mathematica
 sci-visualization/tensorboard 2.13.0 2.14.1 2.15.2 2.16.2 2.17.1: TensorFlow's Visualization Toolkit
-sys-apps/bat-extras 2024.08.24: Bash scripts that integrate bat with various command line tools.
+sys-apps/bat-extras 2024.08.24-r1: Bash scripts that integrate bat with various command line tools.
 sys-devel/clang 14.0.6-r4: C language family frontend for LLVM
 sys-devel/clang-common 14.0.6: Common files shared between multiple slots of clang
 sys-devel/clang-runtime 14.0.6: Meta-ebuild for clang runtime libraries
