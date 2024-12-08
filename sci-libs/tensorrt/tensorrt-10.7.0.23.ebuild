@@ -13,7 +13,7 @@ EXTEND_VER="${BASE_VER}"
 
 DESCRIPTION="An SDK for high-performance deep learning inference"
 HOMEPAGE="https://developer.nvidia.com/tensorrt"
-SRC_URI="https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/${BASE_VER}/tars/tensorrt-${PV}.Linux.x86_64-gnu.cuda-${CUDA_VER}.tar.gz"
+SRC_URI="https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/${BASE_VER}/tars/TensorRT-${PV}.Linux.x86_64-gnu.cuda-${CUDA_VER}.tar.gz"
 S="${WORKDIR}/TensorRT-${PV}"
 
 LICENSE="NVIDIA-TensorRT"
