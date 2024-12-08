@@ -1,22 +1,19 @@
-# Copyright 2023 Gentoo Authors
+# Copyright 2003-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{10..11} )
+PYTHON_COMPAT=( python3_{10..12} )
 DISTUTILS_USE_PEP517=no
 inherit distutils-r1
 
-CUDA_VER="12.0"
+CUDA_VER="12.5"
 BASE_VER="$(ver_cut 1-3)"
 EXTEND_VER="${BASE_VER}"
-GRAPHSURGEON_VER="0.4.6"
-ONNX_GRAPHSURGEON_VER="0.3.12"
-UFF_VER="0.6.9"
 
 DESCRIPTION="An SDK for high-performance deep learning inference"
 HOMEPAGE="https://developer.nvidia.com/tensorrt"
-SRC_URI="https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/secure/${BASE_VER}/tars/tensorrt-${PV}.linux.x86_64-gnu.cuda-${CUDA_VER}.tar.gz"
+SRC_URI="https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/${BASE_VER}/tars/TensorRT-${PV}.Linux.x86_64-gnu.cuda-${CUDA_VER}.tar.gz"
 S="${WORKDIR}/TensorRT-${PV}"
 
 LICENSE="NVIDIA-TensorRT"
@@ -50,8 +47,13 @@ src_install() {
 	dosym "libnvinfer_builder_resource.so.${BASE_VER}" \
 		"/opt/cuda/targets/x86_64-linux/lib/do_not_link_against_nvinfer_builder_resource"
 
-	# See https://github.com/NVIDIA/TensorRT/issues/2218#issuecomment-1258227217
-	# and https://docs.nvidia.com/deeplearning/tensorrt/release-notes/index.html#rel-8-4-1
+	dosym "libnvinfer_builder_resource_win.so.${BASE_VER}" \
+		"/opt/cuda/targets/x86_64-linux/lib/libnvinfer_builder_resource_win.so.${BASE_VER%%.*}"
+	dosym "libnvinfer_builder_resource_win.so.${BASE_VER}" \
+		"/opt/cuda/targets/x86_64-linux/lib/libnvinfer_builder_resource_win.so"
+	dosym "libnvinfer_builder_resource_win.so.${BASE_VER}" \
+		"/opt/cuda/targets/x86_64-linux/lib/do_not_link_against_nvinfer_builder_resource_win"
+
 	patchelf --add-rpath '$ORIGIN' "${ED}/opt/cuda/targets/x86_64-linux/lib/libnvinfer.so"|| die "patchelf failed"
 
 	do_install() {
@@ -60,9 +62,6 @@ src_install() {
 		distutils_wheel_install "${ED}" "${S}/python/tensorrt-${EXTEND_VER}-cp${PYTHON_VER}-none-linux_x86_64.whl"
 		distutils_wheel_install "${ED}" "${S}/python/tensorrt_dispatch-${EXTEND_VER}-cp${PYTHON_VER}-none-linux_x86_64.whl"
 		distutils_wheel_install "${ED}" "${S}/python/tensorrt_lean-${EXTEND_VER}-cp${PYTHON_VER}-none-linux_x86_64.whl"
-		distutils_wheel_install "${ED}" "${S}/graphsurgeon/graphsurgeon-${GRAPHSURGEON_VER}-py2.py3-none-any.whl"
-		distutils_wheel_install "${ED}" "${S}/onnx_graphsurgeon/onnx_graphsurgeon-${ONNX_GRAPHSURGEON_VER}-py2.py3-none-any.whl"
-		distutils_wheel_install "${ED}" "${S}/uff/uff-${UFF_VER}-py2.py3-none-any.whl"
 		python_optimize
 	}
 	python_foreach_impl do_install
