@@ -130,7 +130,7 @@ RDEPEND="
 		dev-python/absl-py[${PYTHON_USEDEP}]
 		>=dev-python/astor-0.7.1[${PYTHON_USEDEP}]
 		dev-python/astunparse[${PYTHON_USEDEP}]
-		dev-python/clang-python[${PYTHON_USEDEP}]
+		dev-python/clang[${PYTHON_USEDEP}]
 		dev-python/dill[${PYTHON_USEDEP}]
 		~dev-python/flatbuffers-24.3.25[${PYTHON_USEDEP}]
 		>=dev-python/gast-0.3.3[${PYTHON_USEDEP}]

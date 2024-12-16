@@ -7,7 +7,6 @@ app-text/typst 0.11.1-r1: A markup-based typesetting system for the sciences
 app-vim/vimcdoc 2.4.0: online vim documentation translated into Chinese
 dev-build/bazel 5.4.1 6.2.1 6.5.0 7.0.1: Fast and correct automated build system
 dev-cpp/abseil-cpp 20230802.2-r1 20240116.2-r3: Abseil Common Libraries (C++), LTS Branch
-dev-debug/lldb 14.0.6: The LLVM debugger
 dev-haskell/plam 2.2.0 2.2.1: An interpreter for learning and exploring pure λ-calculus
 dev-lang/luajit 2.1.1720049189: Just-In-Time Compiler for the Lua programming language
 dev-libs/FBGEMM 2024.10.20: Facebook GEneral Matrix Multiplication
@@ -19,15 +18,14 @@ dev-libs/cusparselt 0.5.2.1 0.6.3.2: A High-Performance CUDA Library for Sparse 
 dev-libs/cutlass 3.5.0 3.5.1: CUDA Templates for Linear Algebra Subroutines
 dev-libs/dlpack 0.8 1.0: common in-memory tensor structure
 dev-libs/flatbuffers 23.1.21 23.5.26: Memory efficient serialization library
-dev-libs/libclc 14.0.6: OpenCL C library
 dev-libs/nccl 2.20.5 2.21.5 2.22.3 2.23.4: Optimized primitives for collective multi-GPU communication
 dev-libs/protobuf 25.3: Google's Protocol Buffers - Extensible mechanism for serializing structured data
 dev-libs/re2 0.2023.11.01-r1: An efficient, principled regular expression library
 dev-libs/sentencepiece 0.2.0: Unsupervised text tokenizer for Neural Network-based text generation
-dev-ml/llvm-ocaml 14.0.6: OCaml bindings for LLVM
+dev-ml/llvm 14.0.6: OCaml bindings for LLVM
 dev-python/FBGEMM_GPU 1.0.0: A collection of high-performance PyTorch GPU operator libraries for training and inference
 dev-python/astunparse 1.6.3-r2: Astun parser for python
-dev-python/clang-python 14.0.6: Python bindings for sys-devel/clang
+dev-python/clang 14.0.6: Python bindings for llvm-core/clang
 dev-python/cuda-python 12.3.0 12.4.0 12.5.0: CUDA Python Low-level Bindings
 dev-python/cutlass 3.3.0 3.4.1 3.5.1: Python packages associated with CUTLASS
 dev-python/dm-tree 0.1.8: A library for working with nested data structures
@@ -61,7 +59,7 @@ dev-python/rouge-score 0.1.2: Pure python implementation of ROUGE-1.5.5
 dev-python/sacrebleu 2.4.3: Hassle-free computation of shareable, comparable, and reproducible BLEU, chrF, and TER scores
 dev-python/sacremoses 0.1.1: Python port of Moses tokenizer, truecaser and normalizer
 dev-python/sentencepiece 0.2.0: Python wrapper for SentencePiece
-dev-python/sentry-sdk 1.45.1 2.13.0: Python client for Sentry
+dev-python/sentry-sdk 2.13.0: Python client for Sentry
 dev-python/setuptools-git-version 1.0.4: Automatically set package version from Git
 dev-python/setuptools-git-versioning 1.13.6 2.0.0: Use git repo data for building a version number according PEP-440
 dev-python/torchinfo 1.8.0-r1: View model summaries in PyTorch
@@ -73,6 +71,23 @@ dev-util/evcxr-repl 0.17.0: A REPL for Rust
 dev-util/minify-html 0.15.0: [CLI] Extremely fast and smart HTML + JS + CSS minifier
 dev-util/minify-js 0.6.0: Extremely fast JS minifier
 dev-util/typstyle 0.12.8: Beautiful and reliable typst code formatter
+llvm-core/clang 14.0.6-r4: C language family frontend for LLVM
+llvm-core/clang-common 14.0.6: Common files shared between multiple slots of clang
+llvm-core/clang-runtime 14.0.6: Meta-ebuild for clang runtime libraries
+llvm-core/clang-toolchain-symlinks 14-r2: Symlinks to use Clang on GCC-free system
+llvm-core/libclc 14.0.6: OpenCL C library
+llvm-core/lld 14.0.6-r1: The LLVM linker (link editor)
+llvm-core/lldb 14.0.6: The LLVM debugger
+llvm-core/llvm 14.0.6-r4: Low Level Virtual Machine
+llvm-core/llvm-common 14.0.6: Common files shared between multiple slots of LLVM
+llvm-core/llvm-toolchain-symlinks 14-r1: Symlinks to use LLVM on binutils-free system
+llvm-core/llvmgold 14: LLVMgold plugin symlink for autoloading
+llvm-runtimes/compiler-rt 14.0.6-r1: Compiler runtime library for clang (built-in part)
+llvm-runtimes/compiler-rt-sanitizers 14.0.6: Compiler runtime libraries for clang (sanitizers & xray)
+llvm-runtimes/libcxx 14.0.6: New implementation of the C++ standard library, targeting C++11
+llvm-runtimes/libcxxabi 14.0.6: Low level support for a standard C++ library
+llvm-runtimes/libunwind 14.0.6-r1: C++ runtime stack unwinder from LLVM
+llvm-runtimes/openmp 14.0.6-r1: OpenMP runtime library for LLVM/clang compiler
 net-libs/google-cloud-cpp 2.32.0: Google Cloud Client Library for C++
 net-libs/grpc 1.59.3 1.60.1 1.62.1: Modern open source high performance RPC framework
 net-libs/nodejs 12.22.6 14.21.3 16.20.2-r1 18.20.4 20.16.0 22.5.1: A JavaScript runtime built on Chrome's V8 JavaScript engine
@@ -125,19 +140,4 @@ sci-libs/transformers 4.46.3: State-of-the-art Machine Learning for JAX, PyTorch
 sci-mathematics/mathematica 14.0.0: Wolfram Mathematica
 sci-visualization/tensorboard 2.13.0 2.14.1 2.15.2 2.16.2 2.17.1: TensorFlow's Visualization Toolkit
 sys-apps/bat-extras 2024.08.24-r1: Bash scripts that integrate bat with various command line tools.
-sys-devel/clang 14.0.6-r4: C language family frontend for LLVM
-sys-devel/clang-common 14.0.6: Common files shared between multiple slots of clang
-sys-devel/clang-runtime 14.0.6: Meta-ebuild for clang runtime libraries
-sys-devel/clang-toolchain-symlinks 14-r2: Symlinks to use Clang on GCC-free system
-sys-devel/lld 14.0.6-r1: The LLVM linker (link editor)
 sys-devel/lld-toolchain-symlinks 14-r2: Symlinks to use LLD on binutils-free system
-sys-devel/llvm 14.0.6-r4: Low Level Virtual Machine
-sys-devel/llvm-common 14.0.6: Common files shared between multiple slots of LLVM
-sys-devel/llvm-toolchain-symlinks 14-r1: Symlinks to use LLVM on binutils-free system
-sys-devel/llvmgold 14: LLVMgold plugin symlink for autoloading
-sys-libs/compiler-rt 14.0.6-r1: Compiler runtime library for clang (built-in part)
-sys-libs/compiler-rt-sanitizers 14.0.6: Compiler runtime libraries for clang (sanitizers & xray)
-sys-libs/libcxx 14.0.6: New implementation of the C++ standard library, targeting C++11
-sys-libs/libcxxabi 14.0.6: Low level support for a standard C++ library
-sys-libs/libomp 14.0.6-r1: OpenMP runtime library for LLVM/clang compiler
-sys-libs/llvm-libunwind 14.0.6-r1: C++ runtime stack unwinder from LLVM

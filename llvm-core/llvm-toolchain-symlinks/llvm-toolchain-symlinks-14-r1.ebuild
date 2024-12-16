@@ -5,22 +5,26 @@ EAPI=8
 
 inherit multilib
 
-DESCRIPTION="Symlinks to use LLD on binutils-free system"
+DESCRIPTION="Symlinks to use LLVM on binutils-free system"
 HOMEPAGE="https://wiki.gentoo.org/wiki/Project:LLVM"
 S=${WORKDIR}
 
 LICENSE="public-domain"
 SLOT="${PV}"
-KEYWORDS="~amd64 ~arm ~arm64 ~ppc ~ppc64 ~riscv ~x86"
+KEYWORDS="~amd64 ~arm ~arm64 ~ppc ~ppc64 ~riscv ~sparc ~x86 ~amd64-linux ~ppc-macos ~x64-macos"
 IUSE="multilib-symlinks +native-symlinks"
 
 RDEPEND="
-	llvm-core/lld:${SLOT}
+	llvm-core/llvm:${SLOT}
 "
 
 src_install() {
 	use native-symlinks || return
 
+	local tools=(
+		addr2line ar dlltool nm objcopy objdump ranlib readelf size
+		strings strip windres
+	)
 	local chosts=( "${CHOST}" )
 	if use multilib-symlinks; then
 		local abi
@@ -29,10 +33,15 @@ src_install() {
 		done
 	fi
 
+	local chost t
 	local dest=/usr/lib/llvm/${SLOT}/bin
 	dodir "${dest}"
-	dosym ld.lld "${dest}/ld"
+	for t in "${tools[@]}"; do
+		dosym "llvm-${t}" "${dest}/${t}"
+	done
 	for chost in "${chosts[@]}"; do
-		dosym ld.lld "${dest}/${chost}-ld"
+		for t in "${tools[@]}"; do
+			dosym "llvm-${t}" "${dest}/${chost}-${t}"
+		done
 	done
 }
