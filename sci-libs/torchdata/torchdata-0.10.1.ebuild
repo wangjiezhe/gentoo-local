@@ -3,9 +3,10 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{11..12} )
+PYTHON_COMPAT=( python3_{11..13} )
 DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_USE_PEP517=setuptools
+# DISTUTILS_EXT=1
 inherit distutils-r1
 
 DESCRIPTION="A library of common modular data loading primitives"
@@ -23,7 +24,6 @@ RDEPEND="
 		dev-python/urllib3[${PYTHON_USEDEP}]
 		dev-python/requests[${PYTHON_USEDEP}]
 		dev-python/pybind11[${PYTHON_USEDEP}]
-		dev-python/portalocker[${PYTHON_USEDEP}]
 	')
 "
 DEPEND="${RDEPEND}"
