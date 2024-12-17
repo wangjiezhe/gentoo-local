@@ -25,7 +25,6 @@ RDEPEND="
 	dev-libs/sentencepiece
 	dev-libs/libutf8proc
 	>=sci-libs/pytorch-2.2.2[${PYTHON_SINGLE_USEDEP}]
-	sci-libs/torchdata[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		dev-python/tqdm[${PYTHON_USEDEP}]
 		dev-python/requests[${PYTHON_USEDEP}]
@@ -34,10 +33,11 @@ RDEPEND="
 DEPEND="${RDEPEND}"
 BDEPEND="
 	test? (
-		sci-libs/torchdata[${PYTHON_SINGLE_USEDEP}]
 		$(python_gen_cond_dep '
 			dev-python/expecttest[${PYTHON_USEDEP}]
+			dev-python/hypothesis[${PYTHON_USEDEP}]
 			dev-python/parameterized[${PYTHON_USEDEP}]
+			dev-python/sacremoses[${PYTHON_USEDEP}]
 		')
 	)
 "
