@@ -1,0 +1,12 @@
+diff --git a/core/go.mod b/core/go.mod
+index 8ab56c2fe..958fe9af2 100644
+--- a/core/go.mod
++++ b/core/go.mod
+@@ -1,6 +1,6 @@
+ module github.com/wandb/wandb/core
+ 
+-go 1.23.4
++go 1.23.3
+ 
+ require (
+ 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.16.0
