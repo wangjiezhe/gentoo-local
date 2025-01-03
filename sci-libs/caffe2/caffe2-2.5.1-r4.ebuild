@@ -146,6 +146,7 @@ PATCHES=(
 	# "${FILESDIR}"/${PN}-2.4.0-cutlass-3.5.0.patch
 	# "${FILESDIR}"/${PN}-2.4.1-cutlass-3.5.1.patch
 	"${FILESDIR}"/${P}-cuda.patch
+	"${FILESDIR}"/${P}-xnnpack.patch
 )
 
 src_prepare() {
