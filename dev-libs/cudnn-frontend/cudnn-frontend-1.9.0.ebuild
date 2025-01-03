@@ -1,4 +1,4 @@
-# Copyright 1999-2024 Gentoo Authors
+# Copyright 1999-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -16,6 +16,7 @@ LICENSE="MIT"
 SLOT="0/8"
 KEYWORDS="~amd64"
 IUSE="python"
+RESTRICT="test"		# RuntimeError: cudnnHandle Create failed
 
 RDEPEND="dev-libs/cudnn"
 DEPEND="${RDEPEND}"
@@ -33,7 +34,8 @@ BDEPEND="
 
 PATCHES=(
 	"${FILESDIR}/${PN}-1.6.1-cmake.patch"
-	"${FILESDIR}/${P}-python.patch"
+	"${FILESDIR}/${PN}-1.8.0-python.patch"
+	"${FILESDIR}"/${P}-test.patch
 )
 
 src_prepare() {
