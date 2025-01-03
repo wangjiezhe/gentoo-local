@@ -547,7 +547,7 @@ github = "YiNNx/cmd-wrapped"
 use_latest_release = true
 prefix = "v"
 
-["dev-util/typstyle"]
+["app-text/typstyle"]
 source = "github"
 github = "Enter-tainer/typstyle"
 use_latest_release = true
