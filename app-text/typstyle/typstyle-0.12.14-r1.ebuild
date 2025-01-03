@@ -500,16 +500,14 @@ CRATES="
 	zune-jpeg@0.4.13
 "
 
-inherit cargo
+inherit edo cargo
 
-DESCRIPTION="Beautiful and reliable typst code formatter"
+DESCRIPTION="A beautiful and reliable code formatter for Typst"
 HOMEPAGE="https://enter-tainer.github.io/typstyle/"
 SRC_URI="
+	https://github.com/Enter-tainer/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz
 	${CARGO_CRATE_URIS}
-	https://github.com/Enter-tainer/typstyle/archive/v${PV}.tar.gz -> ${P}.tar.gz
 "
-
-S="${WORKDIR}"/${P}/crates/typstyle
 
 LICENSE="Apache-2.0"
 # Dependent crate licenses
@@ -518,17 +516,33 @@ LICENSE+="
 	MPL-2.0 Unicode-3.0 ZLIB
 "
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~arm64"
+IUSE="test"
+RESTRICT="!test? ( test )"
 
-DOCS=( ../../README.md )
+RDEPEND="
+	app-text/typst
+"
+DEPEND="${RDEPEND}"
+BDEPEND="
+	dev-vcs/git
+	test? ( dev-util/cargo-nextest )
+"
+
+DOCS=( README.md )
 
 src_compile() {
+	export VERGEN_GIT_DESCRIBE="v${PV}"
 	export VERGEN_GIT_SHA=$(gunzip < "${DISTDIR}/${P}.tar.gz" | git get-tar-commit-id)
+
 	cargo_src_compile
 }
 
 src_install() {
-	cargo_src_install
-
+	cargo_src_install --path "${S}/crates/${PN}"
 	einstalldocs
+}
+
+src_test() {
+	edo cargo nextest run --workspace -E 'test([typst])' --no-fail-fast --no-default-features
 }
