@@ -1,4 +1,4 @@
-# Copyright 2023-2024 Gentoo Authors
+# Copyright 2023-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -28,6 +28,10 @@ RDEPEND="
 	cuda? ( >=sci-libs/caffe2-${PV}[cuda?] )
 "
 DEPEND="${RDEPEND}"
+
+PATCHES=(
+	"${FILESDIR}"/${P}-Fix-CUDA-12.5-build.patch
+)
 
 src_prepare() {
 	export USE_FFMPEG=$(usex ffmpeg)
