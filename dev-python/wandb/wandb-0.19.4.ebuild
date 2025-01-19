@@ -1,4 +1,4 @@
-# Copyright 2024 Gentoo Authors
+# Copyright 2024-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -47,6 +47,7 @@ CRATES="
 	displaydoc@0.2.5
 	either@1.13.0
 	env_filter@0.1.2
+	env_home@0.1.0
 	env_logger@0.11.5
 	equivalent@1.0.1
 	errno@0.3.10
@@ -100,7 +101,7 @@ CRATES="
 	itertools@0.13.0
 	itoa@1.0.14
 	js-sys@0.3.74
-	libc@0.2.167
+	libc@0.2.169
 	libloading@0.8.6
 	linux-raw-sys@0.4.14
 	litemap@0.7.4
@@ -133,9 +134,9 @@ CRATES="
 	prettyplease@0.2.25
 	proc-macro2@1.0.92
 	prost-build@0.13.3
-	prost-derive@0.13.3
-	prost-types@0.13.3
-	prost@0.13.3
+	prost-derive@0.13.4
+	prost-types@0.13.4
+	prost@0.13.4
 	quinn-proto@0.11.9
 	quinn-udp@0.5.7
 	quinn@0.11.6
@@ -156,19 +157,18 @@ CRATES="
 	rustls-pemfile@2.2.0
 	rustls-pki-types@1.10.0
 	rustls-webpki@0.102.8
-	rustls@0.22.4
 	rustls@0.23.19
 	rustversion@1.0.18
 	ryu@1.0.18
 	scopeguard@1.2.0
 	semver@1.0.23
-	sentry-backtrace@0.34.0
-	sentry-contexts@0.34.0
-	sentry-core@0.34.0
-	sentry-panic@0.34.0
-	sentry-tracing@0.34.0
-	sentry-types@0.34.0
-	sentry@0.34.0
+	sentry-backtrace@0.35.0
+	sentry-contexts@0.35.0
+	sentry-core@0.35.0
+	sentry-panic@0.35.0
+	sentry-tracing@0.35.0
+	sentry-types@0.35.0
+	sentry@0.35.0
 	serde@1.0.215
 	serde_derive@1.0.215
 	serde_json@1.0.133
@@ -187,7 +187,7 @@ CRATES="
 	sync_wrapper@0.1.2
 	sync_wrapper@1.0.2
 	synstructure@0.13.1
-	tempfile@3.14.0
+	tempfile@3.15.0
 	thiserror-impl@1.0.69
 	thiserror-impl@2.0.4
 	thiserror@1.0.69
@@ -200,7 +200,7 @@ CRATES="
 	tinyvec_macros@0.1.1
 	tokio-macros@2.4.0
 	tokio-rustls@0.26.0
-	tokio-stream@0.1.16
+	tokio-stream@0.1.17
 	tokio-util@0.7.13
 	tokio@1.42.0
 	tonic-build@0.12.3
@@ -236,6 +236,7 @@ CRATES="
 	web-sys@0.3.74
 	web-time@1.1.0
 	webpki-roots@0.26.7
+	which@7.0.1
 	windows-core@0.52.0
 	windows-registry@0.2.0
 	windows-result@0.2.0
@@ -252,6 +253,7 @@ CRATES="
 	windows_x86_64_gnu@0.52.6
 	windows_x86_64_gnullvm@0.52.6
 	windows_x86_64_msvc@0.52.6
+	winsafe@0.0.19
 	wrapcenum-derive@0.4.1
 	write16@1.0.0
 	writeable@0.5.5
@@ -311,7 +313,6 @@ RDEPEND="
 
 PATCHES=(
 	"${FILESDIR}/${PN}-0.18.5-hatch.patch"
-	"${FILESDIR}/${P}-go.patch"
 )
 
 DOC=( package_readme.md )
