@@ -589,3 +589,9 @@ use_latest_release = true
 source = "regex"
 url = "https://developer.download.nvidia.com/compute/cudss/redist/libcudss/linux-x86_64/"
 regex = "\\d\\.\\d\\.\\d\\.\\d+"
+
+["media-fonts/maple-mono"]
+source = "github"
+github = "subframe7536/maple-font"
+use_latest_release = true
+prefix = "v"
