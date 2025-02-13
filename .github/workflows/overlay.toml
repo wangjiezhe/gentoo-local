@@ -595,3 +595,8 @@ source = "github"
 github = "subframe7536/maple-font"
 use_latest_release = true
 prefix = "v"
+
+["app-laptop/thinkfan"]
+source = "github"
+github = "vmatare/thinkfan"
+use_latest_release = true
