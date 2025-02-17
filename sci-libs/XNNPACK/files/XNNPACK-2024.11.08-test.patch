@@ -1,0 +1,28 @@
+From b8d5d5ad417fc23b5302f57d897cd53cdaa84672 Mon Sep 17 00:00:00 2001
+From: Frank Barchard <fbarchard@google.com>
+Date: Thu, 30 Jan 2025 11:51:07 -0800
+Subject: [PATCH] Fix debug build with CMake for rndnu16
+
+Targets including requantization.h failed to build in Debug mode due to
+hex-float literals in assert statements.
+
+Fixes #7716
+
+PiperOrigin-RevId: 721468041
+---
+ src/xnnpack/requantization.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/xnnpack/requantization.h b/src/xnnpack/requantization.h
+index 054f681bfe4..0ed416401f4 100644
+--- a/src/xnnpack/requantization.h
++++ b/src/xnnpack/requantization.h
+@@ -121,7 +121,7 @@ static inline uint8_t xnn_qu8_requantize_rndnu16(int32_t input, float scale,
+                                                  uint8_t zero_point,
+                                                  uint8_t min, uint8_t max) {
+   assert(scale < 256.0f);
+-  assert(scale >= 0x1.0p-32f);
++  assert(scale >= 1.0f / 4294967296.0f /* 0x1.0p-32f */);
+ 
+   struct ExpMul f32 = parse_f32(scale);
+ 
