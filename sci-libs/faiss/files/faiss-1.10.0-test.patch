@@ -1,8 +1,8 @@
 diff --git a/perf_tests/CMakeLists.txt b/perf_tests/CMakeLists.txt
-index b7c325dc..caff5b4a 100644
+index e89d1157..f0866260 100644
 --- a/perf_tests/CMakeLists.txt
 +++ b/perf_tests/CMakeLists.txt
-@@ -8,12 +8,7 @@
+@@ -7,12 +7,7 @@
  project(faiss_perf_tests)
  set(BENCHMARK_ENABLE_TESTING OFF)
  
@@ -16,16 +16,16 @@ index b7c325dc..caff5b4a 100644
  
  
  find_package(Threads REQUIRED)
-@@ -25,7 +20,7 @@ add_library(faiss_perf_tests_utils
+@@ -24,7 +19,7 @@ add_library(faiss_perf_tests_utils
  )
  # `#include <faiss/perf_tests/utils.h>` or any other headers
  target_include_directories(faiss_perf_tests_utils PRIVATE
 -   ${PROJECT_SOURCE_DIR}/../..)
 +   ${PROJECT_SOURCE_DIR}/..)
  
- function(link_to_faiss_lib target)
-   if(NOT FAISS_OPT_LEVEL STREQUAL "avx2" AND NOT FAISS_OPT_LEVEL STREQUAL "avx512" AND NOT FAISS_OPT_LEVEL STREQUAL "sve")
-@@ -93,6 +88,6 @@ foreach(bench ${FAISS_PERF_TEST_SRC})
+ include(../cmake/link_to_faiss_lib.cmake)
+ 
+@@ -44,6 +39,6 @@ foreach(bench ${FAISS_PERF_TEST_SRC})
    target_link_libraries(${bench_exec} PRIVATE faiss_perf_tests_utils OpenMP::OpenMP_CXX benchmark::benchmark gflags)
    # `#include <faiss/perf_tests/utils.h>` or any other headers
    target_include_directories(${bench_exec} PRIVATE
@@ -34,7 +34,7 @@ index b7c325dc..caff5b4a 100644
  
  endforeach()
 diff --git a/perf_tests/bench_scalar_quantizer_accuracy.cpp b/perf_tests/bench_scalar_quantizer_accuracy.cpp
-index b13b9114..da66d8e2 100644
+index bde9939f..01df679d 100644
 --- a/perf_tests/bench_scalar_quantizer_accuracy.cpp
 +++ b/perf_tests/bench_scalar_quantizer_accuracy.cpp
 @@ -5,7 +5,7 @@
@@ -47,7 +47,7 @@ index b13b9114..da66d8e2 100644
  #include <cstdio>
  #include <map>
 diff --git a/perf_tests/bench_scalar_quantizer_decode.cpp b/perf_tests/bench_scalar_quantizer_decode.cpp
-index fc9d5205..fa4163f0 100644
+index 16d1502a..ea5805c3 100644
 --- a/perf_tests/bench_scalar_quantizer_decode.cpp
 +++ b/perf_tests/bench_scalar_quantizer_decode.cpp
 @@ -5,7 +5,7 @@
@@ -60,7 +60,7 @@ index fc9d5205..fa4163f0 100644
  #include <omp.h>
  #include <cstdio>
 diff --git a/perf_tests/bench_scalar_quantizer_distance.cpp b/perf_tests/bench_scalar_quantizer_distance.cpp
-index d0d1d9a4..9a1aad23 100644
+index 14945c58..778f2fee 100644
 --- a/perf_tests/bench_scalar_quantizer_distance.cpp
 +++ b/perf_tests/bench_scalar_quantizer_distance.cpp
 @@ -12,7 +12,7 @@
@@ -70,10 +70,10 @@ index d0d1d9a4..9a1aad23 100644
 -#include <faiss/perf_tests/utils.h>
 +#include <perf_tests/utils.h>
  #include <faiss/utils/random.h>
- #include <faiss/utils/utils.h>
  
+ using namespace faiss;
 diff --git a/perf_tests/bench_scalar_quantizer_encode.cpp b/perf_tests/bench_scalar_quantizer_encode.cpp
-index 40c95dab..26ece5e7 100644
+index 0e4909c9..b6fe3eff 100644
 --- a/perf_tests/bench_scalar_quantizer_encode.cpp
 +++ b/perf_tests/bench_scalar_quantizer_encode.cpp
 @@ -12,7 +12,7 @@
@@ -84,23 +84,26 @@ index 40c95dab..26ece5e7 100644
 +#include <perf_tests/utils.h>
  #include <faiss/utils/distances.h>
  #include <faiss/utils/random.h>
- #include <faiss/utils/utils.h>
+ 
 diff --git a/perf_tests/utils.cpp b/perf_tests/utils.cpp
-index 3e6c3322..5c522e6a 100644
+index 9f505a49..5b2968d7 100644
 --- a/perf_tests/utils.cpp
 +++ b/perf_tests/utils.cpp
-@@ -1,4 +1,4 @@
+@@ -5,7 +5,7 @@
+  * LICENSE file in the root directory of this source tree.
+  */
+ 
 -#include <faiss/perf_tests/utils.h>
 +#include <perf_tests/utils.h>
  namespace faiss::perf_tests {
  std::map<std::string, faiss::ScalarQuantizer::QuantizerType> sq_types() {
      static std::map<std::string, faiss::ScalarQuantizer::QuantizerType>
 diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
-index c41edf0c..0002ecf6 100644
+index dfab76e0..de3c2926 100644
 --- a/tests/CMakeLists.txt
 +++ b/tests/CMakeLists.txt
-@@ -88,34 +88,6 @@ if(FAISS_OPT_LEVEL STREQUAL "sve")
-   target_link_libraries(faiss_test PRIVATE faiss_sve)
+@@ -48,34 +48,6 @@ if (FAISS_ENABLE_PYTHON)
+   target_link_libraries(faiss_test PUBLIC faiss_example_external_module)
  endif()
  
 -include(FetchContent)
