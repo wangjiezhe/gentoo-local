@@ -1,4 +1,4 @@
-# Copyright 2003-2024 Gentoo Authors
+# Copyright 2003-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{10..12} )
 DISTUTILS_USE_PEP517=no
 inherit distutils-r1
 
-CUDA_VER="12.5"
+CUDA_VER="12.8"
 BASE_VER="$(ver_cut 1-3)"
 EXTEND_VER="${BASE_VER}"
 
@@ -59,9 +59,9 @@ src_install() {
 	do_install() {
 		local PYTHON_VER="${EPYTHON/python/}"
 		local PYTHON_VER="${PYTHON_VER/./}"
-		distutils_wheel_install "${ED}" "${S}/python/tensorrt-${EXTEND_VER}-cp${PYTHON_VER}-none-linux_x86_64.whl"
-		distutils_wheel_install "${ED}" "${S}/python/tensorrt_dispatch-${EXTEND_VER}-cp${PYTHON_VER}-none-linux_x86_64.whl"
-		distutils_wheel_install "${ED}" "${S}/python/tensorrt_lean-${EXTEND_VER}-cp${PYTHON_VER}-none-linux_x86_64.whl"
+		distutils_wheel_install "${ED}" "${S}/python/tensorrt-${PV}-cp${PYTHON_VER}-none-linux_x86_64.whl"
+		distutils_wheel_install "${ED}" "${S}/python/tensorrt_dispatch-${PV}-cp${PYTHON_VER}-none-linux_x86_64.whl"
+		distutils_wheel_install "${ED}" "${S}/python/tensorrt_lean-${PV}-cp${PYTHON_VER}-none-linux_x86_64.whl"
 		python_optimize
 	}
 	python_foreach_impl do_install
