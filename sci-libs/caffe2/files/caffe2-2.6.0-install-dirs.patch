@@ -1,5 +1,21 @@
+From 0e523ba73ae9da6baf1e11d1c58dedec64cecc31 Mon Sep 17 00:00:00 2001
+From: wangjiezhe <wangjiezhe@gmail.com>
+Date: Mon, 17 Feb 2025 13:31:18 +0800
+Subject: [PATCH] Fix install dirs
+
+---
+ c10/CMakeLists.txt             | 4 ++--
+ c10/cuda/CMakeLists.txt        | 4 ++--
+ c10/hip/CMakeLists.txt         | 2 +-
+ c10/xpu/CMakeLists.txt         | 4 ++--
+ cmake/External/EigenBLAS.cmake | 4 ++--
+ test/cpp/c10d/CMakeLists.txt   | 4 ++--
+ test/cpp/jit/CMakeLists.txt    | 6 +++---
+ test/inductor/CMakeLists.txt   | 2 +-
+ 8 files changed, 15 insertions(+), 15 deletions(-)
+
 diff --git a/c10/CMakeLists.txt b/c10/CMakeLists.txt
-index 7dc13b4f0df..0524696ad4f 100644
+index 663f2ddf2f2..61619fd7a45 100644
 --- a/c10/CMakeLists.txt
 +++ b/c10/CMakeLists.txt
 @@ -162,7 +162,7 @@ if(NOT BUILD_LIBTORCHLESS)
@@ -84,29 +100,29 @@ index 133712c4c18..0420da62840 100644
 +        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 diff --git a/test/cpp/c10d/CMakeLists.txt b/test/cpp/c10d/CMakeLists.txt
-index 0874852517e..597e1d5c4f0 100644
+index 5b423241d5b..6fbc752530f 100644
 --- a/test/cpp/c10d/CMakeLists.txt
 +++ b/test/cpp/c10d/CMakeLists.txt
-@@ -52,7 +52,7 @@ if(USE_CUDA)
+@@ -50,7 +50,7 @@ if(USE_CUDA)
+       ProcessGroupNCCLErrorsTest.cpp
+       LINK_LIBRARIES torch_cpu c10d_cuda_test gtest_main __caffe2_nccl INSTALL_TEST ${INSTALL_TEST})
      if(INSTALL_TEST)
-       install(TARGETS ProcessGroupNCCLTest DESTINATION bin)
-       install(TARGETS ProcessGroupNCCLErrorsTest DESTINATION bin)
 -      install(TARGETS c10d_cuda_test DESTINATION lib)
 +      install(TARGETS c10d_cuda_test DESTINATION ${CMAKE_INSTALL_LIBDIR})
      endif()
    endif()
    if(USE_UCC AND USE_C10D_UCC)
-@@ -65,7 +65,7 @@ if(USE_CUDA)
-       torch_cpu c10d_cuda_test gtest_main __caffe2_ucc)
+@@ -62,7 +62,7 @@ if(USE_CUDA)
+       ProcessGroupUCCTest.cpp
+       LINK_LIBRARIES torch_cpu c10d_cuda_test gtest_main __caffe2_ucc INSTALL_TEST ${INSTALL_TEST})
      if(INSTALL_TEST)
-       install(TARGETS ProcessGroupUCCTest DESTINATION bin)
 -      install(TARGETS c10d_cuda_test DESTINATION lib)
 +      install(TARGETS c10d_cuda_test DESTINATION ${CMAKE_INSTALL_LIBDIR})
      endif()
    endif()
  else()
 diff --git a/test/cpp/jit/CMakeLists.txt b/test/cpp/jit/CMakeLists.txt
-index f0510d9c81f..ee6b5a1c159 100644
+index cd2eaf761df..05eebac8f81 100644
 --- a/test/cpp/jit/CMakeLists.txt
 +++ b/test/cpp/jit/CMakeLists.txt
 @@ -32,9 +32,9 @@ endif()
@@ -133,3 +149,6 @@ index c27e8c77294..29c2c25c080 100644
 -  install(TARGETS aoti_custom_ops DESTINATION lib)
 +  install(TARGETS aoti_custom_ops DESTINATION ${CMAKE_INSTALL_LIBDIR})
  endif()
+-- 
+2.45.3
+

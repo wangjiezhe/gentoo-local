@@ -1,9 +1,9 @@
-# Copyright 2022-2024 Gentoo Authors
+# Copyright 2022-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{10..12} )
+PYTHON_COMPAT=( python3_{10..13} )
 ROCM_VERSION=6.1
 inherit python-single-r1 cmake cuda flag-o-matic prefix rocm toolchain-funcs
 
@@ -95,7 +95,7 @@ RDEPEND="
 	distributed? (
 		sci-libs/tensorpipe[cuda?]
 	)
-	xnnpack? ( >=sci-libs/XNNPACK-2024.02.29 )
+	xnnpack? ( >=sci-libs/XNNPACK-2024.11.08 )
 	mkl? ( sci-libs/mkl )
 	openblas? ( sci-libs/openblas )
 	blis? ( || ( sci-libs/blis sci-libs/aocl-blas ) )
@@ -137,10 +137,8 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.1.2-fix-rpath.patch
 	"${FILESDIR}"/${PN}-2.4.0-fix-openmp-link.patch
 	"${FILESDIR}"/${PN}-2.4.0-rocm-fix-std-cpp17.patch
-	"${FILESDIR}"/${PN}-2.2.2-musl.patch
 	"${FILESDIR}"/${PN}-2.3.0-fix-libcpp.patch
 	"${FILESDIR}"/${PN}-2.0.1-functorch.patch
-	"${FILESDIR}"/${PN}-2.4.0-missing-binaries.patch
 	"${FILESDIR}"/${PN}-2.4.0-qnnpack.patch
 	"${FILESDIR}"/${PN}-2.4.0-blis.patch
 	# "${FILESDIR}"/${PN}-2.4.0-cutlass-3.5.0.patch
