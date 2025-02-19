@@ -1,0 +1,55 @@
+diff --git a/fbgemm_gpu/setup.py b/fbgemm_gpu/setup.py
+index cdb131f5..66424221 100644
+--- a/fbgemm_gpu/setup.py
++++ b/fbgemm_gpu/setup.py
+@@ -177,49 +177,8 @@ class FbgemmGpuBuild:
+         pkg_vver = self.variant_version()
+ 
+         print("[SETUP.PY] Extracting the package version ...")
+-        print(
+-            f"[SETUP.PY] TAG: {gitversion.get_tag()}, BRANCH: {gitversion.get_branch()}, SHA: {gitversion.get_sha()}"
+-        )
+-
+-        if self.args.package_channel == "nightly":
+-            # Use date stamp for nightly versions
+-            print(
+-                "[SETUP.PY] Package is for NIGHTLY; using timestamp for the versioning"
+-            )
+-            today = date.today()
+-            pkg_version = f"{today.year}.{today.month}.{today.day}"
+-
+-        elif self.nova_flag() is not None:
+-            # For Nova workflow contexts, we want to strip out the `rcN` suffix
+-            # from the git-tagged version strings, regardless of test or release
+-            # channels.  This is done to comply with PyTorch PIP package naming
+-            # convensions
+-
+-            # Remove -rcN, .rcN, or rcN (e.g. 0.4.0-rc0 => 0.4.0)
+-            pkg_version = re.sub(
+-                r"(\.|\-)*rc\d+$",
+-                "",
+-                # Remove postN (e.g. 0.4.0rc0.post0 => 0.4.0rc0)
+-                re.sub(
+-                    r"\.post\d+$",
+-                    "",
+-                    # Remove the local version identifier, if any (e.g. 0.4.0rc0.post0+git.6a63116c.dirty => 0.4.0rc0.post0)
+-                    gitversion.version_from_git().split("+")[0],
+-                ),
+-            )
+-
+-        else:
+-            # For non-Nova workflow contexts, i.e. PyPI, we want to maintain the
+-            # `rcN` suffix in the version string
+-
+-            # Remove post0 (keep postN for N > 0) (e.g. 0.4.0rc0.post0 => 0.4.0rc0)
+-            pkg_version = re.sub(
+-                r"\.post0$",
+-                "",
+-                # Remove the local version identifier, if any (e.g. 0.4.0rc0.post0+git.6a63116c.dirty => 0.4.0rc0.post0)
+-                gitversion.version_from_git().split("+")[0],
+-            )
+ 
++        pkg_version = "1.1.0"
+         full_version_string = f"{pkg_version}{pkg_vver}"
+         print(
+             f"[SETUP.PY] Setting the full package version string: {full_version_string}"
