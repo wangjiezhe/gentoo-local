@@ -1,4 +1,4 @@
-# Copyright 2023-2024 Gentoo Authors
+# Copyright 2023-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -22,7 +22,7 @@ KEYWORDS="~amd64"
 RESTRICT="test" # Need some modules, not yet packaged
 
 RDEPEND="
-	=sci-libs/tokenizers-0.20*[${PYTHON_SINGLE_USEDEP}]
+	=sci-libs/tokenizers-0.21*[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		dev-python/filelock[${PYTHON_USEDEP}]
 		dev-python/numpy[${PYTHON_USEDEP}]
@@ -33,6 +33,12 @@ RDEPEND="
 		dev-python/tqdm[${PYTHON_USEDEP}]
 		sci-libs/huggingface_hub[${PYTHON_USEDEP}]
 		>=sci-libs/safetensors-0.4.1[${PYTHON_USEDEP}]
+	')
+"
+BDEPEND="
+	$(python_gen_cond_dep '
+		dev-python/parameterized[${PYTHON_USEDEP}]
+		dev-python/timeout-decorator[${PYTHON_USEDEP}]
 	')
 "
 
