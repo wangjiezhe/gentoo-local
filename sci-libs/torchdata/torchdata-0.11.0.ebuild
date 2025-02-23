@@ -1,4 +1,4 @@
-# Copyright 2020-2023 Gentoo Authors
+# Copyright 2020-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -19,7 +19,7 @@ SLOT="0"
 KEYWORDS="~amd64"
 
 RDEPEND="
-	>=sci-libs/pytorch-2.1.1[${PYTHON_SINGLE_USEDEP}]
+	>=sci-libs/pytorch-2.6[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		dev-python/urllib3[${PYTHON_USEDEP}]
 		dev-python/requests[${PYTHON_USEDEP}]
