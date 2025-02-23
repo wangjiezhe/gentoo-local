@@ -1,9 +1,9 @@
-# Copyright 2024 Gentoo Authors
+# Copyright 2024-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{10..12} )
+PYTHON_COMPAT=( python3_{10..13} )
 DISTUTILS_USE_PEP517=setuptools
 inherit distutils-r1 pypi
 
@@ -17,7 +17,7 @@ KEYWORDS="~amd64"
 
 RDEPEND="
 	>=dev-python/graphql-core-3.2[${PYTHON_USEDEP}]
-	<dev-python/graphql-core-3.3[${PYTHON_USEDEP}]
+	<dev-python/graphql-core-3.2.4[${PYTHON_USEDEP}]
 	dev-python/yarl[${PYTHON_USEDEP}]
 	dev-python/backoff[${PYTHON_USEDEP}]
 	dev-python/anyio[${PYTHON_USEDEP}]
