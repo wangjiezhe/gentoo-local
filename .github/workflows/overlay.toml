@@ -600,3 +600,7 @@ prefix = "v"
 source = "github"
 github = "vmatare/thinkfan"
 use_latest_release = true
+
+["dev-python/clang-repl"]
+source = "pypi"
+pypi = "clang-repl"
