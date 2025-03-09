@@ -58,7 +58,7 @@ DOC=( package_readme.md )
 
 src_unpack() {
 	S="${WORKDIR}/${P}/core" go-module_src_unpack
-	S="${WORKDIR}/${P}/gpu_stats" cargo_src_unpack
+	S="${WORKDIR}/${P}/gpu_stats" cargo_gen_config
 }
 
 src_prepare() {
