@@ -604,3 +604,9 @@ use_latest_release = true
 ["dev-python/clang-repl"]
 source = "pypi"
 pypi = "clang-repl"
+
+["app-misc/aigit"]
+source = "github"
+github = "zzxwill/aigit"
+use_latest_release = true
+prefix = "v"
