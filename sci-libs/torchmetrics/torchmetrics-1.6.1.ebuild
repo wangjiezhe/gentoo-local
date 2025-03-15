@@ -31,7 +31,7 @@ RDEPEND="
 		')
 	)
 	image? (
-		sci-libs/torchvision[${PYTHON_SINGLE_USEDEP}]
+		sci-ml/torchvision[${PYTHON_SINGLE_USEDEP}]
 		sci-libs/torch-fidelity[${PYTHON_SINGLE_USEDEP}]
 		$(python_gen_cond_dep '
 			dev-python/scipy[${PYTHON_USEDEP}]

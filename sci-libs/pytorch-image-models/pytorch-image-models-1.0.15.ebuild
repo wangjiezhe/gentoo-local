@@ -20,7 +20,7 @@ RESTRICT="test"		# some tests fail randomly
 
 RDEPEND="
 	sci-libs/pytorch[${PYTHON_SINGLE_USEDEP}]
-	sci-libs/torchvision[${PYTHON_SINGLE_USEDEP}]
+	sci-ml/torchvision[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		dev-python/pyyaml[${PYTHON_USEDEP}]
 		sci-ml/huggingface_hub[${PYTHON_USEDEP}]
