@@ -25,7 +25,7 @@ SRC_URI="https://github.com/tensorflow/${MY_PN}/archive/v${MY_PV}.tar.gz -> ${P}
 	${bazel_external_uris}"
 
 RDEPEND="
-	=sci-libs/tensorflow-2.14*[python,${PYTHON_USEDEP}]
+	=sci-ml/tensorflow-2.14*[python,${PYTHON_USEDEP}]
 	sci-ml/keras[${PYTHON_USEDEP}]"
 DEPEND="${RDEPEND}"
 BDEPEND="

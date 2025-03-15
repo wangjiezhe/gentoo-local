@@ -24,7 +24,7 @@ PATCHES=(
 BDEPEND="
 	test? (
 		dev-python/numpy[${PYTHON_USEDEP}]
-		sci-libs/tensorflow[${PYTHON_USEDEP}]
+		sci-ml/tensorflow[${PYTHON_USEDEP}]
 	)
 "
 

@@ -31,7 +31,7 @@ RDEPEND="
 	dev-python/six[${PYTHON_USEDEP}]
 	>=sci-ml/keras-applications-1.0.8[${PYTHON_USEDEP}]
 	>=sci-ml/keras-preprocessing-1.1.2[${PYTHON_USEDEP}]
-	>=sci-libs/tensorflow-2.15[python,${PYTHON_USEDEP}]"
+	>=sci-ml/tensorflow-2.15[python,${PYTHON_USEDEP}]"
 DEPEND="${RDEPEND}
 	dev-python/setuptools[${PYTHON_USEDEP}]"
 BDEPEND="

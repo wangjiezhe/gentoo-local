@@ -29,3 +29,4 @@ move sci-libs/lpips sci-ml/lpips
 move sci-libs/clean-fid sci-ml/clean-fid
 move sci-libs/framework-reproducibility sci-ml/framework-reproducibility
 move sci-libs/tensorflow-estimator sci-ml/tensorflow-estimator
+move sci-libs/tensorflow sci-ml/tensorflow

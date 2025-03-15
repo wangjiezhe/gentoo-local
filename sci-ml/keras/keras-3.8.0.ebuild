@@ -30,5 +30,5 @@ DEPEND="
 	dev-python/rich[${PYTHON_USEDEP}]
 	dev-python/scipy[${PYTHON_USEDEP}]
 	dev-python/six[${PYTHON_USEDEP}]
-	>=sci-libs/tensorflow-2.16[python,${PYTHON_USEDEP}]
+	>=sci-ml/tensorflow-2.16[python,${PYTHON_USEDEP}]
 "
