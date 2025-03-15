@@ -28,7 +28,7 @@ RDEPEND="
 		dev-python/packaging[${PYTHON_USEDEP}]
 		dev-python/psutil[${PYTHON_USEDEP}]
 		dev-python/pyyaml[${PYTHON_USEDEP}]
-		>=sci-libs/huggingface_hub-0.21.0[${PYTHON_USEDEP}]
+		>=sci-ml/huggingface_hub-0.21.0[${PYTHON_USEDEP}]
 		>=sci-libs/safetensors-0.4.3[${PYTHON_USEDEP}]
 	')
 "

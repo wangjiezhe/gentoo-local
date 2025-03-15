@@ -2,3 +2,4 @@ move dev-util/typstyle app-text/typstyle
 move sci-libs/transformers sci-ml/transformers
 move sci-libs/tokenizers sci-ml/tokenizers
 move sci-libs/datasets sci-ml/datasets
+move sci-libs/huggingface_hub sci-ml/huggingface_hub
