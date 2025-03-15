@@ -24,3 +24,4 @@ move sci-libs/faiss sci-ml/faiss
 move sci-libs/keras sci-ml/keras
 move sci-libs/keras-applications sci-ml/keras-applications
 move sci-libs/keras-preprocessing sci-ml/keras-preprocessing
+move sci-libs/kineto sci-ml/kineto
