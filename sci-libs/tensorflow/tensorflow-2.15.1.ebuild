@@ -156,7 +156,7 @@ DEPEND="${RDEPEND}
 	)"
 PDEPEND="python? (
 		=sci-ml/keras-${DEP_VER}*[${PYTHON_USEDEP}]
-		=sci-libs/tensorflow-estimator-${DEP_VER}*[${PYTHON_USEDEP}]
+		=sci-ml/tensorflow-estimator-${DEP_VER}*[${PYTHON_USEDEP}]
 	)"
 #	>=dev-libs/protobuf-3.8.0
 # bazel-7.0 (need to remove `distinct_host_configuration` in bazel.eclass and
