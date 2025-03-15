@@ -38,7 +38,7 @@ RDEPEND="
 # 			dev-python/pytest-xdist[${PYTHON_USEDEP}]
 # 			dev-python/pytest-subtests[${PYTHON_USEDEP}]
 # 			dev-python/parameterized[${PYTHON_USEDEP}]
-# 			sci-libs/datasets[${PYTHON_USEDEP}]
+# 			sci-ml/datasets[${PYTHON_USEDEP}]
 # 			sci-libs/evaluate[${PYTHON_USEDEP}]
 # 			sci-ml/transformers[${PYTHON_USEDEP}]
 # 			dev-python/scipy[${PYTHON_USEDEP}]
