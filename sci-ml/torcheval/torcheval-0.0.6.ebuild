@@ -19,7 +19,7 @@ KEYWORDS="~amd64"
 RESTRICT="test"
 
 RDEPEND="
-	>=sci-libs/torchtnt-0.0.5[${PYTHON_SINGLE_USEDEP}]
+	>=sci-ml/torchtnt-0.0.5[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		dev-python/typing-extensions[${PYTHON_USEDEP}]
 	')

@@ -17,3 +17,4 @@ move sci-libs/torchsnapshot sci-ml/torchsnapshot
 move sci-libs/pytorch-image-models sci-ml/pytorch-image-models
 move sci-libs/pytorch-msssim sci-ml/pytorch-msssim
 move sci-libs/torchtext sci-ml/torchtext
+move sci-libs/torchtnt sci-ml/torchtnt
