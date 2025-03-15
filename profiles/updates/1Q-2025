@@ -11,3 +11,4 @@ move sci-libs/torchaudio sci-ml/torchaudio
 move sci-libs/torchdata sci-ml/torchdata
 move sci-libs/torcheval sci-ml/torcheval
 move sci-libs/torchmetrics sci-ml/torchmetrics
+move sci-libs/torch-fidelity sci-ml/torch-fidelity
