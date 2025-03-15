@@ -19,7 +19,7 @@ KEYWORDS="~amd64"
 RDEPEND="
 	sci-ml/pytorch[${PYTHON_SINGLE_USEDEP}]
 	dev-python/lightning-utilities[${PYTHON_SINGLE_USEDEP}]
-	sci-libs/torchmetrics[${PYTHON_SINGLE_USEDEP}]
+	sci-ml/torchmetrics[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		dev-python/fsspec[${PYTHON_USEDEP}]
 		dev-python/packaging[${PYTHON_USEDEP}]

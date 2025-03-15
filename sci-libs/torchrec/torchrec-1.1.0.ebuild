@@ -18,7 +18,7 @@ KEYWORDS="~amd64"
 RESTRICT="test"		# need torchx
 
 RDEPEND="
-	sci-libs/torchmetrics[${PYTHON_SINGLE_USEDEP}]
+	sci-ml/torchmetrics[${PYTHON_SINGLE_USEDEP}]
 	>=dev-python/FBGEMM_GPU-0.8.0[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		dev-python/iopath[${PYTHON_USEDEP}]
