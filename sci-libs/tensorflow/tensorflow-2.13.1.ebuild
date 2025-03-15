@@ -149,7 +149,7 @@ DEPEND="${RDEPEND}
 		dev-python/setuptools
 	)"
 PDEPEND="python? (
-		=sci-libs/keras-${DEP_VER}*[${PYTHON_USEDEP}]
+		=sci-ml/keras-${DEP_VER}*[${PYTHON_USEDEP}]
 		=sci-libs/tensorflow-estimator-${DEP_VER}*[${PYTHON_USEDEP}]
 	)"
 BDEPEND="

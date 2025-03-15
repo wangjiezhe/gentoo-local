@@ -162,7 +162,7 @@ DEPEND="${RDEPEND}
 		dev-python/setuptools
 	)"
 PDEPEND="python? (
-		>=sci-libs/keras-3.2.0[${PYTHON_USEDEP}]
+		>=sci-ml/keras-3.2.0[${PYTHON_USEDEP}]
 	)"
 #	>=dev-libs/protobuf-3.8.0
 BDEPEND="
