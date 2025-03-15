@@ -25,7 +25,7 @@ RDEPEND="
 	media-sound/sox
 	dev-util/ccache
 	ffmpeg? ( media-video/ffmpeg )
-	cuda? ( >=sci-libs/caffe2-${PV}[cuda?] )
+	cuda? ( >=sci-ml/caffe2-${PV}[cuda?] )
 "
 DEPEND="${RDEPEND}"
 

@@ -29,7 +29,7 @@ RDEPEND="
 		dev-python/scipy[${PYTHON_USEDEP}]
 	')
 	sci-ml/pytorch[${PYTHON_SINGLE_USEDEP}]
-	sci-libs/caffe2[cuda?]
+	sci-ml/caffe2[cuda?]
 	media-video/ffmpeg
 	dev-qt/qtcore:5
 "

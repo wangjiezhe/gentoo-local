@@ -27,7 +27,7 @@ BDEPEND="
 		test? (
 			dev-python/looseversion
 			sci-ml/pytorch
-			sci-libs/caffe2[cuda]
+			sci-ml/caffe2[cuda]
 		)
 	)
 "
