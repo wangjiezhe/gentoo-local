@@ -25,7 +25,7 @@ RDEPEND="
 		dev-python/numpy[${PYTHON_USEDEP}]
 	')
 	audio? (
-		sci-libs/torchaudio[${PYTHON_SINGLE_USEDEP}]
+		sci-ml/torchaudio[${PYTHON_SINGLE_USEDEP}]
 		$(python_gen_cond_dep '
 			dev-python/pystoi[${PYTHON_USEDEP}]
 		')
