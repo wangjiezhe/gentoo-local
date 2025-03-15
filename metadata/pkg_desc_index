@@ -99,50 +99,50 @@ net-misc/mosh 1.4.0: Mobile shell that supports roaming and intelligent local ec
 net-misc/piping-server 0.18.0: Infinitely transfer between every device over pure HTTP with pipes or browsers
 net-vpn/frp 0.61.2: A reverse proxy that exposes a server behind a NAT or firewall to the internet
 sci-libs/XNNPACK 2024.11.08: library of floating-point neural network inference operators
-sci-libs/accelerate 0.34.1 1.4.0: A simple way to train and use PyTorch models with multi-GPU, TPU, mixed-precision
 sci-libs/aocl-blas 5.0: AMD's optimized version of BLAS targeted for AMD EPYC and Ryzen CPUs
 sci-libs/aocl-lapack 5.0: AMD optimized high-performance object-based library for DLA computations
 sci-libs/aocl-libm 5.0 5.0-r1: Optimized libm replacement from AMD for x86_64 architectures
 sci-libs/aocl-sparse 5.0: AMD library for optimized sparse BLAS operations
 sci-libs/aocl-utils 5.0: A uniform interface to all AOCL libraries to access CPU features
-sci-libs/caffe2 2.6.0: A deep learning framework
-sci-libs/clean-fid 0.1.35: FID calculation with proper image resizing and quantization steps
-sci-libs/compressai 1.2.6: A PyTorch library and evaluation platform for end-to-end compression research
-sci-libs/datasets 2.21.0: Access and share datasets for Audio, Computer Vision, and NLP tasks
-sci-libs/faiss 1.10.0: A library for efficient similarity search and clustering of dense vectors
-sci-libs/framework-reproducibility 0.6.0: Providing reproducibility in deep learning frameworks
 sci-libs/gloo 2023.07.15-r1: library of floating-point neural network inference operators
-sci-libs/huggingface_hub 0.29.1: a client library to interact with the Hugging Face Hub
-sci-libs/keras 2.13.1 2.14.0 2.15.0 3.8.0: Deep Learning for humans
-sci-libs/keras-applications 1.0.8-r2: Keras deep learning library reference implementations of deep learning models
-sci-libs/keras-preprocessing 1.1.2-r1: Easy data preprocessing and data augmentation for deep learning models
-sci-libs/kineto 0.4.0_p20240525: part of the PyTorch Profiler
-sci-libs/lpips 0.1.4: Perceptual Similarity Metric and Dataset
 sci-libs/magma 2.8.0: Matrix Algebra on GPU and Multicore Architectures
 sci-libs/nltk 3.9.1: Natural Language Toolkit
 sci-libs/nltk-data 20250220: Data Distribution for NLTK
 sci-libs/onnx 1.16.2 1.17.0: Open Neural Network Exchange (ONNX)
 sci-libs/openblas 0.3.26: Optimized BLAS library based on GotoBLAS2
-sci-libs/pytorch 2.6.0: Tensors and Dynamic neural networks in Python
-sci-libs/pytorch-image-models 1.0.15: PyTorch image models, scripts, pretrained weights
-sci-libs/pytorch-msssim 1.0.0: Fast and differentiable MS-SSIM and SSIM for pytorch
-sci-libs/safetensors 0.4.2: Simple, safe way to store and distribute tensors
-sci-libs/tensorflow 2.13.1 2.14.1 2.15.1 2.16.2 2.17.1 2.18.0: Computation framework using data flow graphs for scalable machine learning
-sci-libs/tensorflow-estimator 2.13.0 2.14.0 2.15.0: A high-level TensorFlow API that greatly simplifies machine learning programming
 sci-libs/tensorrt 8.6.1.6-r1 10.7.0.23 10.8.0.43: An SDK for high-performance deep learning inference
-sci-libs/tokenizers 0.20.1 0.21.0: Implementation of today's most used tokenizers
-sci-libs/torch-fidelity 0.3.0_p20231026: High-fidelity performance metrics for generative models in PyTorch
-sci-libs/torchaudio 2.6.0: Data manipulation and transformation for audio signal processing
-sci-libs/torchdata 0.11.0: A library of common modular data loading primitives
-sci-libs/torcheval 0.0.6: A library that contains a rich collection of performant PyTorch model metrics
-sci-libs/torchmetrics 1.6.1: Machine learning metrics for distributed, scalable PyTorch applications
-sci-libs/torchrec 1.1.0: Pytorch domain library for recommendation systems
-sci-libs/torchsnapshot 0.1.0_p20230721 0.1.0_p20240521-r1: A performant, memory-efficient checkpointing library for PyTorch applications
-sci-libs/torchtext 0.18.0-r1: Data manipulation and transformation for audio signal processing
-sci-libs/torchtnt 0.2.3-r1 0.2.4: A lightweight library for PyTorch training tools and utilities
-sci-libs/torchvision 0.21.0: Datasets, transforms and models to specific to computer vision
-sci-libs/transformers 4.49.0: State-of-the-art Machine Learning for JAX, PyTorch and TensorFlow
 sci-mathematics/mathematica 14.0.0: Wolfram Mathematica
+sci-ml/accelerate 0.34.1 1.4.0: A simple way to train and use PyTorch models with multi-GPU, TPU, mixed-precision
+sci-ml/caffe2 2.6.0: A deep learning framework
+sci-ml/clean-fid 0.1.35: FID calculation with proper image resizing and quantization steps
+sci-ml/compressai 1.2.6: A PyTorch library and evaluation platform for end-to-end compression research
+sci-ml/datasets 2.21.0: Access and share datasets for Audio, Computer Vision, and NLP tasks
+sci-ml/faiss 1.10.0: A library for efficient similarity search and clustering of dense vectors
+sci-ml/framework-reproducibility 0.6.0: Providing reproducibility in deep learning frameworks
+sci-ml/huggingface_hub 0.29.1: a client library to interact with the Hugging Face Hub
+sci-ml/keras 2.13.1 2.14.0 2.15.0 3.8.0: Deep Learning for humans
+sci-ml/keras-applications 1.0.8-r2: Keras deep learning library reference implementations of deep learning models
+sci-ml/keras-preprocessing 1.1.2-r1: Easy data preprocessing and data augmentation for deep learning models
+sci-ml/kineto 0.4.0_p20240525: part of the PyTorch Profiler
+sci-ml/lpips 0.1.4: Perceptual Similarity Metric and Dataset
+sci-ml/pytorch 2.6.0: Tensors and Dynamic neural networks in Python
+sci-ml/pytorch-image-models 1.0.15: PyTorch image models, scripts, pretrained weights
+sci-ml/pytorch-msssim 1.0.0: Fast and differentiable MS-SSIM and SSIM for pytorch
+sci-ml/safetensors 0.4.2: Simple, safe way to store and distribute tensors
+sci-ml/tensorflow 2.13.1 2.14.1 2.15.1 2.16.2 2.17.1 2.18.0: Computation framework using data flow graphs for scalable machine learning
+sci-ml/tensorflow-estimator 2.13.0 2.14.0 2.15.0: A high-level TensorFlow API that greatly simplifies machine learning programming
+sci-ml/tokenizers 0.20.1 0.21.0: Implementation of today's most used tokenizers
+sci-ml/torch-fidelity 0.3.0_p20231026: High-fidelity performance metrics for generative models in PyTorch
+sci-ml/torchaudio 2.6.0: Data manipulation and transformation for audio signal processing
+sci-ml/torchdata 0.11.0: A library of common modular data loading primitives
+sci-ml/torcheval 0.0.6: A library that contains a rich collection of performant PyTorch model metrics
+sci-ml/torchmetrics 1.6.1: Machine learning metrics for distributed, scalable PyTorch applications
+sci-ml/torchrec 1.1.0: Pytorch domain library for recommendation systems
+sci-ml/torchsnapshot 0.1.0_p20230721 0.1.0_p20240521-r1: A performant, memory-efficient checkpointing library for PyTorch applications
+sci-ml/torchtext 0.18.0-r1: Data manipulation and transformation for audio signal processing
+sci-ml/torchtnt 0.2.3-r1 0.2.4: A lightweight library for PyTorch training tools and utilities
+sci-ml/torchvision 0.21.0: Datasets, transforms and models to specific to computer vision
+sci-ml/transformers 4.49.0: State-of-the-art Machine Learning for JAX, PyTorch and TensorFlow
 sci-visualization/tensorboard 2.13.0 2.14.1 2.15.2 2.16.2 2.17.1: TensorFlow's Visualization Toolkit
 sys-apps/bat-extras 2024.08.24-r1: Bash scripts that integrate bat with various command line tools.
 sys-devel/lld-toolchain-symlinks 14-r2: Symlinks to use LLD on binutils-free system
