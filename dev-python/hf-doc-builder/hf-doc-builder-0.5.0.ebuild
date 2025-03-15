@@ -32,7 +32,7 @@ BDEPEND="
 		dev-python/pytest-xdist[${PYTHON_USEDEP}]
 		$(python_gen_any_dep 'sci-libs/pytorch[${PYTHON_SINGLE_USEDEP}]')
 		sci-ml/transformers[${PYTHON_USEDEP}]
-		sci-libs/tokenizers[${PYTHON_USEDEP}]
+		sci-ml/tokenizers[${PYTHON_USEDEP}]
 	)
 "
 

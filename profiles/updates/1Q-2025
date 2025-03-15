@@ -1,2 +1,3 @@
 move dev-util/typstyle app-text/typstyle
 move sci-libs/transformers sci-ml/transformers
+move sci-libs/tokenizers sci-ml/tokenizers
