@@ -26,7 +26,7 @@ BDEPEND="
 		dev-libs/dlpack
 		test? (
 			dev-python/looseversion
-			sci-libs/pytorch
+			sci-ml/pytorch
 			sci-libs/caffe2[cuda]
 		)
 	)

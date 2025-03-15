@@ -19,7 +19,7 @@ KEYWORDS="~amd64"
 IUSE="audio image text"
 
 RDEPEND="
-	sci-libs/pytorch[${PYTHON_SINGLE_USEDEP}]
+	sci-ml/pytorch[${PYTHON_SINGLE_USEDEP}]
 	dev-python/lightning-utilities[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		dev-python/numpy[${PYTHON_USEDEP}]

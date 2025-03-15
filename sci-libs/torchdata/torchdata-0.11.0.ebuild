@@ -19,7 +19,7 @@ SLOT="0"
 KEYWORDS="~amd64"
 
 RDEPEND="
-	>=sci-libs/pytorch-2.6[${PYTHON_SINGLE_USEDEP}]
+	>=sci-ml/pytorch-2.6[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		dev-python/urllib3[${PYTHON_USEDEP}]
 		dev-python/requests[${PYTHON_USEDEP}]

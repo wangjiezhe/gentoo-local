@@ -22,7 +22,7 @@ KEYWORDS="~amd64"
 PATCHES=( "${FILESDIR}/${PN}-0.11.5-test.patch" )
 
 RDEPEND="
-	sci-libs/pytorch[${PYTHON_SINGLE_USEDEP}]
+	sci-ml/pytorch[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		dev-python/packaging[${PYTHON_USEDEP}]
 		dev-python/typing-extensions[${PYTHON_USEDEP}]

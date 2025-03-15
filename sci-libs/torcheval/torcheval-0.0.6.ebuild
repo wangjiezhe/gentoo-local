@@ -26,7 +26,7 @@ RDEPEND="
 "
 # BDEPEND="
 # 	test? (
-# 		sci-libs/pytorch[${PYTHON_SINGLE_USEDEP}]
+# 		sci-ml/pytorch[${PYTHON_SINGLE_USEDEP}]
 # 		sci-ml/torchvision[${PYTHON_SINGLE_USEDEP}]
 # 		dev-python/numpy[${PYTHON_USEDEP}]
 # 		sci-libs/scikit-learn[${PYTHON_USEDEP}]

@@ -21,7 +21,7 @@ IUSE="cuda ffmpeg"
 RESTRICT="test"		# has fatal python error and too many other failures
 
 RDEPEND="
-	>=sci-libs/pytorch-${PV}[${PYTHON_SINGLE_USEDEP}]
+	>=sci-ml/pytorch-${PV}[${PYTHON_SINGLE_USEDEP}]
 	media-sound/sox
 	dev-util/ccache
 	ffmpeg? ( media-video/ffmpeg )

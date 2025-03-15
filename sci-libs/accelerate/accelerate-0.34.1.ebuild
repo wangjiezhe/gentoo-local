@@ -22,7 +22,7 @@ KEYWORDS="~amd64"
 RESTRICT="test"
 
 RDEPEND="
-	sci-libs/pytorch[${PYTHON_SINGLE_USEDEP}]
+	sci-ml/pytorch[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		dev-python/numpy[${PYTHON_USEDEP}]
 		dev-python/psutil[${PYTHON_USEDEP}]
@@ -33,7 +33,7 @@ RDEPEND="
 "
 # BDEPEND="
 # 	test? (
-# 		sci-libs/pytorch-image-models[${PYTHON_SINGLE_USEDEP}]
+# 		sci-ml/pytorch-image-models[${PYTHON_SINGLE_USEDEP}]
 # 		$(python_gen_cond_dep '
 # 			dev-python/pytest-xdist[${PYTHON_USEDEP}]
 # 			dev-python/pytest-subtests[${PYTHON_USEDEP}]

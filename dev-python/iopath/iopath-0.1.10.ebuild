@@ -26,7 +26,7 @@ RDEPEND="
 "
 BDEPEND="
 	test? (
-		$(python_gen_any_dep 'sci-libs/pytorch[${PYTHON_SINGLE_USEDEP}]')
+		$(python_gen_any_dep 'sci-ml/pytorch[${PYTHON_SINGLE_USEDEP}]')
 	)
 "
 

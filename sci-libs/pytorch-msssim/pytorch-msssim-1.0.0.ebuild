@@ -18,5 +18,5 @@ KEYWORDS="~amd64"
 RESTRICT="test"
 
 RDEPEND="
-	sci-libs/pytorch[${PYTHON_SINGLE_USEDEP}]
+	sci-ml/pytorch[${PYTHON_SINGLE_USEDEP}]
 "

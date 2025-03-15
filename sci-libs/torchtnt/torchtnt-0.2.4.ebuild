@@ -21,7 +21,7 @@ KEYWORDS="~amd64"
 # RESTRICT="test"
 
 RDEPEND="
-	>=sci-libs/pytorch-2.4.0[${PYTHON_SINGLE_USEDEP}]
+	>=sci-ml/pytorch-2.4.0[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		dev-python/numpy[${PYTHON_USEDEP}]
 		dev-python/fsspec[${PYTHON_USEDEP}]
