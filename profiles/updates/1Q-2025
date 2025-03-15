@@ -19,3 +19,4 @@ move sci-libs/pytorch-msssim sci-ml/pytorch-msssim
 move sci-libs/torchtext sci-ml/torchtext
 move sci-libs/torchtnt sci-ml/torchtnt
 move sci-libs/accelerate sci-ml/accelerate
+move sci-libs/compressai sci-ml/compressai
