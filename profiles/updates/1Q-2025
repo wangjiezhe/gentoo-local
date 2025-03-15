@@ -14,3 +14,4 @@ move sci-libs/torchmetrics sci-ml/torchmetrics
 move sci-libs/torch-fidelity sci-ml/torch-fidelity
 move sci-libs/torchrec sci-ml/torchrec
 move sci-libs/torchsnapshot sci-ml/torchsnapshot
+move sci-libs/pytorch-image-models sci-ml/pytorch-image-models
