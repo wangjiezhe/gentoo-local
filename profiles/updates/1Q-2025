@@ -23,3 +23,4 @@ move sci-libs/compressai sci-ml/compressai
 move sci-libs/faiss sci-ml/faiss
 move sci-libs/keras sci-ml/keras
 move sci-libs/keras-applications sci-ml/keras-applications
+move sci-libs/keras-preprocessing sci-ml/keras-preprocessing
