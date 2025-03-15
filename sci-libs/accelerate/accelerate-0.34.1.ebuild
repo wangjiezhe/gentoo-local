@@ -40,7 +40,7 @@ RDEPEND="
 # 			dev-python/parameterized[${PYTHON_USEDEP}]
 # 			sci-libs/datasets[${PYTHON_USEDEP}]
 # 			sci-libs/evaluate[${PYTHON_USEDEP}]
-# 			sci-libs/transformers[${PYTHON_USEDEP}]
+# 			sci-ml/transformers[${PYTHON_USEDEP}]
 # 			dev-python/scipy[${PYTHON_USEDEP}]
 # 			sci-libs/scikit-learn[${PYTHON_USEDEP}]
 # 			deepspeed

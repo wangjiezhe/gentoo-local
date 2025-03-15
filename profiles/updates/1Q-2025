@@ -1,1 +1,2 @@
 move dev-util/typstyle app-text/typstyle
+move sci-libs/transformers sci-ml/transformers

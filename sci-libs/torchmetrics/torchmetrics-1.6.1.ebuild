@@ -38,7 +38,7 @@ RDEPEND="
 		')
 	)
 	text? (
-		sci-libs/transformers[${PYTHON_SINGLE_USEDEP}]
+		sci-ml/transformers[${PYTHON_SINGLE_USEDEP}]
 		$(python_gen_cond_dep '
 			sci-libs/nltk[${PYTHON_USEDEP}]
 			dev-python/regex[${PYTHON_USEDEP}]

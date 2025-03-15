@@ -27,7 +27,7 @@ RDEPEND="
 BDEPEND="
 	test? (
 		sci-libs/compressai[${PYTHON_SINGLE_USEDEP}]
-		sci-libs/transformers[${PYTHON_SINGLE_USEDEP}]
+		sci-ml/transformers[${PYTHON_SINGLE_USEDEP}]
 		$(python_gen_cond_dep '
 			dev-python/pytest-cov[${PYTHON_USEDEP}]
 		')
