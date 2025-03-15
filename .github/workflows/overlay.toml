@@ -2,19 +2,19 @@
 oldver = "old_ver.json"
 newver = "new_ver.json"
 
-["sci-libs/caffe2"]
+["sci-ml/caffe2"]
 source = "github"
 github = "pytorch/pytorch"
 use_latest_release = true
 prefix = "v"
 
-["sci-libs/pytorch"]
+["sci-ml/pytorch"]
 source = "github"
 github = "pytorch/pytorch"
 use_latest_release = true
 prefix = "v"
 
-["sci-libs/torchvision"]
+["sci-ml/torchvision"]
 source = "github"
 github = "pytorch/vision"
 use_latest_release = true
@@ -112,19 +112,19 @@ github = "Lightning-AI/utilities"
 use_latest_release = true
 prefix = "v"
 
-["sci-libs/torchaudio"]
+["sci-ml/torchaudio"]
 source = "github"
 github = "pytorch/audio"
 use_latest_release = true
 prefix = "v"
 
-["sci-libs/lpips"]
+["sci-ml/lpips"]
 source = "github"
 github = "richzhang/PerceptualSimilarity"
 use_latest_release = true
 prefix = "v"
 
-["sci-libs/torch-fidelity"]
+["sci-ml/torch-fidelity"]
 source = "github"
 github = "toshas/torch-fidelity"
 use_latest_release = true
@@ -141,7 +141,7 @@ github = "nltk/nltk_data"
 from_pattern = '(\d+)\.\d+'
 to_pattern = '\1'
 
-["sci-libs/torchmetrics"]
+["sci-ml/torchmetrics"]
 # source = "github"
 # github = "Lightning-AI/torchmetrics"
 # use_latest_release = true
@@ -199,13 +199,13 @@ github = "TylerYep/torchinfo"
 use_latest_release = true
 prefix = "v"
 
-["sci-libs/kineto"]
+["sci-ml/kineto"]
 source = "github"
 github = "pytorch/kineto"
 use_latest_release = true
 prefix = "v"
 
-["sci-libs/transformers"]
+["sci-ml/transformers"]
 source = "github"
 github = "huggingface/transformers"
 use_latest_release = true
@@ -217,7 +217,7 @@ bitbucket = "icl/magma"
 use_max_tag = true
 prefix = "v"
 
-["sci-libs/huggingface_hub"]
+["sci-ml/huggingface_hub"]
 source = "github"
 github = "huggingface/huggingface_hub"
 use_latest_release = true
@@ -229,11 +229,11 @@ github = "jax-ml/ml_dtypes"
 use_latest_release = true
 prefix = "v"
 
-["sci-libs/clean-fid"]
+["sci-ml/clean-fid"]
 source = "pypi"
 pypi = "clean-fid"
 
-["sci-libs/framework-reproducibility"]
+["sci-ml/framework-reproducibility"]
 source = "github"
 github = "NVIDIA/framework-reproducibility"
 use_latest_release = true
@@ -264,13 +264,13 @@ use_latest_release = true
 source = "pypi"
 pypi = "revtok"
 
-["sci-libs/torchdata"]
+["sci-ml/torchdata"]
 source = "github"
 github = "pytorch/data"
 use_latest_release = true
 prefix = "v"
 
-["sci-libs/torchtext"]
+["sci-ml/torchtext"]
 source = "github"
 github = "pytorch/text"
 use_latest_release = true
@@ -291,7 +291,7 @@ source = "github"
 github = "abseil/abseil-cpp"
 use_latest_release = true
 
-["sci-libs/tensorflow"]
+["sci-ml/tensorflow"]
 source = "github"
 github = "tensorflow/tensorflow"
 use_latest_release = true
@@ -303,19 +303,19 @@ github = "tensorflow/tensorboard"
 use_latest_release = true
 prefix = "v"
 
-["sci-libs/tensorflow-estimator"]
+["sci-ml/tensorflow-estimator"]
 source = "github"
 github = "tensorflow/estimator"
 use_latest_release = true
 prefix = "v"
 
-["sci-libs/keras"]
+["sci-ml/keras"]
 source = "github"
 github = "keras-team/keras"
 use_latest_release = true
 prefix = "v"
 
-["sci-libs/pytorch-image-models"]
+["sci-ml/pytorch-image-models"]
 source = "github"
 github = "huggingface/pytorch-image-models"
 use_latest_release = true
@@ -340,11 +340,11 @@ prefix = "v"
 source = "pypi"
 pypi = "pyre-extensions"
 
-["sci-libs/torchtnt"]
+["sci-ml/torchtnt"]
 source = "pypi"
 pypi = "torchtnt"
 
-["sci-libs/torcheval"]
+["sci-ml/torcheval"]
 source = "github"
 github = "pytorch/torcheval"
 use_latest_release = true
@@ -394,13 +394,13 @@ github = "NVIDIA/cutlass"
 use_latest_release = true
 prefix = "v"
 
-["sci-libs/pytorch-msssim"]
+["sci-ml/pytorch-msssim"]
 source = "github"
 github = "VainF/pytorch-msssim"
 use_latest_release = true
 prefix = "v"
 
-["sci-libs/compressai"]
+["sci-ml/compressai"]
 source = "github"
 github = "InterDigitalInc/CompressAI"
 use_latest_tag = true
@@ -426,13 +426,13 @@ prefix = "v"
 source = "pypi"
 pypi = "gql"
 
-["sci-libs/faiss"]
+["sci-ml/faiss"]
 source = "github"
 github = "facebookresearch/faiss"
 use_latest_release = true
 prefix = "v"
 
-["sci-libs/torchsnapshot"]
+["sci-ml/torchsnapshot"]
 source = "github"
 github = "pytorch/torchsnapshot"
 use_latest_release = true
@@ -441,7 +441,7 @@ use_latest_release = true
 source = "pypi"
 pypi = "iopath"
 
-["sci-libs/torchrec"]
+["sci-ml/torchrec"]
 source = "github"
 github = "pytorch/torchrec"
 use_latest_release = true
@@ -453,13 +453,13 @@ github = "messense/rjieba-py"
 use_latest_tag = true
 prefix = "v"
 
-["sci-libs/accelerate"]
+["sci-ml/accelerate"]
 source = "github"
 github = "huggingface/accelerate"
 use_latest_release = true
 prefix = "v"
 
-["sci-libs/datasets"]
+["sci-ml/datasets"]
 source = "github"
 github = "huggingface/datasets"
 use_latest_release = true
@@ -557,7 +557,7 @@ prefix = "v"
 source = "pypi"
 pypi = "py3nvml"
 
-["sci-libs/tokenizers"]
+["sci-ml/tokenizers"]
 source = "github"
 github = "huggingface/tokenizers"
 use_latest_release = true
