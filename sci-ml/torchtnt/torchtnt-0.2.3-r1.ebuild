@@ -106,7 +106,7 @@ python_test() {
 		tests/utils/test_prepare_module.py::PrepareModelTest::test_prepare_fsdp
 		tests/utils/test_prepare_module.py::PrepareModelTest::test_prepare_module_with_ddp
 		tests/utils/test_prepare_module.py::PrepareModelTest::test_prepare_module_with_fsdp
-		## RuntimeError: [/var/tmp/portage/sci-libs/gloo-2023.07.15-r1/work/gloo-c6f3a5bcf568dafc9a8ae482e8cc900633dd6db1/gloo/transport/tcp/pair.cc:525] Read error [127.0.0.1]:55523: Connection reset by peer
+		## RuntimeError: [/var/tmp/portage/sci-ml/gloo-2023.07.15-r1/work/gloo-c6f3a5bcf568dafc9a8ae482e8cc900633dd6db1/gloo/transport/tcp/pair.cc:525] Read error [127.0.0.1]:55523: Connection reset by peer
 		tests/framework/callbacks/test_checkpoint_utils.py::BaseCheckpointerTest::test_directory_sync_collective
 		tests/framework/callbacks/test_checkpoint_utils.py::CheckpointUtilsTest::test_distributed_get_checkpoint_dirpaths
 		tests/framework/callbacks/test_checkpoint_utils.py::CheckpointUtilsTest::test_rank_zero_read_and_broadcast

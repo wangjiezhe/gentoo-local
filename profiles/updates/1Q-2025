@@ -30,3 +30,4 @@ move sci-libs/clean-fid sci-ml/clean-fid
 move sci-libs/framework-reproducibility sci-ml/framework-reproducibility
 move sci-libs/tensorflow-estimator sci-ml/tensorflow-estimator
 move sci-libs/tensorflow sci-ml/tensorflow
+move sci-libs/gloo sci-ml/gloo
