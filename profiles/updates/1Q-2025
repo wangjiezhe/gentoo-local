@@ -33,3 +33,4 @@ move sci-libs/tensorflow sci-ml/tensorflow
 move sci-libs/gloo sci-ml/gloo
 move sci-libs/XNNPACK sci-ml/XNNPACK
 move sci-libs/onnx sci-ml/onnx
+move dev-libs/FBGEMM sci-ml/FBGEMM

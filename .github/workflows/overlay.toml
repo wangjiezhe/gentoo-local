@@ -49,7 +49,7 @@ github = "sandrolovnicki/pLam"
 use_latest_release = true
 prefix = "v"
 
-["dev-libs/FBGEMM"]
+["sci-ml/FBGEMM"]
 source = "github"
 github = "pytorch/FBGEMM"
 use_latest_release = true

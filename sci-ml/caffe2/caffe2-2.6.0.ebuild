@@ -57,7 +57,7 @@ RDEPEND="
 		dev-libs/cusparselt
 		dev-libs/cudss
 	)
-	fbgemm? ( >=dev-libs/FBGEMM-2023.12.01 )
+	fbgemm? ( >=sci-ml/FBGEMM-2023.12.01 )
 	gloo? ( sci-ml/gloo[cuda?] )
 	magma? ( sci-libs/magma[cuda?] )
 	mpi? ( virtual/mpi )
