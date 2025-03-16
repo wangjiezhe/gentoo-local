@@ -40,8 +40,8 @@ RDEPEND="
 	dev-cpp/gflags:=
 	>=dev-cpp/glog-0.5.0
 	dev-cpp/opentelemetry-cpp
-	>=dev-libs/cpuinfo-2024.03.28
-	dev-libs/libfmt
+	dev-libs/cpuinfo
+	dev-libs/libfmt:=
 	dev-libs/protobuf:=
 	dev-libs/pthreadpool
 	dev-libs/sleef
