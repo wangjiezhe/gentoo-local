@@ -32,3 +32,4 @@ move sci-libs/tensorflow-estimator sci-ml/tensorflow-estimator
 move sci-libs/tensorflow sci-ml/tensorflow
 move sci-libs/gloo sci-ml/gloo
 move sci-libs/XNNPACK sci-ml/XNNPACK
+move sci-libs/onnx sci-ml/onnx

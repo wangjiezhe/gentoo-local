@@ -158,7 +158,7 @@ source = "aur"
 aur = "tensorrt"
 strip_release = true
 
-["sci-libs/onnx"]
+["sci-ml/onnx"]
 source = "github"
 github = "onnx/onnx"
 use_latest_release = true
