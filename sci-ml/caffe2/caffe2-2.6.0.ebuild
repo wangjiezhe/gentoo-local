@@ -95,7 +95,7 @@ RDEPEND="
 	distributed? (
 		sci-libs/tensorpipe[cuda?]
 	)
-	xnnpack? ( >=sci-libs/XNNPACK-2024.11.08 )
+	xnnpack? ( >=sci-ml/XNNPACK-2024.11.08 )
 	mkl? ( sci-libs/mkl )
 	openblas? ( sci-libs/openblas )
 	blis? ( || ( sci-libs/blis sci-libs/aocl-blas ) )
