@@ -50,8 +50,8 @@ BDEPEND="test? (
 		dev-python/pytest-datadir[${PYTHON_USEDEP}]
 		dev-python/decorator[${PYTHON_USEDEP}]
 		dev-python/sqlalchemy[${PYTHON_USEDEP}]
-		sci-libs/jiwer[${PYTHON_USEDEP}]
-		sci-libs/seqeval[${PYTHON_USEDEP}]
+		sci-ml/jiwer[${PYTHON_USEDEP}]
+		sci-ml/seqeval[${PYTHON_USEDEP}]
 	')
 )"
 
