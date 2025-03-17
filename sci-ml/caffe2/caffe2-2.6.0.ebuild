@@ -51,7 +51,7 @@ RDEPEND="
 	cuda? (
 		dev-libs/cudnn
 		>=dev-libs/cudnn-frontend-1.0.3:0/8
-		<dev-util/nvidia-cuda-toolkit-12.8.0:=[profiler]
+		dev-util/nvidia-cuda-toolkit:=[profiler]
 		dev-libs/nccl
 		!=dev-libs/nccl-2.19.4*
 		dev-libs/cusparselt
@@ -68,7 +68,6 @@ RDEPEND="
 	onednn? ( sci-ml/oneDNN )
 	opencl? ( virtual/opencl )
 	qnnpack? (
-		!sci-libs/QNNPACK
 		dev-cpp/gemmlowp
 		dev-libs/clog
 	)
