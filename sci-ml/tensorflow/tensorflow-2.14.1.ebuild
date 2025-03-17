@@ -114,7 +114,7 @@ RDEPEND="
 		dev-util/nvidia-cuda-toolkit:=[profiler]
 		=dev-libs/cudnn-8*
 		dev-libs/nccl
-		=sci-libs/tensorrt-8*
+		=sci-ml/tensorrt-8*
 	)
 	mpi? ( virtual/mpi )
 	python? (

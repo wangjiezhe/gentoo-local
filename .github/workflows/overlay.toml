@@ -149,7 +149,7 @@ to_pattern = '\1'
 source = "pypi"
 pypi = "torchmetrics"
 
-["sci-libs/tensorrt"]
+["sci-ml/tensorrt"]
 # source = "github"
 # github = "NVIDIA/TensorRT"
 # use_latest_release = true
