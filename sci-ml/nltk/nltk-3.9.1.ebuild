@@ -20,7 +20,7 @@ IUSE="data"
 PATCHES=( "${FILESDIR}/${PN}-3.8.1-test.patch" )
 
 RDEPEND="
-	data? ( sci-libs/nltk-data )
+	data? ( sci-ml/nltk-data )
 	$(python_gen_cond_dep '
 		dev-python/joblib[${PYTHON_USEDEP}]
 		>=dev-python/regex-2021.8.3[${PYTHON_USEDEP}]
@@ -32,7 +32,7 @@ BDEPEND="
 		dev-lang/python[tk]
 		dev-python/pytest-mock[${PYTHON_USEDEP}]
 		dev-python/twython[${PYTHON_USEDEP}]
-		>=sci-libs/nltk-data-20240729
+		>=sci-ml/nltk-data-20240729
 	)
 "
 

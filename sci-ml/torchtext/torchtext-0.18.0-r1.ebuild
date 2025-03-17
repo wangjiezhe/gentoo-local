@@ -50,7 +50,7 @@ src_prepare() {
 
 pkg_postinst() {
 	elog "Optional NLP tools"
-	optfeature "toktok tokenizer" sci-libs/nltk
+	optfeature "toktok tokenizer" sci-ml/nltk
 	# optfeature "SpaCy English tokenizer" sci-libs/spacy
 	optfeature "NLTK port of the Moses tokenization" dev-python/sacremoses
 	optfeature "revtok reversible/caps-aware tokenizer" dev-python/revtok

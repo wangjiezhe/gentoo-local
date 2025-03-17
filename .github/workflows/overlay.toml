@@ -130,12 +130,12 @@ github = "toshas/torch-fidelity"
 use_latest_release = true
 prefix = "v"
 
-["sci-libs/nltk"]
+["sci-ml/nltk"]
 source = "github"
 github = "nltk/nltk"
 use_max_tag = true
 
-["sci-libs/nltk-data"]
+["sci-ml/nltk-data"]
 source = "github"
 github = "nltk/nltk_data"
 from_pattern = '(\d+)\.\d+'

@@ -134,7 +134,7 @@ KEYWORDS="~amd64"
 RESTRICT="mirror"
 
 RDEPEND="
-	sci-libs/nltk
+	sci-ml/nltk
 	dev-python/six
 "
 BDEPEND="app-arch/unzip"

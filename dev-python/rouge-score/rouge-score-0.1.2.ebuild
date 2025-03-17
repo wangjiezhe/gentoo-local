@@ -17,7 +17,7 @@ RESTRICT="test"		# due to lack of `testdata` directory
 
 RDEPEND="
 	dev-python/absl-py[${PYTHON_USEDEP}]
-	sci-libs/nltk[${PYTHON_USEDEP}]
+	sci-ml/nltk[${PYTHON_USEDEP}]
 	dev-python/numpy[${PYTHON_USEDEP}]
 	dev-python/six[${PYTHON_USEDEP}]
 "
