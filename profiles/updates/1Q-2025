@@ -36,3 +36,4 @@ move sci-libs/onnx sci-ml/onnx
 move dev-libs/FBGEMM sci-ml/FBGEMM
 move sci-libs/tensorrt sci-ml/tensorrt
 move sci-libs/nltk sci-ml/nltk
+move sci-libs/nltk-data sci-ml/nltk-data
