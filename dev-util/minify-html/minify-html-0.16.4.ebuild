@@ -14,109 +14,104 @@ CRATES="
 	autocfg@1.4.0
 	base64-simd@0.7.0
 	bitflags@1.3.2
-	bitflags@2.6.0
+	bitflags@2.9.0
 	bitvec@1.0.1
-	bumpalo@3.16.0
+	bumpalo@3.17.0
 	bytecheck@0.6.12
 	bytecheck_derive@0.6.12
-	byteorder@1.5.0
-	bytes@1.7.2
+	bytes@1.10.1
 	cfg-if@1.0.0
 	clap@2.34.0
 	const-str-proc-macro@0.3.2
 	const-str@0.3.2
 	convert_case@0.6.0
-	crossbeam-deque@0.8.5
+	crossbeam-deque@0.8.6
 	crossbeam-epoch@0.9.18
-	crossbeam-utils@0.8.20
+	crossbeam-utils@0.8.21
 	cssparser-color@0.1.0
 	cssparser-macros@0.6.1
 	cssparser@0.33.0
 	dashmap@5.5.3
-	data-encoding@2.6.0
+	data-encoding@2.8.0
 	data-url@0.1.1
 	dtoa-short@0.3.5
-	dtoa@1.0.9
-	either@1.13.0
+	dtoa@1.0.10
+	either@1.15.0
+	equivalent@1.0.2
 	funty@2.0.0
-	fxhash@0.2.1
 	getrandom@0.2.15
 	hashbrown@0.12.3
 	hashbrown@0.13.2
 	hashbrown@0.14.5
+	hashbrown@0.15.2
 	heck@0.3.3
 	hermit-abi@0.1.19
+	indexmap@2.8.0
 	itertools@0.10.5
 	itertools@0.12.1
-	itoa@1.0.11
+	itoa@1.0.15
 	lazy_static@1.5.0
-	libc@0.2.159
+	libc@0.2.171
 	lightningcss-derive@1.0.0-alpha.43
-	lightningcss@1.0.0-alpha.59
+	lightningcss@1.0.0-alpha.65
 	lock_api@0.4.12
-	log@0.4.22
+	log@0.4.27
 	matches@0.1.10
 	memchr@2.7.4
-	minify-js@0.5.6
-	once_cell@1.20.1
+	minify-js@0.6.0
+	once_cell@1.21.1
 	outref@0.1.0
-	parcel_selectors@0.27.0
+	parcel_selectors@0.28.1
 	parcel_sourcemap@2.1.1
 	parking_lot_core@0.9.10
-	parse-js@0.17.0
+	parse-js@0.20.1
 	paste@1.0.15
-	pathdiff@0.2.1
-	phf@0.10.1
-	phf@0.11.2
-	phf_codegen@0.10.0
-	phf_generator@0.10.0
-	phf_generator@0.11.2
-	phf_macros@0.11.2
-	phf_shared@0.10.0
-	phf_shared@0.11.2
-	portable-atomic@1.9.0
-	ppv-lite86@0.2.20
+	pathdiff@0.2.3
+	phf@0.11.3
+	phf_codegen@0.11.3
+	phf_generator@0.11.3
+	phf_macros@0.11.3
+	phf_shared@0.11.3
 	precomputed-hash@0.1.1
 	proc-macro-error-attr@1.0.4
 	proc-macro-error@1.0.4
-	proc-macro2@1.0.86
+	proc-macro2@1.0.94
 	ptr_meta@0.1.4
 	ptr_meta_derive@0.1.4
-	quote@1.0.37
+	quote@1.0.40
 	radium@0.7.0
 	rand@0.8.5
-	rand_chacha@0.3.1
 	rand_core@0.6.4
 	rayon-core@1.12.1
 	rayon@1.10.0
-	redox_syscall@0.5.7
+	redox_syscall@0.5.10
 	rend@0.4.2
 	rkyv@0.7.45
 	rkyv_derive@0.7.45
-	rustc-hash@1.1.0
-	ryu@1.0.18
+	rustc-hash@2.1.1
+	ryu@1.0.20
 	scopeguard@1.2.0
 	seahash@4.1.0
-	serde@1.0.210
-	serde_derive@1.0.210
-	serde_json@1.0.128
+	serde@1.0.219
+	serde_derive@1.0.219
+	serde_json@1.0.140
 	simd-abstraction@0.7.1
 	simdutf8@0.1.5
-	siphasher@0.3.11
-	smallvec@1.13.2
+	siphasher@1.0.1
+	smallvec@1.14.0
 	strsim@0.8.0
 	structopt-derive@0.4.18
 	structopt@0.3.26
 	syn@1.0.109
-	syn@2.0.79
+	syn@2.0.100
 	tap@1.0.1
 	textwrap@0.11.0
-	tinyvec@1.8.0
+	tinyvec@1.9.0
 	tinyvec_macros@0.1.1
-	unicode-ident@1.0.13
+	unicode-ident@1.0.18
 	unicode-segmentation@1.12.0
 	unicode-width@0.1.14
-	uuid@1.10.0
+	uuid@1.16.0
 	vec_map@0.8.2
 	version_check@0.9.5
 	vlq@0.5.1
@@ -151,7 +146,7 @@ S="${WORKDIR}/${P}/minhtml"
 
 LICENSE="MIT"
 # Dependent crate licenses
-LICENSE+=" Apache-2.0 MIT MPL-2.0 Unicode-DFS-2016"
+LICENSE+=" Apache-2.0 MIT MPL-2.0 Unicode-3.0"
 SLOT="0"
 KEYWORDS="~amd64"
 

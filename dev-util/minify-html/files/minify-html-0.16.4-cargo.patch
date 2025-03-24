@@ -1,15 +1,13 @@
-diff '--color=auto' -ur minify-html-0.15.0/Cargo.toml minify-html-0.15.0_modified/Cargo.toml
---- minify-html-0.15.0/Cargo.toml	2023-12-24 17:37:09.000000000 +0800
-+++ minify-html-0.15.0_modified/Cargo.toml	2024-10-04 14:29:31.176115917 +0800
-@@ -1,20 +1,7 @@
+diff '--color=auto' -ur minify-html-0.16.4/Cargo.toml minify-html-0.16.4_modified/Cargo.toml
+--- minify-html-0.16.4/Cargo.toml	2025-03-22 23:22:46.000000000 +0800
++++ minify-html-0.16.4_modified/Cargo.toml	2025-03-24 23:25:33.843481662 +0800
+@@ -1,18 +1,7 @@
  [workspace]
  members = [
 -  "bench/runners/minify-html-onepass",
 -  "bench/runners/minify-html",
 -  "debug/diff/c14n",
 -  "debug/diff/charlines",
--  "fuzz",
--  "fuzz/process",
    "minhtml",
    "minify-html-common",
 -  "minify-html-java",
