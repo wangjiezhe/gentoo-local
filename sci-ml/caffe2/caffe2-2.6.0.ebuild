@@ -20,7 +20,8 @@ S="${WORKDIR}"/${MYP}
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="blis cuda distributed fbgemm flash gloo magma mkl mpi numa nnpack +numpy onednn openblas opencl openmp qnnpack rocm xnnpack"
+IUSE="blis cuda distributed fbgemm flash gloo magma memefficient mkl mpi numa nnpack +numpy
+	onednn openblas opencl openmp qnnpack rocm xnnpack"
 RESTRICT="test"
 REQUIRED_USE="
 	${PYTHON_REQUIRED_USE}
@@ -152,6 +153,10 @@ src_prepare() {
 		-e "/third_party\/gloo/d" \
 		cmake/Dependencies.cmake \
 		|| die
+	sed -i \
+		-e '/Using pocketfft in directory:/d' \
+		cmake/Dependencies.cmake \
+		|| die
 	cmake_src_prepare
 	pushd torch/csrc/jit/serialization || die
 	flatc --cpp --gen-mutable --scoped-enums mobile_bytecode.fbs || die
@@ -227,7 +232,7 @@ src_configure() {
 		-DUSE_KINETO=OFF # TODO
 		-DUSE_MAGMA=$(usex magma)
 		-DMAGMA_V2=$(usex magma)
-		-DUSE_MEM_EFF_ATTENTION=OFF
+		-DUSE_MEM_EFF_ATTENTION=$(usex memefficient)
 		-DUSE_MKLDNN=$(usex onednn)
 		-DUSE_MPI=$(usex mpi)
 		-DUSE_NNPACK=$(usex nnpack)
