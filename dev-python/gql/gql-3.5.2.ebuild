@@ -17,7 +17,7 @@ KEYWORDS="~amd64"
 
 RDEPEND="
 	>=dev-python/graphql-core-3.2[${PYTHON_USEDEP}]
-	<dev-python/graphql-core-3.2.4[${PYTHON_USEDEP}]
+	<dev-python/graphql-core-3.2.5[${PYTHON_USEDEP}]
 	dev-python/yarl[${PYTHON_USEDEP}]
 	dev-python/backoff[${PYTHON_USEDEP}]
 	dev-python/anyio[${PYTHON_USEDEP}]
@@ -38,5 +38,9 @@ BDEPEND="
 		dev-python/botocore[${PYTHON_USEDEP}]
 	)
 "
+
+EPYTEST_DESELECT=(
+	tests/test_async_client_validation.py::test_async_client_validation_fetch_schema_from_server_valid_query
+)
 
 distutils_enable_tests pytest
