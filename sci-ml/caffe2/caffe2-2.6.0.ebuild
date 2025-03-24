@@ -40,6 +40,7 @@ RDEPEND="
 	dev-cpp/abseil-cpp:=
 	dev-cpp/gflags:=
 	>=dev-cpp/glog-0.5.0
+	dev-cpp/nlohmann_json
 	dev-cpp/opentelemetry-cpp
 	dev-libs/cpuinfo
 	dev-libs/libfmt:=
@@ -47,8 +48,8 @@ RDEPEND="
 	dev-libs/pthreadpool
 	dev-libs/sleef
 	virtual/lapack
-	sci-ml/onnx
 	sci-ml/foxi
+	sci-ml/onnx
 	cuda? (
 		dev-libs/cudnn
 		>=dev-libs/cudnn-frontend-1.0.3:0/8
@@ -58,7 +59,7 @@ RDEPEND="
 		dev-libs/cusparselt
 		dev-libs/cudss
 	)
-	fbgemm? ( >=sci-ml/FBGEMM-2023.12.01 )
+	fbgemm? ( sci-ml/FBGEMM )
 	gloo? ( sci-ml/gloo[cuda?] )
 	magma? ( sci-libs/magma[cuda?] )
 	mpi? ( virtual/mpi )
@@ -66,11 +67,10 @@ RDEPEND="
 	numpy? ( $(python_gen_cond_dep '
 		dev-python/numpy[${PYTHON_USEDEP}]
 		') )
-	onednn? ( sci-ml/oneDNN )
+	onednn? ( =sci-ml/oneDNN-3.5* )
 	opencl? ( virtual/opencl )
 	qnnpack? (
 		sci-ml/gemmlowp
-		dev-libs/clog
 	)
 	rocm? (
 		=dev-util/hip-6.1*
@@ -94,6 +94,7 @@ RDEPEND="
 	)
 	distributed? (
 		sci-ml/tensorpipe[cuda?]
+		dev-cpp/cpp-httplib
 	)
 	xnnpack? ( >=sci-ml/XNNPACK-2024.11.08 )
 	mkl? ( sci-libs/mkl )
@@ -104,24 +105,23 @@ RDEPEND="
 
 DEPEND="
 	${RDEPEND}
+	dev-libs/flatbuffers
+	dev-libs/FXdiv
+	dev-libs/pocketfft
+	dev-libs/psimd
+	sci-ml/FP16
+	sci-ml/kineto
+	$(python_gen_cond_dep '
+		dev-python/pybind11[${PYTHON_USEDEP}]
+		dev-python/pyyaml[${PYTHON_USEDEP}]
+		dev-python/typing-extensions[${PYTHON_USEDEP}]
+	')
 	cuda? (
 		>=dev-libs/cutlass-3.4.1
 		<dev-libs/cutlass-3.5.0
 	)
 	onednn? ( sci-ml/ideep )
-	>=dev-cpp/cpp-httplib-0.16.0
-	dev-cpp/nlohmann_json
-	dev-libs/psimd
-	sci-ml/FP16
-	dev-libs/FXdiv
-	dev-libs/pocketfft
-	dev-libs/flatbuffers
-	>=sci-ml/kineto-0.4.0_p20240525
-	$(python_gen_cond_dep '
-		dev-python/pyyaml[${PYTHON_USEDEP}]
-		dev-python/pybind11[${PYTHON_USEDEP}]
-		dev-python/typing-extensions[${PYTHON_USEDEP}]
-	')
+	qnnpack? ( dev-libs/clog )
 "
 
 BDEPEND="
@@ -157,6 +157,7 @@ src_prepare() {
 		-e '/Using pocketfft in directory:/d' \
 		cmake/Dependencies.cmake \
 		|| die
+
 	cmake_src_prepare
 	pushd torch/csrc/jit/serialization || die
 	flatc --cpp --gen-mutable --scoped-enums mobile_bytecode.fbs || die
