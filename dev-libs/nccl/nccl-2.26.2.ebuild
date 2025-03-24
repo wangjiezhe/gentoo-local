@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
-inherit cuda
+inherit cuda toolchain-funcs
 
 DESCRIPTION="Optimized primitives for collective multi-GPU communication"
 HOMEPAGE="https://developer.nvidia.com/nccl/"
@@ -33,6 +33,10 @@ pkg_pretend() {
 		einfo ""
 		einfo "The CUDA architecture tuple for your device can be found at https://developer.nvidia.com/cuda-gpus."
 	fi
+
+	if [[ ${BUILD_TYPE} != "binary" ]] && tc-is-gcc && ver_test $(gcc-version) -ge 14; then
+		eerror "NCCL need gcc<14 to compile."
+	fi
 }
 
 src_prepare() {
@@ -44,7 +48,6 @@ src_configure() {
 	export CUDA_HOME="${EPREFIX}/opt/cuda"
 	export PREFIX="${EPREFIX}/opt/cuda/targets/x86_64-linux"	# used for nccl.pc
 	export CXXFLAGS+=" -ffat-lto-objects"
-	export CXX="$(cuda_gccdir | tr -d \")/g++"
 }
 
 src_compile() {
