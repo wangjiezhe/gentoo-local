@@ -22,7 +22,7 @@ KEYWORDS="~amd64"
 RDEPEND="
 	dev-libs/re2
 	dev-libs/double-conversion
-	dev-libs/sentencepiece
+	sci-ml/sentencepiece
 	dev-libs/libutf8proc
 	>=sci-ml/pytorch-2.2.2[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '

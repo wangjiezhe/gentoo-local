@@ -243,7 +243,7 @@ prefix = "v"
 source = "pypi"
 pypi = "expecttest"
 
-["dev-libs/sentencepiece"]
+["sci-ml/sentencepiece"]
 source = "github"
 github = "google/sentencepiece"
 use_latest_release = true
