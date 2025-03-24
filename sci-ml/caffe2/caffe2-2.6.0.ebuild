@@ -68,7 +68,7 @@ RDEPEND="
 	onednn? ( sci-ml/oneDNN )
 	opencl? ( virtual/opencl )
 	qnnpack? (
-		dev-cpp/gemmlowp
+		sci-ml/gemmlowp
 		dev-libs/clog
 	)
 	rocm? (
