@@ -18,7 +18,7 @@ KEYWORDS="~amd64"
 IUSE="python"
 RESTRICT="test"		# RuntimeError: cudnnHandle Create failed
 
-RDEPEND="dev-libs/cudnn"
+RDEPEND=">=dev-libs/cudnn-9"
 DEPEND="${RDEPEND}"
 BDEPEND="
 	python? (
