@@ -38,3 +38,4 @@ move sci-libs/tensorrt sci-ml/tensorrt
 move sci-libs/nltk sci-ml/nltk
 move sci-libs/nltk-data sci-ml/nltk-data
 move dev-libs/sentencepiece sci-ml/sentencepiece
+move dev-python/sentencepiece sci-ml/pysentencepiece

@@ -249,7 +249,7 @@ github = "google/sentencepiece"
 use_latest_release = true
 prefix = "v"
 
-["dev-python/sentencepiece"]
+["sci-ml/pysentencepiece"]
 source = "github"
 github = "google/sentencepiece"
 use_latest_release = true
