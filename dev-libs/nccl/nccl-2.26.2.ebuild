@@ -16,6 +16,7 @@ KEYWORDS="~amd64"
 
 DEPEND="dev-util/nvidia-cuda-toolkit"
 RDEPEND="${DEPEND}"
+BDEPEND="<sys-devel/gcc-14"
 
 DOCS=( README.md LICENSE.txt )
 
