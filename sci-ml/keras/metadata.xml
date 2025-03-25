@@ -11,5 +11,6 @@
 	</longdescription>
 	<upstream>
 		<remote-id type="github">keras-team/keras</remote-id>
+		<remote-id type="pypi">keras</remote-id>
 	</upstream>
 </pkgmetadata>
