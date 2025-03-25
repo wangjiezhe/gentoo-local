@@ -1,9 +1,5 @@
-# Seems failed to build
-# Constructing Python tuple not allowed without gil
->=dev-python/cuda-python-12.4.0
-
 # WIP
-=sci-libs/tensorflow-2.18*
+=sci-ml/tensorflow-2.18*
 
 # Bazel 7 support is not ready
 =dev-build/bazel-7*

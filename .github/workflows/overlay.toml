@@ -610,3 +610,15 @@ source = "github"
 github = "zzxwill/aigit"
 use_latest_release = true
 prefix = "v"
+
+["dev-python/cuda-bindings"]
+source = "github"
+github = "NVIDIA/cuda-python"
+use_latest_release = true
+prefix = "v"
+
+["dev-python/cuda-core"]
+source = "github"
+github = "NVIDIA/cuda-python"
+use_latest_release = true
+prefix = "cuda-core-v"
