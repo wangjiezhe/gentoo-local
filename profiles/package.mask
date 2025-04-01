@@ -3,3 +3,6 @@
 
 # Bazel 7 support is not ready
 =dev-build/bazel-7*
+
+# Requires >=cutlass-3.6
+=dev-python/FBGEMM_GPU-1.1.0
