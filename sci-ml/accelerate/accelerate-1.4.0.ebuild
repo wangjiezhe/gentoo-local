@@ -22,13 +22,13 @@ KEYWORDS="~amd64"
 RESTRICT="test"
 
 RDEPEND="
+	sci-ml/huggingface_hub[${PYTHON_SINGLE_USEDEP}]
 	sci-ml/pytorch[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		dev-python/numpy[${PYTHON_USEDEP}]
 		dev-python/packaging[${PYTHON_USEDEP}]
 		dev-python/psutil[${PYTHON_USEDEP}]
 		dev-python/pyyaml[${PYTHON_USEDEP}]
-		>=sci-ml/huggingface_hub-0.21.0[${PYTHON_USEDEP}]
 		>=sci-ml/safetensors-0.4.3[${PYTHON_USEDEP}]
 	')
 "
