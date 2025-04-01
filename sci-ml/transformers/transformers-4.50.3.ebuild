@@ -19,6 +19,7 @@ SRC_URI="https://github.com/huggingface/${PN}/archive/refs/tags/v${PV}.tar.gz
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~amd64"
+IUSE="torch"
 RESTRICT="test" # Need some modules, not yet packaged
 
 RDEPEND="
@@ -32,14 +33,21 @@ RDEPEND="
 		dev-python/regex[${PYTHON_USEDEP}]
 		dev-python/requests[${PYTHON_USEDEP}]
 		dev-python/tqdm[${PYTHON_USEDEP}]
-		>=sci-ml/safetensors-0.4.1[${PYTHON_USEDEP}]
+		sci-ml/safetensors[${PYTHON_USEDEP}]
 	')
+	torch? (
+		sci-ml/accelerate[${PYTHON_SINGLE_USEDEP}]
+		sci-ml/caffe2[${PYTHON_SINGLE_USEDEP}]
+		sci-ml/pytorch[${PYTHON_SINGLE_USEDEP}]
+	)
 "
 BDEPEND="
-	$(python_gen_cond_dep '
-		dev-python/parameterized[${PYTHON_USEDEP}]
-		dev-python/timeout-decorator[${PYTHON_USEDEP}]
-	')
+	test? (
+		$(python_gen_cond_dep '
+			dev-python/parameterized[${PYTHON_USEDEP}]
+			dev-python/timeout-decorator[${PYTHON_USEDEP}]
+		')
+	)
 "
 
 distutils_enable_tests pytest
