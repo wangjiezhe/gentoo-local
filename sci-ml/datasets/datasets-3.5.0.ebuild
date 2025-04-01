@@ -94,4 +94,5 @@ EPYTEST_DESELECT=(
 	tests/test_fingerprint.py::RecurseHashTest::test_hash_ignores_line_definition_of_function
 	tests/test_fingerprint.py::RecurseHashTest::test_hash_ipython_function
 	tests/test_fingerprint.py::test_move_script_doesnt_change_hash
+	tests/test_iterable_dataset.py::test_iterable_dataset_from_hub_torch_dataloader_parallel
 )
