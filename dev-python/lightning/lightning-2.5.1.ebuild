@@ -19,7 +19,7 @@ KEYWORDS="~amd64"
 RESTRICT="test"		# Need fastapi, etc.
 
 RDEPEND="
-	dev-python/lightning-utilities[${PYTHON_SINGLE_USEDEP}]
+	sci-ml/lightning-utilities[${PYTHON_SINGLE_USEDEP}]
 	~dev-python/pytorch-lightning-${PV}[${PYTHON_SINGLE_USEDEP}]
 	sci-ml/pytorch[${PYTHON_SINGLE_USEDEP}]
 	sci-ml/torchmetrics[${PYTHON_SINGLE_USEDEP}]

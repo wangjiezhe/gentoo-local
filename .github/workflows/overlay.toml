@@ -106,7 +106,7 @@ github = "mpariente/pystoi"
 use_max_tag = true
 prefix = "v"
 
-["dev-python/lightning-utilities"]
+["sci-ml/lightning-utilities"]
 source = "github"
 github = "Lightning-AI/utilities"
 use_latest_release = true
