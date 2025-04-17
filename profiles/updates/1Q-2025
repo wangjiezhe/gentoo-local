@@ -40,3 +40,4 @@ move sci-libs/nltk-data sci-ml/nltk-data
 move dev-libs/sentencepiece sci-ml/sentencepiece
 move dev-python/sentencepiece sci-ml/pysentencepiece
 move dev-python/lightning-utilities sci-ml/lightning-utilities
+move dev-python/pytorch-lightning sci-ml/pytorch-lightning

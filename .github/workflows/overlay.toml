@@ -82,7 +82,7 @@ source = "github"
 github = "Lightning-AI/pytorch-lightning"
 use_latest_release = true
 
-["dev-python/pytorch-lightning"]
+["sci-ml/pytorch-lightning"]
 source = "github"
 github = "Lightning-AI/pytorch-lightning"
 use_latest_release = true
