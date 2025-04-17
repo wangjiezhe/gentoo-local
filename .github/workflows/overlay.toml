@@ -77,7 +77,7 @@ source = "aur"
 aur = "mathematica"
 strip_release = true
 
-["dev-python/lightning"]
+["sci-ml/lightning"]
 source = "github"
 github = "Lightning-AI/pytorch-lightning"
 use_latest_release = true
