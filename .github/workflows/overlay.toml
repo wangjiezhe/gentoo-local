@@ -55,7 +55,7 @@ github = "pytorch/FBGEMM"
 use_latest_release = true
 prefix = "v"
 
-["dev-libs/cudnn-frontend"]
+["sci-ml/cudnn-frontend"]
 source = "github"
 github = "NVIDIA/cudnn-frontend"
 use_latest_release = true

@@ -42,3 +42,4 @@ move dev-python/sentencepiece sci-ml/pysentencepiece
 move dev-python/lightning-utilities sci-ml/lightning-utilities
 move dev-python/pytorch-lightning sci-ml/pytorch-lightning
 move dev-python/lightning sci-ml/lightning
+move dev-libs/cudnn-frontend sci-ml/cudnn-frontend
