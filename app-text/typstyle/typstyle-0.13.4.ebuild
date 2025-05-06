@@ -54,5 +54,5 @@ src_install() {
 }
 
 src_test() {
-	edo cargo nextest run --workspace -E 'test([typst])' --no-fail-fast --no-default-features
+	edo cargo nextest run --workspace -E 'test([snapshot])' --no-fail-fast --no-default-features
 }
