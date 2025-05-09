@@ -330,7 +330,7 @@ source = "github"
 github = "shin-/dockerpy-creds"
 use_max_tag = true
 
-["dev-python/wandb"]
+["sci-ml/wandb"]
 source = "github"
 github = "wandb/wandb"
 use_latest_release = true
