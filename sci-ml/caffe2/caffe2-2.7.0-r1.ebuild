@@ -15,11 +15,16 @@ MYP=${MYPN}-${PV}
 CK_COMMIT=50ee4267e27b875d149e642f4cebd47be1dc3b57
 CK_P=composable_kernel-${CK_COMMIT:0:8}
 
+# flash useflag needs third-party flash-attention
+FA_COMMIT=979702c87a8713a8e0a5e9fee122b90d2ef13be5
+FA_P=flash-attention-${FA_COMMIT:0:8}
+
 DESCRIPTION="A deep learning framework"
 HOMEPAGE="https://pytorch.org/"
 SRC_URI="
 	https://github.com/pytorch/${MYPN}/archive/refs/tags/v${PV}.tar.gz -> ${MYP}.tar.gz
 	rocm? ( https://github.com/ROCm/composable_kernel/archive/${CK_COMMIT}.tar.gz -> ${CK_P}.tar.gz )
+	flash? ( https://github.com/Dao-AILab/flash-attention/archive/${FA_COMMIT}.tar.gz -> ${FA_P}.tar.gz )
 "
 
 S="${WORKDIR}"/${MYP}
@@ -117,7 +122,7 @@ DEPEND="
 		dev-python/pyyaml[${PYTHON_USEDEP}]
 		dev-python/typing-extensions[${PYTHON_USEDEP}]
 	')
-	cuda? ( >=dev-libs/cutlass-3.8.0 )
+	cuda? ( ~dev-libs/cutlass-3.8.0 )
 	onednn? ( sci-ml/ideep )
 	qnnpack? ( dev-libs/clog )
 "
@@ -145,6 +150,13 @@ src_prepare() {
 		c10/CMakeLists.txt \
 		cmake/Dependencies.cmake \
 		torch/CMakeLists.txt \
+		|| die
+
+	# use third-party flash-attention
+	sed -i \
+		caffe2/CMakeLists.txt \
+		aten/src/ATen/CMakeLists.txt \
+		-e "s:third_party/flash-attention:../flash-attention-${FA_COMMIT}:g" \
 		|| die
 
 	# Drop third_party from CMake tree
@@ -266,17 +278,6 @@ src_configure() {
 		-DUSE_PYTORCH_QNNPACK=$(usex qnnpack)
 		-DUSE_PYTORCH_METAL=OFF
 		-DUSE_ROCM=$(usex rocm)
-		-DUSE_SYSTEM_CPUINFO=ON
-		-DUSE_SYSTEM_EIGEN_INSTALL=ON
-		-DUSE_SYSTEM_FP16=ON
-		-DUSE_SYSTEM_FXDIV=ON
-		-DUSE_SYSTEM_GLOO=ON
-		-DUSE_SYSTEM_ONNX=ON
-		-DUSE_SYSTEM_PSIMD=ON
-		-DUSE_SYSTEM_PTHREADPOOL=ON
-		-DUSE_SYSTEM_PYBIND11=ON
-		-DUSE_SYSTEM_SLEEF=ON
-		-DUSE_SYSTEM_XNNPACK=$(usex xnnpack)
 		-DUSE_TENSORPIPE=$(usex distributed)
 		-DUSE_UCC=OFF
 		-DUSE_VALGRIND=OFF
