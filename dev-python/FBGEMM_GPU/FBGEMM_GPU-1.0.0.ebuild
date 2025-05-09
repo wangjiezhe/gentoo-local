@@ -29,6 +29,7 @@ RDEPEND="
 "
 DEPEND="
 	dev-cpp/glog
+	sci-ml/FBGEMM
 	cuda? (
 		dev-util/nvidia-cuda-toolkit
 		dev-libs/cudnn

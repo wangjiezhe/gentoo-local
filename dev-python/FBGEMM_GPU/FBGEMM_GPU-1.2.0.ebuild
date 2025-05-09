@@ -29,12 +29,13 @@ RDEPEND="
 "
 DEPEND="
 	dev-cpp/glog
+	sci-ml/FBGEMM
 	cuda? (
 		dev-util/nvidia-cuda-toolkit
 		dev-libs/cudnn
 		sci-ml/caffe2:=[cuda?]
 		dev-libs/nccl
-		>=dev-libs/cutlass-3.6
+		>=dev-libs/cutlass-3.8
 	)
 "
 BDEPEND="
@@ -54,11 +55,11 @@ BDEPEND="
 
 PARENT_PATCHES=(
 	"${FILESDIR}/${P}-version.patch"
-	"${FILESDIR}/${P}-gentoo.patch"
+	"${FILESDIR}/${PN}-1.1.0-gentoo.patch"
 )
 
 src_prepare() {
-	[[ -n "${PARENT_PATCHES[@]}" ]] && eapply -p2 -- "${PARENT_PATCHES[@]}"
+	[[ ${#PARENT_PATCHES[@]} -gt 0 ]] && eapply -p2 -- "${PARENT_PATCHES[@]}"
 
 	sed -i "s@CMAKE_PREFIX_PATH={torch_root}@CMAKE_PREFIX_PATH=${EPREFIX}/usr@" setup.py
 
