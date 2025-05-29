@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{10..13} )
 DISTUTILS_USE_PEP517=no
 inherit distutils-r1
 
-CUDA_VER="12.8"
+CUDA_VER="12.9"
 BASE_VER="$(ver_cut 1-3)"
 EXTEND_VER="${BASE_VER}"
 
