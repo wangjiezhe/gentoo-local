@@ -13,7 +13,4 @@
 	<upstream>
 		<remote-id type="github">amd/aocl-libm-ose</remote-id>
 	</upstream>
-	<use>
-		<flag name="aocc">install the library built using AOCC, else use the GCC version</flag>
-	</use>
 </pkgmetadata>
