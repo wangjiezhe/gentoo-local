@@ -18,6 +18,10 @@ LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64"
 
+BDEPEND="
+	dev-python/setuptools-scm[${PYTHON_USEDEP}]
+"
+
 RDEPEND="
 	dev-python/pyparsing[${PYTHON_USEDEP}]
 "
