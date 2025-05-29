@@ -1,9 +1,9 @@
-# Copyright 2024 Gentoo Authors
+# Copyright 2024-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{10..12} )
+PYTHON_COMPAT=( python3_{10..13} )
 inherit python-any-r1
 
 DESCRIPTION="AMD's optimized version of BLAS targeted for AMD EPYC and Ryzen CPUs"
@@ -32,9 +32,8 @@ BDEPEND="${PYTHON_DEPS}"
 PATCHES=(
 	"${FILESDIR}"/blis-0.6.0-blas-provider.patch
 	# to prevent QA Notice: pkg-config files with wrong LDFLAGS detected
-	"${FILESDIR}"/${P}-pkg-config.patch
+	"${FILESDIR}"/${PN}-5.0-pkg-config.patch
 	"${FILESDIR}"/${PN}-5.0-rpath.patch
-	"${FILESDIR}"/${PN}-4.1-python.patch
 )
 
 src_configure() {
