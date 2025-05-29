@@ -17,7 +17,7 @@ KEYWORDS="~amd64"
 
 RDEPEND="
 	>=dev-python/graphql-core-3.2[${PYTHON_USEDEP}]
-	<dev-python/graphql-core-3.2.5[${PYTHON_USEDEP}]
+	<dev-python/graphql-core-3.2.7[${PYTHON_USEDEP}]
 	dev-python/yarl[${PYTHON_USEDEP}]
 	dev-python/backoff[${PYTHON_USEDEP}]
 	dev-python/anyio[${PYTHON_USEDEP}]
