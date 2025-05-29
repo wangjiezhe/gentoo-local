@@ -1,10 +1,10 @@
 diff --git a/tests/unit_tests/CMakeLists.txt b/tests/unit_tests/CMakeLists.txt
-index f718e04..6f30d5b 100644
+index b5c7615..9fe3b6f 100644
 --- a/tests/unit_tests/CMakeLists.txt
 +++ b/tests/unit_tests/CMakeLists.txt
-@@ -21,30 +21,7 @@
- #
- # ########################################################################
+@@ -144,30 +144,7 @@ else (BUILD_SPARSE_TESTS_OUTOFSRCTREE)
+ endif (BUILD_SPARSE_TESTS_OUTOFSRCTREE)
+ message(STATUS "  \$SPARSE_LIBRARY......${SPARSE_LIBRARY}")
  
 -include(FetchContent)
 -set(FETCHCONTENT_QUIET off)
@@ -19,7 +19,7 @@ index f718e04..6f30d5b 100644
 -FetchContent_Declare(
 -  googletest
 -  GIT_REPOSITORY https://github.com/google/googletest.git
--  GIT_TAG v1.14.0
+-  GIT_TAG v1.15.2
 -)
 -# For Windows: Prevent overriding the parent project's compiler/linker settings
 -set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
@@ -32,5 +32,5 @@ index f718e04..6f30d5b 100644
 -endif()
 +find_package(GTest REQUIRED)
  
- set(utils_source common_data_utils.cpp ../common/aoclsparse_template_specialization.cpp ../common/aoclsparse_utility.cpp)
- include_directories(${CMAKE_SOURCE_DIR}/library/src/include
+ set(GTEST_EXECUTABLES
+     dispatcher_tests
