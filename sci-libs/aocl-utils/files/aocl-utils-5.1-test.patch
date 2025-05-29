@@ -1,16 +1,19 @@
 diff --git a/CMake/au_find_gtest.cmake b/CMake/au_find_gtest.cmake
-index 36a9369..4683391 100644
+index c13f6cf..6a05e9d 100644
 --- a/CMake/au_find_gtest.cmake
 +++ b/CMake/au_find_gtest.cmake
-@@ -1,18 +1,13 @@
+@@ -25,21 +25,16 @@
+ # POSSIBILITY OF SUCH DAMAGE.
+ #
+ 
 -include(FetchContent)
  set(INSTALL_GTEST OFF)
 +find_package(GTest REQUIRED)
  include(GoogleTest)
 -FetchContent_Declare(gtest
 -  GIT_REPOSITORY https://github.com/google/googletest.git
--  GIT_TAG release-1.12.1
--  )
+-  GIT_TAG ${AU_GTEST_TAG}
+-)
 -FetchContent_MakeAvailable(gtest)
  
  #
@@ -24,7 +27,7 @@ index 36a9369..4683391 100644
  ENDIF()
  
  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-@@ -22,8 +17,8 @@ option(GMOCK_ENABLE_INSTALL "" OFF)
+@@ -49,8 +44,8 @@ option(GMOCK_ENABLE_INSTALL "" OFF)
  #FetchContent_MakeAvailable(gtest)
  # You can disable clang-tidy for specific folders in the fetched content project
  if(CMAKE_CXX_CLANG_TIDY)
@@ -51,31 +54,24 @@ index 8682acd..c28f416 100644
    #
    # Add additional dependencies,
 diff --git a/Library/Tests/CMakeLists.txt b/Library/Tests/CMakeLists.txt
-index c52afca..ee8fbe4 100644
+index 8726c5f..0dd6ea5 100644
 --- a/Library/Tests/CMakeLists.txt
 +++ b/Library/Tests/CMakeLists.txt
-@@ -145,15 +145,15 @@ endif()
+@@ -165,17 +165,6 @@ endif()
  #        au::base64
  #)
  
--au_cc_test(CpuidTest
--  SOURCES
--  ${CPUID_TEST_FILES}
--  HEADERS Mock/MockTest.hh QemuTest.hh
--  DEPENDS
--  au::cpuid
--  EXTLIBRARY
--  Python3
--)
-+# au_cc_test(CpuidTest
-+#   SOURCES
-+#   ${CPUID_TEST_FILES}
-+#   HEADERS Mock/MockTest.hh QemuTest.hh
-+#   DEPENDS
-+#   au::cpuid
-+#   EXTLIBRARY
-+#   Python3
-+# )
+-if(au_cpuid_cpuid)
+-    au_cc_test(CpuidTest
+-    SOURCES
+-    ${CPUID_TEST_FILES}
+-    HEADERS Mock/MockTest.hh QemuTest.hh
+-    DEPENDS
+-    au::cpuid
+-    EXTLIBRARY
+-    Python3
+-    )
+-endif()
  ##########
  # Dynamic Loader Tests
  ##########
