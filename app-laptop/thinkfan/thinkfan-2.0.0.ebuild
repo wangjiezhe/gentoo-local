@@ -5,13 +5,9 @@ EAPI=8
 
 inherit cmake readme.gentoo-r1
 
-CommitId=40ecf15f914e068e9a68e6192865d91f32fe8e99
-
 DESCRIPTION="Simple fan control program for thinkpads"
 HOMEPAGE="https://github.com/vmatare/thinkfan"
-SRC_URI="https://github.com/vmatare/${PN}/archive/${CommitId}.tar.gz -> ${P}.tar.gz"
-
-S="${WORKDIR}"/${PN}-${CommitId}
+SRC_URI="https://github.com/vmatare/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
