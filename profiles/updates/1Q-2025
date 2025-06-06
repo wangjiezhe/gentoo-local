@@ -39,9 +39,3 @@ move sci-libs/nltk sci-ml/nltk
 move sci-libs/nltk-data sci-ml/nltk-data
 move dev-libs/sentencepiece sci-ml/sentencepiece
 move dev-python/sentencepiece sci-ml/pysentencepiece
-move dev-python/lightning-utilities sci-ml/lightning-utilities
-move dev-python/pytorch-lightning sci-ml/pytorch-lightning
-move dev-python/lightning sci-ml/lightning
-move dev-libs/cudnn-frontend sci-ml/cudnn-frontend
-move dev-python/wandb sci-ml/wandb
-move app-office/qtikz app-text/qtikz
