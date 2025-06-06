@@ -1,4 +1,4 @@
-From cb75924714d17bce115b34494d098ccde1e1ce08 Mon Sep 17 00:00:00 2001
+From 8881152a32d635852906989ee7c293b9dfef966c Mon Sep 17 00:00:00 2001
 From: wangjiezhe <wangjiezhe@gmail.com>
 Date: Mon, 18 Mar 2024 18:36:55 +0800
 Subject: [PATCH 12/17] systemlib: Add missing targets for absl
@@ -143,7 +143,7 @@ index 63bac99d71b..962f36bcc03 100644
 +    ],
 +)
 diff --git a/third_party/absl/workspace.bzl b/third_party/absl/workspace.bzl
-index addb2410abd..eebe1c8b3de 100644
+index b5197f9304b..e3aa08d167e 100644
 --- a/third_party/absl/workspace.bzl
 +++ b/third_party/absl/workspace.bzl
 @@ -16,6 +16,7 @@ def repo():
@@ -155,5 +155,5 @@ index addb2410abd..eebe1c8b3de 100644
          "flags",
          "functional",
 -- 
-2.45.2
+2.49.0
 

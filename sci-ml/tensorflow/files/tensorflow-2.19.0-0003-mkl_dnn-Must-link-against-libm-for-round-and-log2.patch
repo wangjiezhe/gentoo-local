@@ -1,4 +1,4 @@
-From 18a51a4b2043e12d2c4df9148ef979bd814b2455 Mon Sep 17 00:00:00 2001
+From 792829714cff8cec23a459634aa358bdccae562a Mon Sep 17 00:00:00 2001
 From: Jason Zaman <jason@perfinion.com>
 Date: Mon, 5 Sep 2022 12:52:44 -0700
 Subject: [PATCH 03/17] mkl_dnn: Must link against libm for round and log2
@@ -25,5 +25,5 @@ index 8c730960bc3..3be62e67624 100644
      }),
      textual_hdrs = _TEXTUAL_HDRS_LIST,
 -- 
-2.45.2
+2.49.0
 

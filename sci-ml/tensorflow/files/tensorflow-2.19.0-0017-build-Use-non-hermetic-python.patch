@@ -1,10 +1,10 @@
-From 62d8ddb1e850584e7e993aff7a91ae0f6d4d211b Mon Sep 17 00:00:00 2001
+From 712f920771c6e9ca351a17c8c506a603c8bc5d2f Mon Sep 17 00:00:00 2001
 From: wangjiezhe <wangjiezhe@gmail.com>
-Date: Wed, 10 Jul 2024 22:46:06 +0800
-Subject: [PATCH 15/17] build: use non-hermetic python
+Date: Fri, 6 Jun 2025 20:54:09 +0800
+Subject: [PATCH 17/17] build: Use non-hermetic python
 
 ---
- WORKSPACE                                     | 47 -------------------
+ WORKSPACE                                     | 45 -------------------
  tensorflow/BUILD                              |  2 -
  tensorflow/compiler/mlir/glob_lit_test.bzl    |  1 -
  tensorflow/compiler/mlir/tfr/BUILD            |  2 -
@@ -13,7 +13,7 @@ Subject: [PATCH 15/17] build: use non-hermetic python
  tensorflow/python/BUILD                       |  1 -
  tensorflow/python/autograph/converters/BUILD  | 11 -----
  tensorflow/python/autograph/core/BUILD        |  1 -
- tensorflow/python/autograph/pyct/BUILD        | 23 ---------
+ tensorflow/python/autograph/pyct/BUILD        | 23 ----------
  .../autograph/pyct/common_transformers/BUILD  |  2 -
  .../autograph/pyct/static_analysis/BUILD      |  6 ---
  .../python/autograph/pyct/testing/BUILD       |  1 -
@@ -22,7 +22,7 @@ Subject: [PATCH 15/17] build: use non-hermetic python
  .../experimental/kernel_tests/service/BUILD   |  1 -
  tensorflow/python/data/util/BUILD             |  2 -
  tensorflow/python/debug/lib/BUILD             |  1 -
- tensorflow/python/distribute/BUILD            |  5 --
+ tensorflow/python/distribute/BUILD            |  5 ---
  .../python/distribute/experimental/rpc/BUILD  |  1 -
  .../python/distribute/failure_handling/BUILD  |  2 -
  tensorflow/python/eager/BUILD                 |  2 -
@@ -30,28 +30,31 @@ Subject: [PATCH 15/17] build: use non-hermetic python
  tensorflow/python/keras/BUILD                 |  1 -
  tensorflow/python/keras/engine/BUILD          |  1 -
  tensorflow/python/keras/saving/BUILD          |  1 -
- tensorflow/python/ops/BUILD                   |  3 --
+ .../python/kernel_tests/array_ops/BUILD       |  1 -
+ tensorflow/python/ops/BUILD                   |  4 --
  tensorflow/python/profiler/BUILD              |  1 -
  .../python/profiler/integration_test/BUILD    |  1 -
  tensorflow/python/summary/BUILD               |  1 -
+ tensorflow/python/tpu/profiler/BUILD          |  2 -
  tensorflow/python/trackable/BUILD             |  1 -
  tensorflow/python/types/BUILD                 |  2 -
  tensorflow/python/util/BUILD                  |  2 -
  tensorflow/tools/docs/BUILD                   |  3 --
- tensorflow/tools/pip_package/BUILD            |  2 -
- third_party/xla/xla/mlir_hlo/tests/BUILD      |  1 -
- 36 files changed, 141 deletions(-)
+ tensorflow/tools/pip_package/BUILD            | 34 --------------
+ third_party/xla/WORKSPACE                     | 25 -----------
+ .../py/py_manylinux_compliance_test.bzl       |  1 -
+ third_party/xla/xla/lit.bzl                   | 18 +-------
+ third_party/xla/xla/mlir_hlo/tests/BUILD      |  2 -
+ 41 files changed, 1 insertion(+), 219 deletions(-)
 
 diff --git a/WORKSPACE b/WORKSPACE
-index 188be544882..539c37b12d1 100644
+index 1ac9c62206d..abddc8eb0c6 100644
 --- a/WORKSPACE
 +++ b/WORKSPACE
-@@ -13,17 +13,6 @@ http_archive(
-     ],
- )
+@@ -15,15 +15,6 @@ http_archive(
  
--# buildifier: disable=load-on-top
--
+ # buildifier: disable=load-on-top
+ 
 -# We must initialize hermetic python first.
 -load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 -
@@ -64,16 +67,16 @@ index 188be544882..539c37b12d1 100644
  # Initialize the TensorFlow repository and all dependencies.
  #
  # The cascade of load() statements and tf_workspace?() calls works around the
-@@ -34,42 +23,6 @@ load("@//tensorflow:workspace3.bzl", "tf_workspace3")
+@@ -34,42 +25,6 @@ load("@//tensorflow:workspace3.bzl", "tf_workspace3")
  
  tf_workspace3()
  
 -# Initialize hermetic Python
--load("@local_xla//third_party/py:python_init_rules.bzl", "python_init_rules")
+-load("@local_tsl//third_party/py:python_init_rules.bzl", "python_init_rules")
 -
 -python_init_rules()
 -
--load("@local_xla//third_party/py:python_init_repositories.bzl", "python_init_repositories")
+-load("@local_tsl//third_party/py:python_init_repositories.bzl", "python_init_repositories")
 -
 -python_init_repositories(
 -    default_python_version = "system",
@@ -91,11 +94,11 @@ index 188be544882..539c37b12d1 100644
 -    },
 -)
 -
--load("@local_xla//third_party/py:python_init_toolchains.bzl", "python_init_toolchains")
+-load("@local_tsl//third_party/py:python_init_toolchains.bzl", "python_init_toolchains")
 -
 -python_init_toolchains()
 -
--load("@local_xla//third_party/py:python_init_pip.bzl", "python_init_pip")
+-load("@local_tsl//third_party/py:python_init_pip.bzl", "python_init_pip")
 -
 -python_init_pip()
 -
@@ -108,10 +111,10 @@ index 188be544882..539c37b12d1 100644
  
  tf_workspace2()
 diff --git a/tensorflow/BUILD b/tensorflow/BUILD
-index 7c7a06131d6..a9f26cb41e0 100644
+index 65c5a1c2a29..d3410cf406c 100644
 --- a/tensorflow/BUILD
 +++ b/tensorflow/BUILD
-@@ -1735,8 +1735,6 @@ py_library(
+@@ -1748,8 +1748,6 @@ py_library(
          "//tensorflow/lite/python:lite",
          "//tensorflow/lite/python/authoring",
          "//tensorflow/python:no_contrib",
@@ -121,7 +124,7 @@ index 7c7a06131d6..a9f26cb41e0 100644
  )
  # copybara:comment_end
 diff --git a/tensorflow/compiler/mlir/glob_lit_test.bzl b/tensorflow/compiler/mlir/glob_lit_test.bzl
-index c87dc83bdde..7c82e414068 100644
+index ad44b889cc6..5b09080328a 100644
 --- a/tensorflow/compiler/mlir/glob_lit_test.bzl
 +++ b/tensorflow/compiler/mlir/glob_lit_test.bzl
 @@ -62,7 +62,6 @@ def _run_lit_test(name, data, size, tags, driver, features, exec_properties):
@@ -133,10 +136,10 @@ index c87dc83bdde..7c82e414068 100644
          main = "lit.py",
          exec_properties = exec_properties,
 diff --git a/tensorflow/compiler/mlir/tfr/BUILD b/tensorflow/compiler/mlir/tfr/BUILD
-index 333712a56e5..5d6125326b3 100644
+index f876cf6cf84..3e7ba3f5db5 100644
 --- a/tensorflow/compiler/mlir/tfr/BUILD
 +++ b/tensorflow/compiler/mlir/tfr/BUILD
-@@ -318,7 +318,6 @@ py_strict_library(
+@@ -322,7 +322,6 @@ py_strict_library(
          "//tensorflow/python/framework:op_def_registry",
          "//tensorflow/python/platform:tf_logging",
          "//tensorflow/python/util:tf_inspect",
@@ -144,7 +147,7 @@ index 333712a56e5..5d6125326b3 100644
      ],
  )
  
-@@ -352,7 +351,6 @@ py_strict_library(
+@@ -356,7 +355,6 @@ py_strict_library(
          "//tensorflow/python/autograph/pyct:transpiler",
          "//tensorflow/python/framework:op_def_registry",
          "//tensorflow/python/util:tf_inspect",
@@ -153,10 +156,10 @@ index 333712a56e5..5d6125326b3 100644
  )
  
 diff --git a/tensorflow/dtensor/python/tests/BUILD b/tensorflow/dtensor/python/tests/BUILD
-index 80cb4361bcd..51f6296fb15 100644
+index a4c039fb3ae..727c65df2c0 100644
 --- a/tensorflow/dtensor/python/tests/BUILD
 +++ b/tensorflow/dtensor/python/tests/BUILD
-@@ -490,7 +490,6 @@ pytype_strict_library(
+@@ -493,7 +493,6 @@ pytype_strict_library(
          ":test_util",
          "//tensorflow/python/platform:client_testlib",
          "@absl_py//absl/flags",
@@ -165,10 +168,10 @@ index 80cb4361bcd..51f6296fb15 100644
  )
  
 diff --git a/tensorflow/lite/python/BUILD b/tensorflow/lite/python/BUILD
-index c5a4ba27639..5c18ce89a77 100644
+index fd39a8656e3..e08c1335468 100644
 --- a/tensorflow/lite/python/BUILD
 +++ b/tensorflow/lite/python/BUILD
-@@ -326,7 +326,6 @@ py_strict_test(
+@@ -328,7 +328,6 @@ py_strict_test(
          "//tensorflow/python/saved_model:save_options",
          "//tensorflow/python/trackable:autotrackable",
          "@absl_py//absl/testing:parameterized",
@@ -177,10 +180,10 @@ index c5a4ba27639..5c18ce89a77 100644
  )
  
 diff --git a/tensorflow/python/BUILD b/tensorflow/python/BUILD
-index 0ad8e84b889..491ede69f93 100644
+index 8a781badc68..c7af0239d88 100644
 --- a/tensorflow/python/BUILD
 +++ b/tensorflow/python/BUILD
-@@ -595,7 +595,6 @@ py_strict_library(
+@@ -611,7 +611,6 @@ py_strict_library(
      deps = [
          ":keras_lib",
          "//third_party/py/numpy",
@@ -530,10 +533,10 @@ index 51d186363eb..2d4300c8475 100644
  )
  
 diff --git a/tensorflow/python/client/BUILD b/tensorflow/python/client/BUILD
-index a1d8ae68ecd..b8b87a2df8c 100644
+index c7bf74753d0..f1eaf614762 100644
 --- a/tensorflow/python/client/BUILD
 +++ b/tensorflow/python/client/BUILD
-@@ -295,7 +295,6 @@ py_strict_library(
+@@ -315,7 +315,6 @@ py_strict_library(
          "//tensorflow/python/util:numpy_compat",
          "//tensorflow/python/util:tf_export",
          "//third_party/py/numpy",
@@ -666,10 +669,10 @@ index 127e98619c1..4cf3f5892ff 100644
  )
  
 diff --git a/tensorflow/python/eager/BUILD b/tensorflow/python/eager/BUILD
-index 87985b25956..b9d354985f0 100644
+index 0b6892b7ee5..e22bb967712 100644
 --- a/tensorflow/python/eager/BUILD
 +++ b/tensorflow/python/eager/BUILD
-@@ -1239,7 +1239,6 @@ cuda_py_strict_test(
+@@ -1245,7 +1245,6 @@ cuda_py_strict_test(
          "//tensorflow/python/training:server_lib",
          "//tensorflow/python/util:compat",
          "@absl_py//absl/testing:parameterized",
@@ -677,7 +680,7 @@ index 87985b25956..b9d354985f0 100644
      ],
  )
  
-@@ -1379,7 +1378,6 @@ py_strict_library(
+@@ -1385,7 +1384,6 @@ py_strict_library(
          "//tensorflow/python/autograph/pyct/static_analysis:reaching_fndefs",
          "//tensorflow/python/framework:op_def_registry",
          "//tensorflow/python/framework:ops",
@@ -686,10 +689,10 @@ index 87985b25956..b9d354985f0 100644
  )
  
 diff --git a/tensorflow/python/framework/BUILD b/tensorflow/python/framework/BUILD
-index f08a3e1347e..11bec52ac8e 100644
+index 28e719e2a21..bc0a677e959 100644
 --- a/tensorflow/python/framework/BUILD
 +++ b/tensorflow/python/framework/BUILD
-@@ -285,7 +285,6 @@ py_strict_library(
+@@ -305,7 +305,6 @@ py_strict_library(
          "//tensorflow/python/eager:execute",
          "//tensorflow/security/fuzzing/py:annotation_types",
          "//tensorflow/tools/docs:doc_controls",
@@ -697,7 +700,7 @@ index f08a3e1347e..11bec52ac8e 100644
      ],
  )
  
-@@ -1731,7 +1730,6 @@ py_strict_library(
+@@ -1810,7 +1809,6 @@ py_strict_library(
      deps = [
          ":composite_tensor",
          "//tensorflow/python/util:nest",
@@ -705,7 +708,7 @@ index f08a3e1347e..11bec52ac8e 100644
      ],
  )
  
-@@ -1760,7 +1758,6 @@ py_strict_library(
+@@ -1839,7 +1837,6 @@ py_strict_library(
          "//tensorflow/python/util:tf_decorator_py",
          "//tensorflow/python/util:tf_export",
          "//tensorflow/python/util:tf_inspect",
@@ -713,7 +716,7 @@ index f08a3e1347e..11bec52ac8e 100644
      ],
  )
  
-@@ -1903,7 +1900,6 @@ pytype_strict_library(
+@@ -1982,7 +1979,6 @@ pytype_strict_library(
          "//tensorflow/python/lib/io:file_io",
          "//tensorflow/python/platform:tf_logging",
          "//tensorflow/python/util:compat",
@@ -721,7 +724,7 @@ index f08a3e1347e..11bec52ac8e 100644
      ],
  )
  
-@@ -2161,7 +2157,6 @@ pytype_strict_library(
+@@ -2258,7 +2254,6 @@ pytype_strict_library(
          "//tensorflow/python/util/protobuf",
          "//third_party/py/numpy",
          "@absl_py//absl/testing:parameterized",
@@ -729,7 +732,7 @@ index f08a3e1347e..11bec52ac8e 100644
      ],
  )
  
-@@ -2757,7 +2752,6 @@ tf_py_strict_test(
+@@ -2853,7 +2848,6 @@ tf_py_strict_test(
          "//tensorflow/python/util:nest",
          "//tensorflow/python/util:tf_inspect",
          "@absl_py//absl/testing:parameterized",
@@ -772,11 +775,23 @@ index a8e9553946d..91cf1e68a8a 100644
 -        "@pypi_h5py//:pkg",
      ],
  )
+diff --git a/tensorflow/python/kernel_tests/array_ops/BUILD b/tensorflow/python/kernel_tests/array_ops/BUILD
+index af0e4464396..012467d35ce 100644
+--- a/tensorflow/python/kernel_tests/array_ops/BUILD
++++ b/tensorflow/python/kernel_tests/array_ops/BUILD
+@@ -481,7 +481,6 @@ cuda_py_strict_test(
+         "//tensorflow/python/ops:manip_ops",
+         "//tensorflow/python/platform:client_testlib",
+         "//third_party/py/numpy",
+-        "@pypi_packaging//:pkg",
+     ],
+ )
+ 
 diff --git a/tensorflow/python/ops/BUILD b/tensorflow/python/ops/BUILD
-index ab203a6beb3..cbadeb6bd74 100644
+index 167d5604e28..a2994661368 100644
 --- a/tensorflow/python/ops/BUILD
 +++ b/tensorflow/python/ops/BUILD
-@@ -2779,7 +2779,6 @@ py_strict_library(
+@@ -2788,7 +2788,6 @@ py_strict_library(
          "//tensorflow/python/util:dispatch",
          "//tensorflow/python/util:tf_export",
          "//third_party/py/numpy",
@@ -784,7 +799,7 @@ index ab203a6beb3..cbadeb6bd74 100644
      ],
  )
  
-@@ -3162,7 +3161,6 @@ py_strict_library(
+@@ -3172,7 +3171,6 @@ py_strict_library(
          "//tensorflow/python/util:tf_should_use",
          "//tensorflow/python/util:traceback_utils",
          "@absl_py//absl/logging",
@@ -792,7 +807,15 @@ index ab203a6beb3..cbadeb6bd74 100644
      ],
  )
  
-@@ -3910,7 +3908,6 @@ cuda_py_strict_test(
+@@ -3685,7 +3683,6 @@ cuda_py_strict_test(
+         "//tensorflow/python/platform:test",
+         "//third_party/py/numpy",
+         "@absl_py//absl/testing:parameterized",
+-        "@pypi_packaging//:pkg",
+     ],
+ )
+ 
+@@ -3921,7 +3918,6 @@ cuda_py_strict_test(
          "//tensorflow/python/platform:tf_logging",
          "//third_party/py/numpy",
          "@absl_py//absl/testing:parameterized",
@@ -801,7 +824,7 @@ index ab203a6beb3..cbadeb6bd74 100644
  )
  
 diff --git a/tensorflow/python/profiler/BUILD b/tensorflow/python/profiler/BUILD
-index b1cfd6ea10c..9413aeeab8b 100644
+index 32681434f24..13b4bc5db79 100644
 --- a/tensorflow/python/profiler/BUILD
 +++ b/tensorflow/python/profiler/BUILD
 @@ -43,7 +43,6 @@ cuda_py_strict_test(
@@ -835,11 +858,30 @@ index 0b27c30c273..32b891eaa7e 100644
      ],
  )
  
+diff --git a/tensorflow/python/tpu/profiler/BUILD b/tensorflow/python/tpu/profiler/BUILD
+index 4fa1b7d0531..af8e275606e 100644
+--- a/tensorflow/python/tpu/profiler/BUILD
++++ b/tensorflow/python/tpu/profiler/BUILD
+@@ -44,7 +44,6 @@ py_strict_library(
+         "//tensorflow/python/profiler:profiler_v2",
+         "@absl_py//absl:app",
+         "@absl_py//absl/flags",
+-        "@pypi_packaging//:pkg",
+     ],
+ )
+ 
+@@ -56,6 +55,5 @@ py_strict_binary(
+     deps = [
+         ":capture_tpu_profile_lib",
+         "@absl_py//absl/flags",
+-        "@pypi_packaging//:pkg",
+     ],
+ )
 diff --git a/tensorflow/python/trackable/BUILD b/tensorflow/python/trackable/BUILD
-index a0a315b85fd..dcaebba46bc 100644
+index 464222e7f90..e365957792e 100644
 --- a/tensorflow/python/trackable/BUILD
 +++ b/tensorflow/python/trackable/BUILD
-@@ -226,7 +226,6 @@ py_strict_library(
+@@ -215,7 +215,6 @@ py_strict_library(
          "//tensorflow/python/ops:variables",
          "//tensorflow/python/util:compat",
          "//tensorflow/python/util:tf_export",
@@ -868,10 +910,10 @@ index 799ca38c729..1ef9d15f402 100644
  )
  
 diff --git a/tensorflow/python/util/BUILD b/tensorflow/python/util/BUILD
-index ee56bb821a2..21d6ff9cc34 100644
+index 008491ef922..41bc03e0b09 100644
 --- a/tensorflow/python/util/BUILD
 +++ b/tensorflow/python/util/BUILD
-@@ -771,7 +771,6 @@ py_strict_library(
+@@ -803,7 +803,6 @@ py_strict_library(
          # library. It isn't possible to add these test dependencies via tensorflow.bzl's
          # py_test because not all tensorflow tests use tensorflow.bzl's py_test.
          "//tensorflow/python:global_test_configuration",
@@ -879,7 +921,7 @@ index ee56bb821a2..21d6ff9cc34 100644
          "//tensorflow/python:pywrap_tensorflow",
          ":_pywrap_utils",
      ],
-@@ -946,7 +945,6 @@ py_strict_library(
+@@ -990,7 +989,6 @@ py_strict_library(
          # py_test because not all tensorflow tests use tensorflow.bzl's py_test.
          "//tensorflow/python:global_test_configuration",
          "//third_party/py/numpy",
@@ -916,10 +958,10 @@ index 45081a2a695..b48274129a9 100644
  )
  
 diff --git a/tensorflow/tools/pip_package/BUILD b/tensorflow/tools/pip_package/BUILD
-index 5c1007c272d..374f3c729dc 100644
+index 5aecef595ba..8be1194153c 100644
 --- a/tensorflow/tools/pip_package/BUILD
 +++ b/tensorflow/tools/pip_package/BUILD
-@@ -240,8 +240,6 @@ py_binary(
+@@ -252,8 +252,6 @@ py_binary(
      main = "build_pip_package.py",
      deps = [
          "//tensorflow/tools/pip_package/utils:py_utils",
@@ -928,18 +970,139 @@ index 5c1007c272d..374f3c729dc 100644
      ],
  )
  
+@@ -413,35 +411,3 @@ verify_manylinux_compliance_test(
+     x86_64_compliance_tag = "manylinux_2_17_x86_64",
+ )
+ 
+-py_import(
+-    name = "tf_py_import",
+-    wheel = ":wheel",
+-    wheel_deps = if_cuda([
+-        "@pypi_nvidia_cublas_cu12//:whl",
+-        "@pypi_nvidia_cuda_cupti_cu12//:whl",
+-        "@pypi_nvidia_cuda_nvrtc_cu12//:whl",
+-        "@pypi_nvidia_cuda_runtime_cu12//:whl",
+-        "@pypi_nvidia_cudnn_cu12//:whl",
+-        "@pypi_nvidia_cufft_cu12//:whl",
+-        "@pypi_nvidia_curand_cu12//:whl",
+-        "@pypi_nvidia_cusolver_cu12//:whl",
+-        "@pypi_nvidia_cusparse_cu12//:whl",
+-        "@pypi_nvidia_nccl_cu12//:whl",
+-        "@pypi_nvidia_nvjitlink_cu12//:whl",
+-    ]),
+-    deps = [
+-        "@pypi_absl_py//:pkg",
+-        "@pypi_astunparse//:pkg",
+-        "@pypi_flatbuffers//:pkg",
+-        "@pypi_gast//:pkg",
+-        "@pypi_ml_dtypes//:pkg",
+-        "@pypi_numpy//:pkg",
+-        "@pypi_opt_einsum//:pkg",
+-        "@pypi_packaging//:pkg",
+-        "@pypi_protobuf//:pkg",
+-        "@pypi_requests//:pkg",
+-        "@pypi_termcolor//:pkg",
+-        "@pypi_typing_extensions//:pkg",
+-        "@pypi_wrapt//:pkg",
+-    ],
+-)
+diff --git a/third_party/xla/WORKSPACE b/third_party/xla/WORKSPACE
+index a18ebde79da..eb63cfb4eda 100644
+--- a/third_party/xla/WORKSPACE
++++ b/third_party/xla/WORKSPACE
+@@ -8,31 +8,6 @@ workspace(name = "xla")
+ # E.g. we can not retrieve a new repository with http_archive and then load()
+ # a macro from that repository in the same file.
+ 
+-# Initialize hermetic Python
+-load("//third_party/py:python_init_rules.bzl", "python_init_rules")
+-
+-python_init_rules()
+-
+-load("//third_party/py:python_init_repositories.bzl", "python_init_repositories")
+-
+-python_init_repositories(
+-    requirements = {
+-        "3.11": "//:requirements_lock_3_11.txt",
+-    },
+-)
+-
+-load("//third_party/py:python_init_toolchains.bzl", "python_init_toolchains")
+-
+-python_init_toolchains()
+-
+-load("//third_party/py:python_init_pip.bzl", "python_init_pip")
+-
+-python_init_pip()
+-
+-load("@pypi//:requirements.bzl", "install_deps")
+-
+-install_deps()
+-
+ load(":workspace4.bzl", "xla_workspace4")
+ 
+ xla_workspace4()
+diff --git a/third_party/xla/third_party/tsl/third_party/py/py_manylinux_compliance_test.bzl b/third_party/xla/third_party/tsl/third_party/py/py_manylinux_compliance_test.bzl
+index 4706b1fb06e..d5ef6b35db8 100644
+--- a/third_party/xla/third_party/tsl/third_party/py/py_manylinux_compliance_test.bzl
++++ b/third_party/xla/third_party/tsl/third_party/py/py_manylinux_compliance_test.bzl
+@@ -15,7 +15,6 @@ def verify_manylinux_compliance_test(
+         data = [
+             wheel,
+         ],
+-        deps = ["@pypi_auditwheel//:pkg"],
+         args = [
+             "--wheel-path=$(location {})".format(wheel),
+             "--aarch64-compliance-tag={}".format(aarch64_compliance_tag),
+diff --git a/third_party/xla/xla/lit.bzl b/third_party/xla/xla/lit.bzl
+index c78781249ad..5efa7f25fc9 100644
+--- a/third_party/xla/xla/lit.bzl
++++ b/third_party/xla/xla/lit.bzl
+@@ -229,22 +229,6 @@ def lit_test(
+         visibility = ["//visibility:private"],
+         **kwargs
+     )
+-    lit_name = "//third_party/py/lit:lit"
+-
+-    # copybara:comment_begin(oss-only)
+-    lit_name = "lit_custom_" + name
+-    native.py_binary(
+-        name = lit_name,
+-        main = "@llvm-project//llvm:utils/lit/lit.py",
+-        srcs = ["@llvm-project//llvm:utils/lit/lit.py"],
+-        testonly = True,
+-        deps = [
+-            "@llvm-project//llvm:lit_lib",
+-            "@pypi_lit//:pkg",
+-        ],
+-    )
+-
+-    # copybara:comment_end
+ 
+     if hermetic_cuda_data_dir:
+         output_file = "with_xla_gpu_cuda_data_dir_{}".format(test_file)
+@@ -274,7 +258,7 @@ def lit_test(
+                    # called lit.cfg.py
+                    cfg,
+                    tools_on_path_target_name,
+-               ] + data + if_oss(["@pypi_lit//:pkg"]) +
++               ] + data +
+                if_google([
+                    "//xla:lit_google_cfg.py",
+                ]),
 diff --git a/third_party/xla/xla/mlir_hlo/tests/BUILD b/third_party/xla/xla/mlir_hlo/tests/BUILD
-index 4db81efeb2d..4d595d5b135 100644
+index 1ffc22fe80a..0d0f157d498 100644
 --- a/third_party/xla/xla/mlir_hlo/tests/BUILD
 +++ b/third_party/xla/xla/mlir_hlo/tests/BUILD
-@@ -26,7 +26,6 @@ package(
+@@ -26,8 +26,6 @@ package(
          tags = [
              "nomsan",  # The execution engine doesn't work with msan, see b/248097619.
          ],
 -        deps = ["@pypi_lit//:pkg"],
+-        deps = ["@pypi_lit//:pkg"],  # copybara:comment
      )
      for src in glob(["**/*.mlir"])
  ]
 -- 
-2.45.2
+2.49.0
 

@@ -1,0 +1,31 @@
+From 419935fb6da87cd1150d2ed9ee6c72b61ea44830 Mon Sep 17 00:00:00 2001
+From: wangjiezhe <wangjiezhe@gmail.com>
+Date: Fri, 6 Jun 2025 19:16:56 +0800
+Subject: [PATCH 14/17] build: hardcode wheel name
+
+---
+ tensorflow/tools/pip_package/utils/tf_wheel.bzl | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/tensorflow/tools/pip_package/utils/tf_wheel.bzl b/tensorflow/tools/pip_package/utils/tf_wheel.bzl
+index 057779e946e..9d3e9b96944 100644
+--- a/tensorflow/tools/pip_package/utils/tf_wheel.bzl
++++ b/tensorflow/tools/pip_package/utils/tf_wheel.bzl
+@@ -31,11 +31,12 @@ load(
+     "@python_version_repo//:py_version.bzl",
+     "HERMETIC_PYTHON_VERSION",
+     "MACOSX_DEPLOYMENT_TARGET",
+-    "WHEEL_COLLAB",
+-    "WHEEL_NAME",
+ )
+ load("//tensorflow:tensorflow.bzl", "VERSION", "WHEEL_VERSION")
+ 
++WHEEL_COLLAB = "False"
++WHEEL_NAME = "tensorflow"
++
+ def _get_wheel_platform_name(platform_name, platform_tag):
+     macos_platform_version = "{}_".format(MACOSX_DEPLOYMENT_TARGET.replace(".", "_")) if MACOSX_DEPLOYMENT_TARGET else ""
+     tag = platform_tag
+-- 
+2.49.0
+

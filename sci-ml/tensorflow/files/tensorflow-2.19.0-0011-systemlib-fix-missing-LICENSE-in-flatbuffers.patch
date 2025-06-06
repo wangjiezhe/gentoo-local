@@ -1,4 +1,4 @@
-From 5ffe7f58ced541293188d09326a5352aa29100bd Mon Sep 17 00:00:00 2001
+From 964e2942549e0a93635b6633f8b6776c646a6b79 Mon Sep 17 00:00:00 2001
 From: wangjiezhe <wangjiezhe@gmail.com>
 Date: Thu, 21 Dec 2023 22:24:24 +0800
 Subject: [PATCH 11/17] systemlib: fix missing `LICENSE` in flatbuffers
@@ -21,5 +21,5 @@ index 8fe4d7a5907..b1d63b4ca0f 100644
  )
  
 -- 
-2.45.2
+2.49.0
 

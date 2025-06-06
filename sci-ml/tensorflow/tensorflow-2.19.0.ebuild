@@ -100,9 +100,6 @@ for i in $CPU_USE_FLAGS_X86; do
 done
 RESTRICT="test" # Tests need GPU access
 
-# check flatbuffers version in tensorflow/lite/schema/schema_generated.h
-# check compatible tensorrt version in third_party/tensorrt/tensorrt_configure.bzl
-# and tensorflow/compiler/tf2tensorrt/stub/nvinfer_stub.cc
 RDEPEND="
 	app-arch/snappy
 	>=dev-cpp/abseil-cpp-20230802.1:=
@@ -126,7 +123,6 @@ RDEPEND="
 		dev-util/nvidia-cuda-toolkit:=[profiler]
 		=dev-libs/cudnn-8*
 		dev-libs/nccl
-		=sci-ml/tensorrt-8*:=
 	)
 	mpi? ( virtual/mpi )
 	python? (
@@ -200,10 +196,9 @@ PATCHES=(
 	"${FILESDIR}/${P}-0011-systemlib-fix-missing-LICENSE-in-flatbuffers.patch"
 	"${FILESDIR}/${P}-0012-systemlib-Add-missing-targets-for-absl.patch"
 	"${FILESDIR}/${P}-0013-installation-remove-create_local_config_python.patch"
-	"${FILESDIR}/${P}-0014-Revert-Use-hermetic-Python-in-TSL-and-XLA.patch"
-	"${FILESDIR}/${P}-0015-build-use-non-hermetic-python.patch"
-	"${FILESDIR}/${P}-0016-build-hardcode-wheel-name.patch"
-	"${FILESDIR}/temp.patch"
+	"${FILESDIR}/${P}-0014-build-hardcode-wheel-name.patch"
+	"${FILESDIR}/${P}-0016-build-revert-to-use-non-hermetic-python.patch"
+	"${FILESDIR}/${P}-0017-build-Use-non-hermetic-python.patch"
 )
 
 get-cpu-flags() {
@@ -255,12 +250,12 @@ src_prepare() {
 	default
 
 	# Use non-hermetic python
-	for d in third_party third_party/xla/third_party third_party/xla/third_party/tsl/third_party;
-	do
-		mv ${d}/py/non_hermetic ${d} || die
-		rm -rf ${d}/py || die
-		mv ${d}/non_hermetic ${d}/py || die
-	done
+	# for d in third_party third_party/xla/third_party third_party/xla/third_party/tsl/third_party;
+	# do
+	# 	mv ${d}/py/non_hermetic ${d} || die
+	# 	rm -rf ${d}/py || die
+	# 	mv ${d}/non_hermetic ${d}/py || die
+	# done
 
 	use python && python_copy_sources
 
@@ -292,7 +287,7 @@ src_configure() {
 		export TF_NEED_CUDA=$(usex cuda 1 0)
 		export TF_DOWNLOAD_CLANG=0
 		export TF_CUDA_CLANG=0
-		export TF_NEED_TENSORRT=$(usex cuda 1 0)
+		export TF_NEED_TENSORRT=0
 		if use cuda; then
 			export TF_CUDA_PATHS="${EPREFIX}/opt/cuda"
 			export GCC_HOST_COMPILER_PATH="$(cuda_gccdir)/$(tc-getCC)"
@@ -339,7 +334,7 @@ src_configure() {
 			boringssl
 			com_github_googlecloudplatform_google_cloud_cpp
 			com_github_grpc_grpc
-			com_google_absl
+			# com_google_absl
 			# com_google_protobuf
 			curl
 			cython
@@ -445,9 +440,6 @@ src_install() {
 		# libtensorflow_framework.so and libtensorflow_cc.so is in /usr/lib already
 		rm -f "${D}/$(python_get_sitedir)"/${PN}/lib${PN}_framework.so* || die
 		rm -f "${D}/$(python_get_sitedir)"/${PN}/lib${PN}_cc.so* || die
-
-		# Fix: TF-TRT Warning: Could not find TensorRT
-		patchelf --add-rpath /opt/cuda/lib64 "${D}/$(python_get_sitedir)"/${PN}/compiler/tf2tensorrt/_pywrap_py_utils.so
 	}
 
 	if use python; then

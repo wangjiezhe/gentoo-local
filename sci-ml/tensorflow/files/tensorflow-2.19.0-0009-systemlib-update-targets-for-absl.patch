@@ -1,4 +1,4 @@
-From d97b7dfa71709ee37594587eb7933c306727e9d7 Mon Sep 17 00:00:00 2001
+From cdf8a92bfbd122df7721b554a12ea2149d1b7932 Mon Sep 17 00:00:00 2001
 From: wangjiezhe <wangjiezhe@gmail.com>
 Date: Sun, 26 Nov 2023 13:12:20 +0800
 Subject: [PATCH 09/17] systemlib: update targets for absl
@@ -13,29 +13,29 @@ Subject: [PATCH 09/17] systemlib: update targets for absl
  create mode 100644 third_party/absl/system.absl.log.BUILD
 
 diff --git a/tensorflow/compiler/mlir/tools/kernel_gen/BUILD b/tensorflow/compiler/mlir/tools/kernel_gen/BUILD
-index 1dcd829833b..f6a62d86f41 100644
+index 4644e09cfe2..2b5baa2fc59 100644
 --- a/tensorflow/compiler/mlir/tools/kernel_gen/BUILD
 +++ b/tensorflow/compiler/mlir/tools/kernel_gen/BUILD
-@@ -119,6 +119,7 @@ tf_cc_binary(
-         "//tensorflow/compiler/mlir/tensorflow",
-         "//tensorflow/core:lib",
+@@ -122,6 +122,7 @@ tf_cc_binary(
+         "@com_google_absl//absl/log",
          "@com_google_absl//absl/status",
+         "@com_google_absl//absl/status:statusor",
 +        "@com_google_absl//absl/log:check",
          "@com_google_absl//absl/strings",
          "@llvm-project//llvm:Analysis",
          "@llvm-project//llvm:CodeGen",
 diff --git a/tensorflow/distribute/experimental/rpc/kernels/BUILD b/tensorflow/distribute/experimental/rpc/kernels/BUILD
-index 611339854ec..27c9b0b7012 100644
+index c98b3939fa3..9d3f6a72241 100644
 --- a/tensorflow/distribute/experimental/rpc/kernels/BUILD
 +++ b/tensorflow/distribute/experimental/rpc/kernels/BUILD
-@@ -64,6 +64,7 @@ tf_kernel_library(
-         "//tensorflow/distribute/experimental/rpc/proto:tf_rpc_service_proto_cc",
-         "@com_github_grpc_grpc//:grpc++",
+@@ -65,6 +65,7 @@ tf_kernel_library(
+         "@com_google_absl//absl/container:flat_hash_map",
+         "@com_google_absl//absl/log",
          "@com_google_absl//absl/status",
 +        "@com_google_absl//absl/log:check",
          "@com_google_absl//absl/strings",
          "@com_google_absl//absl/strings:str_format",
-         "@local_xla//xla/stream_executor/platform",
+     ],
 diff --git a/third_party/absl/system.absl.debugging.BUILD b/third_party/absl/system.absl.debugging.BUILD
 index 931ffdc9e92..223db7b4c46 100644
 --- a/third_party/absl/system.absl.debugging.BUILD
@@ -349,7 +349,7 @@ index 00000000000..9a2a5de657e
 +    deps = [":internal_log_impl"],
 +)
 diff --git a/third_party/absl/workspace.bzl b/third_party/absl/workspace.bzl
-index 9565a82c331..addb2410abd 100644
+index d5973b13b39..b5197f9304b 100644
 --- a/third_party/absl/workspace.bzl
 +++ b/third_party/absl/workspace.bzl
 @@ -20,6 +20,7 @@ def repo():
@@ -361,5 +361,5 @@ index 9565a82c331..addb2410abd 100644
          "meta",
          "numeric",
 -- 
-2.45.2
+2.49.0
 

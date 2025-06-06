@@ -1,4 +1,4 @@
-From e0a03ab046b96c99db2829ed53968836457bb277 Mon Sep 17 00:00:00 2001
+From 561b6fc6a7e05f5b390165832f9790a872921a95 Mon Sep 17 00:00:00 2001
 From: wangjiezhe <wangjiezhe@gmail.com>
 Date: Fri, 24 Nov 2023 16:48:15 +0800
 Subject: [PATCH 06/17] systemlib: Update targets for absl_py
@@ -20,5 +20,5 @@ index d92f4949df1..614938fb8c4 100644
 +    ],
  )
 -- 
-2.45.2
+2.49.0
 

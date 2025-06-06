@@ -1,17 +1,17 @@
-From a7d278a7540ec7d5099943f61a94fd9ae20d8362 Mon Sep 17 00:00:00 2001
+From 9f99958431d5ec6368f4156e5f51aeaf91775e07 Mon Sep 17 00:00:00 2001
 From: wangjiezhe <wangjiezhe@gmail.com>
 Date: Sat, 3 Aug 2024 14:03:20 +0800
-Subject: [PATCH 17/17] fix `TF-TRT Warning: Could not find TensorRT`
+Subject: [PATCH 15/17] fix `TF-TRT Warning: Could not find TensorRT`
 
 when LD_LIBRARY_PATH is not net
 ---
- .../third_party/tsl/tsl/platform/default/dso_loader.cc    | 8 --------
+ third_party/xla/xla/tsl/platform/default/dso_loader.cc | 8 --------
  1 file changed, 8 deletions(-)
 
-diff --git a/third_party/xla/third_party/tsl/tsl/platform/default/dso_loader.cc b/third_party/xla/third_party/tsl/tsl/platform/default/dso_loader.cc
-index 8c59f439ccc..aa2949f26f0 100644
---- a/third_party/xla/third_party/tsl/tsl/platform/default/dso_loader.cc
-+++ b/third_party/xla/third_party/tsl/tsl/platform/default/dso_loader.cc
+diff --git a/third_party/xla/xla/tsl/platform/default/dso_loader.cc b/third_party/xla/xla/tsl/platform/default/dso_loader.cc
+index 5ebe6c9dae7..1357876bf74 100644
+--- a/third_party/xla/xla/tsl/platform/default/dso_loader.cc
++++ b/third_party/xla/xla/tsl/platform/default/dso_loader.cc
 @@ -142,19 +142,11 @@ absl::StatusOr<void*> GetNcclDsoHandle() {
  }
  
@@ -33,5 +33,5 @@ index 8c59f439ccc..aa2949f26f0 100644
  
  absl::StatusOr<void*> GetRocblasDsoHandle() {
 -- 
-2.45.2
+2.49.0
 

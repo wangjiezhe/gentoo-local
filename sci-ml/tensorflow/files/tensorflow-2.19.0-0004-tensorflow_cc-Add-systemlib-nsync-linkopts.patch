@@ -1,4 +1,4 @@
-From ba3f82dbd73bddccf6e28140a4420e4ca9b85e88 Mon Sep 17 00:00:00 2001
+From 15a2450e84f1d240a955176eb445a807fe64c208 Mon Sep 17 00:00:00 2001
 From: wangjiezhe <wangjiezhe@gmail.com>
 Date: Fri, 24 Nov 2023 16:42:48 +0800
 Subject: [PATCH 04/17] tensorflow_cc: Add systemlib nsync linkopts
@@ -10,7 +10,7 @@ workaround by applying them directly
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/tensorflow/BUILD b/tensorflow/BUILD
-index a3a09b2d4cb..7c7a06131d6 100644
+index 0a74d6a9613..65c5a1c2a29 100644
 --- a/tensorflow/BUILD
 +++ b/tensorflow/BUILD
 @@ -5,6 +5,7 @@
@@ -21,7 +21,7 @@ index a3a09b2d4cb..7c7a06131d6 100644
  load(
      "//tensorflow:tensorflow.bzl",
      "VERSION",
-@@ -1339,7 +1340,7 @@ tf_cc_shared_library(
+@@ -1345,7 +1346,7 @@ tf_cc_shared_library(
              "-z defs",
              "-Wl,--version-script,$(location //tensorflow:tf_version_script.lds)",
          ],
@@ -31,5 +31,5 @@ index a3a09b2d4cb..7c7a06131d6 100644
      roots = [
          "//tensorflow/c:c_api",
 -- 
-2.45.2
+2.49.0
 

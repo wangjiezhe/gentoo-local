@@ -1,4 +1,4 @@
-From f632572387e2ca5e14c18f3fa639ecacd8c3d12e Mon Sep 17 00:00:00 2001
+From a6a53b11dbc1445422ecc0f8f4c9079568df56c8 Mon Sep 17 00:00:00 2001
 From: Jason Zaman <jason@perfinion.com>
 Date: Sun, 6 Feb 2022 00:13:56 -0800
 Subject: [PATCH 02/17] systemlib: Latest absl LTS has split cord libs
@@ -28,5 +28,5 @@ index fa9a7a84f67..63bac99d71b 100644
          ":str_format",
          "//absl/container:compressed_tuple",
 -- 
-2.45.2
+2.49.0
 
