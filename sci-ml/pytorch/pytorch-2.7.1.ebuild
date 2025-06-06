@@ -16,22 +16,14 @@ SRC_URI="https://github.com/pytorch/${PN}/archive/refs/tags/v${PV}.tar.gz
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~arm64"
 RESTRICT="test"
 
 REQUIRED_USE=${PYTHON_REQUIRED_USE}
-BDEPEND="
-	~sci-ml/caffe2-${PV}[${PYTHON_SINGLE_USEDEP}]
-"
 RDEPEND="
 	${PYTHON_DEPS}
-	${BDEPEND}
+	~sci-ml/caffe2-${PV}[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
-		dev-python/filelock[${PYTHON_USEDEP}]
-		dev-python/fsspec[${PYTHON_USEDEP}]
-		dev-python/jinja2[${PYTHON_USEDEP}]
-		dev-python/networkx[${PYTHON_USEDEP}]
-		dev-python/opt-einsum[${PYTHON_USEDEP}]
 		dev-python/sympy[${PYTHON_USEDEP}]
 		dev-python/typing-extensions[${PYTHON_USEDEP}]
 	')
@@ -42,27 +34,24 @@ DEPEND="${RDEPEND}
 	')
 "
 
-QA_PREBUILT="usr/lib/python*/site-packages/functorch/_C.*.so"
-
-PATCHES=(
-	"${FILESDIR}"/${P}-don-t-build-libtorch-again.patch
-	"${FILESDIR}"/${P}-Change-library-directory-according-to-CMake-build.patch
-	"${FILESDIR}"/${P}-global-dlopen.patch
-	"${FILESDIR}"/${PN}-2.5.1-torch_shm_manager.patch
-	"${FILESDIR}"/${P}-setup.patch
-)
-
 src_prepare() {
+	eapply "${FILESDIR}"/${PN}-2.6.0-setup.patch
+	eapply "${FILESDIR}"/${PN}-2.6.0-don-t-build-libtorch-again.patch
+
 	# Set build dir for pytorch's setup
 	sed -i \
 		-e "/BUILD_DIR/s|build|/var/lib/caffe2/|" \
 		tools/setup_helpers/env.py \
 		|| die
-
-	# Crazy workaround for splitting "caffe2" and "pytorch" in two different packages:
-	cp -a "${EPREFIX}/usr/$(get_libdir)/functorch.so" functorch/ || die
-
+	# Drop legacy from pyproject.toml
+	sed -i \
+		-e "/build-backend/s|:__legacy__||" \
+		pyproject.toml \
+		|| die
 	distutils-r1_src_prepare
+
+	# Get object file from caffe2
+	cp "${ESYSROOT}"/var/lib/caffe2/functorch.so functorch/functorch.so || die
 
 	hprefixify tools/setup_helpers/env.py
 }
@@ -77,7 +66,4 @@ python_compile() {
 
 python_install() {
 	USE_SYSTEM_LIBS=ON distutils-r1_python_install
-
-	dosym -r "/usr/include/torch" "$(python_get_sitedir)/torch/include/torch"
-	dosym -r "/usr/lib64" "$(python_get_sitedir)/torch/lib"
 }
