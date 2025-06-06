@@ -1,10 +1,10 @@
-# Copyright 1999-2023 Gentoo Authors
+# Copyright 1999-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
 DISTUTILS_USE_PEP517=setuptools
-PYTHON_COMPAT=( python3_{10..12} )
+PYTHON_COMPAT=( python3_{10..13} )
 
 inherit distutils-r1
 
@@ -21,7 +21,7 @@ S=${WORKDIR}/${P}/python
 
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS="amd64 arm arm64 ~riscv x86"
+KEYWORDS="amd64 arm arm64 ~riscv ~sparc x86"
 IUSE="test"
 RESTRICT="!test? ( test )"
 
@@ -31,9 +31,16 @@ BDEPEND="
 	)
 "
 
+src_prepare() {
+	cd "${WORKDIR}/${P}" || die
+	eapply "${FILESDIR}/${PN}-24.3.25-numpy-2.patch"
+	cd "${S}" || die
+	distutils-r1_src_prepare
+}
+
 python_test() {
 	cd "${WORKDIR}/${P}/tests" || die
 	# zeroes means without benchmarks
-	"${EPYTHON}" py_test.py 0 0 0 false || die "Tests failed with ${EPYTHON}"
-	"${EPYTHON}" py_flexbuffers_test.py -v || die "Tests failed with ${EPYTHON}"
+	"${EPYTHON}" py_test.py 0 0 0 0 false || die
+	"${EPYTHON}" py_flexbuffers_test.py -v || die
 }
