@@ -276,21 +276,6 @@ github = "pytorch/text"
 use_latest_release = true
 prefix = "v"
 
-["net-libs/grpc"]
-source = "github"
-github = "grpc/grpc"
-use_latest_release = true
-prefix = "v"
-
-["dev-python/grpcio"]
-source = "pypi"
-pypi = "grpcio"
-
-["dev-cpp/abseil-cpp"]
-source = "github"
-github = "abseil/abseil-cpp"
-use_latest_release = true
-
 ["sci-ml/tensorflow"]
 source = "github"
 github = "tensorflow/tensorflow"
@@ -300,12 +285,6 @@ prefix = "v"
 ["sci-visualization/tensorboard"]
 source = "github"
 github = "tensorflow/tensorboard"
-use_latest_release = true
-prefix = "v"
-
-["sci-ml/tensorflow-estimator"]
-source = "github"
-github = "tensorflow/estimator"
 use_latest_release = true
 prefix = "v"
 
