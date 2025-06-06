@@ -31,7 +31,7 @@ S="${WORKDIR}"/${MYP}
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~arm64"
 IUSE="blis cuda distributed fbgemm flash gloo magma memefficient mkl mpi numa nnpack +numpy
 	onednn openblas opencl openmp qnnpack rocm xnnpack"
 RESTRICT="test"
@@ -131,13 +131,13 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.5.1-unbundle_fmt.patch
 	"${FILESDIR}"/${PN}-2.5.1-unbundle_kineto.patch
 	"${FILESDIR}"/${PN}-2.3.0-cudnn_include_fix.patch
-	"${FILESDIR}"/${P}-gentoo.patch
+	"${FILESDIR}"/${PN}-2.7.0-gentoo.patch
 	"${FILESDIR}"/${PN}-2.4.0-cpp-httplib.patch
 	"${FILESDIR}"/${PN}-1.12.0-glog-0.6.0.patch
 	"${FILESDIR}"/${PN}-2.5.1-newfix-functorch-install.patch
 	"${FILESDIR}"/${PN}-2.6.0-rocm-fix-std-cpp17.patch
 	"${FILESDIR}"/${PN}-2.4.0-blis.patch
-	"${FILESDIR}"/${P}-cuda.patch
+	"${FILESDIR}"/${PN}-2.7.0-cuda.patch
 	"${FILESDIR}"/${PN}-2.6.0-xnnpack.patch
 )
 
