@@ -1,5 +1,5 @@
 # WIP
-=sci-ml/tensorflow-2.18*
+=sci-ml/tensorflow-2.19*
 
 # Bazel 7 support is not ready
 =dev-build/bazel-7*
