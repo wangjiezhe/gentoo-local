@@ -17,5 +17,5 @@ REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 RDEPEND="
 	${PYTHON_DEPS}
 	dev-python/cuda-core[${PYTHON_USEDEP}]
-	dev-python/cuda-bindings[${PYTHON_USEDEP}]
+	~dev-python/cuda-bindings-${PV}[${PYTHON_USEDEP}]
 "
