@@ -34,5 +34,6 @@ BDEPEND="
 python_prepare_all() {
 	distutils-r1_python_prepare_all
 
-	export CUDA_PATH="${EPREFIX}/opt/cuda"
+	export CUDA_HOME="${EPREFIX}/opt/cuda"
+	export LIBRARY_PATH="${CUDA_HOME}/lib64:${LIBRARY_PATH}"
 }
