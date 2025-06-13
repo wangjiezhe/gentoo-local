@@ -33,7 +33,7 @@ DEPEND="
 	cuda? (
 		dev-util/nvidia-cuda-toolkit
 		dev-libs/cudnn
-		sci-ml/caffe2:=[cuda?]
+		>=sci-ml/caffe2-2.7.1-r1:=[cuda?]
 		dev-libs/nccl
 		>=dev-libs/cutlass-3.8
 	)
