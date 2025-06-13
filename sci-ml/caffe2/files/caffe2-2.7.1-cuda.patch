@@ -35,12 +35,11 @@ index 72e6d9d71c8..c13df88e0b4 100644
 @@ -171,9 +174,9 @@ endif()
  
  # nvToolsExt
- if(USE_SYSTEM_NVTX)
--  find_path(nvtx3_dir NAMES nvtx3)
-+  find_path(nvtx3_dir NAMES nvtx3 PATHS "/opt/cuda/include" NO_DEFAULT_PATH)
+-if(USE_SYSTEM_NVTX)
++if(TRUE)
+   find_path(nvtx3_dir NAMES nvtx3 PATHS ${CUDA_INCLUDE_DIRS})
  else()
--  find_path(nvtx3_dir NAMES nvtx3 PATHS "${PROJECT_SOURCE_DIR}/third_party/NVTX/c/include" NO_DEFAULT_PATH)
-+  find_path(nvtx3_dir NAMES nvtx3 PATHS "/opt/cuda/include" NO_DEFAULT_PATH)
+   find_path(nvtx3_dir NAMES nvtx3 PATHS "${PROJECT_SOURCE_DIR}/third_party/NVTX/c/include" NO_DEFAULT_PATH)
  endif()
  find_package_handle_standard_args(nvtx3 DEFAULT_MSG nvtx3_dir)
  if(nvtx3_FOUND)

@@ -137,7 +137,7 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.5.1-newfix-functorch-install.patch
 	"${FILESDIR}"/${PN}-2.6.0-rocm-fix-std-cpp17.patch
 	"${FILESDIR}"/${PN}-2.4.0-blis.patch
-	"${FILESDIR}"/${PN}-2.7.0-cuda.patch
+	"${FILESDIR}"/${P}-cuda.patch
 	"${FILESDIR}"/${PN}-2.6.0-xnnpack.patch
 )
 
