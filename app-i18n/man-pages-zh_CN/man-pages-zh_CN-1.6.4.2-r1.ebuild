@@ -29,6 +29,9 @@ src_install() {
 	# to avoid file collision, we have to remove it
 	rm src/man1/groups.1 || die
 
+	# avoid collision with >=sys-process/procps-4.0.5
+	rm src/man1/free.1 src/man8/vmstat.8 || die
+
 	doman -i18n=zh_CN src/man?/*.[1-9]*
 	dodoc README.md AUTHORS ChangeLog NEWS
 }
