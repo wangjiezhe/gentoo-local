@@ -1,9 +1,9 @@
-# Copyright 2024 Gentoo Authors
+# Copyright 2024-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{10..12} )
+PYTHON_COMPAT=( python3_{11..13} )
 DISTUTILS_USE_PEP517=setuptools
 DISTUTILS_SINGLE_IMPL=1
 inherit distutils-r1 # pypi
@@ -18,7 +18,7 @@ S="${WORKDIR}/tnt-${CommitId}"
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64"
-# RESTRICT="test"
+RESTRICT="test"
 
 RDEPEND="
 	>=sci-ml/pytorch-2.4.0[${PYTHON_SINGLE_USEDEP}]
@@ -44,38 +44,6 @@ BDEPEND="
 		')
 	)
 "
-
-# PATCHES=(
-# 	"${FILESDIR}/0001-Revert-fix-GradScaler-pre-commit-699.patch"
-# 	"${FILESDIR}/0002-Revert-Fix-type-annotation-to-use-base-GradScaler-as.patch"
-# )
-
-# python_prepare_all() {
-# 	cat <<- EOF > requirements.txt
-# 	torch
-# 	numpy
-# 	fsspec
-# 	tensorboard
-# 	packaging
-# 	psutil
-# 	pyre_extensions
-# 	typing_extensions
-# 	setuptools
-# 	tqdm
-# 	tabulate
-# 	EOF
-
-# 	cat <<- EOF > dev-requirements.txt
-# 	parameterized
-# 	pytest
-# 	pytest-cov
-# 	torchsnapshot-nightly
-# 	pyre-check
-# 	torchvision
-# 	EOF
-
-# 	distutils-r1_python_prepare_all
-# }
 
 distutils_enable_tests pytest
 
