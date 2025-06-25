@@ -1,0 +1,12 @@
+diff '--color=auto' -ur torch-fidelity-a61422fb9bafcf94af51440ddad4bb11b091f7aa.orig/setup.py torch-fidelity-a61422fb9bafcf94af51440ddad4bb11b091f7aa/setup.py
+--- torch-fidelity-a61422fb9bafcf94af51440ddad4bb11b091f7aa.orig/setup.py	2025-06-25 23:15:37.108253719 +0800
++++ torch-fidelity-a61422fb9bafcf94af51440ddad4bb11b091f7aa/setup.py	2025-06-25 23:16:28.264237484 +0800
+@@ -38,7 +38,7 @@
+     long_description_content_type="text/plain",
+     install_requires=requirements,
+     python_requires=">=3.6",
+-    packages=find_packages(),
++    packages=find_packages(exclude=["tests", "tests.*"]),
+     author="Anton Obukhov",
+     license="Apache License 2.0",
+     url="https://www.github.com/toshas/torch-fidelity",

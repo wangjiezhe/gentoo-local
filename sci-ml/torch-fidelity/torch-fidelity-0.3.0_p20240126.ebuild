@@ -1,19 +1,21 @@
-# Copyright 1999-2023 Gentoo Authors
+# Copyright 1999-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{10..12} )
+PYTHON_COMPAT=( python3_{11..13} )
 DISTUTILS_USE_PEP517=setuptools
 DISTUTILS_SINGLE_IMPL=1
 inherit distutils-r1
 
-CommitId="3dcb32c877dbbcbdd5023806a69c000e19fd0285"
+CommitId="a61422fb9bafcf94af51440ddad4bb11b091f7aa"
 
 DESCRIPTION="High-fidelity performance metrics for generative models in PyTorch"
 HOMEPAGE="https://github.com/toshas/torch-fidelity"
 SRC_URI="https://github.com/toshas/torch-fidelity/archive/${CommitId}.tar.gz
 	-> ${P}.gh.tar.gz"
+
+S="${WORKDIR}"/${PN}-${CommitId}
 
 LICENSE="Apache-2.0"
 SLOT="0"
@@ -21,8 +23,6 @@ KEYWORDS="~amd64"
 RESTRICT="test"		# Need network access
 
 PATCHES=( "${FILESDIR}/${P}-install.patch" )
-
-S="${WORKDIR}"/${PN}-${CommitId}
 
 RDEPEND="
 	sci-ml/pytorch[${PYTHON_SINGLE_USEDEP}]
