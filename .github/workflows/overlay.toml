@@ -193,7 +193,7 @@ github = "googleapis/google-cloud-cpp"
 use_latest_release = true
 prefix = "v"
 
-["dev-python/torchinfo"]
+["sci-ml/torchinfo"]
 source = "github"
 github = "TylerYep/torchinfo"
 use_latest_release = true

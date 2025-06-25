@@ -4,3 +4,4 @@ move dev-python/lightning sci-ml/lightning
 move dev-libs/cudnn-frontend sci-ml/cudnn-frontend
 move dev-python/wandb sci-ml/wandb
 move app-office/qtikz app-text/qtikz
+move dev-python/torchinfo sci-ml/torchinfo
