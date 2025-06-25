@@ -1,0 +1,121 @@
+From 590c504b058e45c5773abf2a334e25b9066393d2 Mon Sep 17 00:00:00 2001
+From: wangjiezhe <wangjiezhe@gmail.com>
+Date: Thu, 26 Jun 2025 00:09:05 +0800
+Subject: [PATCH 1/2] Revert "Add cmake dependency only when system cmake is
+ not available (backend version) (#6643)"
+
+This reverts commit e194287ac70ef853d0612ada473636f27fc3bd20.
+---
+ backend.py     | 56 --------------------------------------------------
+ pyproject.toml |  5 ++---
+ setup.py       |  8 ++++++--
+ 3 files changed, 8 insertions(+), 61 deletions(-)
+ delete mode 100644 backend.py
+
+diff --git a/backend.py b/backend.py
+deleted file mode 100644
+index d34365d8..00000000
+--- a/backend.py
++++ /dev/null
+@@ -1,56 +0,0 @@
+-# Copyright (c) ONNX Project Contributors
+-#
+-# SPDX-License-Identifier: Apache-2.0
+-
+-"""PEP 517 build backend for onnx
+-
+-This is a thin wrapper over setuptools' PEP 517 build backend that
+-automatically adds ``cmake`` to build dependencies if there is no CMake
+-executable in PATH.  This approach ensures that the package uses system
+-CMake (that may contain downstream patches) when one is available,
+-and pulls in the CMake package from PyPI when it is not.
+-"""
+-
+-from __future__ import annotations
+-
+-import shutil
+-
+-from setuptools.build_meta import (
+-    build_editable,
+-    build_sdist,
+-    build_wheel,
+-    get_requires_for_build_sdist,
+-    prepare_metadata_for_build_editable,
+-    prepare_metadata_for_build_wheel,
+-)
+-from setuptools.build_meta import (
+-    get_requires_for_build_editable as _get_requires_for_build_editable,
+-)
+-from setuptools.build_meta import (
+-    get_requires_for_build_wheel as _get_requires_for_build_wheel,
+-)
+-
+-__all__ = [
+-    "build_editable",
+-    "build_sdist",
+-    "build_wheel",
+-    "get_requires_for_build_editable",
+-    "get_requires_for_build_sdist",
+-    "get_requires_for_build_wheel",
+-    "prepare_metadata_for_build_editable",
+-    "prepare_metadata_for_build_wheel",
+-]
+-
+-
+-def _get_cmake_dep() -> list[str]:
+-    if shutil.which("cmake3") or shutil.which("cmake"):
+-        return []
+-    return ["cmake>=3.18"]
+-
+-
+-def get_requires_for_build_editable(*args, **kwargs) -> list[str]:
+-    return _get_requires_for_build_editable(*args, **kwargs) + _get_cmake_dep()
+-
+-
+-def get_requires_for_build_wheel(*args, **kwargs) -> list[str]:
+-    return _get_requires_for_build_wheel(*args, **kwargs) + _get_cmake_dep()
+diff --git a/pyproject.toml b/pyproject.toml
+index 2270afc8..21907274 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -3,9 +3,8 @@
+ # SPDX-License-Identifier: Apache-2.0
+ 
+ [build-system]
+-requires = ["setuptools>=64", "protobuf>=4.25.1"]
+-backend-path = ["."]
+-build-backend = "backend"
++requires = ["setuptools>=64", "protobuf>=4.25.1", "cmake>=3.18"]
++build-backend = "setuptools.build_meta"
+ 
+ [project]
+ name = "onnx"
+diff --git a/setup.py b/setup.py
+index 02fa58e4..1f1707ac 100644
+--- a/setup.py
++++ b/setup.py
+@@ -55,6 +55,12 @@ COVERAGE = os.getenv("COVERAGE", "0") == "1"
+ # See https://github.com/onnx/onnx/pull/6117
+ ONNX_WHEEL_PLATFORM_NAME = os.getenv("ONNX_WHEEL_PLATFORM_NAME")
+ 
++################################################################################
++# Pre Check
++################################################################################
++
++assert CMAKE, "Could not find cmake in PATH"
++
+ ################################################################################
+ # Version
+ ################################################################################
+@@ -161,8 +167,6 @@ class CmakeBuild(setuptools.Command):
+             self.jobs = multiprocessing.cpu_count()
+ 
+     def run(self):
+-        assert CMAKE, "Could not find cmake in PATH"
+-
+         os.makedirs(CMAKE_BUILD_DIR, exist_ok=True)
+ 
+         with cd(CMAKE_BUILD_DIR):
+-- 
+2.49.0
+
