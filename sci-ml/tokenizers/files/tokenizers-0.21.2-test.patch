@@ -1,17 +1,5 @@
 --- a/tests/bindings/test_trainers.py	2024-04-07 18:21:19.443506351 +0200
 +++ b/tests/bindings/test_trainers.py	2024-04-07 18:21:54.893466083 +0200
-@@ -295,8 +295,8 @@
-         tokenizer.pre_tokenizer = pre_tokenizers.Sequence(
-             [pre_tokenizers.Whitespace(), pre_tokenizers.Digits(individual_digits=True)]
-         )
--        tokenizer.train(files=["data/big.txt"], trainer=trainer)
-+        tokenizer.train(files=["tests/data/big.txt"], trainer=trainer)
- 
--        tokenizer.save("data/tokenizer.json")
-+        tokenizer.save("tests/data/tokenizer.json")
- 
--        tokenizer.from_file("data/tokenizer.json")
-+        tokenizer.from_file("tests/data/tokenizer.json")
 --- a/tests/documentation/test_tutorial_train_from_iterators.py	2024-04-07 18:19:08.653593406 +0200
 +++ b/tests/documentation/test_tutorial_train_from_iterators.py	2024-04-07 18:19:39.206906910 +0200
 @@ -40,7 +40,7 @@
