@@ -6,6 +6,6 @@
 		<name>wangjiezhe</name>
 	</maintainer>
 	<upstream>
-		<remote-id type="github">Enter-tainer/typstyle</remote-id>
+		<remote-id type="github">typstyle-rs/typstyle</remote-id>
 	</upstream>
 </pkgmetadata>

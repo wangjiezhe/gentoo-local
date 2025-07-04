@@ -8,12 +8,16 @@ EAPI=8
 CRATES="
 "
 
+declare -A GIT_CRATES=(
+	[wasm-minimal-protocol]='https://github.com/astrale-sharp/wasm-minimal-protocol;f015b1cff10eac7a976878e2b1c2a662ea8e455e;wasm-minimal-protocol-%commit%/crates/macro'
+)
+
 inherit edo cargo
 
 DESCRIPTION="A beautiful and reliable code formatter for Typst"
-HOMEPAGE="https://enter-tainer.github.io/typstyle/"
+HOMEPAGE="https://typstyle-rs.github.io/typstyle/"
 SRC_URI="
-	https://github.com/Enter-tainer/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz
+	https://github.com/typstyle-rs/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz
 	${CARGO_CRATE_URIS}
 "
 if [[ ${PKGBUMPING} != ${PVR} ]]; then
