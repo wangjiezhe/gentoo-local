@@ -1,0 +1,13 @@
+diff --git a/python/CMakeLists.txt b/python/CMakeLists.txt
+index ff8118d..045b674 100644
+--- a/python/CMakeLists.txt
++++ b/python/CMakeLists.txt
+@@ -7,7 +7,7 @@ set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+ set(CMAKE_POLICY_VERSION_MINIMUM 3.18)
+ set(BUILD_MOCK OFF)
+ 
+-option(CUDNN_FRONTEND_USE_SYSTEM_DLPACK "Whether dlpack should use the system version or fetched." OFF)
++option(CUDNN_FRONTEND_USE_SYSTEM_DLPACK "Whether dlpack should use the system version or fetched." ON)
+ 
+ IF(CUDNN_FRONTEND_USE_SYSTEM_DLPACK)
+   find_package(dlpack REQUIRED)

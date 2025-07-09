@@ -3,7 +3,7 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{10..13} )
+PYTHON_COMPAT=( python3_{11..13} )
 DISTUTILS_USE_PEP517=setuptools
 DISTUTILS_EXT=1
 inherit distutils-r1 flag-o-matic
@@ -16,7 +16,6 @@ LICENSE="MIT"
 SLOT="0/8"
 KEYWORDS="~amd64"
 IUSE="python"
-RESTRICT="test"		# RuntimeError: cudnnHandle Create failed
 
 RDEPEND=">=dev-libs/cudnn-9"
 DEPEND="${RDEPEND}"
@@ -63,6 +62,11 @@ src_install() {
 distutils_enable_tests pytest
 
 src_test() {
+	if has usersandbox ${FEATURES}; then
+		ewarn "Test suite fails under FEATURES=usersandbox. Skipping."
+		return 0
+	fi
+
 	use python && distutils-r1_src_test
 }
 
@@ -71,9 +75,9 @@ python_test() {
 		# Failed with param: ((1, 128, 1024), torch.bfloat16)
 		# AssertionError: Tensor-likes are not close!
 		# Mismatched elements: 0.2%
-		test/python_fe/test_matmul_bias_relu.py::test_matmul_bias_relu[param_extract4]
+		test/python/test_matmul_bias_relu.py::test_matmul_bias_relu[param_extract4]
 		# AssertionError: Legacy CUDA profiling requires use_cpu=True
-		test/python_fe/test_silu_and_mul.py::test_silu_and_mul_and_quantization
+		test/python/test_silu_and_mul.py::test_silu_and_mul_and_quantization
 	)
 
 	epytest
