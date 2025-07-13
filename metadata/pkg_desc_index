@@ -6,7 +6,7 @@ app-misc/cheat 4.4.2: cheat allows you to create and view interactive cheatsheet
 app-misc/cmd-wrapped 0.4.1: A CLI tool to view Unix shell history statistics, with support for zsh, bash, fish, and atuin
 app-text/qtikz 0.13.2: A nice user interface for making pictures using TikZ
 app-text/typst 0.13.1: A markup-based typesetting system for the sciences
-app-text/typstyle 0.13.13: A beautiful and reliable code formatter for Typst
+app-text/typstyle 0.13.14: A beautiful and reliable code formatter for Typst
 app-vim/vimcdoc 2.5.0: online vim documentation translated into Chinese
 dev-build/bazel 5.4.1 6.2.1 6.5.0 7.0.1: Fast and correct automated build system
 dev-cpp/abseil-cpp 20230802.3 20240116.3: Abseil Common Libraries (C++), LTS Branch
@@ -19,7 +19,7 @@ dev-libs/cusparselt 0.5.2.1 0.6.3.2 0.7.1.0: A High-Performance CUDA Library for
 dev-libs/cutlass 3.5.0 3.5.1: CUDA Templates for Linear Algebra Subroutines
 dev-libs/dlpack 0.8 1.1: common in-memory tensor structure
 dev-libs/flatbuffers 23.5.26 24.3.25: Memory efficient serialization library
-dev-libs/nccl 2.27.5: Optimized primitives for collective multi-GPU communication
+dev-libs/nccl 2.27.6: Optimized primitives for collective multi-GPU communication
 dev-libs/re2 0.2023.11.01-r1: An efficient, principled regular expression library
 dev-python/FBGEMM_GPU 1.0.0 1.2.0: A collection of high-performance PyTorch GPU operator libraries for training and inference
 dev-python/astunparse 1.6.3-r2: Astun parser for python
@@ -59,10 +59,11 @@ dev-python/treelib 1.8.0: An efficient implementation of tree data structure
 dev-python/typing-inspect 0.9.0: Runtime inspection utilities for Python typing module
 dev-python/watermark 2.5.0: IPython magic function to print date/time stamps and various system information
 dev-util/evcxr-repl 0.20.0: A REPL for Rust
+dev-util/gemini-cli 0.1.11: Gemini CLI - a command-line AI workflow tool by Google
 dev-util/minify-html 0.16.4: [CLI] Extremely fast and smart HTML + JS + CSS minifier
 dev-util/minify-js 0.6.0: Extremely fast JS minifier
 media-fonts/maple-mono 6.4 7.4: Open source monospace & nerd font with round corners and ligatures
-net-libs/google-cloud-cpp 2.38.0: Google Cloud Client Library for C++
+net-libs/google-cloud-cpp 2.39.0: Google Cloud Client Library for C++
 net-libs/nodejs 12.22.6 14.21.3 16.20.2-r1 18.20.4 20.16.0 22.5.1: A JavaScript runtime built on Chrome's V8 JavaScript engine
 net-misc/mosh 1.4.0: Mobile shell that supports roaming and intelligent local echo
 net-misc/piping-server 0.18.0: Infinitely transfer between every device over pure HTTP with pipes or browsers
@@ -78,10 +79,10 @@ sci-mathematics/mathematica 14.1.0: Wolfram Mathematica
 sci-ml/FBGEMM 2025.01.29: Facebook GEneral Matrix Multiplication
 sci-ml/XNNPACK 2024.11.08: library of floating-point neural network inference operators
 sci-ml/accelerate 0.34.1 1.4.0: A simple way to train and use PyTorch models with multi-GPU, TPU, mixed-precision
-sci-ml/caffe2 2.7.1-r1: A deep learning framework
+sci-ml/caffe2 2.7.1-r2: A deep learning framework
 sci-ml/clean-fid 0.1.35: FID calculation with proper image resizing and quantization steps
 sci-ml/compressai 1.2.8: A PyTorch library and evaluation platform for end-to-end compression research
-sci-ml/cudnn-frontend 1.12.0: A c++ wrapper for the cudnn backend API
+sci-ml/cudnn-frontend 1.12.1: A c++ wrapper for the cudnn backend API
 sci-ml/datasets 2.21.0 3.5.0: Access and share datasets for Audio, Computer Vision, and NLP tasks
 sci-ml/faiss 1.11.0: A library for efficient similarity search and clustering of dense vectors
 sci-ml/framework-reproducibility 0.6.0: Providing reproducibility in deep learning frameworks
@@ -96,21 +97,21 @@ sci-ml/nltk 3.9.1: Natural Language Toolkit
 sci-ml/nltk-data 20250310: Data Distribution for NLTK
 sci-ml/onnx 1.16.2 1.17.0 1.18.0: Open Neural Network Exchange (ONNX)
 sci-ml/pysentencepiece 0.2.0: Python wrapper for SentencePiece
-sci-ml/pytorch 2.7.1: Tensors and Dynamic neural networks in Python
-sci-ml/pytorch-image-models 1.0.16: PyTorch image models, scripts, pretrained weights
+sci-ml/pytorch 2.7.1-r1: Tensors and Dynamic neural networks in Python
+sci-ml/pytorch-image-models 1.0.17: PyTorch image models, scripts, pretrained weights
 sci-ml/pytorch-lightning 2.5.2: Lightweight PyTorch wrapper for ML researchers
 sci-ml/pytorch-msssim 1.0.0: Fast and differentiable MS-SSIM and SSIM for pytorch
 sci-ml/safetensors 0.4.2: Simple, safe way to store and distribute tensors
 sci-ml/sentencepiece 0.2.0: Unsupervised text tokenizer for Neural Network-based text generation
 sci-ml/tensorflow 2.16.2 2.17.1 2.19.0: Computation framework using data flow graphs for scalable machine learning
 sci-ml/tensorrt 8.6.1.6-r1 10.10.0.31 10.12.0.36: An SDK for high-performance deep learning inference
-sci-ml/tokenizers 0.21.2: Implementation of today's most used tokenizers
+sci-ml/tokenizers 0.21.3: Implementation of today's most used tokenizers
 sci-ml/torch-fidelity 0.3.0_p20240126: High-fidelity performance metrics for generative models in PyTorch
 sci-ml/torchaudio 2.7.1: Data manipulation and transformation for audio signal processing
 sci-ml/torchdata 0.11.0: A library of common modular data loading primitives
 sci-ml/torcheval 0.0.6: A library that contains a rich collection of performant PyTorch model metrics
 sci-ml/torchinfo 1.8.0-r1: View model summaries in PyTorch
-sci-ml/torchmetrics 1.7.3: Machine learning metrics for distributed, scalable PyTorch applications
+sci-ml/torchmetrics 1.7.4: Machine learning metrics for distributed, scalable PyTorch applications
 sci-ml/torchrec 1.2.0: Pytorch domain library for recommendation systems
 sci-ml/torchsnapshot 0.1.0_p20240521-r1: A performant, memory-efficient checkpointing library for PyTorch applications
 sci-ml/torchtext 0.18.0-r1: Data manipulation and transformation for audio signal processing

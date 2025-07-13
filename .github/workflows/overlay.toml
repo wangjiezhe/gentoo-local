@@ -601,3 +601,9 @@ source = "github"
 github = "NVIDIA/cuda-python"
 use_latest_release = true
 prefix = "cuda-core-v"
+
+["dev-util/gemini-cli"]
+source = "github"
+github = "google-gemini/gemini-cli"
+use_max_release = true
+exclude_regex = ".*nightly.*"
