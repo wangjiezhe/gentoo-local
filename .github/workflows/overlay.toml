@@ -607,3 +607,9 @@ source = "github"
 github = "google-gemini/gemini-cli"
 use_max_release = true
 exclude_regex = ".*nightly.*"
+
+["media-gfx/pdf2svg"]
+souce = "github"
+github = "dawbarton/pdf2svg"
+use_max_tag = true
+prefix = "v"
