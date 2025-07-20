@@ -64,7 +64,7 @@ prefix = "v"
 ["dev-libs/cudnn"]
 source = "regex"
 url = "https://developer.download.nvidia.com/compute/cudnn/redist/cudnn/linux-x86_64/"
-regex = "\\d\\.\\d\\.\\d\\.\\d+"
+regex = "\\d+\\.\\d+\\.\\d+\\.\\d+"
 
 ["dev-libs/cutlass"]
 source = "github"
