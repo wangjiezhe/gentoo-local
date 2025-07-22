@@ -606,6 +606,7 @@ prefix = "cuda-core-v"
 source = "github"
 github = "google-gemini/gemini-cli"
 use_max_release = true
+prefix = "v"
 exclude_regex = ".*nightly.*"
 
 ["media-gfx/pdf2svg"]
