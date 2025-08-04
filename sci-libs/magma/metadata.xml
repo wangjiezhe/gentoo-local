@@ -17,6 +17,6 @@ heterogeneous/hybrid architectures, starting with current
 		<flag name="openblas">Use OpenBLAS as the BLAS vendor</flag>
 	</use>
 	<upstream>
-		<remote-id type="bitbucket">icl/magma</remote-id>
+		<remote-id type="github">icl-utk-edu/magma</remote-id>
 	</upstream>
 </pkgmetadata>

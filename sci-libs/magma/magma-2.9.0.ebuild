@@ -1,10 +1,10 @@
-# Copyright 1999-2024 Gentoo Authors
+# Copyright 1999-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
 FORTRAN_STANDARD="77 90"
-PYTHON_COMPAT=( python3_{10..12} )
+PYTHON_COMPAT=( python3_{11..13} )
 
 inherit cmake fortran-2 python-any-r1 toolchain-funcs cuda
 
@@ -13,7 +13,7 @@ MY_PV=$(ver_rs 3 '-')
 DESCRIPTION="Matrix Algebra on GPU and Multicore Architectures"
 HOMEPAGE="
 	https://icl.cs.utk.edu/magma/
-	https://bitbucket.org/icl/magma
+	https://github.com/icl-utk-edu/magma
 "
 SRC_URI="https://icl.cs.utk.edu/projectsfiles/${PN}/downloads/${PN}-${MY_PV}.tar.gz"
 
@@ -44,7 +44,6 @@ RESTRICT="!test? ( test )"
 
 PATCHES=(
 	"${FILESDIR}/${PN}-2.7.2-gentoo.patch"
-	"${FILESDIR}/${PN}-2.7.2-cuda.patch"
 )
 
 pkg_setup() {

@@ -212,9 +212,9 @@ use_latest_release = true
 prefix = "v"
 
 ["sci-libs/magma"]
-source = "bitbucket"
-bitbucket = "icl/magma"
-use_max_tag = true
+source = "github"
+bitbucket = "icl-utk-edu/magma"
+use_latest_release = true
 prefix = "v"
 
 ["sci-ml/huggingface_hub"]
