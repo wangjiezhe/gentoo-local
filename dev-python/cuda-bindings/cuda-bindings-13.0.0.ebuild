@@ -23,7 +23,7 @@ RDEPEND="
 	dev-python/numpy[${PYTHON_USEDEP}]
 "
 DEPEND="
-	>=dev-util/nvidia-cuda-toolkit-12:=
+	=dev-util/nvidia-cuda-toolkit-13*:=
 "
 BDEPEND="
 	${PYTHON_DEPS}
