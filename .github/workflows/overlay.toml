@@ -593,7 +593,7 @@ prefix = "v"
 ["dev-python/cuda-bindings"]
 source = "github"
 github = "NVIDIA/cuda-python"
-use_latest_release = true
+use_max_release = true
 prefix = "v"
 
 ["dev-python/cuda-core"]
