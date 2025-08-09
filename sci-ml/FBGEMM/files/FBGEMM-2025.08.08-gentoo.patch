@@ -1,0 +1,44 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 03a73290..03b8306f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -381,6 +381,9 @@ install(
+   FILES ${FBGEMM_PUBLIC_HEADERS}
+   DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/fbgemm")
+ 
++install(FILES src/RefImplementations.h
++  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/fbgemm/src")
++
+ install(
+   EXPORT fbgemmLibraryConfig
+   DESTINATION share/cmake/fbgemm
+@@ -390,7 +393,7 @@ install(
+ # Asmjit Target
+ ################################################################################
+ 
+-if(NOT TARGET asmjit)
++if(false)
+   # Download asmjit from github if ASMJIT_SRC_DIR is not specified.
+   if(NOT DEFINED ASMJIT_SRC_DIR)
+     set(ASMJIT_SRC_DIR "${FBGEMM_SOURCE_DIR}/external/asmjit"
+@@ -409,7 +412,7 @@ endif()
+ # Cpuinfo Target
+ ################################################################################
+ 
+-if(NOT TARGET cpuinfo)
++if(false)
+   #Download cpuinfo from github if CPUINFO_SOURCE_DIR is not specified.
+   if(NOT DEFINED CPUINFO_SOURCE_DIR)
+     set(CPUINFO_SOURCE_DIR "${FBGEMM_SOURCE_DIR}/external/cpuinfo"
+diff --git a/src/PackMatrix.cc b/src/PackMatrix.cc
+index def13092..37fe2e4a 100644
+--- a/src/PackMatrix.cc
++++ b/src/PackMatrix.cc
+@@ -30,6 +30,7 @@ PackMatrix<PT, inpType, accType>::PackMatrix(
+ }
+ 
+ template <typename PT, typename inpType, typename accType>
++FBGEMM_API
+ int PackMatrix<PT, inpType, accType>::packedBufferSize(
+     int rows,
+     int cols,

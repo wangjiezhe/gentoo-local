@@ -3,10 +3,10 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{10..13} )
+PYTHON_COMPAT=( python3_{11..13} )
 inherit python-any-r1 flag-o-matic cmake
 
-CommitId=724304300984a22f7cd57907763c53a3e5545272
+CommitId=2ed5d4103ff270245a55bedcddf2ffabdaf8cfa1
 
 DESCRIPTION="Facebook GEneral Matrix Multiplication"
 HOMEPAGE="https://github.com/pytorch/FBGEMM"
@@ -50,7 +50,7 @@ python_check_deps() {
 }
 
 PATCHES=(
-	"${FILESDIR}"/${PN}-2024.10.20-gentoo.patch
+	"${FILESDIR}"/${P}-gentoo.patch
 )
 
 src_prepare() {
