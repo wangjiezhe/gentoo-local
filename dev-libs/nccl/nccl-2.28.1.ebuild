@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
-inherit cuda toolchain-funcs
+inherit cuda
 
 DESCRIPTION="Optimized primitives for collective multi-GPU communication"
 HOMEPAGE="https://developer.nvidia.com/nccl/"
@@ -16,7 +16,6 @@ KEYWORDS="~amd64"
 
 DEPEND="dev-util/nvidia-cuda-toolkit"
 RDEPEND="${DEPEND}"
-BDEPEND="<sys-devel/gcc-14"
 
 DOCS=( README.md LICENSE.txt )
 
@@ -33,10 +32,6 @@ pkg_pretend() {
 		einfo "   echo "dev-libs/nccl nccl" >> /etc/portage/package.env/nccl"
 		einfo ""
 		einfo "The CUDA architecture tuple for your device can be found at https://developer.nvidia.com/cuda-gpus."
-	fi
-
-	if [[ ${BUILD_TYPE} != "binary" ]] && tc-is-gcc && ver_test $(gcc-version) -ge 14; then
-		eerror "NCCL need gcc<14 to compile."
 	fi
 }
 
