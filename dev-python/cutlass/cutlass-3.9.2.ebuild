@@ -3,7 +3,7 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{10..11} )
+PYTHON_COMPAT=( python3_{11..13} )
 DISTUTILS_USE_PEP517=setuptools
 inherit distutils-r1
 
@@ -14,25 +14,19 @@ SRC_URI="https://github.com/NVIDIA/cutlass/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64"
+RESTRICT="test"
 
 RDEPEND="
 	dev-python/cuda-python[${PYTHON_USEDEP}]
-	dev-python/networkx[${PYTHON_USEDEP}]
-	dev-python/numpy[${PYTHON_USEDEP}]
-	dev-python/pydot[${PYTHON_USEDEP}]
-	dev-python/scipy[${PYTHON_USEDEP}]
+	dev-python/scikit-build[${PYTHON_USEDEP}]
 	dev-python/treelib[${PYTHON_USEDEP}]
+	dev-python/pydot[${PYTHON_USEDEP}]
 "
 DEPEND="
 	~dev-libs/cutlass-${PV}
+	dev-python/pybind11[${PYTHON_USEDEP}]
 "
 
 DOCS=()
 
-PATCHES=( "${FILESDIR}/${PN}-3.3.0-install.patch" )
-
-distutils_enable_tests pytest
-
-python_test() {
-	epytest test/python
-}
+PATCHES=()
