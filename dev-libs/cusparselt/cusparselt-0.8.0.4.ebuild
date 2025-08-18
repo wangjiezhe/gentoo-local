@@ -3,9 +3,11 @@
 
 EAPI=8
 
+CUDA_MA="12"
+
 DESCRIPTION="A High-Performance CUDA Library for Sparse Matrix-Matrix Multiplication"
-HOMEPAGE="https://developer.nvidia.com/cusparselt-downloads"
-SRC_URI="https://developer.download.nvidia.com/compute/cusparselt/redist/libcusparse_lt/linux-x86_64/libcusparse_lt-linux-x86_64-${PV}-archive.tar.xz"
+HOMEPAGE="https://docs.nvidia.com/cuda/cusparselt/index.html"
+SRC_URI="https://developer.download.nvidia.com/compute/cusparselt/redist/libcusparse_lt/linux-x86_64/libcusparse_lt-linux-x86_64-${PV}_cuda${CUDA_MA}-archive.tar.xz"
 S="${WORKDIR}/libcusparse_lt-linux-x86_64-${PV}-archive"
 
 LICENSE="NVIDIA-cuSPARSELt"
