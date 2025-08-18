@@ -1,10 +1,22 @@
+diff --git a/faiss/gpu/test/TestGpuDistance.cu b/faiss/gpu/test/TestGpuDistance.cu
+index 6c5526b1..7ac7e287 100644
+--- a/faiss/gpu/test/TestGpuDistance.cu
++++ b/faiss/gpu/test/TestGpuDistance.cu
+@@ -31,6 +31,7 @@
+ #include <faiss/gpu/utils/Transpose.cuh>
+ #include <sstream>
+ #include <vector>
++#include <algorithm>
+ 
+ enum class TestThresholds {
+     Normal,
 diff --git a/perf_tests/CMakeLists.txt b/perf_tests/CMakeLists.txt
-index e89d1157..f0866260 100644
+index 5ae9d3ed..95fcd1ec 100644
 --- a/perf_tests/CMakeLists.txt
 +++ b/perf_tests/CMakeLists.txt
-@@ -7,12 +7,7 @@
- project(faiss_perf_tests)
+@@ -8,12 +8,7 @@ project(faiss_perf_tests)
  set(BENCHMARK_ENABLE_TESTING OFF)
+ set(BENCHMARK_INSTALL_DOCS OFF)
  
 -include(FetchContent)
 -FetchContent_Declare(googlebenchmark
@@ -16,7 +28,7 @@ index e89d1157..f0866260 100644
  
  
  find_package(Threads REQUIRED)
-@@ -24,7 +19,7 @@ add_library(faiss_perf_tests_utils
+@@ -25,7 +20,7 @@ add_library(faiss_perf_tests_utils
  )
  # `#include <faiss/perf_tests/utils.h>` or any other headers
  target_include_directories(faiss_perf_tests_utils PRIVATE
@@ -25,7 +37,7 @@ index e89d1157..f0866260 100644
  
  include(../cmake/link_to_faiss_lib.cmake)
  
-@@ -44,6 +39,6 @@ foreach(bench ${FAISS_PERF_TEST_SRC})
+@@ -45,6 +40,6 @@ foreach(bench ${FAISS_PERF_TEST_SRC})
    target_link_libraries(${bench_exec} PRIVATE faiss_perf_tests_utils OpenMP::OpenMP_CXX benchmark::benchmark gflags)
    # `#include <faiss/perf_tests/utils.h>` or any other headers
    target_include_directories(${bench_exec} PRIVATE
@@ -34,7 +46,7 @@ index e89d1157..f0866260 100644
  
  endforeach()
 diff --git a/perf_tests/bench_scalar_quantizer_accuracy.cpp b/perf_tests/bench_scalar_quantizer_accuracy.cpp
-index bde9939f..01df679d 100644
+index 0133d1c5..05b46025 100644
 --- a/perf_tests/bench_scalar_quantizer_accuracy.cpp
 +++ b/perf_tests/bench_scalar_quantizer_accuracy.cpp
 @@ -5,7 +5,7 @@
@@ -60,7 +72,7 @@ index 16d1502a..ea5805c3 100644
  #include <omp.h>
  #include <cstdio>
 diff --git a/perf_tests/bench_scalar_quantizer_distance.cpp b/perf_tests/bench_scalar_quantizer_distance.cpp
-index 14945c58..778f2fee 100644
+index 8a32d69c..c1530791 100644
 --- a/perf_tests/bench_scalar_quantizer_distance.cpp
 +++ b/perf_tests/bench_scalar_quantizer_distance.cpp
 @@ -12,7 +12,7 @@
@@ -73,7 +85,7 @@ index 14945c58..778f2fee 100644
  
  using namespace faiss;
 diff --git a/perf_tests/bench_scalar_quantizer_encode.cpp b/perf_tests/bench_scalar_quantizer_encode.cpp
-index 0e4909c9..b6fe3eff 100644
+index 068268a2..6e7029eb 100644
 --- a/perf_tests/bench_scalar_quantizer_encode.cpp
 +++ b/perf_tests/bench_scalar_quantizer_encode.cpp
 @@ -12,7 +12,7 @@
@@ -82,9 +94,9 @@ index 0e4909c9..b6fe3eff 100644
  #include <faiss/impl/ScalarQuantizer.h>
 -#include <faiss/perf_tests/utils.h>
 +#include <perf_tests/utils.h>
- #include <faiss/utils/distances.h>
  #include <faiss/utils/random.h>
  
+ using namespace faiss;
 diff --git a/perf_tests/utils.cpp b/perf_tests/utils.cpp
 index 9f505a49..5b2968d7 100644
 --- a/perf_tests/utils.cpp
@@ -99,10 +111,10 @@ index 9f505a49..5b2968d7 100644
  std::map<std::string, faiss::ScalarQuantizer::QuantizerType> sq_types() {
      static std::map<std::string, faiss::ScalarQuantizer::QuantizerType>
 diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
-index dfab76e0..de3c2926 100644
+index 285b9090..297cf188 100644
 --- a/tests/CMakeLists.txt
 +++ b/tests/CMakeLists.txt
-@@ -48,34 +48,6 @@ if (FAISS_ENABLE_PYTHON)
+@@ -50,34 +50,6 @@ if (FAISS_ENABLE_PYTHON)
    target_link_libraries(faiss_test PUBLIC faiss_example_external_module)
  endif()
  
