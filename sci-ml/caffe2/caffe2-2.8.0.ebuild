@@ -36,6 +36,10 @@ SRC_URI="
 		https://github.com/Dao-AILab/${FLASH_PN}/archive/refs/tags/v${FLASH_PV}.tar.gz
 		-> ${FLASH_P}.gh.tar.gz
 	)
+	memefficient? (
+		https://github.com/Dao-AILab/${FLASH_PN}/archive/refs/tags/v${FLASH_PV}.tar.gz
+		-> ${FLASH_P}.gh.tar.gz
+	)
 "
 
 S="${WORKDIR}"/${MYP}
@@ -71,19 +75,19 @@ RDEPEND="
 	dev-libs/pthreadpool
 	dev-libs/sleef
 	sci-ml/foxi
-	~sci-ml/kineto-0.4.0_p20250214
+	~sci-ml/kineto-0.4.0_p20250617
 	sci-ml/onnx
 	virtual/lapack
 	cuda? (
 		dev-libs/cudnn
-		>=sci-ml/cudnn-frontend-1.0.3:0/8
+		>=sci-ml/cudnn-frontend-1.12.0:=
 		dev-util/nvidia-cuda-toolkit:=[profiler]
 		dev-libs/nccl
 		cudss? ( dev-libs/cudss )
 		cusparselt? ( dev-libs/cusparselt )
 	)
 	fbgemm? ( sci-ml/FBGEMM:= )
-	gloo? ( <=sci-ml/gloo-2023.12.03[cuda?] )
+	gloo? ( sci-ml/gloo[cuda?] )
 	magma? ( sci-libs/magma[cuda?] )
 	mpi? ( virtual/mpi )
 	nnpack? ( sci-ml/NNPACK )
@@ -134,7 +138,7 @@ DEPEND="
 		dev-python/pyyaml[${PYTHON_USEDEP}]
 		dev-python/typing-extensions[${PYTHON_USEDEP}]
 	')
-	cuda? ( ~dev-libs/cutlass-3.8.0 )
+	cuda? ( ~dev-libs/cutlass-3.9.2[tools(+)] )
 	onednn? ( sci-ml/ideep )
 	qnnpack? ( dev-libs/clog )
 "
@@ -142,21 +146,24 @@ DEPEND="
 PATCHES=(
 	"${FILESDIR}"/${PN}-2.5.1-unbundle_fmt.patch
 	"${FILESDIR}"/${PN}-2.5.1-unbundle_kineto.patch
+	"${FILESDIR}"/${P}-unbundle_pocketfft.patch
 	"${FILESDIR}"/${PN}-2.3.0-cudnn_include_fix.patch
-	"${FILESDIR}"/${PN}-2.7.0-gentoo.patch
+	"${FILESDIR}"/${P}-gentoo.patch
 	"${FILESDIR}"/${PN}-2.4.0-cpp-httplib.patch
 	"${FILESDIR}"/${PN}-1.12.0-glog-0.6.0.patch
 	"${FILESDIR}"/${PN}-2.5.1-newfix-functorch-install.patch
 	"${FILESDIR}"/${PN}-2.6.0-rocm-fix-std-cpp17.patch
+	"${FILESDIR}"/${P}-cmake.patch
+	"${FILESDIR}"/${PN}-2.7.0-glog-0.7.1.patch
+	"${FILESDIR}"/${PN}-2.7.1-aotriton-fixes.patch
+	"${FILESDIR}"/${PN}-2.8.0-rocm-minus-flash.patch
 	"${FILESDIR}"/${PN}-2.4.0-blis.patch
-	# "${FILESDIR}"/${P}-cuda.patch
 	"${FILESDIR}"/${PN}-2.6.0-xnnpack.patch
-	"${FILESDIR}"/${PN}-2.7.0-llvm.patch
-	"${FILESDIR}"/${PN}-2.7.1-ck-config.patch
+	"${FILESDIR}"/${P}-gloo-146637.patch
 )
 
 src_prepare() {
-	if use flash; then
+	if use flash || use memefficient; then
 		mv "${WORKDIR}"/${FLASH_P}/* third_party/${FLASH_PN}/ || die
 	fi
 	filter-lto #bug 862672
@@ -184,10 +191,6 @@ src_prepare() {
 		c10/CMakeLists.txt \
 		c10/hip/CMakeLists.txt \
 		|| die
-	sed -i \
-		-e '/Using pocketfft in directory:/d' \
-		cmake/Dependencies.cmake \
-		|| die
 
 	# Change libaotriton path
 	sed -i \
@@ -204,7 +207,6 @@ src_prepare() {
 	popd
 
 	sed -i "s|@LIBDIR@|$(get_libdir)|g" \
-		aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt \
 		cmake/Modules/FindBLIS.cmake \
 		|| die
 
@@ -231,6 +233,11 @@ src_prepare() {
 		# TODO: delete, when caffe2 depends on systemwide composable_kernel
 		sed -e "s:third_party/composable_kernel:../composable_kernel-${CK_COMMIT}:g" \
 			-i aten/src/ATen/CMakeLists.txt || die
+
+		# Bug 959808: fix for gfx101x targets
+		pushd "${WORKDIR}/composable_kernel-${CK_COMMIT}" > /dev/null || die
+		eapply "${FILESDIR}"/composable-kernel-6.4.1-expand-isa.patch
+		popd > /dev/null || die
 
 		if tc-is-clang; then
 			# Systemwide gcc (for absl and at::TensorBase) + hipcc (llvm>=18) need abi-compat=17.
@@ -297,7 +304,6 @@ src_configure() {
 		-DUSE_PYTORCH_QNNPACK=$(usex qnnpack)
 		-DUSE_PYTORCH_METAL=OFF
 		-DUSE_ROCM=$(usex rocm)
-		-DUSE_SYSTEM_NVTX=ON
 		-DUSE_TENSORPIPE=$(usex distributed)
 		-DUSE_UCC=OFF
 		-DUSE_VALGRIND=OFF

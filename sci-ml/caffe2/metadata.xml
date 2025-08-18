@@ -11,22 +11,24 @@
 	</maintainer>
 	<use>
 		<flag name="blis">Use <pkg>sci-libs/blis</pkg> or <pkg>sci-libs/aocl-blas</pkg> for blas routines</flag>
+		<flag name="cudss">Use <pkg>dev-libs/cudss</pkg></flag>
+		<flag name="cusparselt">Use the CUDA Sparse Matrix Multiplication</flag>
 		<flag name="distributed">Support distributed applications</flag>
-		<flag name="fbgemm">Use FBGEMM</flag>
+		<flag name="fbgemm">Use <pkg>sci-ml/FBGEMM</pkg></flag>
 		<flag name="flash">Enable flash attention</flag>
-		<flag name="gloo">Use sci-libs/gloo</flag>
+		<flag name="gloo">Use <pkg>sci-ml/gloo</pkg></flag>
 		<flag name="magma">Use sci-libs/magma</flag>
 		<flag name="memefficient">Enable mem efficient attention</flag>
 		<flag name="mkl">Use <pkg>sci-libs/mkl</pkg> for blas, lapack and sparse blas routines</flag>
+		<flag name="nnpack">Use <pkg>sci-ml/NNPACK</pkg></flag>
 		<flag name="numa">Enable NUMA support</flag>
-		<flag name="nnpack">Use NNPACK</flag>
 		<flag name="numpy">Add support for math operations through numpy</flag>
-		<flag name="onednn">Use oneDNN</flag>
+		<flag name="onednn">Use <pkg>sci-ml/oneDNN</pkg></flag>
 		<flag name="openblas">Use <pkg>sci-libs/openblas</pkg> for blas routines</flag>
 		<flag name="openmp">Use OpenMP for parallel code</flag>
 		<flag name="qnnpack">Use QNNPACK</flag>
 		<flag name="rocm">Enable ROCm gpu computing support</flag>
-		<flag name="xnnpack">Use XNNPACK</flag>
+		<flag name="xnnpack">Use <pkg>sci-ml/XNNPACK</pkg></flag>
 	</use>
 	<upstream>
 		<remote-id type="github">pytorch/pytorch</remote-id>
