@@ -9,11 +9,18 @@ DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_USE_PEP517=setuptools
 inherit distutils-r1 cuda
 
+CommitId=2ed5d4103ff270245a55bedcddf2ffabdaf8cfa1
+
 DESCRIPTION="A collection of high-performance PyTorch GPU operator libraries for training and inference"
 HOMEPAGE="https://github.com/pytorch/FBGEMM"
-SRC_URI="https://github.com/pytorch/FBGEMM/archive/v${PV}.tar.gz -> ${P}.gh.tar.gz"
+# SRC_URI="https://github.com/pytorch/FBGEMM/archive/v${PV}.tar.gz -> ${P}.gh.tar.gz"
 
-S="${WORKDIR}/FBGEMM-${PV}/fbgemm_gpu"
+# S="${WORKDIR}/FBGEMM-${PV}/fbgemm_gpu"
+
+SRC_URI="https://github.com/pytorch/FBGEMM/archive/${CommitId}.tar.gz
+	-> ${P}.gh.tar.gz"
+
+S="${WORKDIR}/FBGEMM-${CommitId}/fbgemm_gpu"
 
 LICENSE="BSD"
 SLOT="0"

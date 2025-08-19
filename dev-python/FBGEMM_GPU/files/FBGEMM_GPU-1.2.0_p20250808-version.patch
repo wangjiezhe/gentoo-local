@@ -1,18 +1,20 @@
 diff --git a/fbgemm_gpu/setup.py b/fbgemm_gpu/setup.py
-index cdb131f5..66424221 100644
+index 84235b59..a59711d1 100644
 --- a/fbgemm_gpu/setup.py
 +++ b/fbgemm_gpu/setup.py
-@@ -177,49 +177,8 @@ class FbgemmGpuBuild:
-         pkg_vver = self.variant_version()
+@@ -211,51 +211,7 @@ class FbgemmGpuBuild:
  
-         print("[SETUP.PY] Extracting the package version ...")
--        print(
+     def package_version(self):
+         pkg_vver = self.variant_version()
+-
+-        logging.debug("[SETUP.PY] Extracting the package version ...")
+-        logging.debug(
 -            f"[SETUP.PY] TAG: {gitversion.get_tag()}, BRANCH: {gitversion.get_branch()}, SHA: {gitversion.get_sha()}"
 -        )
 -
 -        if self.args.package_channel == "nightly":
 -            # Use date stamp for nightly versions
--            print(
+-            logging.debug(
 -                "[SETUP.PY] Package is for NIGHTLY; using timestamp for the versioning"
 -            )
 -            today = date.today()
@@ -48,8 +50,8 @@ index cdb131f5..66424221 100644
 -                # Remove the local version identifier, if any (e.g. 0.4.0rc0.post0+git.6a63116c.dirty => 0.4.0rc0.post0)
 -                gitversion.version_from_git().split("+")[0],
 -            )
- 
+-
 +        pkg_version = "1.2.0"
          full_version_string = f"{pkg_version}{pkg_vver}"
-         print(
+         logging.debug(
              f"[SETUP.PY] Setting the full package version string: {full_version_string}"
