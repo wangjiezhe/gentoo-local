@@ -4,6 +4,7 @@
 EAPI=8
 
 PYTHON_COMPAT=( python3_{10..13} )
+DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_USE_PEP517=setuptools
 inherit distutils-r1 pypi
 
@@ -16,26 +17,30 @@ SLOT="0"
 KEYWORDS="~amd64"
 
 RDEPEND="
-	>=dev-python/graphql-core-3.2[${PYTHON_USEDEP}]
-	<dev-python/graphql-core-3.2.7[${PYTHON_USEDEP}]
-	dev-python/yarl[${PYTHON_USEDEP}]
-	dev-python/backoff[${PYTHON_USEDEP}]
-	dev-python/anyio[${PYTHON_USEDEP}]
+	$(python_gen_cond_dep '
+		>=dev-python/graphql-core-3.2[${PYTHON_USEDEP}]
+		<dev-python/graphql-core-3.2.7[${PYTHON_USEDEP}]
+		dev-python/yarl[${PYTHON_USEDEP}]
+		dev-python/backoff[${PYTHON_USEDEP}]
+		dev-python/anyio[${PYTHON_USEDEP}]
+	')
 "
 BDEPEND="
 	test? (
-		dev-python/parse[${PYTHON_USEDEP}]
-		dev-python/pytest[${PYTHON_USEDEP}]
-		dev-python/pytest-asyncio[${PYTHON_USEDEP}]
-		dev-python/pytest-console-scripts[${PYTHON_USEDEP}]
-		dev-python/pytest-cov[${PYTHON_USEDEP}]
-		dev-python/mock[${PYTHON_USEDEP}]
-		dev-python/vcrpy[${PYTHON_USEDEP}]
-		dev-python/aiofiles[${PYTHON_USEDEP}]
-		dev-python/requests-toolbelt[${PYTHON_USEDEP}]
-		dev-python/httpx[${PYTHON_USEDEP}]
-		dev-python/websockets[${PYTHON_USEDEP}]
-		dev-python/botocore[${PYTHON_USEDEP}]
+		$(python_gen_cond_dep '
+			dev-python/parse[${PYTHON_USEDEP}]
+			dev-python/pytest[${PYTHON_USEDEP}]
+			dev-python/pytest-asyncio[${PYTHON_USEDEP}]
+			dev-python/pytest-console-scripts[${PYTHON_USEDEP}]
+			dev-python/pytest-cov[${PYTHON_USEDEP}]
+			dev-python/mock[${PYTHON_USEDEP}]
+			dev-python/vcrpy[${PYTHON_USEDEP}]
+			dev-python/aiofiles[${PYTHON_USEDEP}]
+			dev-python/requests-toolbelt[${PYTHON_USEDEP}]
+			dev-python/httpx[${PYTHON_USEDEP}]
+			dev-python/websockets[${PYTHON_USEDEP}]
+			dev-python/botocore[${PYTHON_USEDEP}]
+		')
 	)
 "
 
