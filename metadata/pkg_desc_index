@@ -19,9 +19,10 @@ dev-libs/cusparselt 0.8.0.4: A High-Performance CUDA Library for Sparse Matrix-M
 dev-libs/cutlass 3.5.0 3.5.1: CUDA Templates for Linear Algebra Subroutines
 dev-libs/dlpack 0.8 1.1: common in-memory tensor structure
 dev-libs/flatbuffers 23.5.26 24.3.25: Memory efficient serialization library
+dev-libs/marisa 0.2.7: Matching Algorithm with Recursively Implemented StorAge
 dev-libs/nccl 2.28.1: Optimized primitives for collective multi-GPU communication
 dev-libs/re2 0.2023.11.01-r1: An efficient, principled regular expression library
-dev-python/FBGEMM_GPU 1.0.0 1.2.0: A collection of high-performance PyTorch GPU operator libraries for training and inference
+dev-python/FBGEMM_GPU 1.2.0_p20250808: A collection of high-performance PyTorch GPU operator libraries for training and inference
 dev-python/astunparse 1.6.3-r2: Astun parser for python
 dev-python/backoff 2.2.1: Function decoration for backoff and retry
 dev-python/clang-repl 1.0.4: IPython kernel forwarding C++ cells to clang-repl
@@ -36,6 +37,7 @@ dev-python/flatbuffers 23.5.26 24.3.25-r1: RFC 7049 - Concise Binary Object Repr
 dev-python/future 1.0.0: Easy, clean, reliable Python 2/3 compatibility
 dev-python/google-re2 1.1: RE2 Python bindings
 dev-python/gql 3.5.3: A GraphQL client in Python
+dev-python/graphql-core 3.2.6: Python port of GraphQL.js, the JavaScript reference implementation for GraphQL
 dev-python/grpcio-tools 1.72.0 1.72.1: Protobuf code generator for gRPC
 dev-python/h5py 3.10.0-r2: Simple Python interface to HDF5 files
 dev-python/hf-doc-builder 0.5.0: Used to build the documentation of our Hugging Face repos
@@ -61,6 +63,7 @@ dev-python/watermark 2.5.0: IPython magic function to print date/time stamps and
 dev-texlive/texlive-pictures 2024_p72555: TeXLive Graphics, pictures, diagrams
 dev-util/evcxr-repl 0.21.1: A REPL for Rust
 dev-util/gemini-cli 0.1.18: Gemini CLI - a command-line AI workflow tool by Google
+dev-util/mamba 2.3.1: The Fast Cross-Platform Package Manager
 dev-util/minify-html 0.16.4: [CLI] Extremely fast and smart HTML + JS + CSS minifier
 dev-util/minify-js 0.6.0: Extremely fast JS minifier
 media-fonts/maple-mono 6.4 7.5: Open source monospace & nerd font with round corners and ligatures
