@@ -69,7 +69,7 @@ BDEPEND="
 
 PATCHES=(
 	"${FILESDIR}/mamba-sh.patch"
-	"${FILESDIR}/${P}-pybind11-3-4030-draft.patch"
+	"${FILESDIR}/${PN}-2.3.1-pybind11-3-4030-draft.patch"
 )
 
 src_prepare() {
