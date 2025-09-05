@@ -3,7 +3,7 @@
 
 EAPI=8
 
-DISTUTILS_USE_PEP517=setuptools
+DISTUTILS_USE_PEP517=scikit-build-core
 DISTUTILS_EXT=1
 DISTUTILS_OPTIONAL=1
 DISTUTILS_SINGLE_IMPL=1
@@ -13,7 +13,8 @@ inherit distutils-r1 cmake multilib
 
 DESCRIPTION="The Fast Cross-Platform Package Manager"
 HOMEPAGE="https://github.com/mamba-org/mamba"
-SRC_URI="https://github.com/mamba-org/mamba/archive/refs/tags/${PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/mamba-org/mamba/archive/refs/tags/${PV//_/.}.tar.gz -> ${P}.tar.gz"
+S="${WORKDIR}/${PN}-${PV//_/.}"
 LICENSE="BSD"
 SLOT="0/3"
 KEYWORDS="~amd64"
@@ -63,13 +64,11 @@ BDEPEND="
 		${PYTHON_DEPS}
 		${DISTUTILS_DEPS}
 		$(python_gen_cond_dep 'dev-python/pybind11[${PYTHON_USEDEP}]')
-		$(python_gen_cond_dep 'dev-python/scikit-build[${PYTHON_USEDEP}]')
 	)
 "
 
 PATCHES=(
 	"${FILESDIR}/mamba-sh.patch"
-	"${FILESDIR}/${PN}-2.3.1-pybind11-3-4030-draft.patch"
 )
 
 src_prepare() {
