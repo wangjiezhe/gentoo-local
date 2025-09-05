@@ -3,7 +3,7 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{10..13} )
+PYTHON_COMPAT=( python3_{11..14} )
 DISTUTILS_USE_PEP517=setuptools
 inherit distutils-r1
 
@@ -15,8 +15,17 @@ LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64"
 
+BDEPEND="
+	dev-python/setuptools-scm[${PYTHON_USEDEP}]
+"
+
 RDEPEND="
 	dev-python/pyparsing[${PYTHON_USEDEP}]
 "
+
+python_prepare_all() {
+	distutils-r1_python_prepare_all
+	export SETUPTOOLS_SCM_PRETEND_VERSION=${PV}
+}
 
 distutils_enable_tests pytest
