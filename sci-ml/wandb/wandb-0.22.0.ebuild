@@ -7,6 +7,7 @@ EAPI=8
 PYTHON_COMPAT=( python3_{11..13} )
 DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_USE_PEP517=hatchling
+RUST_MIN_VER="1.81"
 inherit cargo distutils-r1 go-module
 
 DESCRIPTION="A tool for visualizing and tracking your machine learning experiments"
