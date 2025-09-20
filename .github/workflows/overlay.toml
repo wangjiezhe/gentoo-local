@@ -164,11 +164,6 @@ github = "onnx/onnx"
 use_latest_release = true
 prefix = "v"
 
-["dev-python/h5py"]
-source = "github"
-github = "h5py/h5py"
-use_latest_release = true
-
 ["dev-libs/dlpack"]
 source = "github"
 github = "dmlc/dlpack"
