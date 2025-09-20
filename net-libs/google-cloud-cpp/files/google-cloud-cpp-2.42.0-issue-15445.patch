@@ -1,0 +1,124 @@
+diff '--color=auto' -ur google-cloud-cpp-2.42.0.orig/google/cloud/bigtable/internal/operation_context_factory.cc google-cloud-cpp-2.42.0/google/cloud/bigtable/internal/operation_context_factory.cc
+--- google-cloud-cpp-2.42.0.orig/google/cloud/bigtable/internal/operation_context_factory.cc	2025-09-20 14:44:40.488665302 +0800
++++ google-cloud-cpp-2.42.0/google/cloud/bigtable/internal/operation_context_factory.cc	2025-09-20 14:48:10.508656906 +0800
+@@ -175,15 +175,15 @@
+         auto& labels = *resource.mutable_labels();
+         auto const& attributes = pda.attributes.GetAttributes();
+         labels[kProjectLabel] =
+-            absl::get<std::string>(attributes.find(kProjectLabel)->second);
++            opentelemetry::nostd::get<std::string>(attributes.find(kProjectLabel)->second);
+         labels[kInstanceLabel] =
+-            absl::get<std::string>(attributes.find(kInstanceLabel)->second);
++            opentelemetry::nostd::get<std::string>(attributes.find(kInstanceLabel)->second);
+         labels[kTableLabel] =
+-            absl::get<std::string>(attributes.find(kTableLabel)->second);
++            opentelemetry::nostd::get<std::string>(attributes.find(kTableLabel)->second);
+         labels[kClusterLabel] =
+-            absl::get<std::string>(attributes.find(kClusterLabel)->second);
++            opentelemetry::nostd::get<std::string>(attributes.find(kClusterLabel)->second);
+         labels[kZoneLabel] =
+-            absl::get<std::string>(attributes.find(kZoneLabel)->second);
++            opentelemetry::nostd::get<std::string>(attributes.find(kZoneLabel)->second);
+         return std::make_pair(labels[kProjectLabel], resource);
+       };
+ 
+diff '--color=auto' -ur google-cloud-cpp-2.42.0.orig/google/cloud/opentelemetry/internal/monitored_resource.cc google-cloud-cpp-2.42.0/google/cloud/opentelemetry/internal/monitored_resource.cc
+--- google-cloud-cpp-2.42.0.orig/google/cloud/opentelemetry/internal/monitored_resource.cc	2025-09-20 14:44:41.508665264 +0800
++++ google-cloud-cpp-2.42.0/google/cloud/opentelemetry/internal/monitored_resource.cc	2025-09-20 14:45:25.844662580 +0800
+@@ -222,7 +222,7 @@
+ 
+ std::string AsString(
+     opentelemetry::sdk::common::OwnedAttributeValue const& attribute) {
+-  return absl::visit(AsStringVisitor{}, attribute);
++  return opentelemetry::nostd::visit(AsStringVisitor{}, attribute);
+ }
+ 
+ MonitoredResource ToMonitoredResource(
+diff '--color=auto' -ur google-cloud-cpp-2.42.0.orig/google/cloud/opentelemetry/internal/monitoring_exporter_test.cc google-cloud-cpp-2.42.0/google/cloud/opentelemetry/internal/monitoring_exporter_test.cc
+--- google-cloud-cpp-2.42.0.orig/google/cloud/opentelemetry/internal/monitoring_exporter_test.cc	2025-09-20 14:44:41.508665264 +0800
++++ google-cloud-cpp-2.42.0/google/cloud/opentelemetry/internal/monitoring_exporter_test.cc	2025-09-20 14:59:41.044622111 +0800
+@@ -134,15 +134,15 @@
+         auto& labels = *resource.mutable_labels();
+         auto const& attributes = pda.attributes.GetAttributes();
+         labels["project_id"] =
+-            absl::get<std::string>(attributes.find("project_id")->second);
++            opentelemetry::nostd::get<std::string>(attributes.find("project_id")->second);
+         labels["instance"] =
+-            absl::get<std::string>(attributes.find("instance")->second);
++            opentelemetry::nostd::get<std::string>(attributes.find("instance")->second);
+         labels["cluster"] =
+-            absl::get<std::string>(attributes.find("cluster")->second);
++            opentelemetry::nostd::get<std::string>(attributes.find("cluster")->second);
+         labels["table"] =
+-            absl::get<std::string>(attributes.find("table")->second);
++            opentelemetry::nostd::get<std::string>(attributes.find("table")->second);
+         labels["zone"] =
+-            absl::get<std::string>(attributes.find("zone")->second);
++            opentelemetry::nostd::get<std::string>(attributes.find("zone")->second);
+         return std::make_pair(labels["project_id"], resource);
+       };
+ 
+diff '--color=auto' -ur google-cloud-cpp-2.42.0.orig/google/cloud/opentelemetry/internal/recordable.cc google-cloud-cpp-2.42.0/google/cloud/opentelemetry/internal/recordable.cc
+--- google-cloud-cpp-2.42.0.orig/google/cloud/opentelemetry/internal/recordable.cc	2025-09-20 14:44:41.508665264 +0800
++++ google-cloud-cpp-2.42.0/google/cloud/opentelemetry/internal/recordable.cc	2025-09-20 14:45:25.848662580 +0800
+@@ -207,7 +207,7 @@
+     std::size_t limit) {
+   auto* proto = ProtoOrDrop(attributes, key, limit);
+   if (proto) {
+-    absl::visit(AttributeVisitor{*proto}, value);
++    opentelemetry::nostd::visit(AttributeVisitor{*proto}, value);
+   } else {
+     attributes.set_dropped_attributes_count(
+         attributes.dropped_attributes_count() + 1);
+diff '--color=auto' -ur google-cloud-cpp-2.42.0.orig/google/cloud/opentelemetry/internal/time_series.cc google-cloud-cpp-2.42.0/google/cloud/opentelemetry/internal/time_series.cc
+--- google-cloud-cpp-2.42.0.orig/google/cloud/opentelemetry/internal/time_series.cc	2025-09-20 14:44:41.508665264 +0800
++++ google-cloud-cpp-2.42.0/google/cloud/opentelemetry/internal/time_series.cc	2025-09-20 14:45:25.848662580 +0800
+@@ -40,10 +40,10 @@
+ google::monitoring::v3::TypedValue ToValue(
+     opentelemetry::sdk::metrics::ValueType value) {
+   google::monitoring::v3::TypedValue proto;
+-  if (absl::holds_alternative<double>(value)) {
+-    proto.set_double_value(absl::get<double>(value));
++  if (opentelemetry::nostd::holds_alternative<double>(value)) {
++    proto.set_double_value(opentelemetry::nostd::get<double>(value));
+   } else {
+-    proto.set_int64_value(absl::get<std::int64_t>(value));
++    proto.set_int64_value(opentelemetry::nostd::get<std::int64_t>(value));
+   }
+   return proto;
+ }
+@@ -62,9 +62,9 @@
+ }
+ 
+ double AsDouble(opentelemetry::sdk::metrics::ValueType const& v) {
+-  return absl::holds_alternative<double>(v)
+-             ? absl::get<double>(v)
+-             : static_cast<double>(absl::get<std::int64_t>(v));
++  return opentelemetry::nostd::holds_alternative<double>(v)
++             ? opentelemetry::nostd::get<double>(v)
++             : static_cast<double>(opentelemetry::nostd::get<std::int64_t>(v));
+ }
+ 
+ std::vector<google::monitoring::v3::CreateTimeSeriesRequest> ToRequestsHelper(
+@@ -117,7 +117,7 @@
+             return absl::nullopt;
+           }
+         };
+-        auto ts = absl::visit(Visitor{metric_data}, pda.point_data);
++        auto ts = opentelemetry::nostd::visit(Visitor{metric_data}, pda.point_data);
+         if (!ts) continue;
+         ts->set_unit(metric_data.instrument_descriptor.unit_);
+         ts_collector_fn(metric_data, pda, *std::move(ts));
+Only in google-cloud-cpp-2.42.0/google/cloud/opentelemetry/internal: time_series.cc.orig
+diff '--color=auto' -ur google-cloud-cpp-2.42.0.orig/google/cloud/testing_util/opentelemetry_matchers.cc google-cloud-cpp-2.42.0/google/cloud/testing_util/opentelemetry_matchers.cc
+--- google-cloud-cpp-2.42.0.orig/google/cloud/testing_util/opentelemetry_matchers.cc	2025-09-20 14:44:41.956665248 +0800
++++ google-cloud-cpp-2.42.0/google/cloud/testing_util/opentelemetry_matchers.cc	2025-09-20 14:46:38.756660911 +0800
+@@ -81,7 +81,7 @@
+       *out += "std::vector<std::uint64_t>:[" + absl::StrJoin(v, ", ") + "]";
+     }
+   };
+-  absl::visit(Visitor{out}, kv.second);
++  opentelemetry::nostd::visit(Visitor{out}, kv.second);
+ }
+ }  // namespace
+ 

@@ -6,7 +6,7 @@ EAPI=8
 inherit cmake
 
 # From cmake/GoogleapisConfig.cmake
-GOOGLEAPIS_COMMIT="f9d6fe4a6ad9ed89dfc315f284124d2104377940"
+GOOGLEAPIS_COMMIT="46403a9acec0719c130b33eb38b2ee62a45f9f6c"
 
 DESCRIPTION="Google Cloud Client Library for C++"
 HOMEPAGE="https://cloud.google.com/"
@@ -35,6 +35,11 @@ DEPEND="${RDEPEND}
 	)"
 
 DOCS=( README.md )
+
+PATCHES=(
+	"${FILESDIR}"/${P}-issue-15445.patch
+	"${FILESDIR}"/${P}-mock_provider.patch
+)
 
 src_configure() {
 	local mycmakeargs=(
