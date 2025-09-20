@@ -3,7 +3,7 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{10..13} )
+PYTHON_COMPAT=( python3_{11..13} )
 DISTUTILS_USE_PEP517=setuptools
 DISTUTILS_SINGLE_IMPL=1
 inherit distutils-r1
@@ -19,6 +19,7 @@ RESTRICT="test"		# need torchx
 
 RDEPEND="
 	sci-ml/torchmetrics[${PYTHON_SINGLE_USEDEP}]
+	sci-ml/tensordict[${PYTHON_SINGLE_USEDEP}]
 	>=dev-python/FBGEMM_GPU-0.8.0[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		dev-python/iopath[${PYTHON_USEDEP}]
