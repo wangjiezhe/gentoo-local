@@ -619,3 +619,9 @@ prefix = "v"
 source = "github"
 github = "mamba-org/mamba"
 use_latest_release = true
+
+["dev-python/pyvers"]
+souce = "github"
+github = "vmoens/pyvers"
+use_latest_release = true
+prefix = "v"
