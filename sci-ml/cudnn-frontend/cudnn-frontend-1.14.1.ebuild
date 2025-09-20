@@ -124,7 +124,7 @@ python_test() {
 		# Failed with param: ((1, 128, 1024), torch.bfloat16)
 		# AssertionError: Tensor-likes are not close!
 		# Mismatched elements: 0.2%
-		test/python/test_matmul_bias_relu.py::test_matmul_bias_relu[param_extract4]
+		test/python/test_matmul_bias_relu.py::test_matmul_bias[param_extract4]
 		# AssertionError: Legacy CUDA profiling requires use_cpu=True
 		test/python/test_silu_and_mul.py::test_silu_and_mul_and_quantization
 		# AssertionError: Tensor-likes are not close!
