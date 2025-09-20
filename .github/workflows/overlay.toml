@@ -620,3 +620,9 @@ souce = "github"
 github = "vmoens/pyvers"
 use_latest_release = true
 prefix = "v"
+
+["sci-ml/tensordict"]
+souce = "github"
+github = "pytorch/tensordict"
+use_latest_release = true
+prefix = "v"
