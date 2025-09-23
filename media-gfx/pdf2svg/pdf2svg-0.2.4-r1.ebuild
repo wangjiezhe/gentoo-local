@@ -21,7 +21,10 @@ BDEPEND="virtual/pkgconfig"
 DOCS=( AUTHORS ) # ChangeLog is only for <=0.2.1
 # and README.md doesn't have anything useful for usage
 
-PATCHES=( "${FILESDIR}"/${P}-white-background.patch )
+PATCHES=(
+	"${FILESDIR}"/${P}-0001-Use-white-background.patch
+	"${FILESDIR}"/${P}-0002-Change-svg-size.patch
+)
 
 # src_prepare() {
 # 	sed -i \
