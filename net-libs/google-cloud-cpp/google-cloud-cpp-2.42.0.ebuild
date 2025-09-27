@@ -21,6 +21,7 @@ RESTRICT="!test? ( test )"
 
 RDEPEND="dev-cpp/abseil-cpp:=
 	dev-cpp/nlohmann_json
+	<dev-cpp/opentelemetry-cpp-1.22.0
 	dev-libs/protobuf:=
 	dev-libs/crc32c
 	dev-libs/openssl:=
