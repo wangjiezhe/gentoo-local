@@ -15,13 +15,12 @@ SRC_URI="https://github.com/GoogleCloudPlatform/google-cloud-cpp/archive/v${PV}.
 
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS="~amd64 ~arm64 ~x86"
+KEYWORDS="~amd64 ~arm64"
 IUSE="test"
 RESTRICT="!test? ( test )"
 
 RDEPEND="dev-cpp/abseil-cpp:=
 	dev-cpp/nlohmann_json
-	<dev-cpp/opentelemetry-cpp-1.22.0
 	dev-libs/protobuf:=
 	dev-libs/crc32c
 	dev-libs/openssl:=
@@ -31,6 +30,7 @@ RDEPEND="dev-cpp/abseil-cpp:=
 	sys-libs/zlib"
 DEPEND="${RDEPEND}
 	dev-cpp/gtest
+	<dev-cpp/opentelemetry-cpp-1.22.0
 	test? (
 		dev-cpp/benchmark
 	)"
