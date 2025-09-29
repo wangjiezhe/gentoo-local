@@ -22,8 +22,7 @@ DOCS=( AUTHORS ) # ChangeLog is only for <=0.2.1
 # and README.md doesn't have anything useful for usage
 
 PATCHES=(
-	"${FILESDIR}"/${P}-0001-Use-white-background.patch
-	"${FILESDIR}"/${P}-0002-Change-svg-size.patch
+	"${FILESDIR}"/${P}-change-svg-size.patch
 )
 
 # src_prepare() {
