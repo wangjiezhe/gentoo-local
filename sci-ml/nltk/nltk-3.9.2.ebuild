@@ -5,6 +5,7 @@ EAPI=8
 
 PYTHON_COMPAT=( python3_{11..13} )
 DISTUTILS_USE_PEP517=setuptools
+DISTUTILS_SINGLE_IMPL=1
 inherit distutils-r1
 
 DESCRIPTION="Natural Language Toolkit"
@@ -16,12 +17,14 @@ LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~amd64"
 IUSE="data"
+RESTRICT="test"		# segmentation fault
 
 PATCHES=( "${FILESDIR}/${PN}-3.8.1-test.patch" )
 
 RDEPEND="
 	data? ( sci-ml/nltk-data )
 	$(python_gen_cond_dep '
+		dev-python/click[${PYTHON_USEDEP}]
 		dev-python/joblib[${PYTHON_USEDEP}]
 		>=dev-python/regex-2021.8.3[${PYTHON_USEDEP}]
 		dev-python/tqdm[${PYTHON_USEDEP}]
@@ -30,8 +33,10 @@ RDEPEND="
 BDEPEND="
 	test? (
 		dev-lang/python[tk]
-		dev-python/pytest-mock[${PYTHON_USEDEP}]
-		dev-python/twython[${PYTHON_USEDEP}]
+		$(python_gen_cond_dep '
+			dev-python/pytest-mock[${PYTHON_USEDEP}]
+			dev-python/twython[${PYTHON_USEDEP}]
+		')
 		>=sci-ml/nltk-data-20240729
 	)
 "

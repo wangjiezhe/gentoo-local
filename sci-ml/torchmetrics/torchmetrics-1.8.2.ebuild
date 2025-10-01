@@ -39,11 +39,11 @@ RDEPEND="
 		')
 	)
 	text? (
+		sci-ml/nltk[${PYTHON_SINGLE_USEDEP}]
 		sci-ml/transformers[${PYTHON_SINGLE_USEDEP}]
 		$(python_gen_cond_dep '
 			dev-python/regex[${PYTHON_USEDEP}]
 			dev-python/tqdm[${PYTHON_USEDEP}]
-			sci-ml/nltk[${PYTHON_USEDEP}]
 			sci-ml/pysentencepiece[${PYTHON_USEDEP}]
 		')
 	)
