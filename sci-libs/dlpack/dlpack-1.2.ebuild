@@ -5,7 +5,7 @@ EAPI=8
 
 inherit cmake
 
-DESCRIPTION="common in-memory tensor structure"
+DESCRIPTION="Common in-memory tensor structure"
 HOMEPAGE="https://github.com/dmlc/dlpack"
 SRC_URI="https://github.com/dmlc/${PN}/archive/refs/tags/v${PV}.tar.gz
 	-> ${P}.tar.gz"
