@@ -30,7 +30,7 @@ BDEPEND="
 	)
 	python? (
 		dev-python/pybind11
-		dev-libs/dlpack
+		sci-libs/dlpack
 		test? (
 			dev-python/looseversion
 			sci-ml/pytorch

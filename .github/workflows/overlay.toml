@@ -164,7 +164,7 @@ github = "onnx/onnx"
 use_latest_release = true
 prefix = "v"
 
-["dev-libs/dlpack"]
+["sci-libs/dlpack"]
 source = "github"
 github = "dmlc/dlpack"
 use_latest_release = true
