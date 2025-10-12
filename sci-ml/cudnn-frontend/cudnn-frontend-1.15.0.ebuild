@@ -26,7 +26,7 @@ DEPEND="${RDEPEND}
 "
 BDEPEND="
 	test? (
-		>dev-cpp/catch-3
+		>=dev-cpp/catch-3
 	)
 	python? (
 		dev-python/pybind11
