@@ -22,13 +22,16 @@ RESTRICT="test"
 RDEPEND="
 	dev-cpp/abseil-cpp:=
 	dev-libs/protobuf:=[protoc(+)]
+	dev-python/ml-dtypes[${PYTHON_USEDEP}]
+	dev-python/numpy[${PYTHON_USEDEP}]
 	dev-python/protobuf[${PYTHON_USEDEP}]
 	dev-python/pybind11[${PYTHON_USEDEP}]
+	dev-python/typing-extensions[${PYTHON_USEDEP}]
 "
 DEPEND="${RDEPEND}"
 
 src_prepare() {
-	eapply "${FILESDIR}"/${P}-hidden.patch
+	eapply "${FILESDIR}"/${PN}-1.19.0-hidden.patch
 	cmake_src_prepare
 	distutils-r1_src_prepare
 }
