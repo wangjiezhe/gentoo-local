@@ -4,7 +4,7 @@
 EAPI=8
 
 DISTUTILS_USE_PEP517=setuptools
-PYTHON_COMPAT=( python3_{10..12} )
+PYTHON_COMPAT=( python3_{11..13} )
 DISTUTILS_SINGLE_IMPL=1
 inherit distutils-r1
 
@@ -20,11 +20,11 @@ LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~amd64"
 IUSE="torch"
-RESTRICT="test" # Need some modules, not yet packaged
+RESTRICT="test" # Need network, too long to execute
 
 RDEPEND="
-	sci-ml/huggingface_hub[${PYTHON_SINGLE_USEDEP}]
-	=sci-ml/tokenizers-0.21*[${PYTHON_SINGLE_USEDEP}]
+	>=sci-ml/huggingface_hub-0.34.0[${PYTHON_SINGLE_USEDEP}]
+	=sci-ml/tokenizers-0.22*[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		dev-python/filelock[${PYTHON_USEDEP}]
 		dev-python/numpy[${PYTHON_USEDEP}]
@@ -41,13 +41,5 @@ RDEPEND="
 		sci-ml/pytorch[${PYTHON_SINGLE_USEDEP}]
 	)
 "
-BDEPEND="
-	test? (
-		$(python_gen_cond_dep '
-			dev-python/parameterized[${PYTHON_USEDEP}]
-			dev-python/timeout-decorator[${PYTHON_USEDEP}]
-		')
-	)
-"
 
-distutils_enable_tests pytest
+distutils_enable_tests import-check
