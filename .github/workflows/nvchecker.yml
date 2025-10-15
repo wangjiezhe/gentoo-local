@@ -69,6 +69,7 @@ jobs:
         echo "::group::nvcmp"
         sed -r -i \
           -e 's#(\.|-|_)?post([[:digit:]]+)(",?)$#_p\2\3#' \
+          -e 's#-preview\.([[:digit:]]+)#_pre\1#' \
           new_ver.json
         cat new_ver.json
         echo "nvcmp=$(nvcmp --file overlay.toml --json --newer | jq --slurpfile homepages homepages.json 'map({name, newver, oldver, homepage: ($homepages[0][.name] // null)})' | jq -c .)" >> $GITHUB_OUTPUT
