@@ -2,6 +2,8 @@ name: nvchecker
 
 on:
   push:
+    branches:
+      - main
   workflow_dispatch:
   schedule:
     # * is a special character in YAML so you have to quote this string
@@ -17,10 +19,11 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/liangyongxiang/gentoo-testing:master
-
+    outputs:
+      nvcmp: ${{ steps.nvchecker.outputs.nvcmp }}
     steps:
     - name: checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: gentoo
       run: |
@@ -34,60 +37,67 @@ jobs:
         echo "::endgroup::"
         # eix
         echo "::group::eix search packages"
-        pkgs=$(ACCEPT_LICENSE="*" ACCEPT_KEYWORDS="~amd64" EIX_LIMIT=0 NAMEVERSION="<category>/<name>-<version>\n" eix --pure-packages --in-overlay "$repo_name" --format '<bestversion:NAMEVERSION>')
+        pkgs=$(ACCEPT_LICENSE="*" ACCEPT_KEYWORDS="~amd64 ~mips" EIX_LIMIT=0 NAMEVERSION="<category>/<name>-<version>\n" eix --pure-packages --in-overlay "$repo_name" --format '<bestversion:NAMEVERSION>')
         pkgs=$(qatom -F "\"%{CATEGORY}/%{PN}\": \"%{PV}\"," $pkgs) # remove revision
         echo "$pkgs"
         pkgs="{ ${pkgs::-1} }"
         echo "$pkgs" > .github/workflows/old_ver.json
-
         sed -r -i \
           -e 's#(\.|-|_)?p([[:digit:]]{8})(",?)$#\3#' \
           .github/workflows/old_ver.json
-
         cat .github/workflows/old_ver.json
         echo "::endgroup::"
 
         # homepage
         echo "::group::eix search homepage for packages"
-        pkgs=$(ACCEPT_LICENSE="*" ACCEPT_KEYWORDS="~amd64" EIX_LIMIT=0 NAMEVERSION='"<category>/<name>": "<homepage>", ' eix --pure-packages --in-overlay "$repo_name" --format '<bestversion:NAMEVERSION>')
+        pkgs=$(ACCEPT_LICENSE="*" ACCEPT_KEYWORDS="~amd64 ~mips" EIX_LIMIT=0 NAMEVERSION='"<category>/<name>": "<homepage>", ' eix --pure-packages --in-overlay "$repo_name" --format '<bestversion:NAMEVERSION>')
         echo "$pkgs" | sed 's/, /\n/g'
-        echo "homepages={ ${pkgs::-2} }" >> $GITHUB_ENV
+        echo "{ ${pkgs::-2} }" | jq -c . > .github/workflows/homepages.json
+        echo "::endgroup::"
 
     - name: nvchecker
       id: nvchecker
+      env:
+        GITHUB_TOKEN: ${{ secrets.NVCHECKER_PAT }}
       run: |
-        echo "::group::nvchecker and nvcmp"
+        echo "::group::nvchecker"
         cd .github/workflows/
         echo -e "[keys]\ngithub = \"${{ secrets.GITHUB_TOKEN }}\"" > keyfile.toml
         nvchecker --file overlay.toml --keyfile keyfile.toml
+        echo "::endgroup::"
 
+        echo "::group::nvcmp"
         sed -r -i \
           -e 's#(\.|-|_)?post([[:digit:]]+)(",?)$#_p\2\3#' \
           new_ver.json
-
         cat new_ver.json
-        echo "nvcmp=$(nvcmp --file overlay.toml --json --newer)" >> $GITHUB_OUTPUT
-
+        echo "nvcmp=$(nvcmp --file overlay.toml --json --newer | jq --slurpfile homepages homepages.json 'map({name, newver, oldver, homepage: ($homepages[0][.name] // null)})' | jq -c .)" >> $GITHUB_OUTPUT
         echo "::endgroup::"
 
-    - name: setup node
-      uses: actions/setup-node@v4
+  issues-bumper:
+    needs: nvchecker
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include: ${{ fromJson(needs.nvchecker.outputs.nvcmp) }}
+    steps:
+    - name: Checkout bumpbot
+      uses: actions/checkout@v5
       with:
-        node-version: latest
+        repository: 'wangjiezhe/gentoo-bumpbot'
 
-    - name: install github-script depends
-      run: |
-        npm install toml
+    - name: Checkout gentoo-local
+      uses: actions/checkout@v5
+      with:
+        path: 'gentoo-local'
 
     - name: update issues
-      uses: actions/github-script@v7
       timeout-minutes: 1
       env:
-        pkgs: ${{ steps.nvchecker.outputs.nvcmp }}
-      with:
-        github-token: ${{ secrets.NVCHECKER_PAT }}
-        script: |
-          const script = require('./.github/workflows/issues-bumper.js');
-          (async function () {
-            await script({github, context, core});
-          })();
+        name: ${{ matrix.name }}
+        newver: ${{ matrix.newver }}
+        oldver: ${{ matrix.oldver }}
+        homepage: ${{ matrix.homepage }}
+        GITHUB_TOKEN: ${{ secrets.NVCHECKER_PAT }} # https://github.com/microcai/gentoo-zh/pull/3130
+      run: |
+        go run . --file gentoo-local/.github/workflows/overlay.toml --name "$name" --newver "$newver" --oldver "$oldver" --homepage "$homepage"
