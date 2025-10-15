@@ -208,7 +208,7 @@ prefix = "v"
 
 ["sci-libs/magma"]
 source = "github"
-bitbucket = "icl-utk-edu/magma"
+github = "icl-utk-edu/magma"
 use_latest_release = true
 prefix = "v"
 
@@ -605,7 +605,7 @@ prefix = "v"
 exclude_regex = ".*nightly.*"
 
 ["media-gfx/pdf2svg"]
-souce = "github"
+source = "github"
 github = "dawbarton/pdf2svg"
 use_max_tag = true
 prefix = "v"
@@ -616,13 +616,13 @@ github = "mamba-org/mamba"
 use_latest_release = true
 
 ["dev-python/pyvers"]
-souce = "github"
+source = "github"
 github = "vmoens/pyvers"
 use_latest_release = true
 prefix = "v"
 
 ["sci-ml/tensordict"]
-souce = "github"
+source = "github"
 github = "pytorch/tensordict"
 use_latest_release = true
 prefix = "v"
