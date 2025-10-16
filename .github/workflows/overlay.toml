@@ -133,7 +133,7 @@ prefix = "v"
 ["sci-ml/nltk"]
 source = "github"
 github = "nltk/nltk"
-use_max_tag = true
+use_latest_tag = true
 
 ["sci-ml/nltk-data"]
 source = "github"
