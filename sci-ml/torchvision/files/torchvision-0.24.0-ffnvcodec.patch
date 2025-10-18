@@ -1,0 +1,47 @@
+diff --git a/setup.py b/setup.py
+index c3ba164007..c8ba8e24ea 100644
+--- a/setup.py
++++ b/setup.py
+@@ -483,8 +483,8 @@ def make_video_decoders_extensions():
+         if not (
+             BUILD_CUDA_SOURCES
+             and CUDA_HOME is not None
+-            and any([os.path.exists(os.path.join(folder, "cuviddec.h")) for folder in TORCHVISION_INCLUDE])
+-            and any([os.path.exists(os.path.join(folder, "nvcuvid.h")) for folder in TORCHVISION_INCLUDE])
++            and any([os.path.exists(os.path.join(folder, "dynlink_cuviddec.h")) for folder in TORCHVISION_INCLUDE])
++            and any([os.path.exists(os.path.join(folder, "dynlink_nvcuvid.h")) for folder in TORCHVISION_INCLUDE])
+             and any([os.path.exists(os.path.join(folder, "libnvcuvid.so")) for folder in TORCHVISION_LIBRARY])
+             and any([os.path.exists(os.path.join(folder, "libavcodec", "bsf.h")) for folder in ffmpeg_include_dir])
+         ):
+diff --git a/torchvision/csrc/io/decoder/gpu/decoder.h b/torchvision/csrc/io/decoder/gpu/decoder.h
+index 5ad685ec74..86a6fa30fd 100644
+--- a/torchvision/csrc/io/decoder/gpu/decoder.h
++++ b/torchvision/csrc/io/decoder/gpu/decoder.h
+@@ -1,11 +1,25 @@
+ #include <cuda.h>
+ #include <cuda_runtime_api.h>
+-#include <cuviddec.h>
+-#include <nvcuvid.h>
++#include <dynlink_cuviddec.h>
++#include <dynlink_nvcuvid.h>
+ #include <torch/torch.h>
+ #include <cstdint>
+ #include <queue>
+ 
++extern tcuvidCreateDecoder *cuvidCreateDecoder;
++extern tcuvidCreateVideoParser *cuvidCreateVideoParser;
++extern tcuvidCtxLockCreate *cuvidCtxLockCreate;
++extern tcuvidCtxLockDestroy *cuvidCtxLockDestroy;
++extern tcuvidDecodePicture *cuvidDecodePicture;
++extern tcuvidDestroyDecoder *cuvidDestroyDecoder;
++extern tcuvidDestroyVideoParser *cuvidDestroyVideoParser;
++extern tcuvidGetDecoderCaps *cuvidGetDecoderCaps;
++extern tcuvidGetDecodeStatus *cuvidGetDecodeStatus;
++extern tcuvidMapVideoFrame *cuvidMapVideoFrame;
++extern tcuvidParseVideoData *cuvidParseVideoData;
++extern tcuvidReconfigureDecoder *cuvidReconfigureDecoder;
++extern tcuvidUnmapVideoFrame *cuvidUnmapVideoFrame;
++
+ static auto check_for_cuda_errors =
+     [](CUresult result, int line_num, std::string file_name) {
+       if (CUDA_SUCCESS != result) {
