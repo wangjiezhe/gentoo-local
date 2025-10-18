@@ -1,0 +1,65 @@
+diff --git a/.ci/pytorch/test_example_code/CMakeLists.txt b/.ci/pytorch/test_example_code/CMakeLists.txt
+index e87f37ae61f..0af9ba6bb65 100644
+--- a/.ci/pytorch/test_example_code/CMakeLists.txt
++++ b/.ci/pytorch/test_example_code/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
++cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+ project(simple-torch-test)
+ 
+ find_package(Torch REQUIRED)
+diff --git a/android/pytorch_android/CMakeLists.txt b/android/pytorch_android/CMakeLists.txt
+index 653256c256c..c640cbdeac9 100644
+--- a/android/pytorch_android/CMakeLists.txt
++++ b/android/pytorch_android/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 3.5)
++cmake_minimum_required(VERSION 3.10)
+ option(BUILD_LITE_INTERPRETER "Master flag to build pytorch_jni_lite" ON)
+ message(
+   STATUS
+diff --git a/android/pytorch_android_torchvision/CMakeLists.txt b/android/pytorch_android_torchvision/CMakeLists.txt
+index 3e23fdc1a1e..2c8931f3fb9 100644
+--- a/android/pytorch_android_torchvision/CMakeLists.txt
++++ b/android/pytorch_android_torchvision/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 3.5)
++cmake_minimum_required(VERSION 3.10)
+ project(pytorch_vision_jni CXX)
+ set(CMAKE_CXX_STANDARD 17 CACHE STRING "The C++ standard whose features are requested to build this target.")
+ set(CMAKE_VERBOSE_MAKEFILE ON)
+diff --git a/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt b/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
+index 5e76c906689..eae0b2e28d6 100644
+--- a/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
++++ b/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
+@@ -4,7 +4,7 @@
+ # This source code is licensed under the BSD-style license found in the
+ # LICENSE file in the root directory of this source tree.
+ 
+-cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
++cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+ 
+ include(GNUInstallDirs)
+ 
+diff --git a/aten/src/ATen/nnapi/CMakeLists.txt b/aten/src/ATen/nnapi/CMakeLists.txt
+index 065729e5c88..9e367028e8a 100644
+--- a/aten/src/ATen/nnapi/CMakeLists.txt
++++ b/aten/src/ATen/nnapi/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ # Define this to build the NNAPI binding out of tree.
+ if(PYTORCH_NNAPI_STANDALONE)
+-  cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
++  cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+   project(pytorch_nnapi)
+ 
+   set(CMAKE_CXX_STANDARD 14 CACHE STRING "The C++ standard whose features are requested to build this target.")
+diff --git a/aten/src/ATen/test/test_install/CMakeLists.txt b/aten/src/ATen/test/test_install/CMakeLists.txt
+index a07044a9ce3..c2d54feeb37 100644
+--- a/aten/src/ATen/test/test_install/CMakeLists.txt
++++ b/aten/src/ATen/test/test_install/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 3.5)
++cmake_minimum_required(VERSION 3.10)
+ find_package(ATen REQUIRED)
+ include_directories(${ATEN_INCLUDE_DIR})
+ 

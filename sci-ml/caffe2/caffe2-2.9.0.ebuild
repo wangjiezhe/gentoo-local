@@ -3,7 +3,7 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{11..13} )
+PYTHON_COMPAT=( python3_{11..14} )
 ROCM_VERSION=6.1
 inherit python-single-r1 cmake cuda flag-o-matic prefix rocm toolchain-funcs
 
@@ -18,6 +18,7 @@ CK_P=composable_kernel-${CK_COMMIT:0:8}
 FLASH_PV=2.7.4
 FLASH_PN=flash-attention
 FLASH_P=${FLASH_PN}-${FLASH_PV}
+FLASH_ATT_URI="https://github.com/Dao-AILab/${FLASH_PN}/archive/refs/tags/v${FLASH_PV}.tar.gz -> ${FLASH_P}.gh.tar.gz"
 
 AOTRITON_PV=0.9.2b
 AOTRITON_PN=aotriton
@@ -32,14 +33,8 @@ SRC_URI="
 		https://github.com/ROCm/composable_kernel/archive/${CK_COMMIT}.tar.gz
 		-> ${CK_P}.tar.gz
 	)
-	flash? (
-		https://github.com/Dao-AILab/${FLASH_PN}/archive/refs/tags/v${FLASH_PV}.tar.gz
-		-> ${FLASH_P}.gh.tar.gz
-	)
-	memefficient? (
-		https://github.com/Dao-AILab/${FLASH_PN}/archive/refs/tags/v${FLASH_PV}.tar.gz
-		-> ${FLASH_P}.gh.tar.gz
-	)
+	flash? ( ${FLASH_ATT_URI} )
+	memefficient? ( ${FLASH_ATT_URI} )
 "
 
 S="${WORKDIR}"/${MYP}
@@ -146,7 +141,7 @@ DEPEND="
 PATCHES=(
 	"${FILESDIR}"/${PN}-2.5.1-unbundle_fmt.patch
 	"${FILESDIR}"/${PN}-2.5.1-unbundle_kineto.patch
-	"${FILESDIR}"/${P}-unbundle_pocketfft.patch
+	"${FILESDIR}"/${PN}-2.8.0-unbundle_pocketfft.patch
 	"${FILESDIR}"/${PN}-2.3.0-cudnn_include_fix.patch
 	"${FILESDIR}"/${P}-gentoo.patch
 	"${FILESDIR}"/${PN}-2.4.0-cpp-httplib.patch
@@ -158,8 +153,7 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.7.1-aotriton-fixes.patch
 	"${FILESDIR}"/${PN}-2.8.0-rocm-minus-flash.patch
 	"${FILESDIR}"/${PN}-2.4.0-blis.patch
-	"${FILESDIR}"/${PN}-2.6.0-xnnpack.patch
-	"${FILESDIR}"/${P}-gloo-146637.patch
+	"${FILESDIR}"/${P}-xnnpack.patch
 )
 
 src_prepare() {

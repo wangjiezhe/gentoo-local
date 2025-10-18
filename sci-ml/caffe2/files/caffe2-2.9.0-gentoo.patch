@@ -1,6 +1,8 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ce7890f002d..917bb8dfd4d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -987,7 +987,7 @@
+@@ -1016,7 +1016,7 @@ if(USE_COLORIZE_OUTPUT)
    set(CMAKE_COLOR_DIAGNOSTICS ON)
  endif()
  if(NOT MSVC)
@@ -9,7 +11,7 @@
  
    # This prevents use of `c10::optional`, `c10::nullopt` etc within the codebase
    string(APPEND CMAKE_CXX_FLAGS " -DC10_NODEPRECATED")
-@@ -998,7 +998,6 @@
+@@ -1027,7 +1027,6 @@ if(NOT MSVC)
    # Details at http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1459
    string(APPEND CMAKE_CXX_FLAGS " -Wall")
    string(APPEND CMAKE_CXX_FLAGS " -Wextra")
@@ -17,7 +19,7 @@
    append_cxx_flag_if_supported("-Werror=non-virtual-dtor" CMAKE_CXX_FLAGS)
    append_cxx_flag_if_supported("-Werror=braced-scalar-init" CMAKE_CXX_FLAGS)
    append_cxx_flag_if_supported("-Werror=range-loop-construct" CMAKE_CXX_FLAGS)
-@@ -1083,7 +1082,6 @@
+@@ -1112,7 +1111,6 @@ if(NOT MSVC)
    endif()
    append_cxx_flag_if_supported("-fno-math-errno" CMAKE_CXX_FLAGS)
    append_cxx_flag_if_supported("-fno-trapping-math" CMAKE_CXX_FLAGS)
@@ -25,9 +27,33 @@
    if(CMAKE_COMPILER_IS_GNUCXX AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 13)
      append_cxx_flag_if_supported("-Wno-dangling-reference" CMAKE_CXX_FLAGS)
      append_cxx_flag_if_supported("-Wno-error=dangling-reference" CMAKE_CXX_FLAGS)
+diff --git a/aten/src/ATen/CMakeLists.txt b/aten/src/ATen/CMakeLists.txt
+index 6c095680733..dd3a28c7c1f 100644
+--- a/aten/src/ATen/CMakeLists.txt
++++ b/aten/src/ATen/CMakeLists.txt
+@@ -415,8 +415,6 @@ endif()
+ if(USE_CUDA)
+   list(APPEND ATen_CUDA_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/cuda)
+   # Next two lines are needed because TunableOp uses third-party/fmt
+-  list(APPEND ATen_CUDA_INCLUDE $<TARGET_PROPERTY:fmt::fmt-header-only,INTERFACE_INCLUDE_DIRECTORIES>)
+-  list(APPEND ATen_CUDA_DEPENDENCY_LIBS fmt::fmt-header-only)
+   list(APPEND ATen_CUDA_CU_SRCS
+     ${cuda_cu}
+     ${native_cuda_cu}
+@@ -488,8 +486,6 @@ if(USE_ROCM)
+   endif()
+ 
+   # Next two lines are needed because TunableOp uses third-party/fmt
+-  list(APPEND ATen_HIP_INCLUDE $<TARGET_PROPERTY:fmt::fmt-header-only,INTERFACE_INCLUDE_DIRECTORIES>)
+-  list(APPEND ATen_HIP_DEPENDENCY_LIBS fmt::fmt-header-only)
+   if(USE_FLASH_ATTENTION AND USE_ROCM_CK_SDPA)
+     list(APPEND ATen_HIP_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/native/transformers/hip/flash_attn/ck)
+   endif()
+diff --git a/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt b/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
+index 799ec5e1740..5e76c906689 100644
 --- a/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
 +++ b/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
-@@ -323,7 +323,7 @@
+@@ -323,7 +323,7 @@ set_target_properties(pytorch_qnnpack PROPERTIES PUBLIC_HEADER include/pytorch_q
  set_target_properties(pytorch_qnnpack PROPERTIES PUBLIC_HEADER include/qnnpack_func.h)
  
  # ---[ Configure clog
@@ -36,7 +62,7 @@
    set(CLOG_BUILD_TESTS OFF CACHE BOOL "")
    set(CLOG_RUNTIME_TYPE "${CPUINFO_RUNTIME_TYPE}" CACHE STRING "")
    add_subdirectory(
-@@ -335,7 +335,8 @@
+@@ -335,7 +335,8 @@ if(NOT TARGET clog)
      target_compile_options(clog PRIVATE "-Wno-unused-result")
    endif()
  endif()
@@ -46,6 +72,8 @@
  
  # ---[ Configure cpuinfo
  if(NOT TARGET cpuinfo AND USE_SYSTEM_CPUINFO)
+diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
+index 1df78be762b..b6834d88e73 100644
 --- a/caffe2/CMakeLists.txt
 +++ b/caffe2/CMakeLists.txt
 @@ -87,7 +87,7 @@ endif()
@@ -57,7 +85,7 @@
    if(NOT TARGET fxdiv)
      set(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
      set(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
-@@ -1195,7 +1195,6 @@ if(USE_XPU)
+@@ -1205,7 +1205,6 @@ if(USE_XPU)
  endif()
  
  if(NOT MSVC AND USE_XNNPACK)
@@ -65,7 +93,7 @@
  endif()
  
  # ==========================================================
-@@ -1307,17 +1306,6 @@
+@@ -1317,17 +1316,6 @@ target_include_directories(torch_cpu PRIVATE
  target_include_directories(torch_cpu PRIVATE
    "/usr/include/kineto")
  
@@ -83,6 +111,8 @@
  install(DIRECTORY
    "${TORCH_SRC_DIR}/csrc"
    "${TORCH_SRC_DIR}/headeronly"
+diff --git a/cmake/Codegen.cmake b/cmake/Codegen.cmake
+index e4973c849a1..280462dfea3 100644
 --- a/cmake/Codegen.cmake
 +++ b/cmake/Codegen.cmake
 @@ -64,7 +64,7 @@ if(INTERN_BUILD_ATEN_OPS)
@@ -94,9 +124,11 @@
      if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
        set(OPT_FLAG " ")
      endif()
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index beac23cf129..229fcd960ac 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
-@@ -461,7 +461,9 @@
+@@ -484,7 +484,9 @@ if(USE_PYTORCH_QNNPACK)
        set_property(TARGET pytorch_qnnpack PROPERTY POSITION_INDEPENDENT_CODE ON)
        set_property(TARGET cpuinfo PROPERTY POSITION_INDEPENDENT_CODE ON)
        # QNNPACK depends on gemmlowp headers
@@ -107,7 +139,7 @@
      endif()
  
      list(APPEND Caffe2_DEPENDENCY_LIBS pytorch_qnnpack)
-@@ -637,7 +639,7 @@ if(BUILD_TEST OR BUILD_MOBILE_BENCHMARK OR BUILD_MOBILE_TEST)
+@@ -662,7 +664,7 @@ if(BUILD_TEST OR BUILD_MOBILE_BENCHMARK OR BUILD_MOBILE_TEST)
  endif()
  
  # ---[ FBGEMM
@@ -116,7 +148,7 @@
    set(CAFFE2_THIRD_PARTY_ROOT "${PROJECT_SOURCE_DIR}/third_party")
    if(NOT DEFINED FBGEMM_SOURCE_DIR)
      set(FBGEMM_SOURCE_DIR "${CAFFE2_THIRD_PARTY_ROOT}/fbgemm" CACHE STRING "FBGEMM source directory")
-@@ -696,6 +698,7 @@ if(USE_FBGEMM)
+@@ -686,6 +688,7 @@ if(USE_FBGEMM)
  endif()
  
  if(USE_FBGEMM)
@@ -124,7 +156,7 @@
    caffe2_update_option(USE_FBGEMM ON)
  else()
    caffe2_update_option(USE_FBGEMM OFF)
-@@ -1140,7 +1140,6 @@
+@@ -1129,7 +1132,6 @@ if(USE_DISTRIBUTED AND USE_TENSORPIPE)
      endif()
      set(TP_BUILD_LIBUV ON CACHE BOOL "" FORCE)
      add_compile_options(-DTORCH_USE_LIBUV)
@@ -132,7 +164,7 @@
      set(TP_STATIC_OR_SHARED STATIC CACHE STRING "" FORCE)
  
      # Tensorpipe uses cuda_add_library
-@@ -1712,11 +1712,9 @@
+@@ -1705,11 +1707,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/FlatBuffers.cmake)
  
  # Include cpp-httplib
  add_library(httplib INTERFACE IMPORTED)
@@ -144,9 +176,11 @@
  
  # Include moodycamel
  add_library(moodycamel INTERFACE IMPORTED)
+diff --git a/cmake/External/nnpack.cmake b/cmake/External/nnpack.cmake
+index 8a4a310d629..5eae5621a7a 100644
 --- a/cmake/External/nnpack.cmake
 +++ b/cmake/External/nnpack.cmake
-@@ -56,7 +56,7 @@
+@@ -56,7 +56,7 @@ if(ANDROID OR IOS OR ${CMAKE_SYSTEM_NAME} STREQUAL "Linux" OR ${CMAKE_SYSTEM_NAM
    set(PTHREADPOOL_SOURCE_DIR "${CAFFE2_THIRD_PARTY_ROOT}/pthreadpool" CACHE STRING "pthreadpool source directory")
    set(GOOGLETEST_SOURCE_DIR "${CAFFE2_THIRD_PARTY_ROOT}/googletest" CACHE STRING "Google Test source directory")
  
@@ -155,9 +189,26 @@
      set(NNPACK_BUILD_TESTS OFF CACHE BOOL "")
      set(NNPACK_BUILD_BENCHMARKS OFF CACHE BOOL "")
      set(NNPACK_LIBRARY_TYPE "static" CACHE STRING "")
+diff --git a/cmake/FlatBuffers.cmake b/cmake/FlatBuffers.cmake
+index 2e8e1b957db..2f1b08f08b6 100644
+--- a/cmake/FlatBuffers.cmake
++++ b/cmake/FlatBuffers.cmake
+@@ -1,10 +1 @@
+-set(FlatBuffers_Include ${PROJECT_SOURCE_DIR}/third_party/flatbuffers/include)
+-file(GLOB FlatBuffers_Library_SRCS
+-  ${FlatBuffers_Include}/flatbuffers/*.h
+-)
+ add_library(flatbuffers INTERFACE)
+-target_sources(
+-  flatbuffers
+-  INTERFACE ${FlatBuffers_Library_SRCS}
+-)
+-target_include_directories(flatbuffers INTERFACE ${FlatBuffers_Include})
+diff --git a/cmake/public/utils.cmake b/cmake/public/utils.cmake
+index 68e66bb3fc3..b08c374cac5 100644
 --- a/cmake/public/utils.cmake
 +++ b/cmake/public/utils.cmake
-@@ -460,8 +460,6 @@ function(torch_compile_options libname)
+@@ -440,8 +440,6 @@ function(torch_compile_options libname)
    endif()
  
    # Use -O2 for release builds (-O3 doesn't improve perf, and -Os results in perf regression)
@@ -166,29 +217,11 @@
  
  endfunction()
  
---- a/aten/src/ATen/CMakeLists.txt	2025-02-27 14:23:02.402742165 +0100
-+++ b/aten/src/ATen/CMakeLists.txt	2025-02-27 14:23:40.445850718 +0100
-@@ -326,8 +326,6 @@
- if(USE_CUDA)
-   list(APPEND ATen_CUDA_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/cuda)
-   # Next two lines are needed because TunableOp uses third-party/fmt
--  list(APPEND ATen_CUDA_INCLUDE $<TARGET_PROPERTY:fmt::fmt-header-only,INTERFACE_INCLUDE_DIRECTORIES>)
--  list(APPEND ATen_CUDA_DEPENDENCY_LIBS fmt::fmt-header-only)
-   list(APPEND ATen_CUDA_CU_SRCS
-     ${cuda_cu}
-     ${native_cuda_cu}
-@@ -395,8 +393,6 @@
-   _pytorch_rocm_generate_ck_conf()
-
-   # Next two lines are needed because TunableOp uses third-party/fmt
--  list(APPEND ATen_HIP_INCLUDE $<TARGET_PROPERTY:fmt::fmt-header-only,INTERFACE_INCLUDE_DIRECTORIES>)
--  list(APPEND ATen_HIP_DEPENDENCY_LIBS fmt::fmt-header-only)
- if(USE_FLASH_ATTENTION)
-   list(APPEND ATen_HIP_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/native/transformers/hip/flash_attn/ck)
- endif()
+diff --git a/torch/CMakeLists.txt b/torch/CMakeLists.txt
+index e0a3efb966d..6e62ac33ead 100644
 --- a/torch/CMakeLists.txt
 +++ b/torch/CMakeLists.txt
-@@ -60,16 +60,10 @@
+@@ -59,16 +59,10 @@ set(TORCH_PYTHON_INCLUDE_DIRECTORIES
      ${CMAKE_BINARY_DIR}/aten/src
      ${CMAKE_BINARY_DIR}/caffe2/aten/src
      ${CMAKE_BINARY_DIR}/third_party
@@ -205,16 +238,3 @@
  
      ${TORCH_SRC_DIR}/csrc
      ${TORCH_SRC_DIR}/csrc/api/include
---- a/cmake/FlatBuffers.cmake
-+++ b/cmake/FlatBuffers.cmake
-@@ -1,10 +1 @@
--set(FlatBuffers_Include ${PROJECT_SOURCE_DIR}/third_party/flatbuffers/include)
--file(GLOB FlatBuffers_Library_SRCS
--  ${FlatBuffers_Include}/flatbuffers/*.h
--)
- add_library(flatbuffers INTERFACE)
--target_sources(
--  flatbuffers
--  INTERFACE ${FlatBuffers_Library_SRCS}
--)
--target_include_directories(flatbuffers INTERFACE ${FlatBuffers_Include})
