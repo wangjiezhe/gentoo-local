@@ -4,7 +4,7 @@
 EAPI=8
 
 DISTUTILS_USE_PEP517=setuptools
-PYTHON_COMPAT=( python3_{11..13} )
+PYTHON_COMPAT=( python3_{11..14} )
 DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_EXT=1
 inherit distutils-r1 prefix
@@ -35,9 +35,7 @@ DEPEND="${RDEPEND}
 "
 
 PATCHES=(
-	"${FILESDIR}"/${PN}-2.6.0-setup.patch
-	"${FILESDIR}"/${PN}-2.6.0-don-t-build-libtorch-again.patch
-	"${FILESDIR}"/${PN}-2.7.1-cpp-extension-libcxx.patch
+	"${FILESDIR}"/${P}-don-t-build-libtorch-again.patch
 	"${FILESDIR}"/${PN}-2.7.1-cpp-extension-multilib.patch
 )
 
