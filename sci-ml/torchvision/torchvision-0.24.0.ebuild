@@ -18,12 +18,10 @@ LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64"
 IUSE="cuda +ffmpeg +jpeg +png +webp"
-RESTRICT="test"
 
 RDEPEND="
 	$(python_gen_cond_dep '
 		dev-python/numpy[${PYTHON_USEDEP}]
-		dev-python/typing-extensions[${PYTHON_USEDEP}]
 		dev-python/pillow[${PYTHON_USEDEP}]
 		dev-python/requests[${PYTHON_USEDEP}]
 		dev-python/scipy[${PYTHON_USEDEP}]
@@ -38,14 +36,9 @@ RDEPEND="
 	sci-ml/pytorch[${PYTHON_SINGLE_USEDEP}]
 "
 DEPEND="${RDEPEND}"
-# BDEPEND="
-# 	test? (
-# 		$(python_gen_cond_dep '
-# 		dev-python/mock[${PYTHON_USEDEP}]
-# 		')
-# 	)"
 
-# distutils_enable_tests pytest
+EPYTEST_PLUGINS=( pytest-mock lmdb )
+distutils_enable_tests pytest
 
 PATCHES=(
 	"${FILESDIR}"/${P}-ffnvcodec.patch
@@ -78,12 +71,38 @@ src_prepare() {
 	export TORCHVISION_LIBRARY="${EPREFIX}/usr/lib/wsl/lib"
 }
 
-# python_test() {
-# 	local EPYTEST_DESELECT=(
-# 		# stuck
-# 		test/test_videoapi.py::TestVideoApi::test_frame_reading_mem_vs_file
-# 	)
+python_test() {
+	rm -rf torchvision || die
 
-# 	rm -rf torchvision || die
-# 	epytest test/datasets_utils.py
-# }
+	local EPYTEST_IGNORE=(
+		test/test_videoapi.py
+		test/test_internet.py
+	)
+	local EPYTEST_DESELECT=(
+		test/test_backbone_utils.py::TestFxFeatureExtraction::test_forward_backward
+		test/test_backbone_utils.py::TestFxFeatureExtraction::test_jit_forward_backward
+		test/test_models.py::test_classification_model
+		test/test_extended_models.py::TestHandleLegacyInterface::test_pretrained_pos
+		test/test_extended_models.py::TestHandleLegacyInterface::test_equivalent_behavior_weights
+		test/test_image.py::test_encode_jpeg_cuda_device_param
+		test/test_image.py::test_decode_avif[decode_avif]
+		test/test_image.py::test_decode_gif[False-earth]
+		test/test_image.py::test_decode_bad_encoded_data
+		test/test_image.py::test_decode_gif[True-earth]
+		test/test_image.py::test_decode_heic[decode_heic]
+		test/test_image.py::test_decode_webp
+		test/test_models.py::test_quantized_classification_model
+		test/test_ops.py::test_roi_opcheck
+		test/test_ops.py::TestDeformConv::test_aot_dispatch_dynamic__test_backward
+		test/test_ops.py::TestDeformConv::test_aot_dispatch_dynamic__test_forward
+		test/test_transforms_v2.py::TestResize::test_kernel_bounding_boxes[cuda-dtype0-False-size4-BoundingBoxFormat.XYWHR]
+		test/test_transforms_v2.py::TestResize::test_kernel_bounding_boxes[cuda-dtype0-False-size5-BoundingBoxFormat.XYWHR]
+		test/test_transforms_v2.py::TestResize::test_bounding_boxes_correctness[resize-False-size4-BoundingBoxFormat.XYWHR]
+		test/test_transforms_v2.py::TestResize::test_bounding_boxes_correctness[resize-False-size5-BoundingBoxFormat.XYWHR]
+		test/test_transforms_v2.py::TestResize::test_bounding_boxes_correctness[Resize-False-size4-BoundingBoxFormat.XYWHR]
+		test/test_transforms_v2.py::TestResize::test_bounding_boxes_correctness[Resize-False-size5-BoundingBoxFormat.XYWHR]
+		test/test_transforms_v2.py::TestCrop::test_transform_bounding_boxes_correctness[4-cuda-dtype0-BoundingBoxFormat.XYWHR-output_size0]
+	)
+
+	epytest
+}
