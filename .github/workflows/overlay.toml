@@ -626,3 +626,7 @@ source = "github"
 github = "pytorch/tensordict"
 use_latest_release = true
 prefix = "v"
+
+["sci-ml/einops"]
+source = "pypi"
+pypi = "einops"
