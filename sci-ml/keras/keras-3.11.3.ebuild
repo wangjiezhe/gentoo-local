@@ -17,7 +17,7 @@ SLOT="0"
 KEYWORDS="~amd64"
 RESTRICT="test"
 
-DEPEND="
+RDEPEND="
 	dev-python/absl-py[${PYTHON_USEDEP}]
 	dev-python/numpy[${PYTHON_USEDEP}]
 	dev-python/rich[${PYTHON_USEDEP}]
