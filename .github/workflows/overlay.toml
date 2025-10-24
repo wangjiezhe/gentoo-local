@@ -630,3 +630,7 @@ prefix = "v"
 ["sci-ml/einops"]
 source = "pypi"
 pypi = "einops"
+
+["sci-ml/flash-attention"]
+source = "pypi"
+pypi = "flash_attn"
