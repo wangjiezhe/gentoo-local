@@ -4,7 +4,7 @@
 EAPI=8
 
 # dev-python/sentry-sdk does not support python3.10
-PYTHON_COMPAT=( python3_{11..13} )
+PYTHON_COMPAT=( python3_{11..14} )
 DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_USE_PEP517=hatchling
 RUST_MIN_VER="1.81"
