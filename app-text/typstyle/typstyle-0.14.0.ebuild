@@ -9,7 +9,7 @@ CRATES="
 "
 
 declare -A GIT_CRATES=(
-	[wasm-minimal-protocol]='https://github.com/astrale-sharp/wasm-minimal-protocol;bb9ccd6b3f4bc554ffec61b89d7d8f15af6236b9;wasm-minimal-protocol-%commit%/crates/macro'
+	[wasm-minimal-protocol]='https://github.com/astrale-sharp/wasm-minimal-protocol;e622e0e4a4f0f34be871a3a6bd22f6519415364b;wasm-minimal-protocol-%commit%/crates/macro'
 )
 
 inherit edo cargo
@@ -29,8 +29,9 @@ fi
 LICENSE="Apache-2.0"
 # Dependent crate licenses
 LICENSE+="
-	Apache-2.0 BSD-2 BSD CDLA-Permissive-2.0 ISC MIT MPL-2.0 Unicode-3.0
-	ZLIB
+	Apache-2.0 Apache-2.0-with-LLVM-exceptions BSD-2 BSD
+	CDLA-Permissive-2.0 ISC MIT MPL-2.0 Unicode-3.0 ZLIB
+	|| ( 0BSD CC0-1.0 )
 "
 SLOT="0"
 KEYWORDS="~amd64 ~arm64"
