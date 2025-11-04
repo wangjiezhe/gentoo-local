@@ -28,7 +28,7 @@ DEPEND="app-arch/libarchive:=
 	dev-cpp/cli11
 	dev-cpp/nlohmann_json
 	dev-cpp/reproc:=
-	dev-cpp/tl-expected
+	dev-cpp/expected
 	dev-cpp/yaml-cpp
 	dev-libs/simdjson
 	sys-libs/libsolv:=[conda]
@@ -48,7 +48,7 @@ DEPEND="app-arch/libarchive:=
 		net-misc/curl
 		sys-apps/acl
 		sys-fs/e2fsprogs
-		sys-libs/zlib
+		virtual/zlib
 		)
 	dev-libs/libfmt:=
 	dev-libs/spdlog
