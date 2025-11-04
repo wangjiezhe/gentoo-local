@@ -53,7 +53,6 @@ RDEPEND="
 
 PATCHES=(
 	"${FILESDIR}/${PN}-0.18.5-hatch.patch"
-	"${FILESDIR}/${PN}-0.22.0-go.patch"
 )
 
 DOC=( package_readme.md )
