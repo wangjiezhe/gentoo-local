@@ -10,9 +10,9 @@ inherit python-single-r1 cmake cuda flag-o-matic prefix rocm toolchain-funcs
 MYPN=pytorch
 MYP=${MYPN}-${PV}
 
-# caffe2-2.6.0 depends on future version of composable kernel
-# TODO: replace it with RDEPEND in the future
-CK_COMMIT=8086bbe3a78d931eb96fe12fdc014082e18d18d3
+# caffe2-2.9.0 depends on future version of composable kernel
+# TODO: replace it with DEPEND in the future
+CK_COMMIT=7fe50dc3da2069d6645d9deb8c017a876472a977
 CK_P=composable_kernel-${CK_COMMIT:0:8}
 
 FLASH_PV=2.7.4
@@ -33,8 +33,10 @@ SRC_URI="
 		https://github.com/ROCm/composable_kernel/archive/${CK_COMMIT}.tar.gz
 		-> ${CK_P}.tar.gz
 	)
-	flash? ( ${FLASH_ATT_URI} )
-	memefficient? ( ${FLASH_ATT_URI} )
+	cuda? (
+		flash? ( ${FLASH_ATT_URI} )
+		memefficient? ( ${FLASH_ATT_URI} )
+	)
 "
 
 S="${WORKDIR}"/${MYP}
@@ -42,7 +44,7 @@ S="${WORKDIR}"/${MYP}
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64 ~arm64"
-IUSE="blis cuda cudss cusparselt distributed fbgemm flash gloo magma memefficient mkl mpi numa nnpack +numpy
+IUSE="blis cuda cudss cusparselt distributed fbgemm flash gloo magma memefficient mkl mpi nccl numa nnpack +numpy
 	onednn openblas opencl openmp qnnpack rocm xnnpack"
 RESTRICT="test"
 REQUIRED_USE="
@@ -52,8 +54,10 @@ REQUIRED_USE="
 	?? ( cuda rocm )
 	rocm? (
 		|| ( ${ROCM_REQUIRED_USE} )
-		!flash
 	)
+	flash? ( || ( cuda rocm ) )
+	memefficient? ( || ( cuda rocm ) )
+	nccl? (  || ( cuda rocm ) )
 	?? ( blis mkl openblas )
 "
 
@@ -61,13 +65,11 @@ RDEPEND="
 	${PYTHON_DEPS}
 	dev-cpp/abseil-cpp:=
 	dev-cpp/gflags:=
-	>=dev-cpp/glog-0.5.0
+	>=dev-cpp/glog-0.5.0:=
 	dev-cpp/nlohmann_json
-	dev-cpp/opentelemetry-cpp
 	dev-libs/cpuinfo
 	dev-libs/libfmt:=
 	dev-libs/protobuf:=
-	dev-libs/pthreadpool
 	dev-libs/sleef
 	sci-ml/foxi
 	~sci-ml/kineto-0.4.0_p20250617
@@ -77,15 +79,18 @@ RDEPEND="
 		dev-libs/cudnn
 		>=sci-ml/cudnn-frontend-1.12.0:=
 		dev-util/nvidia-cuda-toolkit:=[profiler]
-		dev-libs/nccl
+		nccl? ( dev-libs/nccl )
 		cudss? ( dev-libs/cudss )
 		cusparselt? ( dev-libs/cusparselt )
 	)
 	fbgemm? ( sci-ml/FBGEMM:= )
-	gloo? ( sci-ml/gloo[cuda?] )
+	gloo? ( >=sci-ml/gloo-2025.06.04[cuda?] )
 	magma? ( sci-libs/magma[cuda?] )
 	mpi? ( virtual/mpi )
-	nnpack? ( sci-ml/NNPACK )
+	nnpack? (
+		sci-ml/NNPACK
+		dev-libs/pthreadpool
+	)
 	numpy? ( $(python_gen_cond_dep '
 		dev-python/numpy[${PYTHON_USEDEP}]
 		') )
@@ -93,28 +98,32 @@ RDEPEND="
 	opencl? ( virtual/opencl )
 	qnnpack? (
 		sci-ml/gemmlowp
+		dev-libs/pthreadpool
 	)
 	rocm? (
-		>=dev-libs/rccl-6.1      <dev-libs/rccl-6.5
-		>=dev-util/hip-6.1       <dev-util/hip-6.5
-		>=dev-util/roctracer-6.1 <dev-util/roctracer-6.5
-		>=sci-libs/hipBLAS-6.1   <sci-libs/hipBLAS-6.5
-		>=sci-libs/hipBLASLt-6.1 <sci-libs/hipBLASLt-6.5
-		>=sci-libs/hipCUB-6.1    <sci-libs/hipCUB-6.5
-		>=sci-libs/hipFFT-6.1    <sci-libs/hipFFT-6.5
-		>=sci-libs/hipRAND-6.1   <sci-libs/hipRAND-6.5
-		>=sci-libs/hipSOLVER-6.1 <sci-libs/hipSOLVER-6.5
-		>=sci-libs/hipSPARSE-6.1 <sci-libs/hipSPARSE-6.5
-		>=sci-libs/miopen-6.1    <sci-libs/miopen-6.5
-		>=sci-libs/rocPRIM-6.1   <sci-libs/rocPRIM-6.5
-		>=sci-libs/rocThrust-6.1 <sci-libs/rocThrust-6.5
-		memefficient? ( sci-libs/aotriton-bin:0/0.9 )
+		nccl? ( >=dev-libs/rccl-6.3:= <dev-libs/rccl-7.1:= )
+		>=dev-util/hip-6.3:=       <dev-util/hip-7.1:=
+		>=dev-util/roctracer-6.3:= <dev-util/roctracer-7.1:=
+		>=sci-libs/hipBLAS-6.3:=   <sci-libs/hipBLAS-7.1:=
+		>=sci-libs/hipBLASLt-6.3:= <sci-libs/hipBLASLt-7.1:=
+		>=sci-libs/hipFFT-6.3:=    <sci-libs/hipFFT-7.1:=
+		>=sci-libs/hipRAND-6.3:=   <sci-libs/hipRAND-7.1:=
+		>=sci-libs/hipSOLVER-6.3:= <sci-libs/hipSOLVER-7.1:=
+		>=sci-libs/hipSPARSE-6.3:= <sci-libs/hipSPARSE-7.1:=
+		>=sci-libs/miopen-6.3:=    <sci-libs/miopen-7.1:=
+		>=sci-libs/rocBLAS-6.3:=   <sci-libs/rocBLAS-7.1:=
+		>=sci-libs/rocRAND-6.3:=   <sci-libs/rocRAND-7.1:=
+		>=sci-libs/rocSOLVER-6.3:= <sci-libs/rocSOLVER-7.1:=
+		memefficient? ( sci-libs/aotriton-bin:0/0.11 )
 	)
 	distributed? (
-		sci-ml/tensorpipe[cuda?]
-		dev-cpp/cpp-httplib
+		!rocm? ( sci-ml/tensorpipe[cuda?] )
+		dev-cpp/cpp-httplib:=
 	)
-	xnnpack? ( >=sci-ml/XNNPACK-2024.11 )
+	xnnpack? (
+		>=sci-ml/XNNPACK-2024.11
+		dev-libs/pthreadpool
+	)
 	mkl? ( sci-libs/mkl )
 	openblas? ( sci-libs/openblas )
 	blis? ( || ( sci-libs/blis sci-libs/aocl-blas ) )
@@ -123,6 +132,7 @@ RDEPEND="
 
 DEPEND="
 	${RDEPEND}
+	dev-cpp/opentelemetry-cpp
 	dev-libs/flatbuffers
 	dev-libs/FXdiv
 	dev-libs/pocketfft
@@ -133,8 +143,13 @@ DEPEND="
 		dev-python/pyyaml[${PYTHON_USEDEP}]
 		dev-python/typing-extensions[${PYTHON_USEDEP}]
 	')
-	cuda? ( ~dev-libs/cutlass-3.9.2[tools(+)] )
+	cuda? ( >=dev-libs/cutlass-3.9.2[tools(+)] )
 	onednn? ( sci-ml/ideep )
+	rocm? (
+		>=sci-libs/hipCUB-6.3:=    <sci-libs/hipCUB-7.1:=
+		>=sci-libs/rocPRIM-6.3:=   <sci-libs/rocPRIM-7.1:=
+		>=sci-libs/rocThrust-6.3:= <sci-libs/rocThrust-7.1:=
+	)
 	qnnpack? ( dev-libs/clog )
 "
 
@@ -157,7 +172,7 @@ PATCHES=(
 )
 
 src_prepare() {
-	if use flash || use memefficient; then
+	if use cuda && ( use flash || use memefficient ); then
 		mv "${WORKDIR}"/${FLASH_P}/* third_party/${FLASH_PN}/ || die
 	fi
 	filter-lto #bug 862672
@@ -196,9 +211,9 @@ src_prepare() {
 	sed -i 's/-Wextra-semi//' cmake/public/utils.cmake || die
 
 	cmake_src_prepare
-	pushd torch/csrc/jit/serialization || die
+	pushd torch/csrc/jit/serialization > /dev/null || die
 	flatc --cpp --gen-mutable --scoped-enums mobile_bytecode.fbs || die
-	popd
+	popd > /dev/null || die
 
 	sed -i "s|@LIBDIR@|$(get_libdir)|g" \
 		cmake/Modules/FindBLIS.cmake \
@@ -230,7 +245,7 @@ src_prepare() {
 
 		# Bug 959808: fix for gfx101x targets
 		pushd "${WORKDIR}/composable_kernel-${CK_COMMIT}" > /dev/null || die
-		eapply "${FILESDIR}"/composable-kernel-6.4.1-expand-isa.patch
+		eapply "${FILESDIR}"/composable-kernel-7fe50dc-expand-isa.patch
 		popd > /dev/null || die
 
 		if tc-is-clang; then
@@ -241,7 +256,7 @@ src_prepare() {
 		fi
 
 		# Workaround for libc++ issue https://github.com/llvm/llvm-project/issues/100802
-		sed 's/std::memcpy/memcpy/g' -i c10/util/Half.h || die
+		sed 's/std::memcpy/memcpy/g' -i torch/headeronly/util/Half.h || die
 
 		ebegin "HIPifying cuda sources"
 		${EPYTHON} tools/amd_build/build_amd.py || die
@@ -266,7 +281,6 @@ src_configure() {
 	local mycmakeargs=(
 		-DBUILD_CUSTOM_PROTOBUF=OFF
 		-DLIBSHM_INSTALL_LIB_SUBDIR="${EPREFIX}"/usr/$(get_libdir)
-		-DONNX_PROTO_LIBRARY="${EPREFIX}"/usr/$(get_libdir)/libonnx_proto.so
 		-DPython_EXECUTABLE="${PYTHON}"
 		-DTORCH_INSTALL_LIB_DIR="${EPREFIX}"/usr/$(get_libdir)
 		-DUSE_LITE_PROTO=ON
@@ -298,7 +312,7 @@ src_configure() {
 		-DUSE_PYTORCH_QNNPACK=$(usex qnnpack)
 		-DUSE_PYTORCH_METAL=OFF
 		-DUSE_ROCM=$(usex rocm)
-		-DUSE_TENSORPIPE=$(usex distributed)
+		-DUSE_TENSORPIPE=$(use distributed && use !rocm && echo ON || echo OFF)
 		-DUSE_UCC=OFF
 		-DUSE_VALGRIND=OFF
 		-DUSE_XNNPACK=$(usex xnnpack)
@@ -324,7 +338,7 @@ src_configure() {
 		mycmakeargs+=(
 			-DUSE_CUDNN=ON
 			-DTORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST:-3.5 7.0}"
-			-DUSE_NCCL=ON
+			-DUSE_NCCL=$(usex nccl)
 			-DCMAKE_CUDA_FLAGS="$(cuda_gccdir -f | tr -d \")"
 			-DUSE_NVRTC=ON
 			-DUSE_CUSPARSELT=$(usex cusparselt)
@@ -338,8 +352,10 @@ src_configure() {
 		fi
 
 		mycmakeargs+=(
-			-DUSE_NCCL=ON
+			-DUSE_NCCL=$(usex nccl)
+			-DUSE_SYSTEM_NCCL=ON
 			-DCMAKE_REQUIRE_FIND_PACKAGE_HIP=ON
+			-DUSE_ROCM_CK_SDPA=OFF # requires flash + aiter, works only on gfx90a/gfx942/gfx950
 		)
 
 		# ROCm libraries produce too much warnings
