@@ -1,14 +1,14 @@
 diff --git a/pyproject.toml b/pyproject.toml
-index 9015e1e..062c4b0 100644
+index ebf92d9..7086f7f 100644
 --- a/pyproject.toml
 +++ b/pyproject.toml
 @@ -14,8 +14,8 @@ classifiers = [
  ]
  
  [tool.setuptools]
--packages = ["cudnn", "include"]
+-packages = ["cudnn", "include", "cudnn.gemm_swiglu", "cudnn.gemm_amax"]
 -package-dir = {"" = "python", "include" = "include"}
-+packages = ["cudnn"]
++packages = ["cudnn", "cudnn.gemm_swiglu", "cudnn.gemm_amax"]
 +package-dir = {"" = "python"}
  include-package-data = true
  

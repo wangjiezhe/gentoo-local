@@ -42,7 +42,7 @@ BDEPEND="
 PATCHES=(
 	"${FILESDIR}/${PN}-1.11.0-fix.patch"
 	"${FILESDIR}"/${PN}-1.12.1-cmake.patch
-	"${FILESDIR}"/${PN}-1.8.0-python.patch
+	"${FILESDIR}"/${P}-python.patch
 	"${FILESDIR}"/${PN}-1.9.0-test.patch
 )
 
