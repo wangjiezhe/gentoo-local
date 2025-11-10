@@ -634,3 +634,9 @@ pypi = "einops"
 ["sci-ml/flash-attention"]
 source = "pypi"
 pypi = "flash_attn"
+
+["sci-mathematics/elan"]
+source = "github"
+github = "leanprover/elan"
+use_latest_release = true
+prefix = "v"
