@@ -41,7 +41,7 @@ EPYTEST_PLUGINS=( pytest-mock lmdb )
 distutils_enable_tests pytest
 
 PATCHES=(
-	"${FILESDIR}"/${P}-ffnvcodec.patch
+	"${FILESDIR}"/${PN}-0.24.0-ffnvcodec.patch
 )
 
 src_prepare() {
