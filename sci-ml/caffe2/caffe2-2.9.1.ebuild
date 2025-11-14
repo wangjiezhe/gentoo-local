@@ -66,9 +66,9 @@ RDEPEND="
 	dev-cpp/abseil-cpp:=
 	dev-cpp/gflags:=
 	>=dev-cpp/glog-0.5.0:=
-	dev-cpp/nlohmann_json
 	dev-libs/cpuinfo
 	dev-libs/libfmt:=
+	dev-cpp/opentelemetry-cpp
 	dev-libs/protobuf:=
 	dev-libs/sleef
 	sci-ml/foxi
@@ -84,7 +84,7 @@ RDEPEND="
 		cusparselt? ( dev-libs/cusparselt )
 	)
 	fbgemm? ( sci-ml/FBGEMM:= )
-	gloo? ( >=sci-ml/gloo-2025.06.04[cuda?] )
+	gloo? ( >=sci-ml/gloo-2025.06.04[cuda?,rocm?] )
 	magma? ( sci-libs/magma[cuda?] )
 	mpi? ( virtual/mpi )
 	nnpack? (
@@ -93,7 +93,7 @@ RDEPEND="
 	)
 	numpy? ( $(python_gen_cond_dep '
 		dev-python/numpy[${PYTHON_USEDEP}]
-		') )
+	') )
 	onednn? ( =sci-ml/oneDNN-3.5* )
 	opencl? ( virtual/opencl )
 	qnnpack? (
@@ -101,20 +101,21 @@ RDEPEND="
 		dev-libs/pthreadpool
 	)
 	rocm? (
-		nccl? ( >=dev-libs/rccl-6.3:= <dev-libs/rccl-7.1:= )
-		>=dev-util/hip-6.3:=       <dev-util/hip-7.1:=
-		>=dev-util/roctracer-6.3:= <dev-util/roctracer-7.1:=
-		>=sci-libs/hipBLAS-6.3:=   <sci-libs/hipBLAS-7.1:=
-		>=sci-libs/hipBLASLt-6.3:= <sci-libs/hipBLASLt-7.1:=
-		>=sci-libs/hipFFT-6.3:=    <sci-libs/hipFFT-7.1:=
-		>=sci-libs/hipRAND-6.3:=   <sci-libs/hipRAND-7.1:=
-		>=sci-libs/hipSOLVER-6.3:= <sci-libs/hipSOLVER-7.1:=
-		>=sci-libs/hipSPARSE-6.3:= <sci-libs/hipSPARSE-7.1:=
-		>=sci-libs/miopen-6.3:=    <sci-libs/miopen-7.1:=
-		>=sci-libs/rocBLAS-6.3:=   <sci-libs/rocBLAS-7.1:=
-		>=sci-libs/rocRAND-6.3:=   <sci-libs/rocRAND-7.1:=
-		>=sci-libs/rocSOLVER-6.3:= <sci-libs/rocSOLVER-7.1:=
+		nccl? ( >=dev-libs/rccl-6.3:= <dev-libs/rccl-7.2:= )
+		>=dev-util/hip-6.3:=       <dev-util/hip-7.2:=
+		>=dev-util/roctracer-6.3:= <dev-util/roctracer-7.2:=
+		>=sci-libs/hipBLAS-6.3:=   <sci-libs/hipBLAS-7.2:=[rocsolver(+)]
+		>=sci-libs/hipBLASLt-6.3:= <sci-libs/hipBLASLt-7.2:=
+		>=sci-libs/hipFFT-6.3:=    <sci-libs/hipFFT-7.2:=
+		>=sci-libs/hipRAND-6.3:=   <sci-libs/hipRAND-7.2:=
+		>=sci-libs/hipSOLVER-6.3:= <sci-libs/hipSOLVER-7.2:=
+		>=sci-libs/hipSPARSE-6.3:= <sci-libs/hipSPARSE-7.2:=
+		>=sci-libs/miopen-6.3:=    <sci-libs/miopen-7.2:=
+		>=sci-libs/rocBLAS-6.3:=   <sci-libs/rocBLAS-7.2:=
+		>=sci-libs/rocRAND-6.3:=   <sci-libs/rocRAND-7.2:=
+		>=sci-libs/rocSOLVER-6.3:= <sci-libs/rocSOLVER-7.2:=
 		memefficient? ( sci-libs/aotriton-bin:0/0.11 )
+		distributed? ( >=dev-util/rocm-smi-6.3:= <dev-util/rocm-smi-7.2:= )
 	)
 	distributed? (
 		!rocm? ( sci-ml/tensorpipe[cuda?] )
@@ -132,7 +133,7 @@ RDEPEND="
 
 DEPEND="
 	${RDEPEND}
-	dev-cpp/opentelemetry-cpp
+	dev-cpp/nlohmann_json
 	dev-libs/flatbuffers
 	dev-libs/FXdiv
 	dev-libs/pocketfft
@@ -146,9 +147,9 @@ DEPEND="
 	cuda? ( >=dev-libs/cutlass-3.9.2[tools(+)] )
 	onednn? ( sci-ml/ideep )
 	rocm? (
-		>=sci-libs/hipCUB-6.3:=    <sci-libs/hipCUB-7.1:=
-		>=sci-libs/rocPRIM-6.3:=   <sci-libs/rocPRIM-7.1:=
-		>=sci-libs/rocThrust-6.3:= <sci-libs/rocThrust-7.1:=
+		>=sci-libs/hipCUB-6.3:=    <sci-libs/hipCUB-7.2:=
+		>=sci-libs/rocPRIM-6.3:=   <sci-libs/rocPRIM-7.2:=
+		>=sci-libs/rocThrust-6.3:= <sci-libs/rocThrust-7.2:=
 	)
 	qnnpack? ( dev-libs/clog )
 "
@@ -158,17 +159,17 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.5.1-unbundle_kineto.patch
 	"${FILESDIR}"/${PN}-2.8.0-unbundle_pocketfft.patch
 	"${FILESDIR}"/${PN}-2.3.0-cudnn_include_fix.patch
-	"${FILESDIR}"/${P}-gentoo.patch
+	"${FILESDIR}"/${PN}-2.9.0-gentoo.patch
 	"${FILESDIR}"/${PN}-2.4.0-cpp-httplib.patch
 	"${FILESDIR}"/${PN}-1.12.0-glog-0.6.0.patch
 	"${FILESDIR}"/${PN}-2.5.1-newfix-functorch-install.patch
 	"${FILESDIR}"/${PN}-2.6.0-rocm-fix-std-cpp17.patch
-	"${FILESDIR}"/${P}-cmake.patch
+	"${FILESDIR}"/${PN}-2.9.0-cmake.patch
 	"${FILESDIR}"/${PN}-2.7.0-glog-0.7.1.patch
 	"${FILESDIR}"/${PN}-2.7.1-aotriton-fixes.patch
 	"${FILESDIR}"/${PN}-2.8.0-rocm-minus-flash.patch
 	"${FILESDIR}"/${PN}-2.4.0-blis.patch
-	"${FILESDIR}"/${P}-xnnpack.patch
+	"${FILESDIR}"/${PN}-2.9.0-xnnpack.patch
 )
 
 src_prepare() {
@@ -184,6 +185,9 @@ src_prepare() {
 		cmake/Dependencies.cmake \
 		torch/CMakeLists.txt \
 		|| die
+
+	# tensorpipe is in system, not a build target of caffe2
+	sed -e '/target_compile_options_if_supported(tensorpipe/d' -i cmake/Dependencies.cmake || die
 
 	# Drop third_party from CMake tree
 	sed -i \
@@ -252,11 +256,14 @@ src_prepare() {
 			# Systemwide gcc (for absl and at::TensorBase) + hipcc (llvm>=18) need abi-compat=17.
 			# But systemwide clang>=18 + hipcc (>=llvm-18) need opposite!
 			# See also: https://github.com/llvm/llvm-project/issues/102443#issuecomment-2329726287
-			sed '/-fclang-abi-compat=17/d' -i cmake/Dependencies.cmake || die
+			sed -e '/-fclang-abi-compat=17/d' -i cmake/Dependencies.cmake || die
 		fi
 
 		# Workaround for libc++ issue https://github.com/llvm/llvm-project/issues/100802
-		sed 's/std::memcpy/memcpy/g' -i torch/headeronly/util/Half.h || die
+		sed -e 's/std::memcpy/memcpy/g' -i torch/headeronly/util/Half.h || die
+
+		# Typo: https://github.com/pytorch/pytorch/pull/166502
+		sed -e 's/gloo_hiop/gloo_hip/' -i cmake/Modules/FindGloo.cmake || die
 
 		ebegin "HIPifying cuda sources"
 		${EPYTHON} tools/amd_build/build_amd.py || die
@@ -290,7 +297,6 @@ src_configure() {
 		-DUSE_CCACHE=OFF
 		-DUSE_CUDA=$(usex cuda)
 		-DUSE_DISTRIBUTED=$(usex distributed)
-		-DUSE_FAKELOWP=OFF
 		-DUSE_FBGEMM=$(usex fbgemm)
 		-DUSE_FLASH_ATTENTION=$(usex flash)
 		-DUSE_GFLAGS=ON
