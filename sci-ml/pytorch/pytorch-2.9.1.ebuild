@@ -35,7 +35,7 @@ DEPEND="${RDEPEND}
 "
 
 PATCHES=(
-	"${FILESDIR}"/${P}-don-t-build-libtorch-again.patch
+	"${FILESDIR}"/${PN}-2.9.0-don-t-build-libtorch-again.patch
 	"${FILESDIR}"/${PN}-2.7.1-cpp-extension-multilib.patch
 )
 
