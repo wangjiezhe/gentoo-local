@@ -57,6 +57,8 @@ PATCHES=(
 
 DOC=( package_readme.md )
 
+QA_PREBUILT="/usr/lib/python*/site-packages/wandb/bin/wandb-core"
+
 src_unpack() {
 	S="${WORKDIR}/${P}/core" go-module_src_unpack
 	S="${WORKDIR}/${P}/gpu_stats" cargo_gen_config
