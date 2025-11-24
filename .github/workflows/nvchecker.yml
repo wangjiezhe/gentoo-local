@@ -23,7 +23,7 @@ jobs:
       nvcmp: ${{ steps.nvchecker.outputs.nvcmp }}
     steps:
     - name: checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     - name: gentoo
       run: |
@@ -83,12 +83,12 @@ jobs:
         include: ${{ fromJson(needs.nvchecker.outputs.nvcmp) }}
     steps:
     - name: Checkout bumpbot
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
       with:
         repository: 'wangjiezhe/gentoo-bumpbot'
 
     - name: Checkout gentoo-local
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
       with:
         path: 'gentoo-local'
 
