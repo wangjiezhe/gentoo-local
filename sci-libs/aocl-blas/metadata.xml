@@ -9,10 +9,10 @@
     <name>wangjiezhe</name>
   </maintainer>
   <use>
+    <flag name="index64">Build an ILP64 libblis64 in addition to LP64 libblis</flag>
     <flag name="openmp">Use openmp threadding model</flag>
     <flag name="pthread">Use pthread threadding model</flag>
     <flag name="serial">Use no threadding model</flag>
     <flag name="eselect-ldso">Enable runtime library switching by eselect and ld.so.</flag>
-    <flag name="64bit-index">Enable 64bit array indexing, incompatible with runtime switching</flag>
   </use>
 </pkgmetadata>
