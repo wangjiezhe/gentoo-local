@@ -640,3 +640,9 @@ source = "github"
 github = "leanprover/elan"
 use_latest_release = true
 prefix = "v"
+
+["sys-process/witr"]
+source = "github"
+github = "pranshuparmar/witr"
+use_latest_release = true
+prefix = "v"
