@@ -9,6 +9,7 @@ DISTUTILS_USE_PEP517=maturin
 PYTHON_COMPAT=( python3_{11..13} )
 DISTUTILS_EXT=1
 DISTUTILS_SINGLE_IMPL=1
+RUST_MIN_VER="1.82.0"
 
 CRATES="
 "
@@ -38,6 +39,7 @@ LICENSE+="
 SLOT="0"
 KEYWORDS="~amd64"
 
+RDEPEND="dev-libs/oniguruma"
 BDEPEND="
 	test? ( sci-ml/datasets[${PYTHON_SINGLE_USEDEP}] )
 	$(python_gen_cond_dep '
