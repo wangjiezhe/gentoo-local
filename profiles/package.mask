@@ -3,3 +3,7 @@
 
 # Bazel 7 support is not ready
 =dev-build/bazel-7*
+
+# cuda 13
+>=dev-python/cuda-bindings-13
+>=dev-python/cuda-python-13
