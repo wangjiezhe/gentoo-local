@@ -1,0 +1,10 @@
+diff '--color=auto' -ur cuda-python-cuda-core-v0.5.0/cuda_core/tests/test_linker.py cuda-python-cuda-core-v0.5.0.modified/cuda_core/tests/test_linker.py
+--- cuda-python-cuda-core-v0.5.0/cuda_core/tests/test_linker.py	2025-12-18 08:50:06.000000000 +0800
++++ cuda-python-cuda-core-v0.5.0.modified/cuda_core/tests/test_linker.py	2026-01-08 14:18:45.553844913 +0800
+@@ -204,5 +204,5 @@
+ def test_linker_options_as_bytes_driver_not_supported():
+     """Test that as_bytes() is not supported for driver backend"""
+     options = LinkerOptions(arch="sm_80")
+-    with pytest.raises(RuntimeError, match="as_bytes\\(\\) only supports 'nvjitlink' backend"):
++    with pytest.raises(ValueError, match="as_bytes\\(\\) only supports 'nvjitlink' backend"):
+         options.as_bytes("driver")
