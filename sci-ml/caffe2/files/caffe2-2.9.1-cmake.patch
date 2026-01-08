@@ -1,0 +1,12 @@
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index ef5c2fd4e97..138b97f6b58 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -1514,6 +1514,7 @@ if(NOT INTERN_BUILD_MOBILE)
+   endif(UNIX AND NOT APPLE)
+ 
+   if(UNIX)
++    include(CheckFunctionExists)
+     set(CMAKE_EXTRA_INCLUDE_FILES "sys/mman.h")
+     CHECK_FUNCTION_EXISTS(mmap HAVE_MMAP)
+     if(HAVE_MMAP)

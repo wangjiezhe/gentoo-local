@@ -16,6 +16,7 @@
 		<flag name="distributed">Support distributed applications</flag>
 		<flag name="fbgemm">Use <pkg>sci-ml/FBGEMM</pkg></flag>
 		<flag name="flash">Enable flash attention</flag>
+		<flag name="flexiblas">Use <pkg>sci-libs/flexiblas</pkg> for blas routines</flag>
 		<flag name="gloo">Use <pkg>sci-ml/gloo</pkg></flag>
 		<flag name="magma">Use sci-libs/magma</flag>
 		<flag name="memefficient">Enable mem efficient attention</flag>

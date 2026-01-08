@@ -1,4 +1,4 @@
-# Copyright 2022-2025 Gentoo Authors
+# Copyright 2022-2026 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -44,7 +44,7 @@ S="${WORKDIR}"/${MYP}
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64 ~arm64"
-IUSE="blis cuda cudss cusparselt distributed fbgemm flash gloo magma memefficient mkl mpi nccl numa nnpack +numpy
+IUSE="blis cuda cudss cusparselt distributed fbgemm flash flexiblas gloo magma memefficient mkl mpi nccl numa nnpack +numpy
 	onednn openblas opencl openmp qnnpack rocm xnnpack"
 RESTRICT="test"
 REQUIRED_USE="
@@ -58,7 +58,7 @@ REQUIRED_USE="
 	flash? ( || ( cuda rocm ) )
 	memefficient? ( || ( cuda rocm ) )
 	nccl? (  || ( cuda rocm ) )
-	?? ( blis mkl openblas )
+	?? ( blis flexiblas mkl openblas )
 "
 
 RDEPEND="
@@ -94,7 +94,7 @@ RDEPEND="
 	numpy? ( $(python_gen_cond_dep '
 		dev-python/numpy[${PYTHON_USEDEP}]
 	') )
-	onednn? ( =sci-ml/oneDNN-3.5* )
+	onednn? ( sci-ml/oneDNN )
 	opencl? ( virtual/opencl )
 	qnnpack? (
 		sci-ml/gemmlowp
@@ -114,7 +114,7 @@ RDEPEND="
 		>=sci-libs/rocBLAS-6.3:=   <sci-libs/rocBLAS-7.2:=
 		>=sci-libs/rocRAND-6.3:=   <sci-libs/rocRAND-7.2:=
 		>=sci-libs/rocSOLVER-6.3:= <sci-libs/rocSOLVER-7.2:=
-		memefficient? ( sci-libs/aotriton-bin:0/0.11 )
+		memefficient? ( =sci-libs/aotriton-bin-0.11*:= )
 		distributed? ( >=dev-util/rocm-smi-6.3:= <dev-util/rocm-smi-7.2:= )
 	)
 	distributed? (
@@ -165,6 +165,7 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.5.1-newfix-functorch-install.patch
 	"${FILESDIR}"/${PN}-2.6.0-rocm-fix-std-cpp17.patch
 	"${FILESDIR}"/${PN}-2.9.0-cmake.patch
+	"${FILESDIR}"/${PN}-2.9.1-cmake.patch
 	"${FILESDIR}"/${PN}-2.7.0-glog-0.7.1.patch
 	"${FILESDIR}"/${PN}-2.7.1-aotriton-fixes.patch
 	"${FILESDIR}"/${PN}-2.8.0-rocm-minus-flash.patch
@@ -332,6 +333,8 @@ src_configure() {
 		mycmakeargs+=(-DBLAS=OpenBLAS)
 	elif use blis; then
 		mycmakeargs+=(-DBLAS=BLIS)
+	elif use flexiblas; then
+		mycmakeargs+=(-DBLAS=FlexiBLAS)
 	else
 		mycmakeargs+=(-DBLAS=Generic -DBLAS_LIBRARIES=)
 	fi
