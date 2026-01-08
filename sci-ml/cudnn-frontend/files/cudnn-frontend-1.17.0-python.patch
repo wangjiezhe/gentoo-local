@@ -1,0 +1,15 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index abefe7d..1b17327 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -14,8 +14,8 @@ classifiers = [
+ ]
+ 
+ [tool.setuptools]
+-packages = ["cudnn", "include", "cudnn.native_sparse_attention", "cudnn.native_sparse_attention.selection", "cudnn.native_sparse_attention.sliding_window_attention", "cudnn.native_sparse_attention.top_k", "cudnn.gemm_swiglu", "cudnn.gemm_amax"]
+-package-dir = {"" = "python", "include" = "include"}
++packages = ["cudnn", "cudnn.native_sparse_attention", "cudnn.native_sparse_attention.selection", "cudnn.native_sparse_attention.sliding_window_attention", "cudnn.native_sparse_attention.top_k", "cudnn.gemm_swiglu", "cudnn.gemm_amax"]
++package-dir = {"" = "python"}
+ include-package-data = true
+ 
+ [project.urls]

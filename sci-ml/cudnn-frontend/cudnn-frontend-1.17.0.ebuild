@@ -1,4 +1,4 @@
-# Copyright 1999-2025 Gentoo Authors
+# Copyright 1999-2026 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -19,7 +19,7 @@ IUSE="python samples test"
 RESTRICT="!test? ( test )"
 
 RDEPEND="
-	>=dev-libs/cudnn-9
+	>=dev-libs/cudnn-9:=
 "
 DEPEND="${RDEPEND}
 	dev-cpp/nlohmann_json
@@ -27,6 +27,7 @@ DEPEND="${RDEPEND}
 BDEPEND="
 	test? (
 		>=dev-cpp/catch-3
+		>=dev-libs/cudnn-9.15.0
 	)
 	python? (
 		dev-python/pybind11
@@ -53,9 +54,6 @@ src_prepare() {
 		-i include/cudnn_frontend_utils.h || die
 
 	rm -r include/cudnn_frontend/thirdparty || die
-
-	# append-flags -Wno-array-bounds
-	# append-flags -Wno-stringop-overread
 }
 
 src_configure() {
@@ -85,15 +83,6 @@ src_compile() {
 
 	use python && distutils-r1_src_compile
 }
-
-src_install() {
-	# insinto /opt/cuda/targets/x86_64-linux
-	# doins -r include
-	cmake_src_install
-
-	use python && distutils-r1_src_install
-}
-
 distutils_enable_tests pytest
 
 src_test() {
@@ -108,11 +97,6 @@ src_test() {
 
 	cmake_src_test
 
-	# if has usersandbox ${FEATURES}; then
-	# 	ewarn "Test suite fails under FEATURES=usersandbox. Skipping."
-	# 	return 0
-	# fi
-
 	if use python; then
 		cd "${S}" || die
 		distutils-r1_src_test
@@ -120,6 +104,10 @@ src_test() {
 }
 
 python_test() {
+	local EPYTEST_IGNORE=(
+		# ValueError: no option named 'perf'
+		test/python/test_mhas_v2.py
+	)
 	local EPYTEST_DESELECT=(
 		# Failed with param: ((1, 128, 1024), torch.bfloat16)
 		# AssertionError: Tensor-likes are not close!
@@ -132,4 +120,14 @@ python_test() {
 	)
 
 	distutils-r1_python_test
+}
+
+src_install() {
+	cmake_src_install
+
+	if use test; then
+		rm -R "${ED}/opt/cuda/targets/x86_64-linux/bin/tests" || die
+	fi
+
+	use python && distutils-r1_src_install
 }
