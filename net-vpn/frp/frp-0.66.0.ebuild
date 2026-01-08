@@ -17,6 +17,8 @@ IUSE="abi_mips_o32 abi_mips_n64 +client +server"
 REQUIRED_USE="|| ( client server )"
 BDEPEND=">=dev-lang/go-1.22"
 
+QA_PRESTRIPPED="usr/bin/.*"
+
 src_compile() {
 	mkdir -pv comp || die
 
