@@ -9,8 +9,8 @@
 		<remote-id type="github">amd/libflame</remote-id>
 	</upstream>
 	<use>
-		<flag name="eselect-ldso">Enable runtime library switching by eselect and ld.so.</flag>
-		<flag name="scc">Enable code that takes advantage of the SCC multicore architecture, recommended to use supermatrix if scc is enabled.</flag>
+		<flag name="aocl-blas">Enables tight coupling with AOCL-BLAS library in order to use AOCL-BLAS internal routines.</flag>
+		<flag name="gpu">Enable gpu advantage.</flag>
 		<flag name="supermatrix">Enable Ernie Chan's dependency-aware task scheduling and parallel execution system.</flag>
 	</use>
 </pkgmetadata>

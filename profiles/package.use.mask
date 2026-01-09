@@ -1,6 +1,3 @@
-# undefined symbol: RCCE_*
-sci-libs/aocl-lapack scc supermatrix
-
 # Not compatible with newest system
 =net-libs/nodejs-14* system-ssl system-icu
 =net-libs/nodejs-12* system-ssl

@@ -1,0 +1,12 @@
+diff --git a/src/map/lapack2flamec/FLA_getrf.c b/src/map/lapack2flamec/FLA_getrf.c
+index 0a8414c42..a21196ceb 100644
+--- a/src/map/lapack2flamec/FLA_getrf.c
++++ b/src/map/lapack2flamec/FLA_getrf.c
+@@ -41,6 +41,7 @@
+ extern void DTL_Trace(uint8 ui8LogLevel, uint8 ui8LogType, const int8 *pi8FileName,
+                       const int8 *pi8FunctionName, uint32 ui32LineNumber, const int8 *pi8Message);
+ int fla_thread_get_num_threads(void);
++integer FLASH_get_num_threads( integer fallback );
+ #define LAPACK_getrf(prefix)                                                                 \
+     void F77_##prefix##getrf(integer *m, integer *n, PREFIX2LAPACK_TYPEDEF(prefix) * buff_A, \
+                              integer * ldim_A, integer * buff_p, integer * info)
