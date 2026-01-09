@@ -1,0 +1,13 @@
+diff --git a/CMake/Checkers/Gcc.cmake b/CMake/Checkers/Gcc.cmake
+index 4586b4ff..5c78d296 100644
+--- a/CMake/Checkers/Gcc.cmake
++++ b/CMake/Checkers/Gcc.cmake
+@@ -27,7 +27,7 @@
+ 
+ 
+ set(GCC_VERSION_MIN   "9.2.0")
+-set(GCC_VERSION_MAX   "14.2.1")
++set(GCC_VERSION_MAX   "15.2.1")
+ 
+ if ((CMAKE_C_COMPILER_VERSION VERSION_LESS ${GCC_VERSION_MIN}) OR
+     (CMAKE_C_COMPILER_VERSION VERSION_GREATER ${GCC_VERSION_MAX}))
