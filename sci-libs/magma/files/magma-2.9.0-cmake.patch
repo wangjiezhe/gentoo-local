@@ -1,0 +1,22 @@
+From 2fecaf3f0c811344363f713669c1fe30f6879acd Mon Sep 17 00:00:00 2001
+From: Xeonacid <h.dwwwwww@gmail.com>
+Date: Tue, 29 Apr 2025 14:56:50 +0800
+Subject: [PATCH] Drop CMP0037 to fix cmake 4.0 build error
+
+Don't know why it is here. Removing it builds fine on my end.
+---
+ CMakeLists.txt | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fc61af74d..50c227442 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -654,7 +654,6 @@ endif()
+ 
+ 
+ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${SPARSE_TEST_DIR}" )
+-cmake_policy( SET CMP0037 OLD)
+ foreach( TEST ${sparse_testing_all} )
+     string( REGEX REPLACE "\\.(cpp|f90|F90)"     "" EXE ${TEST} )
+     string( REGEX REPLACE "${SPARSE_TEST_DIR}/" "" EXE ${EXE} )
