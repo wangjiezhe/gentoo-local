@@ -1,4 +1,4 @@
-# Copyright 2024-2025 Gentoo Authors
+# Copyright 2024-2026 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -24,8 +24,8 @@ BDEPEND="
 DOCS=( Readme.md version.txt )
 
 PATCHES=(
-	"${FILESDIR}/${P}-install.patch"
-	"${FILESDIR}/${P}-test.patch"
+	"${FILESDIR}/${PN}-5.1-install.patch"
+	"${FILESDIR}/${PN}-5.1-test.patch"
 )
 
 src_configure() {
