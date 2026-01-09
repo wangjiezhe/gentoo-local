@@ -1,26 +1,26 @@
-# Copyright 2024-2025 Gentoo Authors
+# Copyright 2024-2026 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{10..13} )
+PYTHON_COMPAT=( python3_{11..14} )
 DISTUTILS_EXT=1
 DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_USE_PEP517=setuptools
 inherit distutils-r1 cuda
 
-CommitId=2ed5d4103ff270245a55bedcddf2ffabdaf8cfa1
+# CommitId=05b82cb98e4c29212511d14a98cdba07fe00625b
 
 DESCRIPTION="A collection of high-performance PyTorch GPU operator libraries for training and inference"
 HOMEPAGE="https://github.com/pytorch/FBGEMM"
-# SRC_URI="https://github.com/pytorch/FBGEMM/archive/v${PV}.tar.gz -> ${P}.gh.tar.gz"
+SRC_URI="https://github.com/pytorch/FBGEMM/archive/v${PV}.tar.gz -> ${P}.gh.tar.gz"
 
-# S="${WORKDIR}/FBGEMM-${PV}/fbgemm_gpu"
+S="${WORKDIR}/FBGEMM-${PV}/fbgemm_gpu"
 
-SRC_URI="https://github.com/pytorch/FBGEMM/archive/${CommitId}.tar.gz
-	-> ${P}.gh.tar.gz"
+# SRC_URI="https://github.com/pytorch/FBGEMM/archive/${CommitId}.tar.gz
+# 	-> ${P}.gh.tar.gz"
 
-S="${WORKDIR}/FBGEMM-${CommitId}/fbgemm_gpu"
+# S="${WORKDIR}/FBGEMM-${CommitId}/fbgemm_gpu"
 
 LICENSE="BSD"
 SLOT="0"
@@ -77,6 +77,7 @@ src_prepare() {
 python_configure_all() {
 	DISTUTILS_ARGS=(
 		--package_channel release
+		--build-target default
 	)
 	use cuda && DISTUTILS_ARGS+=(
 		--nccl_lib_path "${EPREFIX}"/opt/cuda/targets/x86_64-linux/lib/libnccl.so.2
