@@ -1,15 +1,10 @@
 diff --git a/tests/unit_tests/CMakeLists.txt b/tests/unit_tests/CMakeLists.txt
-index 9fe3b6f..59c5629 100644
+index 96a8539..0611a8e 100644
 --- a/tests/unit_tests/CMakeLists.txt
 +++ b/tests/unit_tests/CMakeLists.txt
-@@ -296,41 +296,8 @@ foreach(TNAME ${GTEST_EXECUTABLES})
-     target_compile_definitions(${TNAME} PUBLIC ${AOCLSPARSE_ILP64})
+@@ -310,42 +310,6 @@ add_subdirectory(data)
  
-     target_compile_options(${TNAME} PUBLIC $<$<CONFIG:Debug>:${COMPILER_FLAGS_DEBUG}> "-mno-avx512f;")
--    if(NOT BUILD_SPARSE_TESTS_OUTOFSRCTREE)
--        install(FILES ${TNAME}.cpp DESTINATION ${TESTS_INSTALL_DIR})
--    endif()
- endforeach()
+ set(TESTS_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/unit_tests")
  
 -if(NOT BUILD_SPARSE_TESTS_OUTOFSRCTREE)
 -    install(FILES CMakeLists.txt DESTINATION ${TESTS_INSTALL_DIR})
@@ -23,7 +18,7 @@ index 9fe3b6f..59c5629 100644
 -    install(FILES data/tinyr.mtx DESTINATION ${TESTS_INSTALL_DIR}/data)
 -    install(FILES ../common/aoclsparse_template_specialization.cpp DESTINATION ${TESTS_INSTALL_DIR}/common)
 -    install(FILES ../common/aoclsparse_utility.cpp DESTINATION ${TESTS_INSTALL_DIR}/common)
--    install(FILES ../include/aoclsparse.hpp DESTINATION ${TESTS_INSTALL_DIR}/include)
+-    install(FILES ../include/aoclsparse_interface.hpp DESTINATION ${TESTS_INSTALL_DIR}/include)
 -    install(FILES ../include/aoclsparse_reference.hpp DESTINATION ${TESTS_INSTALL_DIR}/include)
 -    install(FILES ../include/aoclsparse_random.hpp DESTINATION ${TESTS_INSTALL_DIR}/include)
 -    install(FILES ../include/aoclsparse_arguments.hpp DESTINATION ${TESTS_INSTALL_DIR}/include)
@@ -39,8 +34,24 @@ index 9fe3b6f..59c5629 100644
 -    install(FILES ${CMAKE_SOURCE_DIR}/cmake/Dependencies.cmake DESTINATION ${TESTS_INSTALL_DIR})
 -    install(FILES ${CMAKE_SOURCE_DIR}/cmake/Coverage.cmake DESTINATION ${TESTS_INSTALL_DIR})
 -    install(FILES ../benchmarks/bench_tests.cmake DESTINATION ${TESTS_INSTALL_DIR})
+-    #--------------------------------
+-    # Install KT kernel source files
+-    #--------------------------------
+-    install(FILES kt_kernels.cpp DESTINATION ${TESTS_INSTALL_DIR})
+-    install(FILES ktlvl2_kernels.cpp DESTINATION ${TESTS_INSTALL_DIR})
+-    #--------------------------------
 -endif()
 -
- include(GoogleTest)
- foreach(TNAME ${GTEST_EXECUTABLES})
- gtest_discover_tests(${TNAME} PROPERTIES TEST_DISCOVERY_TIMEOUT 600)
+ # -----------------------------------------------------------------------
+ # Build KT test dependencies
+ # -----------------------------------------------------------------------
+@@ -396,9 +360,6 @@ foreach(TNAME ${GTEST_EXECUTABLES})
+     target_compile_definitions(${TNAME} PUBLIC ${AOCLSPARSE_ILP64})
+ 
+     target_compile_options(${TNAME} PUBLIC $<$<CONFIG:Debug>:${COMPILER_FLAGS_DEBUG}> "-mno-avx512f;")
+-    if(NOT BUILD_SPARSE_TESTS_OUTOFSRCTREE)
+-        install(FILES ${TNAME}.cpp DESTINATION ${TESTS_INSTALL_DIR})
+-    endif()
+ endforeach()
+ 
+ 

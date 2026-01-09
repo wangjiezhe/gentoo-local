@@ -1,4 +1,4 @@
-# Copyright 1999-2025 Gentoo Authors
+# Copyright 1999-2026 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -19,7 +19,7 @@ fi
 
 LICENSE="BSD"
 SLOT="0"
-IUSE="cpu_flags_x86_avx512f examples test"
+IUSE="cpu_flags_x86_avx512vl examples test"
 RESTRICT="!test? ( test )"
 
 DEPEND="
@@ -42,17 +42,17 @@ DOCS=( README.md )
 
 PATCHES=(
 	"${FILESDIR}"/${P}-install.patch
-	"${FILESDIR}"/${P}-test.patch
+	"${FILESDIR}"/${PN}-5.1-test.patch
 )
 
 src_prepare() {
-	sed -e 's/-march=native//' \
+	sed -e 's/-march=znver2//' \
 			-e 's/-mtune=native//' \
-	    -e '/^[[:space:]]*set[[:space:]]*([[:space:]]*CMAKE_INSTALL_LIBDIR[[:space:]].*)/I{s/^/#_cmake_modify_IGNORE /g}' \
-	    -e 's:-O3::' \
-	    -i CMakeLists.txt || die
+			-e '/^[[:space:]]*set[[:space:]]*([[:space:]]*CMAKE_INSTALL_LIBDIR[[:space:]].*)/I{s/^/#_cmake_modify_IGNORE /g}' \
+			-e 's:-O3::' \
+			-i CMakeLists.txt || die
 	sed -e 's:${CMAKE_INSTALL_PREFIX}/lib:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}:' \
-	    -i library/CMakeLists.txt || die
+			-i library/CMakeLists.txt || die
 	cmake_src_prepare
 }
 
@@ -61,7 +61,7 @@ src_configure() {
 		-DCMAKE_INSTALL_PREFIX="${EPREFIX}"/usr
 		-DBUILD_CLIENTS_SAMPLES=OFF
 		-DBUILD_UNIT_TESTS=$(usex test)
-		-DUSE_AVX512=$(usex cpu_flags_x86_avx512f)
+		-DUSE_AVX512=$(usex cpu_flags_x86_avx512vl)
 		-DAOCL_LIBFLAME_INCLUDE_DIR="${EPREFIX}"/usr/include/flame
 		# -DBUILD_DOCS=$(usex doc)
 	)
