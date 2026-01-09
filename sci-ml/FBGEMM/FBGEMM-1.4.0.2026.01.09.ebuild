@@ -3,10 +3,10 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{11..13} )
+PYTHON_COMPAT=( python3_{11..14} )
 inherit python-any-r1 flag-o-matic cmake
 
-CommitId=2ed5d4103ff270245a55bedcddf2ffabdaf8cfa1
+CommitId=05b82cb98e4c29212511d14a98cdba07fe00625b
 
 DESCRIPTION="Facebook GEneral Matrix Multiplication"
 HOMEPAGE="https://github.com/pytorch/FBGEMM"
@@ -23,7 +23,7 @@ IUSE="doc test"
 ## Rebuilding is needed if abi version of asmjit is changed.
 ## See https://github.com/asmjit/asmjit/blob/master/src/asmjit/core/api-config.h#L30
 DEPEND="
-	>=dev-libs/asmjit-2022.07.02:=
+	dev-libs/asmjit:=
 	dev-libs/cpuinfo
 "
 RDEPEND="${DEPEND}"
@@ -50,7 +50,7 @@ python_check_deps() {
 }
 
 PATCHES=(
-	"${FILESDIR}"/${P}-gentoo.patch
+	"${FILESDIR}"/${PN}-2025.08.08-gentoo.patch
 )
 
 src_prepare() {
