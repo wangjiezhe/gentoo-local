@@ -13,8 +13,9 @@ S="${WORKDIR}/blis-${PV}"
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64 ~ppc64 ~x86"
-IUSE="index64 openmp pthread static-libs"
+IUSE="index64 openmp pthread static-libs test"
 REQUIRED_USE="?? ( openmp pthread )"
+RESTRICT="!test? ( test )"
 
 RDEPEND="!sci-libs/blis"
 
@@ -94,4 +95,9 @@ src_compile() {
 src_install() {
 	cmake_src_install
 	use index64 && index64_wrapper cmake_src_install
+}
+
+src_test() {
+	cmake_build checkblis-fast
+	use index64 && index64_wrapper cmake_build checkblis-fast
 }
