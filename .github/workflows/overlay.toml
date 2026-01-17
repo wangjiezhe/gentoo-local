@@ -646,3 +646,9 @@ source = "github"
 github = "pranshuparmar/witr"
 use_latest_release = true
 prefix = "v"
+
+["net-libs/bun-bin"]
+source = "github"
+git = "oven-sh/bun"
+prefix = "bun-v"
+include_regex = 'bun-v(\d+\.\d+\.\d+)'
