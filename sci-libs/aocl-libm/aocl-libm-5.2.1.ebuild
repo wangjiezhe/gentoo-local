@@ -14,7 +14,6 @@ LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64"
 IUSE="static-libs"
-# IUSE+=" cpu_flags_x86_avx512f"
 # RESTRICT="!test? ( test )"
 
 DEPEND="
@@ -22,16 +21,18 @@ DEPEND="
 "
 # BDEPEND="
 # 	test? (
+# 		dev-libs/gmp
 # 		dev-libs/mpc
 # 		dev-libs/mpfr
+# 		sci-libs/aocl-utils[static-libs]
 # 	)
 # "
 
 DOCS=( README.md docs/ReleaseNotes_AMDLibM.txt )
 
 PATCHES=(
-	"${FILESDIR}"/${P}-gcc.patch
-	"${FILESDIR}"/${P}-compat.patch
+	"${FILESDIR}"/${PN}-5.2-gcc.patch
+	"${FILESDIR}"/${PN}-5.2-compat.patch
 )
 
 src_prepare() {
@@ -58,8 +59,6 @@ src_configure() {
 	local mycmakeargs=(
 		-DAOCL_UTILS_INCLUDE_DIR="${EPREFIX}"/usr/include
 		-DAOCL_UTILS_LIB="${EPREFIX}"/usr/$(get_libdir)/libaoclutils.so
-		# -DBUILD_STATIC_LIBS=$(usex static-libs)
-		# -DLIBM_ENABLE_AVX512=$(usex cpu_flags_x86_avx512f)
 	)
 	cmake_src_configure
 }
