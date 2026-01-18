@@ -652,3 +652,9 @@ source = "github"
 git = "oven-sh/bun"
 prefix = "bun-v"
 include_regex = 'bun-v(\d+\.\d+\.\d+)'
+
+["dev-go/yaegi"]
+source = "github"
+git = "traefik/yaegi"
+use_latest_release = true
+prefix = "v"

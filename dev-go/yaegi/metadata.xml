@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>wangjiezhe@gmail.com</email>
+		<name>wangjiezhe</name>
+	</maintainer>
+	<upstream>
+		<remote-id type="github">traefik/yaegi</remote-id>
+	</upstream>
+</pkgmetadata>
