@@ -33,7 +33,7 @@ BDEPEND="
 "
 
 PARENT_PATCHES=(
-	"${FILESDIR}"/${P}-test.patch
+	"${FILESDIR}"/${PN}-0.5.0-test.patch
 )
 
 python_prepare_all() {
