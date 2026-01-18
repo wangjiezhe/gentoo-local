@@ -1,8 +1,16 @@
 diff --git a/fbgemm_gpu/setup.py b/fbgemm_gpu/setup.py
-index 97600fc0b..f0028343c 100644
+index 97600fc0b..fe3e4e9fd 100644
 --- a/fbgemm_gpu/setup.py
 +++ b/fbgemm_gpu/setup.py
-@@ -222,49 +222,7 @@ class FbgemmGpuBuild:
+@@ -19,7 +19,6 @@ from datetime import date
+ from typing import Optional
+ 
+ import setuptools
+-import setuptools_git_versioning as gitversion
+ import torch
+ from setuptools.command.install import install as PipInstall
+ from skbuild import setup
+@@ -222,49 +221,7 @@ class FbgemmGpuBuild:
      def package_version(self):
          pkg_vver = self.variant_version()
  

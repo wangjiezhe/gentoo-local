@@ -53,7 +53,6 @@ BDEPEND="
 		dev-python/scikit-build[${PYTHON_USEDEP}]
 		dev-python/tabulate[${PYTHON_USEDEP}]
 		dev-python/jinja2[${PYTHON_USEDEP}]
-		dev-python/setuptools-git-versioning[${PYTHON_USEDEP}]
 	')
 "
 	# test? (
