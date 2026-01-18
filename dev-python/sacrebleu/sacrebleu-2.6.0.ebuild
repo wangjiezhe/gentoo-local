@@ -1,9 +1,10 @@
-# Copyright 2024-2025 Gentoo Authors
+# Copyright 2024-2026 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{11..12} )
+PYTHON_COMPAT=( python3_{11..13} )
+DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_USE_PEP517=setuptools
 inherit distutils-r1 pypi
 
@@ -18,12 +19,14 @@ SLOT="0"
 KEYWORDS="~amd64"
 
 RDEPEND="
-	dev-python/portalocker[${PYTHON_USEDEP}]
-	dev-python/regex[${PYTHON_USEDEP}]
-	dev-python/tabulate[${PYTHON_USEDEP}]
-	dev-python/numpy[${PYTHON_USEDEP}]
-	dev-python/colorama[${PYTHON_USEDEP}]
-	dev-python/lxml[${PYTHON_USEDEP}]
+	$(python_gen_cond_dep '
+		dev-python/portalocker[${PYTHON_USEDEP}]
+		dev-python/regex[${PYTHON_USEDEP}]
+		dev-python/tabulate[${PYTHON_USEDEP}]
+		dev-python/numpy[${PYTHON_USEDEP}]
+		dev-python/colorama[${PYTHON_USEDEP}]
+		dev-python/lxml[${PYTHON_USEDEP}]
+	')
 "
 
 distutils_enable_tests pytest
