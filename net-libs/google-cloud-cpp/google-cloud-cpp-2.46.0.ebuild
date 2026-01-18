@@ -6,7 +6,7 @@ EAPI=8
 inherit cmake
 
 # From cmake/GoogleapisConfig.cmake
-GOOGLEAPIS_COMMIT="05f65958eb7f2a8bc59db87ad40487f0fb093097"
+GOOGLEAPIS_COMMIT="6145b5ffe99d290c3d840136f310490d732acb04"
 
 DESCRIPTION="Google Cloud Client Library for C++"
 HOMEPAGE="https://cloud.google.com/"
@@ -27,7 +27,7 @@ RDEPEND="dev-cpp/abseil-cpp:=
 	dev-libs/re2:=
 	net-misc/curl
 	net-libs/grpc:=
-	sys-libs/zlib"
+	virtual/zlib"
 DEPEND="${RDEPEND}
 	dev-cpp/gtest
 	<dev-cpp/opentelemetry-cpp-1.22.0
