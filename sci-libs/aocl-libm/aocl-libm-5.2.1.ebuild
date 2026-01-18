@@ -17,7 +17,7 @@ IUSE="static-libs"
 # RESTRICT="!test? ( test )"
 
 DEPEND="
-	>=sci-libs/aocl-utils-${PV}[static-libs?]
+	>=sci-libs/aocl-utils-5.2[static-libs?]
 "
 # BDEPEND="
 # 	test? (
