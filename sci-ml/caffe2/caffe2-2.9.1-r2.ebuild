@@ -171,6 +171,8 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.8.0-rocm-minus-flash.patch
 	"${FILESDIR}"/${PN}-2.4.0-blis.patch
 	"${FILESDIR}"/${PN}-2.9.0-xnnpack.patch
+	"${FILESDIR}"/${P}-CCCL31.patch
+	"${FILESDIR}"/${P}-torch_cpu.patch
 )
 
 src_prepare() {
