@@ -1,0 +1,24 @@
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index dc5a228d590..90612112502 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -198,6 +198,9 @@ elseif(BLAS STREQUAL "BLIS")
+   find_package(BLIS REQUIRED)
+   include_directories(SYSTEM ${BLIS_INCLUDE_DIR})
+   list(APPEND Caffe2_DEPENDENCY_LIBS ${BLIS_LIB})
++  set(BLAS_INFO "blis")
++  set(BLAS_FOUND 1)
++  set(BLAS_LIBRARIES ${BLIS_LIB})
+   set(BLAS_CHECK_F2C 1)
+ elseif(BLAS STREQUAL "MKL")
+   if(BLAS_SET_BY_USER)
+@@ -240,6 +243,9 @@ elseif(BLAS STREQUAL "FlexiBLAS")
+   find_package(FlexiBLAS REQUIRED)
+   include_directories(SYSTEM ${FlexiBLAS_INCLUDE_DIR})
+   list(APPEND Caffe2_DEPENDENCY_LIBS ${FlexiBLAS_LIB})
++  set(BLAS_INFO "flexi")
++  set(BLAS_FOUND 1)
++  set(BLAS_LIBRARIES ${FlexiBLAS_LIB})
+   set(BLAS_CHECK_F2C 1)
+ elseif(BLAS STREQUAL "APL")
+   find_package(APL REQUIRED)

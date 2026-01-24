@@ -5,6 +5,7 @@ EAPI=8
 
 PYTHON_COMPAT=( python3_{11..14} )
 ROCM_VERSION=6.1
+CMAKE_REMOVE_MODULES_LIST=()
 inherit python-single-r1 cmake cuda flag-o-matic prefix rocm toolchain-funcs
 
 MYPN=pytorch
@@ -44,7 +45,7 @@ S="${WORKDIR}"/${MYP}
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64 ~arm64"
-IUSE="blis cuda cudss cusparselt distributed fbgemm flash flexiblas gloo magma memefficient mkl mpi nccl numa nnpack +numpy
+IUSE="aocl cuda cudss cusparselt distributed fbgemm flash flexiblas gloo magma memefficient mkl mpi nccl numa nnpack +numpy
 	onednn openblas opencl openmp qnnpack rocm xnnpack"
 RESTRICT="test"
 REQUIRED_USE="
@@ -58,7 +59,7 @@ REQUIRED_USE="
 	flash? ( || ( cuda rocm ) )
 	memefficient? ( || ( cuda rocm ) )
 	nccl? (  || ( cuda rocm ) )
-	?? ( blis flexiblas mkl openblas )
+	?? ( aocl flexiblas mkl openblas )
 "
 
 RDEPEND="
@@ -127,7 +128,10 @@ RDEPEND="
 	)
 	mkl? ( sci-libs/mkl )
 	openblas? ( sci-libs/openblas )
-	blis? ( || ( sci-libs/blis sci-libs/aocl-blas ) )
+	aocl? (
+		sci-libs/aocl-blas
+		sci-libs/aocl-lapack
+	)
 	flexiblas? ( sci-libs/flexiblas )
 	numa? ( sys-process/numactl )
 "
@@ -169,9 +173,11 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.7.0-glog-0.7.1.patch
 	"${FILESDIR}"/${PN}-2.7.1-aotriton-fixes.patch
 	"${FILESDIR}"/${PN}-2.8.0-rocm-minus-flash.patch
-	"${FILESDIR}"/${PN}-2.4.0-blis.patch
+	"${FILESDIR}"/${P}-aocl.patch
 	"${FILESDIR}"/${PN}-2.9.0-xnnpack.patch
 	"${FILESDIR}"/${PN}-2.9.1-torch_cpu.patch
+	"${FILESDIR}"/${P}-blas.patch
+	"${FILESDIR}"/${P}-lapack.patch
 )
 
 src_prepare() {
@@ -334,7 +340,7 @@ src_configure() {
 		mycmakeargs+=(-DBLAS=MKL)
 	elif use openblas; then
 		mycmakeargs+=(-DBLAS=OpenBLAS)
-	elif use blis; then
+	elif use aocl; then
 		mycmakeargs+=(-DBLAS=BLIS)
 	elif use flexiblas; then
 		mycmakeargs+=(-DBLAS=FlexiBLAS)

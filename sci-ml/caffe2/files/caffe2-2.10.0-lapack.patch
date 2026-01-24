@@ -1,0 +1,13 @@
+diff --git a/cmake/Modules/FindLAPACK.cmake b/cmake/Modules/FindLAPACK.cmake
+index 500bec8cef6..46b049bae23 100644
+--- a/cmake/Modules/FindLAPACK.cmake
++++ b/cmake/Modules/FindLAPACK.cmake
+@@ -182,7 +182,7 @@ if(BLAS_FOUND)
+   endif()
+ 
+   # FLAME
+-  IF((NOT LAPACK_INFO) AND (BLAS_INFO STREQUAL "FLAME"))
++  IF((NOT LAPACK_INFO) AND (BLAS_INFO STREQUAL "blis"))
+     check_lapack_libraries(
+       LAPACK_LIBRARIES
+       LAPACK
