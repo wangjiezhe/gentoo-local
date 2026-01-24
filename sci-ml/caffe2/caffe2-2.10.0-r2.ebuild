@@ -73,7 +73,7 @@ RDEPEND="
 	dev-libs/protobuf:=
 	dev-libs/sleef
 	sci-ml/foxi
-	~sci-ml/kineto-0.4.0_p20250617
+	~sci-ml/kineto-0.4.0_p20251121
 	sci-ml/onnx
 	virtual/lapack
 	cuda? (
@@ -119,7 +119,7 @@ RDEPEND="
 		distributed? ( >=dev-util/rocm-smi-6.3:= <dev-util/rocm-smi-7.2:= )
 	)
 	distributed? (
-		!rocm? ( sci-ml/tensorpipe[cuda?] )
+		!rocm? ( ~sci-ml/tensorpipe-2025.11.05[cuda?] )
 		dev-cpp/cpp-httplib:=
 	)
 	xnnpack? (
