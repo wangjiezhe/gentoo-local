@@ -13,6 +13,7 @@ SRC_URI+=" https://github.com/wangjiezhe/gentoo-go-deps/releases/download/${P}/$
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~amd64 ~arm64 ~mips"
+IUSE="abi_mips_o32 abi_mips_n64"
 
 src_compile() {
 	local ldflags=(
