@@ -142,6 +142,7 @@ src_configure() {
 	if use index64; then
 		mycmakeargs+=(
 			-DINTEGER8=ON
+			-Daocl_LIBRARY="${libdir}/libblis64-mt.so"
 			-Dblis_LIBRARY="${libdir}/libblis64.so"
 			-Dopenblas_LIBRARY="${libdir}/libopenblas64.so"
 		)
