@@ -1,0 +1,26 @@
+diff --git a/torch/utils/cpp_extension.py b/torch/utils/cpp_extension.py
+index f29c382f0e3..da808fdddc7 100644
+--- a/torch/utils/cpp_extension.py
++++ b/torch/utils/cpp_extension.py
+@@ -1616,10 +1616,10 @@ def library_paths(device_type: str = "cpu", torch_include_dirs: bool = True, cro
+         paths.extend([TORCH_LIB_PATH])
+ 
+     if device_type == "cuda" and IS_HIP_EXTENSION:
+-        lib_dir = 'lib'
++        lib_dir = '%LIB_DIR%'
+         paths.append(_join_rocm_home(lib_dir))
+         if HIP_HOME is not None:
+-            paths.append(os.path.join(HIP_HOME, 'lib'))
++            paths.append(os.path.join(HIP_HOME, '%LIB_DIR%'))
+     elif device_type == "cuda":
+         if cross_target_platform == "windows":
+             lib_dir = os.path.join('lib', 'x64')
+@@ -2447,7 +2447,7 @@ def _prepare_ldflags(extra_ldflags, with_cuda, with_sycl, verbose, is_standalone
+                 extra_ldflags.append(f'/LIBPATH:{_join_rocm_home("lib")}')
+                 extra_ldflags.append('amdhip64.lib')
+             else:
+-                extra_ldflags.append(f'-L{_join_rocm_home("lib")}')
++                extra_ldflags.append(f'-L{_join_rocm_home("%LIB_DIR%")}')
+                 extra_ldflags.append('-lamdhip64')
+     if with_sycl:
+         if IS_WINDOWS:
