@@ -1,0 +1,39 @@
+From e1232690308a6b5297fcd06e925899a9b64f7280 Mon Sep 17 00:00:00 2001
+From: askmyteapot <62238146+askmyteapot@users.noreply.github.com>
+Date: Wed, 7 Jan 2026 22:57:28 +1000
+Subject: [PATCH] Fix building on GCC 14.2 (#4163)
+
+---
+ src/libtorchaudio/rnnt/cpu/compute.cpp | 2 +-
+ src/libtorchaudio/rnnt/gpu/compute.cu  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/libtorchaudio/rnnt/cpu/compute.cpp b/src/libtorchaudio/rnnt/cpu/compute.cpp
+index c8b0f473..a927b5ac 100644
+--- a/src/libtorchaudio/rnnt/cpu/compute.cpp
++++ b/src/libtorchaudio/rnnt/cpu/compute.cpp
+@@ -21,7 +21,7 @@ std::tuple<Tensor, Tensor> compute(
+     Tensor target_lengths,
+     int64_t blank,
+     double clamp,
+-    bool fused_log_softmax = true) {
++    bool fused_log_softmax) {
+   STD_TORCH_CHECK(logits.is_cpu(), "logits must be on CPU");
+ 
+   STD_TORCH_CHECK(
+diff --git a/src/libtorchaudio/rnnt/gpu/compute.cu b/src/libtorchaudio/rnnt/gpu/compute.cu
+index 03bad83b..7e99fec3 100644
+--- a/src/libtorchaudio/rnnt/gpu/compute.cu
++++ b/src/libtorchaudio/rnnt/gpu/compute.cu
+@@ -21,7 +21,7 @@ std::tuple<Tensor, Tensor> compute(
+     Tensor target_lengths,
+     int64_t blank,
+     double clamp,
+-    bool fused_log_softmax = true) {
++    bool fused_log_softmax) {
+   STD_TORCH_CHECK(logits.is_cuda(), "logits must be on CUDA");
+ 
+   STD_TORCH_CHECK(
+-- 
+2.52.0
+

@@ -1,4 +1,4 @@
-# Copyright 2023-2025 Gentoo Authors
+# Copyright 2023-2026 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -27,13 +27,12 @@ RDEPEND="
 "
 DEPEND="${RDEPEND}"
 
+PATCHES=( "${FILESDIR}"/${P}-Fix-building-on-GCC-14.2-4163.patch )
+
 src_prepare() {
 	export USE_CUDA=$(usex cuda)
 	export BUILD_CUDA_CTC_DECODER=$(usex cuda)
 	export USE_OPENMP=$(usex openmp)
-
-	sed -i "s/FetchContent_Populate/#FetchContent_Populate/" third_party/sox/CMakeLists.txt
-	sed -i "s@/lib@/lib64@" third_party/ffmpeg/single/CMakeLists.txt
 
 	distutils-r1_src_prepare
 	use cuda && cuda_src_prepare && cuda_add_sandbox -w
