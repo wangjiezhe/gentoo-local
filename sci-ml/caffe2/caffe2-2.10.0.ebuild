@@ -128,6 +128,7 @@ RDEPEND="
 	mkl? ( sci-libs/mkl )
 	openblas? ( sci-libs/openblas )
 	blis? ( || ( sci-libs/blis sci-libs/aocl-blas ) )
+	flexiblas? ( sci-libs/flexiblas )
 	numa? ( sys-process/numactl )
 "
 
@@ -159,10 +160,9 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.5.1-unbundle_kineto.patch
 	"${FILESDIR}"/${PN}-2.8.0-unbundle_pocketfft.patch
 	"${FILESDIR}"/${PN}-2.3.0-cudnn_include_fix.patch
-	"${FILESDIR}"/${PN}-2.9.0-gentoo.patch
+	"${FILESDIR}"/${P}-gentoo.patch
 	"${FILESDIR}"/${PN}-2.4.0-cpp-httplib.patch
 	"${FILESDIR}"/${PN}-1.12.0-glog-0.6.0.patch
-	"${FILESDIR}"/${PN}-2.5.1-newfix-functorch-install.patch
 	"${FILESDIR}"/${PN}-2.6.0-rocm-fix-std-cpp17.patch
 	"${FILESDIR}"/${PN}-2.9.0-cmake.patch
 	"${FILESDIR}"/${PN}-2.9.1-cmake.patch
@@ -171,8 +171,7 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.8.0-rocm-minus-flash.patch
 	"${FILESDIR}"/${PN}-2.4.0-blis.patch
 	"${FILESDIR}"/${PN}-2.9.0-xnnpack.patch
-	"${FILESDIR}"/${P}-CCCL31.patch
-	"${FILESDIR}"/${P}-torch_cpu.patch
+	"${FILESDIR}"/${PN}-2.9.1-torch_cpu.patch
 )
 
 src_prepare() {
@@ -296,6 +295,8 @@ src_configure() {
 		-DUSE_LITE_PROTO=ON
 		-DBUILD_SHARED_LIBS=ON
 		-DUSE_SYSTEM_LIBS=ON
+		-DATEN_NO_TEST=ON
+		-DBUILD_TEST=OFF
 
 		-DUSE_CCACHE=OFF
 		-DUSE_CUDA=$(usex cuda)
@@ -409,7 +410,6 @@ src_install() {
 	# Used by pytorch ebuild
 	insinto "/var/lib/${PN}"
 	doins "${BUILD_DIR}"/CMakeCache.txt
-	dostrip -x /var/lib/${PN}/functorch.so
 
 	rm -rf python
 	mkdir -p python/torch || die

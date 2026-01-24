@@ -21,6 +21,7 @@
 		<flag name="magma">Use sci-libs/magma</flag>
 		<flag name="memefficient">Enable mem efficient attention</flag>
 		<flag name="mkl">Use <pkg>sci-libs/mkl</pkg> for blas, lapack and sparse blas routines</flag>
+		<flag name="nccl">Use <pkg>dev-libs/nccl</pkg> or <pkg>dev-libs/rccl</pkg> (NCCL compatible) backend for distributed operations</flag>
 		<flag name="nnpack">Use <pkg>sci-ml/NNPACK</pkg></flag>
 		<flag name="numa">Enable NUMA support</flag>
 		<flag name="numpy">Add support for math operations through numpy</flag>
