@@ -1,10 +1,10 @@
-# Copyright 2025 Gentoo Authors
+# Copyright 2025-2026 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
 DISTUTILS_USE_PEP517=setuptools
-PYTHON_COMPAT=( python3_{11..14} python3_13t )
+PYTHON_COMPAT=( python3_{11..14} python3_{13..14}t )
 DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_EXT=1
 export SETUPTOOLS_SCM_PRETEND_VERSION=${PV}
@@ -29,7 +29,7 @@ DEPEND="
 		dev-python/cloudpickle[${PYTHON_USEDEP}]
 		dev-python/packaging[${PYTHON_USEDEP}]
 		dev-python/importlib-metadata[${PYTHON_USEDEP}]
-		dev-python/pyvers[${PYTHON_USEDEP}]
+		>=dev-python/pyvers-0.2.0[${PYTHON_USEDEP}]
 	')
 	$(python_gen_cond_dep 'dev-python/orjson[${PYTHON_USEDEP}]' python3_{11..12})
 "
@@ -57,6 +57,9 @@ EPYTEST_DESELECT=(
 	test/test_tensorclass.py::test_tensorclass_instance_methods
 	# RuntimeError: !is_cpu() || index_ <= 0 INTERNAL ASSERT FAILED
 	test/test_tensordict.py::TestTensorDicts::test_cast_to
+	# AssertionError: assert 'a string!' == 'a metadata!'
+	"test/test_tensordict.py::TestTensorDicts::test_save_load_memmap[td_with_non_tensor_and_metadata-device31]"
+	"test/test_tensordict.py::TestTensorDicts::test_save_load_memmap[td_with_non_tensor_and_metadata-device32]"
 )
 distutils_enable_tests pytest
 
