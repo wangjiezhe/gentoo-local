@@ -212,12 +212,6 @@ github = "icl-utk-edu/magma"
 use_latest_release = true
 prefix = "v"
 
-["sci-ml/huggingface_hub"]
-source = "github"
-github = "huggingface/huggingface_hub"
-use_latest_release = true
-prefix = "v"
-
 ["dev-python/ml-dtypes"]
 source = "github"
 github = "jax-ml/ml_dtypes"
