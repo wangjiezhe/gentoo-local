@@ -427,12 +427,6 @@ github = "messense/rjieba-py"
 use_latest_tag = true
 prefix = "v"
 
-["sci-ml/accelerate"]
-source = "github"
-github = "huggingface/accelerate"
-use_latest_release = true
-prefix = "v"
-
 ["sci-ml/datasets"]
 source = "github"
 github = "huggingface/datasets"
