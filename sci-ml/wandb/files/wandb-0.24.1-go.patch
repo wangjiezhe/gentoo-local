@@ -1,0 +1,12 @@
+diff --git a/core/go.mod b/core/go.mod
+index 4f68cefef..f201b9b1b 100644
+--- a/core/go.mod
++++ b/core/go.mod
+@@ -1,6 +1,6 @@
+ module github.com/wandb/wandb/core
+ 
+-go 1.25.6
++go 1.25.5
+ 
+ require (
+ 	cloud.google.com/go/storage v1.59.1
