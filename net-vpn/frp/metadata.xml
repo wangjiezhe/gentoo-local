@@ -8,6 +8,7 @@
 	<use>
 		<flag name="client">Build and install frp client (frpc)</flag>
 		<flag name="server">Build and install frp server (frps)</flag>
+		<flag name="web">Build web interface</flag>
 	</use>
 	<upstream>
 		<remote-id type="github">fatedier/frp</remote-id>
