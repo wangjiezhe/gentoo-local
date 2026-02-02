@@ -587,11 +587,6 @@ github = "dawbarton/pdf2svg"
 use_max_tag = true
 prefix = "v"
 
-["dev-util/mamba"]
-source = "github"
-github = "mamba-org/mamba"
-use_latest_release = true
-
 ["dev-python/pyvers"]
 source = "github"
 github = "vmoens/pyvers"
