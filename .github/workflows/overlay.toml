@@ -200,12 +200,6 @@ github = "pytorch/kineto"
 use_latest_release = true
 prefix = "v"
 
-["sci-ml/transformers"]
-source = "github"
-github = "huggingface/transformers"
-use_latest_release = true
-prefix = "v"
-
 ["sci-libs/magma"]
 source = "github"
 github = "icl-utk-edu/magma"
