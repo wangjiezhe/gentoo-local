@@ -13,7 +13,7 @@ inherit distutils-r1 cuda
 
 DESCRIPTION="A collection of high-performance PyTorch GPU operator libraries for training and inference"
 HOMEPAGE="https://github.com/pytorch/FBGEMM"
-SRC_URI="https://github.com/pytorch/FBGEMM/archive/v${PV}.tar.gz -> ${P}.gh.tar.gz"
+SRC_URI="https://github.com/pytorch/FBGEMM/archive/v${PV}.tar.gz -> FBGEMM-${PV}.tar.gz"
 
 S="${WORKDIR}/FBGEMM-${PV}/fbgemm_gpu"
 

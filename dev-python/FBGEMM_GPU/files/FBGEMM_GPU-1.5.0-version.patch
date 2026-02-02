@@ -1,8 +1,8 @@
 diff --git a/fbgemm_gpu/setup.py b/fbgemm_gpu/setup.py
-index 97600fc0b..fe3e4e9fd 100644
+index 20e330ac9..85e69f4ba 100644
 --- a/fbgemm_gpu/setup.py
 +++ b/fbgemm_gpu/setup.py
-@@ -19,7 +19,6 @@ from datetime import date
+@@ -17,7 +17,6 @@ from datetime import date
  from typing import Optional
  
  import setuptools
@@ -10,7 +10,7 @@ index 97600fc0b..fe3e4e9fd 100644
  import torch
  from setuptools.command.install import install as PipInstall
  from skbuild import setup
-@@ -222,49 +221,7 @@ class FbgemmGpuBuild:
+@@ -220,41 +219,7 @@ class FbgemmGpuBuild:
      def package_version(self):
          pkg_vver = self.variant_version()
  
@@ -31,20 +31,12 @@ index 97600fc0b..fe3e4e9fd 100644
 -            # For Nova workflow contexts, we want to strip out the `rcN` suffix
 -            # from the git-tagged version strings, regardless of test or release
 -            # channels.  This is done to comply with PyTorch PIP package naming
--            # convensions
--
--            # Remove -rcN, .rcN, or rcN (e.g. 0.4.0-rc0 => 0.4.0)
--            pkg_version = re.sub(
--                r"(\.|\-)*rc\d+$",
--                "",
--                # Remove postN (e.g. 0.4.0rc0.post0 => 0.4.0rc0)
--                re.sub(
--                    r"\.post\d+$",
--                    "",
--                    # Remove the local version identifier, if any (e.g. 0.4.0rc0.post0+git.6a63116c.dirty => 0.4.0rc0.post0)
--                    gitversion.version_from_git().split("+")[0],
--                ),
--            )
+-            # conventions
+-            #
+-            # See docs in https://packaging.pypa.io/en/stable/version.html
+-            #
+-            # E.g. 0.4.0rc0.post0+git.6a63116c.dirty => 0.4.0
+-            pkg_version = gitversion.version_from_git().base_version
 -
 -        else:
 -            # For non-Nova workflow contexts, i.e. PyPI, we want to maintain the
@@ -55,9 +47,9 @@ index 97600fc0b..fe3e4e9fd 100644
 -                r"\.post0$",
 -                "",
 -                # Remove the local version identifier, if any (e.g. 0.4.0rc0.post0+git.6a63116c.dirty => 0.4.0rc0.post0)
--                gitversion.version_from_git().split("+")[0],
+-                gitversion.version_from_git().public,
 -            )
-+        pkg_version = "1.4.0"
++        pkg_version = "1.5.0"
  
          full_version_string = f"{pkg_version}{pkg_vver}"
          logging.debug(
