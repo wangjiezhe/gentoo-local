@@ -6,7 +6,7 @@ EAPI=8
 PYTHON_COMPAT=( python3_{11..14} )
 DISTUTILS_USE_PEP517=setuptools
 DISTUTILS_EXT=1
-inherit cuda cmake distutils-r1
+inherit cuda cmake distutils-r1 multiprocessing
 
 DESCRIPTION="A c++ wrapper for the cudnn backend API"
 HOMEPAGE="https://github.com/NVIDIA/cudnn-frontend"
@@ -44,7 +44,7 @@ PATCHES=(
 	"${FILESDIR}/${PN}-1.11.0-fix.patch"
 	"${FILESDIR}"/${PN}-1.12.1-cmake.patch
 	"${FILESDIR}"/${P}-python.patch
-	"${FILESDIR}"/${PN}-1.9.0-test.patch
+	"${FILESDIR}"/${P}-test.patch
 )
 
 src_prepare() {
@@ -79,6 +79,8 @@ src_configure() {
 }
 
 src_compile() {
+	export CMAKE_BUILD_PARALLEL_LEVEL=$(makeopts_jobs)
+
 	cmake_src_compile
 
 	use python && distutils-r1_src_compile
@@ -107,6 +109,8 @@ python_test() {
 	local EPYTEST_IGNORE=(
 		# ValueError: no option named 'perf'
 		test/python/test_mhas_v2.py
+		# Need nvidia-cutlass-dsl i.e. CuteDSL
+		test/python/fe_api
 	)
 	local EPYTEST_DESELECT=(
 		# Failed with param: ((1, 128, 1024), torch.bfloat16)
