@@ -56,6 +56,7 @@ SRC_URI="
 	https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/chunkers/maxent_ne_chunker_tab.zip
 	https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/taggers/maxent_treebank_pos_tagger.zip
 	https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/taggers/maxent_treebank_pos_tagger_tab.zip
+	https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/corpora/mock_corpus.zip
 	https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/models/moses_sample.zip
 	https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/corpora/movie_reviews.zip
 	https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/corpora/mte_teip5.zip
