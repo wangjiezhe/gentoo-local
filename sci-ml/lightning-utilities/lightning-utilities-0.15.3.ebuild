@@ -19,13 +19,14 @@ LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~amd64"
 
-PATCHES=( "${FILESDIR}/${PN}-0.11.5-test.patch" )
+PATCHES=( "${FILESDIR}/${PN}-0.15.3-test.patch" )
 
 RDEPEND="
 	sci-ml/pytorch[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		dev-python/packaging[${PYTHON_USEDEP}]
 		dev-python/typing-extensions[${PYTHON_USEDEP}]
+		dev-python/jsonargparse[${PYTHON_USEDEP}]
 	')
 "
 

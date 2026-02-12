@@ -1,8 +1,8 @@
 diff --git a/src/lightning_utilities/core/imports.py b/src/lightning_utilities/core/imports.py
-index 55e74e4..fbb7430 100644
+index e9af9e4..8cd0e73 100644
 --- a/src/lightning_utilities/core/imports.py
 +++ b/src/lightning_utilities/core/imports.py
-@@ -67,6 +67,7 @@ def module_available(module_path: str) -> bool:
+@@ -68,6 +68,7 @@ def module_available(module_path: str) -> bool:
  def compare_version(package: str, op: Callable, version: str, use_base_version: bool = False) -> bool:
      """Compare package version with some requirements.
  
@@ -10,22 +10,22 @@ index 55e74e4..fbb7430 100644
      >>> compare_version("torch", operator.ge, "0.1")
      True
      >>> compare_version("does_not_exist", operator.ge, "0.0")
-@@ -201,8 +202,8 @@ class ModuleAvailableCache(RequirementCache):
+@@ -237,8 +238,8 @@ class ModuleAvailableCache(RequirementCache):
  def get_dependency_min_version_spec(package_name: str, dependency_name: str) -> str:
      """Return the minimum version specifier of a dependency of a package.
  
 -    >>> get_dependency_min_version_spec("pytorch-lightning==1.8.0", "jsonargparse")
 -    '>=4.12.0'
 +    >>> get_dependency_min_version_spec("pytorch-lightning", "jsonargparse")
-+    '>=4.27.7'
++    '>=4.39.0'
  
      """
      dependencies = metadata.requires(package_name) or []
 diff --git a/src/lightning_utilities/install/requirements.py b/src/lightning_utilities/install/requirements.py
-index 0622d7d..36c982b 100644
+index 4a06ccb..b1475b9 100644
 --- a/src/lightning_utilities/install/requirements.py
 +++ b/src/lightning_utilities/install/requirements.py
-@@ -68,7 +68,7 @@ def _parse_requirements(strs: Union[str, Iterable[str]]) -> Iterator[_Requiremen
+@@ -120,7 +120,7 @@ def _parse_requirements(strs: Union[str, Iterable[str]]) -> Iterator[_Requiremen
      >>> txt = ['# ignored', '', 'this # is an', '--piparg', 'example', 'foo # strict', 'thing', '-r different/file.txt']
      >>> [r.adjust('none') for r in _parse_requirements(txt)]
      ['this', 'example', 'foo  # strict', 'thing']
@@ -34,7 +34,7 @@ index 0622d7d..36c982b 100644
      >>> [r.adjust('none') for r in _parse_requirements(txt)]
      ['this', 'example', 'foo  # strict', 'thing']
  
-@@ -108,9 +108,9 @@ def load_requirements(path_dir: str, file_name: str = "base.txt", unfreeze: str
+@@ -166,9 +166,9 @@ def load_requirements(path_dir: str, file_name: str = "base.txt", unfreeze: str
  
      >>> import os
      >>> from lightning_utilities import _PROJECT_ROOT
@@ -45,5 +45,5 @@ index 0622d7d..36c982b 100644
 +    >>> load_requirements(path_req, "_docs.txt", unfreeze="major")  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
 +    ['sphinx<7.0,>=5.0', ...]
  
-     """
-     if unfreeze not in {"none", "major", "all"}:
+     Args:
+         path_dir: Directory containing the requirements file.
