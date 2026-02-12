@@ -637,3 +637,7 @@ github = "QwenLM/qwen-code"
 use_max_release = true
 prefix = "v"
 exclude_regex = ".*nightly.*"
+
+["dev-python/jsonargparse"]
+source = "pypi"
+pypi = "jsonargparse"
