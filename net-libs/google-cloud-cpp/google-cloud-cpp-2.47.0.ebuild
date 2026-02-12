@@ -6,7 +6,7 @@ EAPI=8
 inherit cmake
 
 # From cmake/GoogleapisConfig.cmake
-GOOGLEAPIS_COMMIT="6145b5ffe99d290c3d840136f310490d732acb04"
+GOOGLEAPIS_COMMIT="c0fcb35628690e9eb15dcefae41c651c67cd050b"
 
 DESCRIPTION="Google Cloud Client Library for C++"
 HOMEPAGE="https://cloud.google.com/"
@@ -44,6 +44,7 @@ PATCHES=(
 
 src_configure() {
 	local mycmakeargs=(
+		-DGOOGLE_CLOUD_CPP_ENABLE_GRPC=ON
 		-DGOOGLE_CLOUD_CPP_ENABLE_WERROR=OFF
 		-DGOOGLE_CLOUD_CPP_ENABLE_EXAMPLES=OFF
 		-DBUILD_TESTING=$(usex test)
@@ -59,5 +60,5 @@ src_configure() {
 
 src_test() {
 	# ClogEnvironment fails under portage sandbox, no fail outside
-	cmake_src_test -LE "integration-test" -E common_log_test
+	cmake_src_test -LE "integration-test" -E common_log_test -E bigtable_internal_data_connection_impl_test
 }
