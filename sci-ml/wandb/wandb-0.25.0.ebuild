@@ -31,7 +31,7 @@ RESTRICT="test"
 
 #	sys-devel/binutils[gold]
 BDEPEND="
-	>=dev-lang/go-1.23.1:=
+	>=dev-lang/go-1.25.5:=
 	dev-util/patchelf
 "
 
@@ -53,7 +53,7 @@ RDEPEND="
 
 PATCHES=(
 	"${FILESDIR}/${PN}-0.18.5-hatch.patch"
-	"${FILESDIR}/${PN}-0.24.1-go.patch"
+	"${FILESDIR}/${P}-go.patch"
 )
 
 DOC=( package_readme.md )
