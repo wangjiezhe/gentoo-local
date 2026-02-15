@@ -641,3 +641,8 @@ exclude_regex = ".*nightly.*"
 ["dev-python/jsonargparse"]
 source = "pypi"
 pypi = "jsonargparse"
+
+["games-strategy/pvz-portable"]
+source = "github"
+git = "wszqkzqk/PvZ-Portable"
+use_latest_release = true
