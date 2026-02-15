@@ -16,8 +16,10 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="man"
 
-RDEPEND=""
-BDEPEND=""
+src_prepare() {
+	default
+	sed -i "s/^go [0-9.]\+$/go 1.25/" go.mod || die
+}
 
 src_compile() {
 	ego build -o ${PN} ./cmd/${PN}
