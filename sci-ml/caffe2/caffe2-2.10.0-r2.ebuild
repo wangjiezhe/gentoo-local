@@ -44,7 +44,7 @@ S="${WORKDIR}"/${MYP}
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="~amd64 ~arm64"
+KEYWORDS="~amd64"
 IUSE="aocl cuda cudss cusparselt distributed fbgemm flash flexiblas gloo magma memefficient mkl mpi nccl numa nnpack +numpy
 	onednn openblas opencl openmp qnnpack rocm xnnpack"
 RESTRICT="test"
