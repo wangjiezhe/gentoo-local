@@ -1,0 +1,12 @@
+diff '--color=auto' -ur nccl-2.29.7-1.orig/src/include/nccl_device/impl/core__types.h nccl-2.29.7-1/src/include/nccl_device/impl/core__types.h
+--- nccl-2.29.7-1.orig/src/include/nccl_device/impl/core__types.h	2026-03-03 10:05:53.096498759 +0800
++++ nccl-2.29.7-1/src/include/nccl_device/impl/core__types.h	2026-03-03 10:06:04.936492423 +0800
+@@ -8,7 +8,7 @@
+ #ifndef _NCCL_DEVICE_CORE__TYPES_H_
+ #define _NCCL_DEVICE_CORE__TYPES_H_
+ #include "../core.h"
+-#include "nccl_device/gin/gin_device_host_common.h"
++#include "../gin/gin_device_host_common.h"
+ 
+ // nccl.h has: typedef ncclWindow_vidmem* ncclWindow_t;
+ struct ncclWindow_vidmem {

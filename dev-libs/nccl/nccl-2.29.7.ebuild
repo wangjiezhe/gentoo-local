@@ -21,6 +21,10 @@ DOCS=( README.md LICENSE.txt )
 
 QA_PREBUILT="/opt/cuda/targets/x86_64-linux/lib/*"
 
+PATCHES=(
+	"${FILESDIR}"/${P}-include.patch
+)
+
 pkg_pretend() {
 	if [[ -z "${NVCC_GENCODE}" ]]; then
 		einfo "By default, NCCL is compiled for all supported architectures."
@@ -36,7 +40,7 @@ pkg_pretend() {
 }
 
 src_prepare() {
-	eapply_user
+	default
 	cuda_src_prepare
 }
 
