@@ -1,9 +1,9 @@
-# Copyright 2019-2023 Gentoo Authors
+# Copyright 2019-2026 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
-inherit go-module optfeature shell-completion
+inherit go-module optfeature shell-completion toolchain-funcs
 
 DESCRIPTION="cheat allows you to create and view interactive cheatsheets on the command-line"
 HOMEPAGE="https://github.com/cheat/cheat"
@@ -34,10 +34,16 @@ src_install() {
 
 	use man && doman doc/${PN}.1
 
-	newbashcomp scripts/${PN}.bash ${PN}
-	dofishcomp scripts/${PN}.fish
-
-	newzshcomp scripts/${PN}.zsh _${PN}
+	if ! tc-is-cross-compiler; then
+		for sh in bash fish zsh; do
+			"${D}"/usr/bin/${PN} --completion ${sh} > "${T}"/${PN}.${sh} || die
+		done
+		newbashcomp "${T}"/${PN}.bash ${PN}
+		dofishcomp "${T}"/${PN}.fish
+		newzshcomp "${T}"/${PN}.zsh _${PN}
+	else
+		ewarn "shell completions files were skipped due to cross-compliation"
+	fi
 }
 
 pkg_postinst() {
