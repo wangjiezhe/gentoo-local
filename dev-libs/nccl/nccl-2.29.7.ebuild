@@ -10,7 +10,7 @@ SRC_URI="https://github.com/NVIDIA/nccl/archive/refs/tags/v${PV}-1.tar.gz
 	-> ${P}.tar.gz"
 
 S="${WORKDIR}/${P}-1"
-LICENSE="BSD"
+LICENSE="Apache-2.0 BSD"
 SLOT="0"
 KEYWORDS="~amd64"
 
