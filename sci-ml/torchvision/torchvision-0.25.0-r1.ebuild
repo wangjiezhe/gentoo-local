@@ -41,6 +41,7 @@ EPYTEST_PLUGINS=( pytest-mock lmdb )
 distutils_enable_tests pytest
 
 PATCHES=(
+	"${FILESDIR}"/${PN}-0.24.0-ffmpeg8.patch
 	"${FILESDIR}"/${PN}-0.24.0-ffnvcodec.patch
 )
 
