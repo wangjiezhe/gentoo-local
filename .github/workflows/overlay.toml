@@ -621,13 +621,13 @@ prefix = "v"
 
 ["net-libs/bun-bin"]
 source = "github"
-git = "oven-sh/bun"
+github = "oven-sh/bun"
 prefix = "bun-v"
 include_regex = 'bun-v(\d+\.\d+\.\d+)'
 
 ["dev-go/yaegi"]
 source = "github"
-git = "traefik/yaegi"
+github = "traefik/yaegi"
 use_latest_release = true
 prefix = "v"
 
@@ -644,5 +644,5 @@ pypi = "jsonargparse"
 
 ["games-strategy/pvz-portable"]
 source = "github"
-git = "wszqkzqk/PvZ-Portable"
+github = "wszqkzqk/PvZ-Portable"
 use_latest_release = true
