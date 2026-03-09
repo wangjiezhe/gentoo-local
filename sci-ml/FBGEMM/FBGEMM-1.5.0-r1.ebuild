@@ -19,7 +19,7 @@ IUSE="doc test"
 ## Rebuilding is needed if abi version of asmjit is changed.
 ## See https://github.com/asmjit/asmjit/blob/master/src/asmjit/core/api-config.h#L30
 DEPEND="
-	dev-libs/asmjit:=
+	<dev-libs/asmjit-2025.09.06:=
 	dev-libs/cpuinfo
 "
 RDEPEND="${DEPEND}"
