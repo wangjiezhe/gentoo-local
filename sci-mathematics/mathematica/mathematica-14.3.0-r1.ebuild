@@ -157,6 +157,8 @@ src_install() {
 			einfo 'Removing FFmpegTools version 4 support'
 			rm -r "${S}/${M_TARGET}/SystemFiles/Links/FFmpegTools/LibraryResources/Linux-x86-64/FFmpegToolsSystem-4.4.so" || die
 		fi
+		einfo 'Removing FFmpegTools version 5 support'
+		rm -r "${S}/${M_TARGET}/SystemFiles/Links/FFmpegTools/LibraryResources/Linux-x86-64/FFmpegToolsSystem-v5.1.2.so" || die
 		if ! has_version 'media-video/ffmpeg-compat:6'; then
 			einfo 'Removing FFmpegTools version 6 support'
 			rm -r "${S}/${M_TARGET}/SystemFiles/Links/FFmpegTools/LibraryResources/Linux-x86-64/FFmpegToolsSystem-6.0.so" || die
@@ -200,6 +202,26 @@ src_install() {
 '$ORIGIN' "${i}" || \
 		die "patchelf failed on ${i}"
 	done < <(find "${S}/${M_TARGET}" -type f -print0)
+
+	# fix RPATH for FFmpegTools
+	if use ffmpeg; then
+		if has_version 'media-video/ffmpeg-compat:7'; then
+			patchelf --add-rpath \
+				"$(ffmpeg_compat_get_prefix 7)/$(get_libdir)" \
+				"${S}/${M_TARGET}/SystemFiles/Links/FFmpegTools/LibraryResources/Linux-x86-64/FFmpegToolsSystem-7.0.so" || \
+				die "patchelf failed"
+		elif has_version 'media-video/ffmpeg-compat:6'; then
+			patchelf --add-rpath \
+				"$(ffmpeg_compat_get_prefix 6)/$(get_libdir)" \
+				"${S}/${M_TARGET}/SystemFiles/Links/FFmpegTools/LibraryResources/Linux-x86-64/FFmpegToolsSystem-6.0.so" || \
+				die "patchelf failed"
+		elif has_version 'media-video/ffmpeg-compat:4'; then
+			patchelf --add-rpath \
+				"$(ffmpeg_compat_get_prefix 4)/$(get_libdir)" \
+				"${S}/${M_TARGET}/SystemFiles/Links/FFmpegTools/LibraryResources/Linux-x86-64/FFmpegToolsSystem-4.4.so" || \
+				die "patchelf failed"
+		fi
+	fi
 
 	# fix broken symbolic links
 	ln -sf "/${M_TARGET}/Executables/WolframNB" "${S}/${M_TARGET}/Executables/mathematica" || die
