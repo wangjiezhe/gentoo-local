@@ -1,0 +1,69 @@
+diff --git a/faiss/gpu/test/TestGpuDistance.cu b/faiss/gpu/test/TestGpuDistance.cu
+index 6c5526b1..7ac7e287 100644
+--- a/faiss/gpu/test/TestGpuDistance.cu
++++ b/faiss/gpu/test/TestGpuDistance.cu
+@@ -31,6 +31,7 @@
+ #include <faiss/gpu/utils/Transpose.cuh>
+ #include <sstream>
+ #include <vector>
++#include <algorithm>
+ 
+ enum class TestThresholds {
+     Normal,
+diff --git a/perf_tests/CMakeLists.txt b/perf_tests/CMakeLists.txt
+index db79f59c..95fcd1ec 100644
+--- a/perf_tests/CMakeLists.txt
++++ b/perf_tests/CMakeLists.txt
+@@ -8,12 +8,7 @@ project(faiss_perf_tests)
+ set(BENCHMARK_ENABLE_TESTING OFF)
+ set(BENCHMARK_INSTALL_DOCS OFF)
+ 
+-include(FetchContent)
+-FetchContent_Declare(googlebenchmark
+-        GIT_REPOSITORY https://github.com/google/benchmark.git
+-        GIT_TAG main) # need main for benchmark::benchmark
+-FetchContent_MakeAvailable(
+-  googlebenchmark)
++find_package(benchmark REQUIRED)
+ 
+ 
+ find_package(Threads REQUIRED)
+diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
+index 76f6019d..2ea73880 100644
+--- a/tests/CMakeLists.txt
++++ b/tests/CMakeLists.txt
+@@ -97,34 +97,6 @@ if (FAISS_ENABLE_PYTHON)
+   target_link_libraries(faiss_test PUBLIC faiss_example_external_module)
+ endif()
+ 
+-include(FetchContent)
+-FetchContent_Declare(
+-  googletest
+-  GIT_REPOSITORY https://github.com/google/googletest.git
+-  GIT_TAG 58d77fa8070e8cec2dc1ed015d66b454c8d78850 # release-1.12.1
+-  OVERRIDE_FIND_PACKAGE)
+-set(BUILD_GMOCK CACHE BOOL OFF)
+-set(INSTALL_GTEST CACHE BOOL OFF)
+-FetchContent_MakeAvailable(googletest)
+-
+-if(NOT EXISTS ${CMAKE_FIND_PACKAGE_REDIRECTS_DIR}/gtest-config.cmake
+-   AND NOT EXISTS ${CMAKE_FIND_PACKAGE_REDIRECTS_DIR}/GTestConfig.cmake)
+-  file(
+-    WRITE ${CMAKE_FIND_PACKAGE_REDIRECTS_DIR}/gtest-config.cmake
+-    [=[
+-include(CMakeFindDependencyMacro)
+-find_dependency(googletest)
+-if(NOT TARGET GTest::GTest)
+-  add_library(GTest::GTest INTERFACE IMPORTED)
+-  target_link_libraries(GTest::GTest INTERFACE GTest::gtest)
+-endif()
+-if(NOT TARGET GTest::Main)
+-  add_library(GTest::Main INTERFACE IMPORTED)
+-  target_link_libraries(GTest::Main INTERFACE GTest::gtest_main)
+-endif()
+-]=])
+-endif()
+-
+ find_package(OpenMP REQUIRED)
+ find_package(GTest CONFIG REQUIRED)
+ 

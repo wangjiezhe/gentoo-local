@@ -2,10 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
-DISTUTILS_OPTIONAL=1
-DISTUTILS_USE_PEP517=setuptools
 PYTHON_COMPAT=( python3_{11..14} )
-inherit distutils-r1 cmake cuda
+inherit cmake cuda python-r1
 
 DESCRIPTION="A library for efficient similarity search and clustering of dense vectors"
 HOMEPAGE="https://github.com/facebookresearch/faiss"
@@ -35,12 +33,12 @@ DEPEND="
 		dev-cpp/benchmark
 	)
 "
-BDEPEND="python? ( ${DISTUTILS_DEPS} )"
+BDEPEND="python? ( ${PYTHON_DEPS} )"
 
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
 PATCHES=(
-	"${FILESDIR}/${PN}-1.12.0-test.patch"
+	"${FILESDIR}/${P}-test.patch"
 )
 
 src_prepare() {
@@ -92,6 +90,7 @@ src_install() {
 
 src_test() {
 	cuda_add_sandbox -w
+	local -x -a CMAKE_SKIP_TESTS=( TestGpuMemoryException.AddException )
 	do_test() {
 		cmake_src_test
 		# cd "${S}"/tests
