@@ -4,7 +4,7 @@
 EAPI=8
 
 FORTRAN_STANDARD="77 90"
-PYTHON_COMPAT=( python3_{11..13} )
+PYTHON_COMPAT=( python3_{11..14} )
 
 inherit cmake fortran-2 python-any-r1 toolchain-funcs cuda
 
@@ -44,7 +44,6 @@ RESTRICT="!test? ( test )"
 
 PATCHES=(
 	"${FILESDIR}/${PN}-2.7.2-gentoo.patch"
-	"${FILESDIR}/${P}-cmake.patch"
 )
 
 pkg_setup() {
@@ -68,7 +67,7 @@ src_prepare() {
 		Requires: $(usex openblas "openblas" "blas lapack")
 	EOF
 
-	rm -r blas_fix || die
+	# rm -r blas_fix || die
 
 	cmake_src_prepare
 	use cuda && cuda_src_prepare
