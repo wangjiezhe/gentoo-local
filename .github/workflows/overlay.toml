@@ -622,8 +622,8 @@ prefix = "v"
 ["net-libs/bun-bin"]
 source = "github"
 github = "oven-sh/bun"
+use_latest_release = true
 prefix = "bun-v"
-include_regex = 'bun-v(\d+\.\d+\.\d+)'
 
 ["dev-go/yaegi"]
 source = "github"
