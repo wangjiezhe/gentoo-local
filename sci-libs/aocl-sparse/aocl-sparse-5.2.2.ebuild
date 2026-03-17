@@ -41,7 +41,7 @@ DEPEND="
 DOCS=( README.md )
 
 PATCHES=(
-	"${FILESDIR}"/${P}-install.patch
+	"${FILESDIR}"/${PN}-5.2-install.patch
 	"${FILESDIR}"/${PN}-5.1-test.patch
 )
 
