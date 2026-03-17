@@ -5,7 +5,7 @@ EAPI=8
 
 MY_PV=${PV}-rc2
 
-PYTHON_COMPAT=( python3_{11..14} )
+PYTHON_COMPAT=( python3_{11..14} python3_14t )
 DISTUTILS_USE_PEP517=setuptools
 DISTUTILS_SINGLE_IMPL=1
 inherit distutils-r1
