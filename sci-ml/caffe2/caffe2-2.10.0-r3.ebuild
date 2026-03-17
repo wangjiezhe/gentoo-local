@@ -45,8 +45,8 @@ S="${WORKDIR}"/${MYP}
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="aocl cuda cudss cusparselt distributed fbgemm flash flexiblas gloo magma memefficient mkl mpi nccl numa nnpack +numpy
-	onednn openblas opencl openmp qnnpack rocm xnnpack"
+IUSE="aocl cuda cudss cusparselt distributed fbgemm flash flexiblas gloo magma memefficient mimalloc mkl
+	mpi nccl numa nnpack +numpy onednn openblas opencl openmp qnnpack rocm xnnpack"
 RESTRICT="test"
 REQUIRED_USE="
 	${PYTHON_REQUIRED_USE}
@@ -56,6 +56,7 @@ REQUIRED_USE="
 	rocm? (
 		|| ( ${ROCM_REQUIRED_USE} )
 	)
+	cusparselt? ( || ( cuda rocm ) )
 	flash? ( || ( cuda rocm ) )
 	memefficient? ( || ( cuda rocm ) )
 	nccl? (  || ( cuda rocm ) )
@@ -87,6 +88,7 @@ RDEPEND="
 	fbgemm? ( sci-ml/FBGEMM:= )
 	gloo? ( >=sci-ml/gloo-2025.06.04[cuda?,rocm?] )
 	magma? ( sci-libs/magma[cuda?] )
+	mimalloc? ( dev-libs/mimalloc )
 	mpi? ( virtual/mpi )
 	nnpack? (
 		sci-ml/NNPACK
@@ -102,21 +104,22 @@ RDEPEND="
 		dev-libs/pthreadpool
 	)
 	rocm? (
-		nccl? ( >=dev-libs/rccl-6.3:= <dev-libs/rccl-7.2:= )
-		>=dev-util/hip-6.3:=       <dev-util/hip-7.2:=
-		>=dev-util/roctracer-6.3:= <dev-util/roctracer-7.2:=
-		>=sci-libs/hipBLAS-6.3:=   <sci-libs/hipBLAS-7.2:=[rocsolver(+)]
-		>=sci-libs/hipBLASLt-6.3:= <sci-libs/hipBLASLt-7.2:=
-		>=sci-libs/hipFFT-6.3:=    <sci-libs/hipFFT-7.2:=
-		>=sci-libs/hipRAND-6.3:=   <sci-libs/hipRAND-7.2:=
-		>=sci-libs/hipSOLVER-6.3:= <sci-libs/hipSOLVER-7.2:=
-		>=sci-libs/hipSPARSE-6.3:= <sci-libs/hipSPARSE-7.2:=
-		>=sci-libs/miopen-6.3:=    <sci-libs/miopen-7.2:=
-		>=sci-libs/rocBLAS-6.3:=   <sci-libs/rocBLAS-7.2:=
-		>=sci-libs/rocRAND-6.3:=   <sci-libs/rocRAND-7.2:=
-		>=sci-libs/rocSOLVER-6.3:= <sci-libs/rocSOLVER-7.2:=
+		nccl? ( >=dev-libs/rccl-6.3:= <dev-libs/rccl-7.3:= )
+		>=dev-util/hip-6.3:=       <dev-util/hip-7.3:=
+		>=dev-util/roctracer-6.3:= <dev-util/roctracer-7.3:=
+		>=sci-libs/hipBLAS-6.3:=   <sci-libs/hipBLAS-7.3:=[rocsolver(+)]
+		>=sci-libs/hipBLASLt-6.3:= <sci-libs/hipBLASLt-7.3:=
+		>=sci-libs/hipFFT-6.3:=    <sci-libs/hipFFT-7.3:=
+		>=sci-libs/hipRAND-6.3:=   <sci-libs/hipRAND-7.3:=
+		>=sci-libs/hipSOLVER-6.3:= <sci-libs/hipSOLVER-7.3:=
+		>=sci-libs/hipSPARSE-6.3:= <sci-libs/hipSPARSE-7.3:=
+		>=sci-libs/miopen-6.3:=    <sci-libs/miopen-7.3:=
+		>=sci-libs/rocBLAS-6.3:=   <sci-libs/rocBLAS-7.3:=
+		>=sci-libs/rocRAND-6.3:=   <sci-libs/rocRAND-7.3:=
+		>=sci-libs/rocSOLVER-6.3:= <sci-libs/rocSOLVER-7.3:=
 		memefficient? ( =sci-libs/aotriton-bin-0.11*:= )
-		distributed? ( >=dev-util/rocm-smi-6.3:= <dev-util/rocm-smi-7.2:= )
+		distributed? ( >=dev-util/rocm-smi-6.3:= <dev-util/rocm-smi-7.3:= )
+		cusparselt? ( >=sci-libs/hipsparselt-6.3:= <sci-libs/hipsparselt-7.3:= )
 	)
 	distributed? (
 		!rocm? ( ~sci-ml/tensorpipe-2025.11.05[cuda?] )
@@ -152,9 +155,9 @@ DEPEND="
 	cuda? ( >=dev-libs/cutlass-3.9.2[tools(+)] )
 	onednn? ( sci-ml/ideep )
 	rocm? (
-		>=sci-libs/hipCUB-6.3:=    <sci-libs/hipCUB-7.2:=
-		>=sci-libs/rocPRIM-6.3:=   <sci-libs/rocPRIM-7.2:=
-		>=sci-libs/rocThrust-6.3:= <sci-libs/rocThrust-7.2:=
+		>=sci-libs/hipCUB-6.3:=    <sci-libs/hipCUB-7.3:=
+		>=sci-libs/rocPRIM-6.3:=   <sci-libs/rocPRIM-7.3:=
+		>=sci-libs/rocThrust-6.3:= <sci-libs/rocThrust-7.3:=
 	)
 	qnnpack? ( dev-libs/clog )
 "
@@ -178,6 +181,7 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.9.1-torch_cpu.patch
 	"${FILESDIR}"/${P}-blas.patch
 	"${FILESDIR}"/${P}-lapack.patch
+	"${FILESDIR}"/${P}-mimalloc.patch
 )
 
 src_prepare() {
@@ -215,6 +219,7 @@ src_prepare() {
 
 	# Change libaotriton path
 	sed -i \
+		-e "/set(__AOTRITON_LIB/s|lib/|$(get_libdir)/|g" \
 		-e "s|}/lib|}/$(get_libdir)|g" \
 		cmake/External/aotriton.cmake \
 		|| die
@@ -270,11 +275,8 @@ src_prepare() {
 		# Workaround for libc++ issue https://github.com/llvm/llvm-project/issues/100802
 		sed -e 's/std::memcpy/memcpy/g' -i torch/headeronly/util/Half.h || die
 
-		# Typo: https://github.com/pytorch/pytorch/pull/166502
-		sed -e 's/gloo_hiop/gloo_hip/' -i cmake/Modules/FindGloo.cmake || die
-
 		ebegin "HIPifying cuda sources"
-		${EPYTHON} tools/amd_build/build_amd.py || die
+		FBCODE_BUILD_TOOL="buck" ${EPYTHON} tools/amd_build/build_amd.py || die
 		eend $?
 	fi
 }
@@ -318,6 +320,7 @@ src_configure() {
 		-DUSE_MAGMA=$(usex magma)
 		-DMAGMA_V2=$(usex magma)
 		-DUSE_MEM_EFF_ATTENTION=$(usex memefficient)
+		-DUSE_MIMALLOC=$(usex mimalloc)
 		-DUSE_MKLDNN=$(usex onednn)
 		-DUSE_MPI=$(usex mpi)
 		-DUSE_NNPACK=$(usex nnpack)
@@ -328,7 +331,7 @@ src_configure() {
 		-DUSE_PYTORCH_QNNPACK=$(usex qnnpack)
 		-DUSE_PYTORCH_METAL=OFF
 		-DUSE_ROCM=$(usex rocm)
-		-DUSE_TENSORPIPE=$(use distributed && use !rocm && echo ON || echo OFF)
+		-DUSE_TENSORPIPE=$(usex distributed $(usex !rocm))
 		-DUSE_UCC=OFF
 		-DUSE_VALGRIND=OFF
 		-DUSE_XNNPACK=$(usex xnnpack)
@@ -349,9 +352,9 @@ src_configure() {
 	fi
 
 	if use cuda; then
-		addpredict "/dev/nvidiactl" # bug 867706
-		addpredict "/dev/char"
-		addpredict "/proc/self/task" # bug 926116
+		# bug 867706 926116
+		cuda_add_sandbox
+		addpredict "/dev/char/"
 
 		mycmakeargs+=(
 			-DUSE_CUDNN=ON
@@ -362,6 +365,14 @@ src_configure() {
 			-DUSE_CUSPARSELT=$(usex cusparselt)
 			-DUSE_CUDSS=$(usex cudss)
 		)
+
+		[[ -v CUDACXX ]] && export PYTORCH_NVCC="${CUDACXX}"
+
+		if use flash; then
+			export FLASH_ATTENTION_FORCE_BUILD="TRUE"
+			export FLASH_ATTN_CUDA_ARCHS="${CUDAARCHS:-${TORCH_CUDA_ARCH_LIST:-3.5 7.0}}"
+		fi
+
 	elif use rocm; then
 		export PYTORCH_ROCM_ARCH="$(get_amdgpu_flags)"
 
@@ -373,6 +384,7 @@ src_configure() {
 			-DUSE_NCCL=$(usex nccl)
 			-DUSE_SYSTEM_NCCL=ON
 			-DCMAKE_REQUIRE_FIND_PACKAGE_HIP=ON
+			-DCMAKE_DISABLE_FIND_PACKAGE_hipsparselt=$(usex !cusparselt) # disable automagic
 			-DUSE_ROCM_CK_SDPA=OFF # requires flash + aiter, works only on gfx90a/gfx942/gfx950
 		)
 
