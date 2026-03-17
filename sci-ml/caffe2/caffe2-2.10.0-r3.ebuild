@@ -182,6 +182,7 @@ PATCHES=(
 	"${FILESDIR}"/${P}-blas.patch
 	"${FILESDIR}"/${P}-lapack.patch
 	"${FILESDIR}"/${P}-mimalloc.patch
+	"${FILESDIR}"/${P}-magma_2_10.patch
 )
 
 src_prepare() {
