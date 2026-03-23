@@ -666,3 +666,7 @@ pypi = "sphinx-external-toc"
 ["dev-python/diagnostic"]
 source = "pypi"
 pypi = "diagnostic"
+
+["dev-python/sphinx-autobuild"]
+source = "pypi"
+pypi = "sphinx-autobuild"
