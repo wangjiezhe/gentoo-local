@@ -678,3 +678,7 @@ pypi = "sphinx-theme-builder"
 ["dev-python/sphinx-thebe"]
 source = "pypi"
 pypi = "sphinx-thebe"
+
+["dev-python/sphinx-book-theme"]
+source = "pypi"
+pypi = "sphinx-book-theme"
