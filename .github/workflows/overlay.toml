@@ -670,3 +670,7 @@ pypi = "diagnostic"
 ["dev-python/sphinx-autobuild"]
 source = "pypi"
 pypi = "sphinx-autobuild"
+
+["dev-python/sphinx-theme-builder"]
+source = "pypi"
+pypi = "sphinx-theme-builder"
