@@ -674,3 +674,7 @@ pypi = "sphinx-autobuild"
 ["dev-python/sphinx-theme-builder"]
 source = "pypi"
 pypi = "sphinx-theme-builder"
+
+["dev-python/sphinx-thebe"]
+source = "pypi"
+pypi = "sphinx-thebe"
