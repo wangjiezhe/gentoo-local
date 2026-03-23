@@ -654,3 +654,7 @@ pypi = "jupyter-cache"
 ["dev-python/myst-nb"]
 source = "pypi"
 pypi = "myst-nb"
+
+["dev-python/sphinx-multitoc-numbering"]
+source = "pypi"
+pypi = "sphinx-multitoc-numbering"
