@@ -662,3 +662,7 @@ pypi = "sphinx-multitoc-numbering"
 ["dev-python/sphinx-external-toc"]
 source = "pypi"
 pypi = "sphinx-external-toc"
+
+["dev-python/diagnostic"]
+source = "pypi"
+pypi = "diagnostic"
