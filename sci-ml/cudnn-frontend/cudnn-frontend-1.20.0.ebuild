@@ -41,10 +41,10 @@ BDEPEND="
 "
 
 PATCHES=(
-	"${FILESDIR}/${PN}-1.11.0-fix.patch"
+	"${FILESDIR}"/${PN}-1.11.0-fix.patch
 	"${FILESDIR}"/${PN}-1.12.1-cmake.patch
 	"${FILESDIR}"/${P}-python.patch
-	"${FILESDIR}"/${P}-test.patch
+	"${FILESDIR}"/${PN}-1.18.0-test.patch
 )
 
 src_prepare() {
