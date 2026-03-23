@@ -646,3 +646,7 @@ pypi = "jsonargparse"
 source = "github"
 github = "wszqkzqk/PvZ-Portable"
 use_latest_release = true
+
+["dev-python/jupyter-cache"]
+source = "pypi"
+pypi = "jupyter-cache"
