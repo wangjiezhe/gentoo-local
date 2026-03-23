@@ -28,7 +28,7 @@ DEPEND="
 # 	)
 # "
 
-DOCS=( README.md docs/ReleaseNotes_AMDLibM.txt )
+DOCS=( README.md )
 
 PATCHES=(
 	"${FILESDIR}"/${PN}-5.2-gcc.patch
