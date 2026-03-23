@@ -28,6 +28,15 @@ DEPEND="
 # 	)
 # "
 
+# BDEPEND="
+# 	doc? (
+# 		app-text/doxygen
+# 		dev-python/sphinx
+# 		dev-python/breathe
+# 		dev-python/rocm-docs-core
+# 	)
+# "
+
 DOCS=( README.md )
 
 PATCHES=(
@@ -59,9 +68,15 @@ src_configure() {
 	local mycmakeargs=(
 		-DAOCL_UTILS_INCLUDE_DIR="${EPREFIX}"/usr/include
 		-DAOCL_UTILS_LIB="${EPREFIX}"/usr/$(get_libdir)/libaoclutils.so
+		# -DLIBM_BUILD_DOCS=$(usex doc ON OFF)
 	)
 	cmake_src_configure
 }
+
+# src_compile() {
+# 	cmake_src_compile
+# 	use doc && cmake_build libmdoc
+# }
 
 src_install() {
 	cmake_src_install
