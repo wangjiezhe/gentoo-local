@@ -658,3 +658,7 @@ pypi = "myst-nb"
 ["dev-python/sphinx-multitoc-numbering"]
 source = "pypi"
 pypi = "sphinx-multitoc-numbering"
+
+["dev-python/sphinx-external-toc"]
+source = "pypi"
+pypi = "sphinx-external-toc"
