@@ -650,3 +650,7 @@ use_latest_release = true
 ["dev-python/jupyter-cache"]
 source = "pypi"
 pypi = "jupyter-cache"
+
+["dev-python/myst-nb"]
+source = "pypi"
+pypi = "myst-nb"
