@@ -686,3 +686,9 @@ pypi = "sphinx-book-theme"
 ["dev-python/rocm-docs-core"]
 source = "pypi"
 pypi = "rocm-docs-core"
+
+["dev-util/codex"]
+source = "github"
+github = "openai/codex"
+use_latest_release = true
+prefix = "rust-v"
