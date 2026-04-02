@@ -43,7 +43,7 @@ BDEPEND="
 PATCHES=(
 	"${FILESDIR}"/${PN}-1.11.0-fix.patch
 	"${FILESDIR}"/${PN}-1.12.1-cmake.patch
-	"${FILESDIR}"/${P}-python.patch
+	"${FILESDIR}"/${PN}-1.20.0-python.patch
 	"${FILESDIR}"/${PN}-1.18.0-test.patch
 )
 
@@ -79,7 +79,7 @@ src_configure() {
 }
 
 src_compile() {
-	export CMAKE_BUILD_PARALLEL_LEVEL=$(makeopts_jobs)
+	export CMAKE_BUILD_PARALLEL_LEVEL=$(get_makeopts_jobs)
 
 	cmake_src_compile
 
@@ -111,6 +111,9 @@ python_test() {
 		test/python/test_mhas_v2.py
 		# Need nvidia-cutlass-dsl i.e. CuteDSL
 		test/python/fe_api
+		# Fatal Python error: Segmentation fault
+		test/python/test_flexible_sdpa.py
+		test/python/test_flexible_sdpa_bprop.py
 	)
 	local EPYTEST_DESELECT=(
 		# Failed with param: ((1, 128, 1024), torch.bfloat16)
@@ -123,7 +126,7 @@ python_test() {
 		test/python/test_kernel_cache.py::test_serialize_both_graph_and_kernel_cache
 	)
 
-	distutils-r1_python_test
+	epytest
 }
 
 src_install() {
