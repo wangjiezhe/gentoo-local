@@ -70,11 +70,10 @@ RDEPEND="
 	>=dev-cpp/glog-0.5.0:=
 	>=dev-libs/cpuinfo-2025.11.14
 	dev-libs/libfmt:=
-	dev-cpp/opentelemetry-cpp
 	dev-libs/protobuf:=
 	dev-libs/sleef
 	sci-ml/foxi
-	~sci-ml/kineto-0.4.0_p20251121
+	>=sci-ml/kineto-0.4.0_p20260323
 	sci-ml/onnx
 	virtual/lapack
 	cuda? (
@@ -161,28 +160,32 @@ DEPEND="
 	)
 	qnnpack? ( dev-libs/clog )
 "
+BDEPEND="
+	dev-util/patchelf
+"
 
 PATCHES=(
 	"${FILESDIR}"/${PN}-2.5.1-unbundle_fmt.patch
 	"${FILESDIR}"/${PN}-2.5.1-unbundle_kineto.patch
 	"${FILESDIR}"/${PN}-2.8.0-unbundle_pocketfft.patch
 	"${FILESDIR}"/${PN}-2.3.0-cudnn_include_fix.patch
-	"${FILESDIR}"/${P}-gentoo.patch
+	"${FILESDIR}"/${PN}-2.10.0-gentoo.patch
 	"${FILESDIR}"/${PN}-2.4.0-cpp-httplib.patch
 	"${FILESDIR}"/${PN}-1.12.0-glog-0.6.0.patch
-	"${FILESDIR}"/${PN}-2.6.0-rocm-fix-std-cpp17.patch
+	"${FILESDIR}"/${P}-rocm-fix-std-cpp17.patch
 	"${FILESDIR}"/${PN}-2.9.0-cmake.patch
 	"${FILESDIR}"/${PN}-2.9.1-cmake.patch
 	"${FILESDIR}"/${PN}-2.7.0-glog-0.7.1.patch
 	"${FILESDIR}"/${PN}-2.7.1-aotriton-fixes.patch
 	"${FILESDIR}"/${PN}-2.8.0-rocm-minus-flash.patch
-	"${FILESDIR}"/${P}-aocl.patch
+	"${FILESDIR}"/${PN}-2.10.0-aocl.patch
 	"${FILESDIR}"/${PN}-2.9.0-xnnpack.patch
 	"${FILESDIR}"/${PN}-2.9.1-torch_cpu.patch
-	"${FILESDIR}"/${P}-blas.patch
-	"${FILESDIR}"/${P}-lapack.patch
+	"${FILESDIR}"/${PN}-2.10.0-blas.patch
+	"${FILESDIR}"/${PN}-2.10.0-lapack.patch
 	"${FILESDIR}"/${P}-mimalloc.patch
-	"${FILESDIR}"/${P}-magma_2_10.patch
+	"${FILESDIR}"/${PN}-2.10.0-magma_2_10.patch
+	"${FILESDIR}"/${P}-Allow-gcc-14-with-CUDA-12.8.patch
 )
 
 src_prepare() {
@@ -425,6 +428,8 @@ python_install() {
 
 src_install() {
 	cmake_src_install
+
+	patchelf --add-needed libcaffe2_nvrtc.so "${ED}/usr/$(get_libdir)/libtorch_cuda.so" || die "patchelf failed"
 
 	# Used by pytorch ebuild
 	insinto "/var/lib/${PN}"
