@@ -3,7 +3,7 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{10..13} )
+PYTHON_COMPAT=( python3_{11..14} )
 DISTUTILS_USE_PEP517=setuptools
 DISTUTILS_EXT=1
 
@@ -36,5 +36,5 @@ python_prepare_all() {
 
 python_configure_all() {
 	export GRPC_PYTHON_BUILD_WITH_CYTHON=1
-	export GRPC_PYTHON_BUILD_EXT_COMPILER_JOBS="$(makeopts_jobs)"
+	export GRPC_PYTHON_BUILD_EXT_COMPILER_JOBS="$(get_makeopts_jobs)"
 }
