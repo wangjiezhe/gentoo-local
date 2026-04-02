@@ -16,7 +16,7 @@ SRC_URI="
 "
 S="${WORKDIR}"/PvZ-Portable-${PV}
 
-LICENSE="LGPL-3+"
+LICENSE="LGPL-3+ PopCap-Games-Framwork-License PopCap-EULA"
 SLOT="0"
 KEYWORDS="~amd64 ~arm64 ~riscv"
 
