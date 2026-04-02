@@ -51,7 +51,7 @@ src_prepare() {
 
 src_compile() {
 	export JAVA_HOME=$(java-config --jre-home) # so keepwork works
-	export EXTRA_BAZEL_ARGS="--jobs=$(makeopts_jobs) $(bazel_get_flags)
+	export EXTRA_BAZEL_ARGS="--jobs=$(get_makeopts_jobs) $(bazel_get_flags)
 		--java_runtime_version=local_jdk
 		--tool_java_runtime_version=local_jdk"
 	VERBOSE=yes ./compile.sh || die "Failed compiling bazel"
