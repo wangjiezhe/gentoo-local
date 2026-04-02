@@ -3,7 +3,7 @@
 
 EAPI=8
 
-MY_PV=${PV}-rc2
+MY_PV=${PV}-rc1
 
 PYTHON_COMPAT=( python3_{11..14} python3_14t )
 DISTUTILS_USE_PEP517=setuptools
