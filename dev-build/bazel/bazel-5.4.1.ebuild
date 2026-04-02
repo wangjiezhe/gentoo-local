@@ -3,12 +3,14 @@
 
 EAPI=8
 
-inherit bash-completion-r1 bazel java-pkg-2 multiprocessing toolchain-funcs
+inherit bazel java-pkg-2 multiprocessing shell-completion toolchain-funcs
 
 DESCRIPTION="Fast and correct automated build system"
 HOMEPAGE="https://bazel.build/"
 
 SRC_URI="https://github.com/bazelbuild/bazel/releases/download/${PV}/${P}-dist.zip"
+
+S="${WORKDIR}"
 
 LICENSE="Apache-2.0"
 SLOT="0"
@@ -22,8 +24,6 @@ DEPEND="
 	virtual/jdk:11
 	app-arch/unzip
 	app-arch/zip"
-
-S="${WORKDIR}"
 
 pkg_setup() {
 	if has ccache ${FEATURES}; then
@@ -83,8 +83,7 @@ src_install() {
 	dobin output/bazel
 	newbashcomp bazel-complete.bash ${PN}
 	bashcomp_alias ${PN} ibazel
-	insinto /usr/share/zsh/site-functions
-	doins scripts/zsh_completion/_bazel
+	dozshcomp scripts/zsh_completion/_bazel
 
 	if use examples; then
 		docinto examples
