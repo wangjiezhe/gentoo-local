@@ -49,7 +49,7 @@ index 20e330ac9..85e69f4ba 100644
 -                # Remove the local version identifier, if any (e.g. 0.4.0rc0.post0+git.6a63116c.dirty => 0.4.0rc0.post0)
 -                gitversion.version_from_git().public,
 -            )
-+        pkg_version = "1.5.0"
++        pkg_version = "1.6.0"
  
          full_version_string = f"{pkg_version}{pkg_vver}"
          logging.debug(
