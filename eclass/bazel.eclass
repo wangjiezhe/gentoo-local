@@ -96,7 +96,7 @@ bazel_setup_bazelrc() {
 		build --action_env HOME
 
 		# make bazel respect MAKEOPTS
-		build --jobs=$(makeopts_jobs)
+		build --jobs=$(get_makeopts_jobs)
 		build --compilation_mode=opt --host_compilation_mode=opt
 
 		# FLAGS
