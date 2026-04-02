@@ -44,3 +44,9 @@ EPYTEST_DESELECT=(
 	tests/test_models.py::test_model_load_pretrained
 	tests/test_models.py::test_model_features_pretrained
 )
+
+python_test() {
+	export GITHUB_ACTIONS=true
+	export TIMEOUT=120
+	epytest
+}
