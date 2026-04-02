@@ -3,7 +3,7 @@
 
 EAPI=8
 
-CUDA_MA="12"
+CUDA_MA="13"
 
 DESCRIPTION="A High-Performance CUDA Library for Sparse Matrix-Matrix Multiplication"
 HOMEPAGE="https://docs.nvidia.com/cuda/cusparselt/index.html"
@@ -15,7 +15,7 @@ SLOT="0"
 KEYWORDS="~amd64"
 RESTRICT="bindist mirror"
 
-RDEPEND="=dev-util/nvidia-cuda-toolkit-12*"
+RDEPEND="=dev-util/nvidia-cuda-toolkit-13*"
 
 QA_PREBUILT="/opt/cuda/targets/x86_64-linux/lib/*"
 
