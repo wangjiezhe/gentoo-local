@@ -27,8 +27,6 @@ RDEPEND="
 "
 DEPEND="${RDEPEND}"
 
-PATCHES=( "${FILESDIR}"/${P}-Fix-building-on-GCC-14.2-4163.patch )
-
 src_prepare() {
 	export USE_CUDA=$(usex cuda)
 	export BUILD_CUDA_CTC_DECODER=$(usex cuda)
