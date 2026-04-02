@@ -36,7 +36,7 @@ DEPEND="${RDEPEND}
 
 PATCHES=(
 	"${FILESDIR}"/${PN}-2.9.0-don-t-build-libtorch-again.patch
-	"${FILESDIR}"/${P}-cpp-extension-multilib.patch
+	"${FILESDIR}"/${PN}-2.10.0-cpp-extension-multilib.patch
 )
 
 src_prepare() {
