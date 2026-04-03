@@ -7,3 +7,4 @@
 # cuda 13
 >=dev-python/cuda-bindings-13
 >=dev-python/cuda-python-13
+>=dev-libs/cusparselt-0.9
