@@ -66,12 +66,6 @@ source = "regex"
 url = "https://developer.download.nvidia.com/compute/cudnn/redist/cudnn/linux-x86_64/"
 regex = "\\d+\\.\\d+\\.\\d+\\.\\d+"
 
-["dev-libs/cutlass"]
-source = "github"
-github = "NVIDIA/cutlass"
-use_max_tag = true
-prefix = "v"
-
 ["sci-mathematics/mathematica"]
 source = "aur"
 aur = "mathematica"
