@@ -9,9 +9,10 @@ diff --git a/samples/cpp/utils/helpers.h b/samples/cpp/utils/helpers.h
 index 67a5cff..4724c95 100644
 --- a/samples/cpp/utils/helpers.h
 +++ b/samples/cpp/utils/helpers.h
-@@ -1,8 +1,9 @@
+@@ -1,9 +1,10 @@
  #pragma once
  
+ #include <vector>
 -#include <stdexcept>
 +#include <memory>
  #include <sstream>
