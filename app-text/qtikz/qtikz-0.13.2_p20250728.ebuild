@@ -1,42 +1,46 @@
-# Copyright 2024 Gentoo Authors
+# Copyright 2024-2026 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
+
+EGIT_COMMIT="0a575c2246556adeecbc7b41be56e6d2e7eb6a42"
 
 inherit qmake-utils xdg-utils
 
 DESCRIPTION="A nice user interface for making pictures using TikZ"
 HOMEPAGE="https://github.com/fhackenberger/ktikz"
-SRC_URI="https://github.com/fhackenberger/ktikz/archive/${PV}.tar.gz -> ${P}.tar.gz"
-S="${WORKDIR}/ktikz-${PV}"
+SRC_URI="https://github.com/fhackenberger/ktikz/archive/${EGIT_COMMIT}.tar.gz -> ${P}.tar.gz"
+S="${WORKDIR}/ktikz-${EGIT_COMMIT}"
 
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64"
 
 DEPEND="
-	app-text/poppler[qt5]
-	dev-qt/qtprintsupport:5
-	dev-qt/qtwidgets:5
-	dev-qt/qtgui:5
-	dev-qt/qtcore:5
-	dev-qt/qtxml:5
+	app-text/poppler[qt6]
+	dev-qt/qtbase:6[gui,widgets,xml]
+	dev-qt/qt5compat:6
 "
 
 BDEPEND="
-	dev-qt/linguist-tools:5
-	dev-qt/qthelp:5
+	dev-qt/qttools:6[linguist]
 "
 
-PATCHES=("${FILESDIR}/${P}-desktop.patch")
+PATCHES=(
+	"${FILESDIR}/${PN}-0.13.2-desktop.patch"
+	"${FILESDIR}/${P}-qt6-compat.patch"
+)
 
 pkg_setup() {
-	# Needed for lrelease
-	export PATH="$(qt5_get_bindir):${PATH}" || die
+	# Needed for lrelease and qhelpgenerator
+	export PATH="$(qt6_get_bindir):$(qt6_get_libexecdir):${PATH}" || die
 }
 
 src_configure() {
-	eqmake5
+	local myqmakeargs=(
+		QCOLLECTIONGENERATORCOMMAND=qhelpgenerator
+	)
+	eqmake6 "${myqmakeargs[@]}"
 }
 
 src_install() {

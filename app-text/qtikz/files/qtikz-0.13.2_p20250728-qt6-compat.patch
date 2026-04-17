@@ -1,0 +1,126 @@
+diff '--color=auto' -ur ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42.orig/app/app.pri ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42/app/app.pri
+--- ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42.orig/app/app.pri	2026-04-17 21:17:41.267951875 +0800
++++ ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42/app/app.pri	2026-04-17 21:32:36.703946694 +0800
+@@ -4,7 +4,7 @@
+ 
+ LANGUAGE = C++
+ CONFIG += qt warn_on thread
+-QT += core gui widgets
++QT += core gui widgets core5compat
+ 
+ DEFINES += QT_STL QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII QT_NO_CAST_FROM_BYTEARRAY QT_STRICT_ITERATORS QT_NO_URL_CAST_FROM_STRING QT_NO_KEYWORDS
+ #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x050200
+diff '--color=auto' -ur ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42.orig/app/loghighlighter.cpp ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42/app/loghighlighter.cpp
+--- ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42.orig/app/loghighlighter.cpp	2026-04-17 21:17:41.271951875 +0800
++++ ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42/app/loghighlighter.cpp	2026-04-17 21:23:07.527950881 +0800
+@@ -46,7 +46,7 @@
+     QTextCharFormat commandFormat;
+     commandFormat.setForeground(Qt::darkBlue);
+     commandFormat.setFontWeight(QFont::Bold);
+-    rule.pattern = QRegularExpression("^\\[[^\\]\\d][^\\]]*\\]");
++    rule.pattern = QRegularExpression(QLatin1String("^\\[[^\\]\\d][^\\]]*\\]"));
+     rule.format = commandFormat;
+     m_highlightingRules.append(rule);
+ 
+diff '--color=auto' -ur ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42.orig/app/tikzeditor.cpp ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42/app/tikzeditor.cpp
+--- ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42.orig/app/tikzeditor.cpp	2026-04-17 21:17:41.271951875 +0800
++++ ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42/app/tikzeditor.cpp	2026-04-17 21:23:49.331950898 +0800
+@@ -620,7 +620,7 @@
+ 
+     // remove all options (between <...>) and put cursor at the first option
+     QString insertWord = completion.right(extra);
+-    const QRegularExpression rx("<[^<>]*>");
++    const QRegularExpression rx(QLatin1String("<[^<>]*>"));
+     const auto m = rx.match(insertWord);
+     const int offset = m.capturedStart() - 1; // put cursor at the first option
+     insertWord.replace(rx, s_completionPlaceHolder);
+diff '--color=auto' -ur ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42.orig/common/tikzpreviewgenerator.cpp ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42/common/tikzpreviewgenerator.cpp
+--- ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42.orig/common/tikzpreviewgenerator.cpp	2026-04-17 21:17:41.271951875 +0800
++++ ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42/common/tikzpreviewgenerator.cpp	2026-04-17 21:20:16.215949766 +0800
+@@ -145,7 +145,7 @@
+ {
+     QString logText;
+ 
+-    const QRegularExpression errorPattern("(\\S*):(\\d+): (.*$)");
++    const QRegularExpression errorPattern(QLatin1String("(\\S*):(\\d+): (.*$)"));
+     QList<QLatin1String> errorMessageList;
+     errorMessageList << QLatin1String("Undefined control sequence")
+                      << QLatin1String("LaTeX Warning:") << QLatin1String("LaTeX Error:")
+@@ -164,7 +164,7 @@
+ 
+             // while we don't get a line starting with "l.<number> ...", we have to add the line to
+             // the first error message
+-            const QRegularExpression rx("^l\\.(\\d+)(.*)");
++            const QRegularExpression rx(QLatin1String("^l\\.(\\d+)(.*)"));
+             logLine = logStream->readLine();
+             const auto m = rx.match(logLine);
+             while (m.hasMatch() && !logStream->atEnd()) {
+diff '--color=auto' -ur ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42.orig/common/utils/pagedialog.cpp ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42/common/utils/pagedialog.cpp
+--- ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42.orig/common/utils/pagedialog.cpp	2026-04-17 21:17:41.271951875 +0800
++++ ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42/common/utils/pagedialog.cpp	2026-04-17 21:21:45.635949623 +0800
+@@ -101,7 +101,7 @@
+     m_pagesTitleLabel->setStyleSheet(QLatin1String("QLabel { font-weight: bold; }"));
+     QGridLayout *titleLayout = new QGridLayout(titleFrame);
+     titleLayout->setColumnStretch(0, 1);
+-    titleLayout->setMargin(6);
++    titleLayout->setContentsMargins(6, 6, 6, 6);
+     titleLayout->addWidget(m_pagesTitleLabel);
+ 
+     // add pages
+diff '--color=auto' -ur ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42.orig/common/utils/toggleaction.h ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42/common/utils/toggleaction.h
+--- ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42.orig/common/utils/toggleaction.h	2026-04-17 21:17:41.275951875 +0800
++++ ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42/common/utils/toggleaction.h	2026-04-17 21:31:36.139946557 +0800
+@@ -36,7 +36,7 @@
+ };
+ #else
+ #  include <QtCore/QtGlobal>
+-#  include <QtWidgets/QAction>
++#  include <QAction>
+ 
+ class ToggleAction : public QAction
+ {
+diff '--color=auto' -ur ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42.orig/common/utils/urlcompletion.h ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42/common/utils/urlcompletion.h
+--- ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42.orig/common/utils/urlcompletion.h	2026-04-17 21:17:41.275951875 +0800
++++ ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42/common/utils/urlcompletion.h	2026-04-17 21:31:42.063946541 +0800
+@@ -29,7 +29,7 @@
+ };
+ #else
+ #  include <QtWidgets/QCompleter>
+-#  include <QtWidgets/QFileSystemModel>
++#  include <QFileSystemModel>
+ 
+ class UrlCompletion : public QCompleter
+ {
+diff '--color=auto' -ur ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42.orig/qmake/findpoppler.pri ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42/qmake/findpoppler.pri
+--- ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42.orig/qmake/findpoppler.pri	2026-04-17 21:17:41.279951875 +0800
++++ ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42/qmake/findpoppler.pri	2026-04-17 21:31:46.291946540 +0800
+@@ -1,7 +1,7 @@
+ unix: {
+ 	PKG_CONFIG = $$pkgConfigExecutable()
+-    POPPLERINCLUDES = $$system($$PKG_CONFIG --cflags poppler-qt5)
+-    POPPLERLIBS = $$system($$PKG_CONFIG --libs poppler-qt5)
++    POPPLERINCLUDES = $$system($$PKG_CONFIG --cflags poppler-qt6)
++    POPPLERLIBS = $$system($$PKG_CONFIG --libs poppler-qt6)
+ 	QMAKE_CXXFLAGS += $$POPPLERINCLUDES
+ 	QMAKE_LFLAGS += $$POPPLERLIBS
+ }
+@@ -11,4 +11,4 @@
+ 	LIBS += -L$${_PRO_FILE_PWD_}/win32/poppler/
+ }
+ 
+-LIBS += -lpoppler-qt5
++LIBS += -lpoppler-qt6
+diff '--color=auto' -ur ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42.orig/qmake/qtikzmacros.pri ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42/qmake/qtikzmacros.pri
+--- ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42.orig/qmake/qtikzmacros.pri	2026-04-17 21:17:41.279951875 +0800
++++ ktikz-0a575c2246556adeecbc7b41be56e6d2e7eb6a42/qmake/qtikzmacros.pri	2026-04-17 21:34:56.763944909 +0800
+@@ -2,8 +2,8 @@
+ 
+ unix:!macx {
+ 	PKG_CONFIG = $$pkgConfigExecutable()
+-    POPPLERINCLUDES = $$system($$PKG_CONFIG --cflags poppler-qt5)
+-    POPPLERLIBS = $$system($$PKG_CONFIG --libs poppler-qt5)
++    POPPLERINCLUDES = $$system($$PKG_CONFIG --cflags poppler-qt6)
++    POPPLERLIBS = $$system($$PKG_CONFIG --libs poppler-qt6)
+ 	QMAKE_CXXFLAGS += $$POPPLERINCLUDES
+ 	QMAKE_LFLAGS += $$POPPLERLIBS
+ }
