@@ -1,0 +1,12 @@
+diff '--color=auto' -ur tensordict-0.12.2.orig/pyproject.toml tensordict-0.12.2/pyproject.toml
+--- tensordict-0.12.2.orig/pyproject.toml	2026-04-24 07:46:31.122066335 +0800
++++ tensordict-0.12.2/pyproject.toml	2026-04-24 08:12:40.081864783 +0800
+@@ -63,7 +63,7 @@
+ include-package-data = false
+ 
+ [tool.setuptools.packages.find]
+-exclude = ["test*", "tutorials*", "packaging*", "gallery*", "docs*", "benchmarks*"]
++exclude = ["test*", "tutorials*", "packaging*", "gallery*", "docs*", "benchmarks*", "scripts*"]
+ 
+ #[tool.setuptools.extension]
+ #my_extension = { sources = ["tensordict/csrc/pybind.cpp", "tensordict/csrc/utils.cpp"] }

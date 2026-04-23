@@ -41,10 +41,13 @@ BDEPEND="
 	')
 "
 
+PATCHES=( "${FILESDIR}"/${P}-setup.patch )
+
 EPYTEST_PLUGINS=( h5py pyyaml pytest-rerunfailures )
 EPYTEST_DESELECT=(
 	# need triton
 	test/test_compile.py::TestTD::test_to
+	test/test_compile.py::TestTTD::test_to
 	test/test_compile.py::TestTC::test_tc_to
 	"test/test_compile.py::TestCudaGraphs::test_cudagraphs_random[True]"
 	"test/test_compile.py::TestCudaGraphs::test_backprop[True]"
