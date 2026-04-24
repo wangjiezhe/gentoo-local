@@ -40,14 +40,13 @@ RDEPEND="
 		dev-python/click[${PYTHON_USEDEP}]
 		dev-python/gitpython[${PYTHON_USEDEP}]
 		dev-python/requests[${PYTHON_USEDEP}]
-		dev-python/psutil[${PYTHON_USEDEP}]
 		dev-python/sentry-sdk[${PYTHON_USEDEP}]
-		dev-python/docker-pycreds[${PYTHON_USEDEP}]
 		dev-python/protobuf[${PYTHON_USEDEP}]
 		dev-python/pyyaml[${PYTHON_USEDEP}]
-		dev-python/setproctitle[${PYTHON_USEDEP}]
 		dev-python/platformdirs[${PYTHON_USEDEP}]
+		dev-python/typing-extensions[${PYTHON_USEDEP}]
 		dev-python/pydantic[${PYTHON_USEDEP}]
+		dev-python/packaging[${PYTHON_USEDEP}]
 	')
 "
 
