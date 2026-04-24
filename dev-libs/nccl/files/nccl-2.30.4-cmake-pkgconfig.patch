@@ -1,0 +1,17 @@
+diff '--color=auto' -ur nccl-2.30.4-1.orig/src/nccl.pc.in nccl-2.30.4-1/src/nccl.pc.in
+--- nccl-2.30.4-1.orig/src/nccl.pc.in	2026-04-24 08:33:00.997705170 +0800
++++ nccl-2.30.4-1/src/nccl.pc.in	2026-04-24 16:57:33.339042991 +0800
+@@ -1,10 +1,10 @@
+-prefix=${nccl:Prefix}
++prefix=@CMAKE_INSTALL_PREFIX@
+ exec_prefix=${prefix}
+-libdir=${exec_prefix}/lib
++libdir=${exec_prefix}/@CMAKE_INSTALL_LIBDIR@
+ includedir=${prefix}/include
+ 
+ Name: nccl
+ Description: Optimized primitives for collective multi-GPU communication
+-Version: ${nccl:Major}.${nccl:Minor}.${nccl:Patch}
++Version: @NCCL_MAJOR@.@NCCL_MINOR@.@NCCL_PATCH@
+ Libs: -L${libdir} -lnccl
+ Cflags: -I${includedir}
