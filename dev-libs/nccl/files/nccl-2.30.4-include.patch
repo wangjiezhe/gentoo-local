@@ -1,0 +1,12 @@
+diff '--color=auto' -ur nccl-2.30.4-1.orig/src/include/nccl_device/impl/core__types.h nccl-2.30.4-1/src/include/nccl_device/impl/core__types.h
+--- nccl-2.30.4-1.orig/src/include/nccl_device/impl/core__types.h	2026-04-24 08:33:00.989705171 +0800
++++ nccl-2.30.4-1/src/include/nccl_device/impl/core__types.h	2026-04-24 08:33:23.689702476 +0800
+@@ -14,7 +14,7 @@
+ #define NCCL_GIN_MAX_CONNECTIONS 4
+ typedef void *ncclGinWindow_t;
+ #else
+-#include "nccl_device/gin/gin_device_host_common.h"
++#include "../gin/gin_device_host_common.h"
+ #endif
+ 
+ struct ncclSegmentWindow {
