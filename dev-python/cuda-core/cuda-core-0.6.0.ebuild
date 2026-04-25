@@ -30,6 +30,7 @@ DEPEND="
 BDEPEND="
 	${PYTHON_DEPS}
 	dev-python/cython[${PYTHON_USEDEP}]
+	>=dev-python/cuda-bindings-12.9.0[${PYTHON_USEDEP}]
 "
 
 PARENT_PATCHES=(
