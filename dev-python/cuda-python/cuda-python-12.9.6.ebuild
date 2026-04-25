@@ -18,5 +18,5 @@ RDEPEND="
 	${PYTHON_DEPS}
 	dev-python/cuda-core[${PYTHON_USEDEP}]
 	~dev-python/cuda-bindings-${PV}[${PYTHON_USEDEP}]
-	~dev-python/cuda-pathfinder-1.3.3[${PYTHON_USEDEP}]
+	~dev-python/cuda-pathfinder-1.4.2[${PYTHON_USEDEP}]
 "
