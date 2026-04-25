@@ -5,7 +5,7 @@ EAPI=8
 
 PYTHON_COMPAT=( python3_{11..14} python3_14t )
 DISTUTILS_EXT=1
-DISTUTILS_USE_PEP517=setuptools
+DISTUTILS_USE_PEP517=standalone
 inherit cuda distutils-r1 edo
 
 DESCRIPTION="CUDA Python Low-level Bindings"
@@ -27,10 +27,13 @@ DEPEND="
 "
 BDEPEND="
 	${PYTHON_DEPS}
+	>=dev-python/setuptools-80.0.0
+	dev-python/setuptools-scm
 	>=dev-python/cython-3.2[${PYTHON_USEDEP}]
 	dev-python/pyclibrary[${PYTHON_USEDEP}]
 	test? (
 		dev-python/pyglet[image,${PYTHON_USEDEP}]
+		>=dev-python/cuda-pathfinder-1.3.5[${PYTHON_USEDEP}]
 	)
 "
 
@@ -40,10 +43,16 @@ python_prepare_all() {
 	distutils-r1_python_prepare_all
 
 	export CUDA_HOME="${EPREFIX}/opt/cuda"
-	# export LIBRARY_PATH="${CUDA_HOME}/lib64:${LIBRARY_PATH}"
+	export SETUPTOOLS_SCM_PRETEND_VERSION_FOR_CUDA_BINDINGS="${PV}"
+	export SETUPTOOLS_SCM_PRETEND_VERSION_FOR_CUDA_PYTHON="${PV}"
+
+	sed -i \
+		-e "/-O3/d" \
+		-e "/library_dirs/s/\"lib\"/\"$(get_libdir)\"/" \
+		build_hooks.py || die
 }
 
-EPYTEST_PLUGINS=( numpy cuda-pathfinder )
+EPYTEST_PLUGINS=( numpy )
 distutils_enable_tests pytest
 
 python_test() {
