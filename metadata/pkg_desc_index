@@ -4,8 +4,8 @@ app-laptop/thinkfan 2.0.0: Simple fan control program for thinkpads
 app-misc/aigit 0.1.1: The most powerful git commit assistant ever
 app-misc/cheat 5.1.0: cheat allows you to create and view interactive cheatsheets on the command-line
 app-misc/cmd-wrapped 0.4.1: A CLI tool to view Unix shell history statistics, with support for zsh, bash, fish, and atuin
-app-misc/qwen-code 0.14.3: Qwen Code is a powerful command-line AI workflow tool adapted from Gemini CLI
-app-text/qtikz 0.13.2: A nice user interface for making pictures using TikZ
+app-misc/qwen-code 0.15.2: Qwen Code is a powerful command-line AI workflow tool adapted from Gemini CLI
+app-text/qtikz 0.13.2_p20250728: A nice user interface for making pictures using TikZ
 app-text/typst 0.14.0: A markup-based typesetting system for the sciences
 app-text/typstyle 0.14.1: A beautiful and reliable code formatter for Typst
 app-vim/vimcdoc 2.5.0: online vim documentation translated into Chinese
@@ -20,16 +20,16 @@ dev-libs/cudss 0.7.1.4: A high-performance CUDA Library for Direct Sparse Solver
 dev-libs/cusparselt 0.8.1.1 0.9.0.3: A High-Performance CUDA Library for Sparse Matrix-Matrix Multiplication
 dev-libs/flatbuffers 23.5.26 24.3.25: Memory efficient serialization library
 dev-libs/marisa 0.2.7: Matching Algorithm with Recursively Implemented StorAge
-dev-libs/nccl 2.29.7: Optimized primitives for collective multi-GPU communication
+dev-libs/nccl 2.30.4-r1: Optimized primitives for collective multi-GPU communication
 dev-libs/re2 0.2023.11.01-r1: An efficient, principled regular expression library
 dev-python/FBGEMM_GPU 1.6.0: A collection of high-performance PyTorch GPU operator libraries for training and inference
 dev-python/astunparse 1.6.3-r2: Astun parser for python
 dev-python/backoff 2.2.1: Function decoration for backoff and retry
 dev-python/clang-repl 1.0.4: IPython kernel forwarding C++ cells to clang-repl
-dev-python/cuda-bindings 12.9.5 13.0.0: CUDA Python Low-level Bindings
-dev-python/cuda-core 0.5.1: CUDA Python Low-level Bindings
-dev-python/cuda-pathfinder 1.3.3: Pathfinder for CUDA components
-dev-python/cuda-python 12.9.5 13.0.0: CUDA Python Low-level Bindings
+dev-python/cuda-bindings 12.9.6 13.0.0: CUDA Python Low-level Bindings
+dev-python/cuda-core 0.6.0 0.7.0: CUDA Python Low-level Bindings
+dev-python/cuda-pathfinder 1.4.2: Pathfinder for CUDA components
+dev-python/cuda-python 12.9.6 13.0.0: CUDA Python Low-level Bindings
 dev-python/cutlass 3.9.2 4.2.1: Python packages associated with CUTLASS
 dev-python/diagnostic 3.0.0: Present errors that contain causes better understand what happened
 dev-python/dm-tree 0.1.8: A library for working with nested data structures
@@ -48,8 +48,9 @@ dev-python/jupyter-cache 1.0.1: A defined interface for working with a cache of 
 dev-python/ml-dtypes 0.5.3: A stand-alone implementation of several NumPy dtype extensions
 dev-python/myst-nb 1.4.0: A Jupyter Notebook Sphinx reader built on top of the MyST markdown parser
 dev-python/namex 0.1.0: A simple utility to separate the implementation of your Python package and its public API surface
+dev-python/nccl 0.2.0: NCCL4Py: Python bindings for NCCL
 dev-python/neovim-remote 2.5.1 9999: A tool that helps control neovim processes
-dev-python/optree 0.18.0: Optimized PyTree Utilities
+dev-python/optree 0.19.0: Optimized PyTree Utilities
 dev-python/pipdeptree 2.34.0: Utility for displaying installed packages in a dependency tree
 dev-python/py3nvml 0.2.7: Python 3 Bindings for the NVIDIA Management Library
 dev-python/pyclibrary 0.2.2_p20250410 0.3.0: C parser and ctypes automation for python
@@ -75,20 +76,20 @@ dev-python/treelib 1.8.0: An efficient implementation of tree data structure
 dev-python/typing-inspect 0.9.0: Runtime inspection utilities for Python typing module
 dev-python/watermark 2.6.0: IPython magic function to print date/time stamps and various system information
 dev-texlive/texlive-pictures 2024_p72555: TeXLive Graphics, pictures, diagrams
-dev-util/codex 0.120.0: Codex CLI - OpenAI's AI-powered coding agent
+dev-util/codex 0.124.0: Codex CLI - OpenAI's AI-powered coding agent
 dev-util/evcxr-repl 0.21.1: A REPL for Rust
-dev-util/gemini-cli 0.35.3: Gemini CLI - a command-line AI workflow tool by Google
+dev-util/gemini-cli 0.37.1: Gemini CLI - a command-line AI workflow tool by Google
 dev-util/minify-html 0.18.1: [CLI] Extremely fast and smart HTML + JS + CSS minifier
 dev-util/minify-js 0.6.0: Extremely fast JS minifier
-games-strategy/pvz-portable 0.1.20: A cross-platform reimplementation of Plants vs. Zombies by the community.
+games-strategy/pvz-portable 0.1.21: A cross-platform reimplementation of Plants vs. Zombies by the community.
 media-fonts/maple-mono 6.4 7.9: Open source monospace & nerd font with round corners and ligatures
 media-gfx/pdf2svg 0.2.4-r2: Convert PDF to SVG files using poppler and cairo
-net-libs/bun-bin 1.3.12: Incredibly fast JavaScript runtime, bundler, test runner, and package manager
+net-libs/bun-bin 1.3.13: Incredibly fast JavaScript runtime, bundler, test runner, and package manager
 net-libs/google-cloud-cpp 2.47.0: Google Cloud Client Library for C++
 net-libs/nodejs 12.22.6 14.21.3 16.20.2-r1 18.20.4 20.16.0 22.5.1: A JavaScript runtime built on Chrome's V8 JavaScript engine
 net-misc/mosh 1.4.0: Mobile shell that supports roaming and intelligent local echo
 net-misc/piping-server 0.18.0: Infinitely transfer between every device over pure HTTP with pipes or browsers
-net-vpn/frp 0.66.0 0.68.0: A reverse proxy that exposes a server behind a NAT or firewall to the internet
+net-vpn/frp 0.66.0 0.68.1: A reverse proxy that exposes a server behind a NAT or firewall to the internet
 sci-libs/aocl-blas 5.2.2: AMD's optimized version of BLAS targeted for AMD EPYC and Ryzen CPUs
 sci-libs/aocl-lapack 5.2: AMD optimized high-performance object-based library for DLA computations
 sci-libs/aocl-libm 5.2.2: Optimized libm replacement from AMD for x86_64 architectures
@@ -123,7 +124,7 @@ sci-ml/pytorch-lightning 2.6.1: Lightweight PyTorch wrapper for ML researchers
 sci-ml/pytorch-msssim 1.0.0: Fast and differentiable MS-SSIM and SSIM for pytorch
 sci-ml/safetensors 0.4.2: Simple, safe way to store and distribute tensors
 sci-ml/sentencepiece 0.2.1: Unsupervised text tokenizer for Neural Network-based text generation
-sci-ml/tensordict 0.12.0: A pytorch dedicated tensor container
+sci-ml/tensordict 0.12.2: A pytorch dedicated tensor container
 sci-ml/tensorflow 2.16.2 2.17.1 2.19.0: Computation framework using data flow graphs for scalable machine learning
 sci-ml/tensorrt 8.6.1.6-r1 10.10.0.31 10.14.1.48: An SDK for high-performance deep learning inference
 sci-ml/tokenizers 0.22.2: Implementation of today's most used tokenizers
@@ -138,7 +139,7 @@ sci-ml/torchsnapshot 0.1.0_p20240521-r1: A performant, memory-efficient checkpoi
 sci-ml/torchtext 0.18.0-r1: Data manipulation and transformation for audio signal processing
 sci-ml/torchtnt 0.2.4: A lightweight library for PyTorch training tools and utilities
 sci-ml/torchvision 0.26.0: Datasets, transforms and models to specific to computer vision
-sci-ml/wandb 0.16.6-r1 0.25.1: A tool for visualizing and tracking your machine learning experiments
+sci-ml/wandb 0.16.6-r1 0.25.1-r1 0.26.1-r1: A tool for visualizing and tracking your machine learning experiments
 sci-visualization/tensorboard 2.16.2 2.17.1 2.19.0: TensorFlow's Visualization Toolkit
 sys-apps/bat-extras 2024.08.24-r1: Bash scripts that integrate bat with various command line tools.
 sys-devel/lld-toolchain-symlinks 14-r2: Symlinks to use LLD on binutils-free system
