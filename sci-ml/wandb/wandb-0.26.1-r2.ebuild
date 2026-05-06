@@ -3,6 +3,17 @@
 
 EAPI=8
 
+# Check xpu/Cargo.toml
+WANDB_XPU_PV="0.7.0"
+# Check parquet-rust-wrapper/Cargo.toml
+ARROR_RS_WRAPPER_PV="0.1.0"
+# Check wandb/vendor/wandb_orjson/Cargo.toml
+WANDB_ORJSON_PV="3.11.7"
+
+WANDB_XPU="wandb-xpu-${WANDB_XPU_PV}"
+ARROR_RS_WRAPPER="arrow-rs-wrapper-${ARROR_RS_WRAPPER_PV}"
+WANDB_ORJSON="orjson-${WANDB_ORJSON_PV}"
+
 # dev-python/sentry-sdk does not support python3.10
 PYTHON_COMPAT=( python3_{11..14} )
 DISTUTILS_SINGLE_IMPL=1
@@ -18,13 +29,17 @@ SRC_URI="
 "
 if [[ ${PKGBUMPING} != ${PVR} ]]; then
 	SRC_URI+="
-		https://github.com/wangjiezhe/gentoo-go-deps/releases/download/${P}/${P}-crates.tar.xz
+		https://github.com/wangjiezhe/gentoo-go-deps/releases/download/${P}/${WANDB_XPU}-crates.tar.xz
+		https://github.com/wangjiezhe/gentoo-go-deps/releases/download/${P}/${ARROR_RS_WRAPPER}-crates.tar.xz
+		https://github.com/wangjiezhe/gentoo-go-deps/releases/download/${P}/${WANDB_ORJSON}-crates.tar.xz
 	"
 fi
 
 LICENSE="MIT"
 # Dependent crate licenses
-LICENSE+=" Apache-2.0 BSD CDLA-Permissive-2.0 ISC MIT Unicode-3.0 ZLIB"
+LICENSE+="
+	Apache-2.0 Apache-2.0-with-LLVM-exceptions BSD Boost-1.0 CDLA-Permissive-2.0 ISC MIT Unicode-3.0 ZLIB
+"
 SLOT="0"
 KEYWORDS="~amd64"
 RESTRICT="test"
@@ -52,7 +67,6 @@ RDEPEND="
 
 PATCHES=(
 	"${FILESDIR}/${PN}-0.18.5-hatch.patch"
-	# "${FILESDIR}/${P}-go.patch"
 )
 
 DOC=( package_readme.md )
@@ -61,7 +75,7 @@ QA_PREBUILT="/usr/lib/python*/site-packages/wandb/bin/wandb-core"
 
 src_unpack() {
 	S="${WORKDIR}/${P}/core" go-module_src_unpack
-	S="${WORKDIR}/${P}/xpu" cargo_gen_config
+	cargo_gen_config
 }
 
 src_prepare() {
