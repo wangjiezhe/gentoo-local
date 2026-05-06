@@ -1,9 +1,9 @@
-# Copyright 1999-2025 Gentoo Authors
+# Copyright 1999-2026 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{11..13} )
+PYTHON_COMPAT=( python3_{11..14} )
 DISTUTILS_USE_PEP517=poetry
 # PYPI_NO_NORMALIZE=1
 inherit distutils-r1 pypi
@@ -18,32 +18,20 @@ LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64"
 
-RDEPEND="
-	$(python_gen_cond_dep \
-		'dev-python/typing-extensions[${PYTHON_USEDEP}]' python3_9)
-"
 BDEPEND="
-	test? (
-		dev-python/pytest-asyncio[${PYTHON_USEDEP}]
-		dev-python/pytest-describe[${PYTHON_USEDEP}]
-		dev-python/pytest-timeout[${PYTHON_USEDEP}]
-	)
+	<dev-python/setuptools-83[${PYTHON_USEDEP}]
+	>=dev-python/setuptools-59[${PYTHON_USEDEP}]
 "
 
 EPYTEST_IGNORE=( tests/benchmarks )
+EPYTEST_PLUGINS=( anyio pytest-{asyncio,describe,timeout} )
 
 distutils_enable_tests pytest
 
 distutils_enable_sphinx docs \
 	dev-python/sphinx-rtd-theme
 
-src_prepare() {
-	distutils-r1_src_prepare
-
-	sed "/addopts =/d" -i setup.cfg pyproject.toml || die
-}
-
 python_test() {
-	cd "${S}"/tests || die
-	epytest
+	# avoid pytest-benchmark
+	epytest -o addopts= tests
 }

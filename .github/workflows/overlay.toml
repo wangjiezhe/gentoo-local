@@ -680,3 +680,7 @@ source = "github"
 github = "openai/codex"
 use_latest_release = true
 prefix = "rust-v"
+
+["dev-python/graphql-core"]
+source = "pypi"
+pypi = "graphql-core"
