@@ -32,7 +32,7 @@ DEPEND="
 # BDEPEND="
 # 	doc? (
 # 		app-text/doxygen
-# 		dev-python/rocm-docs-core (not packed yet)
+# 		dev-python/rocm-docs-core
 # 		dev-python/breathe
 # 		dev-python/sphinxcontrib-bibtex
 # 	)
