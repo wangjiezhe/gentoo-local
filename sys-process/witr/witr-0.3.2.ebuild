@@ -15,6 +15,8 @@ SLOT="0"
 KEYWORDS="~amd64 ~arm64 ~mips"
 IUSE="abi_mips_o32 abi_mips_n64"
 
+BDEPEND=">=dev-lang/go-1.25"
+
 src_compile() {
 	local ldflags=(
 		-X main.version=${PV}
