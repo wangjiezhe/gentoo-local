@@ -1,0 +1,23 @@
+diff --git a/fbgemm_gpu/CMakeLists.txt b/fbgemm_gpu/CMakeLists.txt
+index e2181cd0a..050e8f7c4 100644
+--- a/fbgemm_gpu/CMakeLists.txt
++++ b/fbgemm_gpu/CMakeLists.txt
+@@ -148,8 +148,6 @@ set(fbgemm_sources_include_directories
+   ${CMAKE_CURRENT_SOURCE_DIR}
+   ${CMAKE_CURRENT_SOURCE_DIR}/include
+   ${CMAKE_CURRENT_SOURCE_DIR}/../include
+-  # PyTorch
+-  ${TORCH_INCLUDE_DIRS}
+   # Third-party
+   ${THIRDPARTY}/asmjit/src
+   ${THIRDPARTY}/cpuinfo/include
+@@ -157,8 +155,7 @@ set(fbgemm_sources_include_directories
+   ${THIRDPARTY}/cutlass/tools/util/include
+   ${THIRDPARTY}/composable_kernel/include
+   ${THIRDPARTY}/composable_kernel/library/include
+-  ${THIRDPARTY}/json/include
+-  ${NCCL_INCLUDE_DIRS})
++  ${THIRDPARTY}/json/include)
+ 
+ 
+ ################################################################################

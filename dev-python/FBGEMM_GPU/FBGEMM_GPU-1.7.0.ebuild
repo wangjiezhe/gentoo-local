@@ -61,13 +61,16 @@ BDEPEND="
 
 PARENT_PATCHES=(
 	"${FILESDIR}/${P}-version.patch"
-	"${FILESDIR}/${PN}-1.1.0-gentoo.patch"
+	"${FILESDIR}/${P}-gentoo.patch"
 )
 
 src_prepare() {
 	[[ ${#PARENT_PATCHES[@]} -gt 0 ]] && eapply -p2 -- "${PARENT_PATCHES[@]}"
 
-	sed -i "s@CMAKE_PREFIX_PATH={torch_root}@CMAKE_PREFIX_PATH=${EPREFIX}/usr@" setup.py
+	sed -i \
+		-e "s@CMAKE_PREFIX_PATH={torch_root}@CMAKE_PREFIX_PATH=${EPREFIX}/usr@" \
+		-e "s@-L{nccl_root}/lib@-L{nccl_root}/$(get_libdir)@" \
+		setup.py || die
 
 	use cuda && cuda_src_prepare
 	distutils-r1_src_prepare
@@ -79,8 +82,9 @@ python_configure_all() {
 		--build-target default
 	)
 	use cuda && DISTUTILS_ARGS+=(
-		--nccl_lib_path "${EPREFIX}"/opt/cuda/targets/x86_64-linux/lib/libnccl.so.2
-	) || DISTUTILS_ARGS+=(--package_variant cpu)
+		--build_variant cuda
+		--nccl_lib_path "${EPREFIX}"/usr/$(get_libdir)/libnccl.so.2
+	) || DISTUTILS_ARGS+=(--build_variant cpu)
 }
 
 # distutils_enable_tests pytest
