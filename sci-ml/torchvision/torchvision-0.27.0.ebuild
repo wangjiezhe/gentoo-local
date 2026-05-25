@@ -5,14 +5,15 @@ EAPI=8
 
 PYTHON_COMPAT=( python3_{11..14} )
 DISTUTILS_SINGLE_IMPL=1
-DISTUTILS_EXT=1
 DISTUTILS_USE_PEP517=setuptools
+DISTUTILS_EXT=1
 inherit distutils-r1 cuda
 
 DESCRIPTION="Datasets, transforms and models to specific to computer vision"
 HOMEPAGE="https://github.com/pytorch/vision"
 SRC_URI="https://github.com/pytorch/vision/archive/v${PV}.tar.gz -> ${P}.gh.tar.gz"
-S="${WORKDIR}/vision-${PV}"
+
+S="${WORKDIR}"/vision-${PV}
 
 LICENSE="BSD"
 SLOT="0"
@@ -23,20 +24,17 @@ RDEPEND="
 	$(python_gen_cond_dep '
 		dev-python/numpy[${PYTHON_USEDEP}]
 		dev-python/pillow[${PYTHON_USEDEP}]
-		dev-python/requests[${PYTHON_USEDEP}]
-		dev-python/scipy[${PYTHON_USEDEP}]
 	')
 	cuda? ( media-libs/nv-codec-headers )
 	jpeg? ( media-libs/libjpeg-turbo:= )
 	png? ( media-libs/libpng:= )
 	webp? ( media-libs/libwebp )
-	dev-qt/qtcore:5
-	sci-ml/caffe2[cuda?]
+	sci-ml/caffe2[cuda?,${PYTHON_SINGLE_USEDEP}]
 	sci-ml/pytorch[${PYTHON_SINGLE_USEDEP}]
 "
 DEPEND="${RDEPEND}"
 
-EPYTEST_PLUGINS=( pytest-mock lmdb )
+EPYTEST_PLUGINS=( pytest-mock lmdb scipy )
 distutils_enable_tests pytest
 
 src_prepare() {
