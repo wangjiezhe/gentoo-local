@@ -5,8 +5,7 @@ EAPI=8
 
 PYTHON_COMPAT=( python3_{11..14} )
 ROCM_VERSION=6.1
-CMAKE_REMOVE_MODULES_LIST=()
-inherit python-single-r1 cmake cuda flag-o-matic prefix rocm toolchain-funcs
+inherit python-single-r1 cmake cuda flag-o-matic prefix rocm
 
 MYPN=pytorch
 MYP=${MYPN}-${PV}
@@ -45,8 +44,9 @@ S="${WORKDIR}"/${MYP}
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="aocl cuda cudss cusparselt distributed fbgemm flash flexiblas gloo magma memefficient mimalloc mkl
-	mpi nccl numa nnpack +numpy onednn openblas opencl openmp qnnpack rocm xnnpack"
+IUSE="aocl cuda cudss cusparselt distributed fbgemm flash flexiblas gloo kineto magma memefficient
+	mimalloc mkl mpi nccl numa nnpack +numpy onednn openblas opencl openmp qnnpack
+	rocm xnnpack"
 RESTRICT="test"
 REQUIRED_USE="
 	${PYTHON_REQUIRED_USE}
@@ -55,6 +55,7 @@ REQUIRED_USE="
 	?? ( cuda rocm )
 	rocm? (
 		|| ( ${ROCM_REQUIRED_USE} )
+		memefficient? ( flash )
 	)
 	cusparselt? ( || ( cuda rocm ) )
 	flash? ( || ( cuda rocm ) )
@@ -72,8 +73,6 @@ RDEPEND="
 	dev-libs/libfmt:=
 	dev-libs/protobuf:=
 	dev-libs/sleef
-	sci-ml/foxi
-	>=sci-ml/kineto-0.4.0_p20260323
 	sci-ml/onnx
 	virtual/lapack
 	cuda? (
@@ -86,6 +85,7 @@ RDEPEND="
 	)
 	fbgemm? ( sci-ml/FBGEMM:= )
 	gloo? ( >=sci-ml/gloo-2025.06.04[cuda?,rocm?] )
+	kineto? ( ~sci-ml/kineto-0.4.0_p20260323 )
 	magma? ( sci-libs/magma[cuda?] )
 	mimalloc? ( dev-libs/mimalloc )
 	mpi? ( virtual/mpi )
@@ -147,7 +147,7 @@ DEPEND="
 	dev-libs/psimd
 	sci-ml/FP16
 	$(python_gen_cond_dep '
-		<dev-python/pybind11-3.0.2[${PYTHON_USEDEP}]
+		<dev-python/pybind11-3.0.5[${PYTHON_USEDEP}]
 		dev-python/pyyaml[${PYTHON_USEDEP}]
 		dev-python/typing-extensions[${PYTHON_USEDEP}]
 	')
@@ -172,20 +172,19 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.10.0-gentoo.patch
 	"${FILESDIR}"/${PN}-2.4.0-cpp-httplib.patch
 	"${FILESDIR}"/${PN}-1.12.0-glog-0.6.0.patch
-	"${FILESDIR}"/${P}-rocm-fix-std-cpp17.patch
-	"${FILESDIR}"/${PN}-2.9.0-cmake.patch
 	"${FILESDIR}"/${PN}-2.9.1-cmake.patch
 	"${FILESDIR}"/${PN}-2.7.0-glog-0.7.1.patch
-	"${FILESDIR}"/${PN}-2.7.1-aotriton-fixes.patch
+	"${FILESDIR}"/${P}-aotriton-fixes.patch
 	"${FILESDIR}"/${PN}-2.8.0-rocm-minus-flash.patch
+	"${FILESDIR}"/${P}-rocm-distributed-link.patch
 	"${FILESDIR}"/${PN}-2.10.0-aocl.patch
 	"${FILESDIR}"/${PN}-2.9.0-xnnpack.patch
 	"${FILESDIR}"/${PN}-2.9.1-torch_cpu.patch
 	"${FILESDIR}"/${PN}-2.10.0-blas.patch
 	"${FILESDIR}"/${PN}-2.10.0-lapack.patch
-	"${FILESDIR}"/${P}-mimalloc.patch
+	"${FILESDIR}"/${PN}-2.11.0-mimalloc.patch
+	"${FILESDIR}"/${P}-removekineto-pr178960.patch
 	"${FILESDIR}"/${PN}-2.10.0-magma_2_10.patch
-	"${FILESDIR}"/${P}-Allow-gcc-14-with-CUDA-12.8.patch
 )
 
 src_prepare() {
@@ -223,8 +222,8 @@ src_prepare() {
 
 	# Change libaotriton path
 	sed -i \
-		-e "/set(__AOTRITON_LIB/s|lib/|$(get_libdir)/|g" \
-		-e "s|}/lib|}/$(get_libdir)|g" \
+		-e "s|}/lib|}/\${CMAKE_INSTALL_LIBDIR}|g" \
+		-e "/set(__AOTRITON_LIB/s|lib/|\${CMAKE_INSTALL_LIBDIR}/|g" \
 		cmake/External/aotriton.cmake \
 		|| die
 
@@ -269,13 +268,6 @@ src_prepare() {
 		eapply "${FILESDIR}"/composable-kernel-7fe50dc-expand-isa.patch
 		popd > /dev/null || die
 
-		if tc-is-clang; then
-			# Systemwide gcc (for absl and at::TensorBase) + hipcc (llvm>=18) need abi-compat=17.
-			# But systemwide clang>=18 + hipcc (>=llvm-18) need opposite!
-			# See also: https://github.com/llvm/llvm-project/issues/102443#issuecomment-2329726287
-			sed -e '/-fclang-abi-compat=17/d' -i cmake/Dependencies.cmake || die
-		fi
-
 		# Workaround for libc++ issue https://github.com/llvm/llvm-project/issues/100802
 		sed -e 's/std::memcpy/memcpy/g' -i torch/headeronly/util/Half.h || die
 
@@ -301,6 +293,7 @@ src_configure() {
 
 	local mycmakeargs=(
 		-DBUILD_CUSTOM_PROTOBUF=OFF
+		-DBUILD_TEST=OFF
 		-DLIBSHM_INSTALL_LIB_SUBDIR="${EPREFIX}"/usr/$(get_libdir)
 		-DPython_EXECUTABLE="${PYTHON}"
 		-DTORCH_INSTALL_LIB_DIR="${EPREFIX}"/usr/$(get_libdir)
@@ -308,7 +301,6 @@ src_configure() {
 		-DBUILD_SHARED_LIBS=ON
 		-DUSE_SYSTEM_LIBS=ON
 		-DATEN_NO_TEST=ON
-		-DBUILD_TEST=OFF
 
 		-DUSE_CCACHE=OFF
 		-DUSE_CUDA=$(usex cuda)
@@ -319,7 +311,7 @@ src_configure() {
 		-DUSE_GLOG=ON
 		-DUSE_GLOO=$(usex gloo)
 		-DUSE_ITT=OFF
-		-DUSE_KINETO=ON
+		-DUSE_KINETO=$(usex kineto)
 		-DUSE_KLEIDIAI=OFF # TODO
 		-DUSE_MAGMA=$(usex magma)
 		-DMAGMA_V2=$(usex magma)
