@@ -185,6 +185,7 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.11.0-mimalloc.patch
 	"${FILESDIR}"/${P}-removekineto-pr178960.patch
 	"${FILESDIR}"/${PN}-2.10.0-magma_2_10.patch
+	"${FILESDIR}"/${P}-fbgemm_1_7.patch
 )
 
 src_prepare() {

@@ -1,0 +1,122 @@
+From 3c43db79771fbb5be0805a1320d33b595c41ce28 Mon Sep 17 00:00:00 2001
+From: Benson Ma <bensonma415@meta.com>
+Date: Wed, 22 Apr 2026 21:32:58 +0000
+Subject: [PATCH] [split] Remove LEGACY template parameter from callers of
+ fbgemm::Quantize (extracted from D100683749) (#181067)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Summary:
+Remove explicit `LEGACY` template parameter from all callers of `fbgemm::Quantize` in PyTorch quantization code
+
+This diff removes the redundant `false /*LEGACY*/` template argument from all call sites of `fbgemm::Quantize<T, LEGACY>()` within PyTorch's native quantization implementation. Since `false` is already the default value for the `LEGACY` parameter, this change is a **pure no-op refactor** — no behavioral change. This cleanup prepares for D100683749, which removes the `LEGACY` template parameter entirely from the `fbgemm::Quantize` API.
+
+Specifically:
+
+1. **QuantizedLinear.cpp**: Simplifies `fbgemm::Quantize<int8_t, false>` → `fbgemm::Quantize<int8_t>` in `fbgemm_linear_quantize_weight`
+2. **AffineQuantizerBase.cpp**: Simplifies two call sites — scalar `quantize_val()` and batch `quantize_vec()` — from `fbgemm::Quantize<typename T::underlying, false>` → `fbgemm::Quantize<typename T::underlying>`
+3. **QuantizedOpKernels.cpp**: Simplifies `fbgemm::Quantize<underlying_t, false>` → `fbgemm::Quantize<underlying_t>` in `quantize_tensor_per_tensor_affine_cpu`
+
+## Detailed Changes
+
+### QuantizedLinear.cpp (fbcode + xplat)
+- Removed `false /*LEGACY*/` template arg from `fbgemm::Quantize<int8_t>()` call in weight quantization path
+
+### AffineQuantizerBase.cpp (fbcode + xplat)
+- Removed `false /*LEGACY*/` template arg from scalar `quantize_val()` (single-value quantization)
+- Removed `false /*LEGACY*/` template arg from batch `quantize_vec()` (buffer quantization)
+
+### QuantizedOpKernels.cpp (fbcode + xplat)
+- Removed `false /*LEGACY*/` template arg from `quantize_tensor_per_tensor_affine_cpu` parallel quantization kernel
+
+Test Plan:
+# Unit Tests
+
+## Full Suite — All Quantization Tests
+# Covers all 3 modified files (QuantizedLinear.cpp, AffineQuantizerBase.cpp, QuantizedOpKernels.cpp)
+buck2 test @//mode/opt fbcode//caffe2/test/quantization:test_quantization
+
+## Targeted Tests
+
+### QuantizedLinear.cpp (fbgemm_linear_quantize_weight)
+# Dynamic quantized linear — uses fbgemm::Quantize<int8_t> for weight quantization
+buck2 test @//mode/opt fbcode//caffe2/test/quantization:test_quantization -- TestDynamicQuantizedOps.test_qlinear_legacy
+buck2 test @//mode/opt fbcode//caffe2/test/quantization:test_quantization -- TestDynamicQuantizedOps.test_qlinear
+
+### AffineQuantizerBase.cpp (quantize_val, quantize_vec)
+# Tensor quantize/dequantize round-trip — exercises both scalar and batch quantization paths
+buck2 test @//mode/opt fbcode//caffe2/test/quantization:test_quantization -- test_quantized_tensor
+
+### QuantizedOpKernels.cpp (quantize_tensor_per_tensor_affine_cpu)
+# Quantized ops — nearly all tests call torch.quantize_per_tensor() which hits this kernel
+buck2 test @//mode/opt fbcode//caffe2/test/quantization:test_quantization -- test_quantized_op
+
+# Benchmarks
+
+# PyTorch Operator Benchmark — quantize ops that exercise the modified code paths
+# Requires: CPU (x86_64)
+# NOTE: This is a no-op refactor, no perf regression expected
+buck2 run @//mode/opt fbcode//caffe2/benchmarks/operator_benchmark:benchmark_all_test -- --operators QuantizePerTensor,QuantizePerChannel,QLinear,QDynamicLinear
+
+# Quick quantization-only benchmark
+buck2 run @//mode/opt fbcode//caffe2/benchmarks/operator_benchmark:benchmark_all_test -- --operators QuantizePerTensor,QuantizePerChannel --tag_filter short
+
+Differential Revision: D101871199
+
+Pull Request resolved: https://github.com/pytorch/pytorch/pull/181067
+Approved by: https://github.com/cyyever, https://github.com/atalman
+---
+ aten/src/ATen/native/QuantizedLinear.cpp                      | 2 +-
+ aten/src/ATen/native/quantized/AffineQuantizerBase.cpp        | 4 ++--
+ .../ATen/native/quantized/cpu/kernels/QuantizedOpKernels.cpp  | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/aten/src/ATen/native/QuantizedLinear.cpp b/aten/src/ATen/native/QuantizedLinear.cpp
+index 8ba63a5e51eaf..b1299def720c8 100644
+--- a/aten/src/ATen/native/QuantizedLinear.cpp
++++ b/aten/src/ATen/native/QuantizedLinear.cpp
+@@ -264,7 +264,7 @@ std::tuple<Tensor, Tensor, double, int64_t> fbgemm_linear_quantize_weight(
+       LEGACY_CONTIGUOUS_MEMORY_FORMAT);
+   // Tensor quantized = at::native::empty_cpu(
+   //     weight_contig.sizes(), weight_contig.options().dtype(at::kChar));
+-  fbgemm::Quantize<int8_t, false /*LEGACY*/>(
++  fbgemm::Quantize<int8_t>(
+       /*src=*/weight_contig.const_data_ptr<float>(),
+       /*dst=*/quantized.mutable_data_ptr<int8_t>(),
+       /*len=*/weight_contig.numel(),
+diff --git a/aten/src/ATen/native/quantized/AffineQuantizerBase.cpp b/aten/src/ATen/native/quantized/AffineQuantizerBase.cpp
+index a5b15b86d27fa..64d9232714d5d 100644
+--- a/aten/src/ATen/native/quantized/AffineQuantizerBase.cpp
++++ b/aten/src/ATen/native/quantized/AffineQuantizerBase.cpp
+@@ -45,7 +45,7 @@ T quantize_val(double scale, int64_t zero_point, float value) {
+   // example in x86 using _mm512_cvtps_epi32 or mm512_round_ps with
+   // _MM_FROUND_CUR_DIRECTION option that also follow the current rounding mode.
+   // NOLINTNEXTLINE(bugprone-signed-char-misuse)
+-  auto qvalue = fbgemm::Quantize<typename T::underlying, false /*LEGACY*/>(
++  auto qvalue = fbgemm::Quantize<typename T::underlying>(
+       value,
+       static_cast<int32_t>(zero_point),
+       static_cast<float>(scale),
+@@ -60,7 +60,7 @@ void quantize_vec(
+     const float* src,
+     T* dst,
+     size_t count) {
+-  fbgemm::Quantize<typename T::underlying, false /*LEGACY*/>(
++  fbgemm::Quantize<typename T::underlying>(
+       src,
+       (typename T::underlying*)dst,
+       count,
+diff --git a/aten/src/ATen/native/quantized/cpu/kernels/QuantizedOpKernels.cpp b/aten/src/ATen/native/quantized/cpu/kernels/QuantizedOpKernels.cpp
+index 8e917e10d1612..1e87b8cf2cbac 100644
+--- a/aten/src/ATen/native/quantized/cpu/kernels/QuantizedOpKernels.cpp
++++ b/aten/src/ATen/native/quantized/cpu/kernels/QuantizedOpKernels.cpp
+@@ -3489,7 +3489,7 @@ void quantize_tensor_per_tensor_affine_cpu(
+         int num_tasks = at::get_num_threads();
+         at::parallel_for(0, num_tasks, 1, [&](int64_t begin, int64_t end) {
+           for (const auto task_id : c10::irange(begin, end)) {
+-            fbgemm::Quantize<underlying_t, false /*LEGACY*/>(
++            fbgemm::Quantize<underlying_t>(
+                 rd, /*src=*/
+                 qd, /*dst=*/
+                 rtensor.numel(), /*len*/
