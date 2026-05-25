@@ -24,6 +24,7 @@ RDEPEND="
 "
 BDEPEND="
 	test? (
+		dev-python/requests[${PYTHON_USEDEP}]
 		dev-python/responses[${PYTHON_USEDEP}]
 		dev-python/pydantic[${PYTHON_USEDEP}]
 		dev-python/attrs[${PYTHON_USEDEP}]
