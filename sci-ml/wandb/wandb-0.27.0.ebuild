@@ -7,12 +7,9 @@ EAPI=8
 WANDB_XPU_PV="0.7.0"
 # Check parquet-rust-wrapper/Cargo.toml
 ARROR_RS_WRAPPER_PV="0.1.0"
-# Check wandb/vendor/wandb_orjson/Cargo.toml
-WANDB_ORJSON_PV="3.11.7"
 
 WANDB_XPU="wandb-xpu-${WANDB_XPU_PV}"
 ARROR_RS_WRAPPER="arrow-rs-wrapper-${ARROR_RS_WRAPPER_PV}"
-WANDB_ORJSON="orjson-${WANDB_ORJSON_PV}"
 
 # dev-python/sentry-sdk does not support python3.10
 PYTHON_COMPAT=( python3_{11..14} )
@@ -30,8 +27,9 @@ SRC_URI="
 if [[ ${PKGBUMPING} != ${PVR} ]]; then
 	SRC_URI+="
 		https://github.com/wangjiezhe/gentoo-go-deps/releases/download/${P}/${WANDB_XPU}-crates.tar.xz
+			-> ${P}-${WANDB_XPU}-crates.tar.xz
 		https://github.com/wangjiezhe/gentoo-go-deps/releases/download/${P}/${ARROR_RS_WRAPPER}-crates.tar.xz
-		https://github.com/wangjiezhe/gentoo-go-deps/releases/download/${P}/${WANDB_ORJSON}-crates.tar.xz
+			-> ${P}-${ARROR_RS_WRAPPER}-crates.tar.xz
 	"
 fi
 
@@ -81,4 +79,5 @@ src_unpack() {
 src_prepare() {
 	export CGO_LDFLAGS=$(echo "$CGO_LDFLAGS" | sed 's/-Wl,-z,pack-relative-relocs//g')
 	distutils-r1_src_prepare
+	sed -i "s/^go 1.26.3$/go 1.26.2/" core/go.mod || die
 }
