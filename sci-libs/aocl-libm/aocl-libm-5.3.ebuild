@@ -19,6 +19,9 @@ IUSE="static-libs"
 DEPEND="
 	>=sci-libs/aocl-utils-5.2[static-libs?]
 "
+BDEPEND="
+	dev-util/patchelf
+"
 # BDEPEND="
 # 	test? (
 # 		dev-libs/gmp
@@ -40,7 +43,6 @@ DEPEND="
 DOCS=( README.md )
 
 PATCHES=(
-	"${FILESDIR}"/${PN}-5.2-gcc.patch
 	"${FILESDIR}"/${PN}-5.2-compat.patch
 )
 
@@ -80,6 +82,10 @@ src_configure() {
 
 src_install() {
 	cmake_src_install
+
+	for soname in alm almfast alm-glibc-compat; do
+		patchelf --add-needed libm.so.6 "${ED}/usr/$(get_libdir)/lib${soname}.so" || die "patchelf failed"
+	done
 
 	insinto /usr/$(get_libdir)/pkgconfig
 	doins "${T}"/amdlibm.pc
