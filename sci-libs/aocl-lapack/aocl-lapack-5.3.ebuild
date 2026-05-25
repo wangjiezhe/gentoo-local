@@ -39,7 +39,8 @@ src_prepare() {
 			-e 's/-march=native//' \
 			-e 's/-mtune=native//' \
 	    -e 's/-O3//' \
-			-e 's:${CMAKE_INSTALL_PREFIX}/lib:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}:' \
+			-i cmake/CompilerFlags.cmake || die
+	sed -e 's:${CMAKE_INSTALL_PREFIX}/lib:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}:' \
 			-e 's:${CMAKE_INSTALL_PREFIX}/include:${CMAKE_INSTALL_PREFIX}/include/flame:' \
 		  -i CMakeLists.txt src/lapacke/LAPACKE/CMakeLists.txt || die
 	sed -e 's:${prefix}/lib:${prefix}/@CMAKE_INSTALL_LIBDIR@:' \
@@ -66,6 +67,6 @@ src_configure() {
 src_install() {
 	cmake_src_install
 
-	use aocl-blas || patchelf --add-needed libblas.so.3 "${ED}"/usr/$(get_libdir)/libflame.so || die "patchelf failed"
+	# use aocl-blas || patchelf --add-needed libblas.so.3 "${ED}"/usr/$(get_libdir)/libflame.so || die "patchelf failed"
 	use gpu && patchelf --add-needed libcublas.so --add-needed libcudart.so "${ED}"/usr/$(get_libdir)/libflame.so || die "patchelf failed"
 }

@@ -1,0 +1,25 @@
+diff --git a/src/base/flamec/include/FLA_type_defs.h b/src/base/flamec/include/FLA_type_defs.h
+index 8fa72dd78..0c6101669 100644
+--- a/src/base/flamec/include/FLA_type_defs.h
++++ b/src/base/flamec/include/FLA_type_defs.h
+@@ -325,7 +325,7 @@ struct FLASH_Task_s
+ 
+   // Integer arguments
+   int           n_int_args;
+-  int*          int_arg;
++  fla_dim_t*    int_arg;
+ 
+   // Constant FLA_Obj arguments
+   int           n_fla_args;
+diff --git a/src/map/lapack2flamec/FLA_getrf.c b/src/map/lapack2flamec/FLA_getrf.c
+index f2e38d2ba..00dd1cc06 100644
+--- a/src/map/lapack2flamec/FLA_getrf.c
++++ b/src/map/lapack2flamec/FLA_getrf.c
+@@ -41,6 +41,7 @@
+ extern void DTL_Trace(uint8 ui8LogLevel, uint8 ui8LogType, const int8 *pi8FileName,
+                       const int8 *pi8FunctionName, uint32 ui32LineNumber, const int8 *pi8Message);
+ int fla_thread_get_num_threads(void);
++fla_dim_t FLASH_get_num_threads( fla_dim_t fallback );
+ /** Generated wrapper function */
+ void sgetrf_(aocl_int_t *m, aocl_int_t *n, real *buff_A, aocl_int_t *ldim_A, aocl_int_t *buff_p, aocl_int_t *info)
+ {
