@@ -37,9 +37,12 @@ declare -A GIT_CRATES=(
 RUST_MIN_VER="1.93.0"
 
 # python3 .github/scripts/rusty_v8_bazel.py resolved-v8-crate-version
-RUSTY_V8_TAG="146.4.0"
+RUSTY_V8_TAG="147.4.0"
 
-inherit cargo
+inherit cargo check-reqs toolchain-funcs
+
+CHECKREQS_MEMORY="15G"
+CHECKREQS_DISK_BUILD="20G"
 
 DESCRIPTION="Codex CLI - OpenAI's AI-powered coding agent"
 HOMEPAGE="https://github.com/openai/codex"
@@ -49,7 +52,7 @@ HOMEPAGE="https://github.com/openai/codex"
 # See .github/workflows/crates.yml for the generation process.
 SRC_URI="
 	https://github.com/openai/${PN}/archive/rust-v${PV}.tar.gz -> ${P}.tar.gz
-	https://github.com/wangjiezhe/gentoo-go-deps/releases/download/${P}/${P}-crates.tar.xz
+	https://github.com/wangjiezhe/gentoo-go-deps/releases/download/${P}/codex-cli-${PV}-crates.tar.xz
 	amd64? (
 		https://github.com/openai/codex/releases/download/rusty-v8-v${RUSTY_V8_TAG}/librusty_v8_release_x86_64-unknown-linux-musl.a.gz
 			-> rusty_v8_${RUSTY_V8_TAG}_librusty_v8_release_x86_64-unknown-linux-musl.a.gz
@@ -87,6 +90,20 @@ BDEPEND="virtual/pkgconfig"
 
 # rust does not use *FLAGS from make.conf, silence portage warning
 QA_FLAGS_IGNORED="usr/bin/${PN}"
+
+pkg_pretend() {
+	check-reqs_pkg_pretend
+}
+
+pkg_setup() {
+	check-reqs_pkg_setup
+	rust_pkg_setup
+	if tc-is-lto; then
+		export CARGO_PROFILE_RELEASE_LTO=thin
+	else
+		export CARGO_PROFILE_RELEASE_LTO=false
+	fi
+}
 
 gen_git_crate_dir() {
 	# https://github.com/gentoo/gentoo/blob/b09dd88412fe2d5eee5a8891e08bfa2d67848da3/eclass/cargo.eclass#L442
