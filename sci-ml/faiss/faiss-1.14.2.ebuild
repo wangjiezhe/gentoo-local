@@ -12,7 +12,6 @@ SRC_URI="https://github.com/facebookresearch/faiss/archive/v${PV}.tar.gz -> ${P}
 LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64"
-CPU_FLAGS="cpu_flags_x86_avx512f cpu_flags_x86_avx2"
 IUSE="python cuda test ${CPU_FLAGS}"
 RESTRICT="!test? ( test )"
 
@@ -38,7 +37,7 @@ BDEPEND="python? ( ${PYTHON_DEPS} )"
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
 PATCHES=(
-	"${FILESDIR}/${P}-test.patch"
+	"${FILESDIR}/${PN}-1.14.1-test.patch"
 )
 
 src_prepare() {
@@ -49,11 +48,12 @@ src_prepare() {
 
 src_configure() {
 	mycmakeargs=(
-		-DCMAKE_BUILD_TYPE=Release
+		-DFAISS_ENABLE_C_API=ON
 		-DFAISS_ENABLE_GPU=$(usex cuda ON OFF)
 		-DFAISS_ENABLE_PYTHON=$(usex python ON OFF)
 		-DBUILD_TESTING=$(usex test ON OFF)
-		-DFAISS_OPT_LEVEL=$(usex cpu_flags_x86_avx512f avx512 $(usex cpu_flags_x86_avx2 avx2 generic))
+		# See faiss/docs/simd_dynamic_dispatch_migration.md
+		-DFAISS_OPT_LEVEL="dd"
 	)
 	if use python; then
 		python_foreach_impl run_in_build_dir cmake_src_configure
@@ -86,6 +86,7 @@ src_install() {
 	else
 		cmake_src_install
 	fi
+	rm -rf "${ED}"/usr/faiss || die
 }
 
 src_test() {
