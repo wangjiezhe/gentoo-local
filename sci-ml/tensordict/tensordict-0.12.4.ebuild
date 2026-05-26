@@ -41,7 +41,7 @@ BDEPEND="
 	')
 "
 
-PATCHES=( "${FILESDIR}"/${P}-setup.patch )
+PATCHES=( "${FILESDIR}"/${PN}-0.12.2-setup.patch )
 
 EPYTEST_PLUGINS=( h5py pyyaml pytest-rerunfailures )
 EPYTEST_DESELECT=(
