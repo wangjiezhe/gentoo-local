@@ -19,15 +19,18 @@ S=${WORKDIR}/${MY_P}
 # BSD for vendored cblas/lapacke
 LICENSE="LGPL-3+ BSD"
 SLOT="0"
-KEYWORDS="amd64 arm arm64 ~mips ppc ppc64 ~riscv x86"
+KEYWORDS="amd64 arm arm64 ~loong ~mips ppc ppc64 ~riscv ~s390 x86"
 IUSE="aocl blis index64 mkl openblas openmp system-blas tbb test"
 RESTRICT="!test? ( test )"
-REQUIRED_USE="?? ( aocl blis )"
+REQUIRED_USE="aocl? ( openmp )"
 
 # flexiblas only supports gnu-openmp using clang/gcc
 DEPEND="
 	sci-libs/lapack:=[deprecated,index64(-)?]
-	aocl? ( sci-libs/aocl-blas:=[-64bit-index(-),index64(-)?] )
+	aocl? (
+		sci-libs/aocl-blas:=[-64bit-index(-),index64(-)?,openmp]
+		sci-libs/lapack:=
+	)
 	blis? ( sci-libs/blis:=[-64bit-index(-),index64(-)?] )
 	mkl? (
 		sci-libs/mkl:=[tbb?]
@@ -77,7 +80,7 @@ src_configure() {
 	# bug #963667
 	filter-flags -fno-semantic-interposition
 
-	BACKENDS=( $(usev aocl) $(usev blis) $(usev openblas) )
+	BACKENDS=( $(usev blis) $(usev openblas) )
 	local extra=${BACKENDS[*]}
 	local libdir="${ESYSROOT}/usr/$(get_libdir)"
 	local mycmakeargs=(
@@ -118,13 +121,17 @@ src_configure() {
 		# respect CFLAGS
 		-DLTO=OFF
 		# these are used only with -DEXTRA
-		-Daocl_LIBRARY="${libdir}/libblis-mt.so"
 		-Dblis_LIBRARY="${libdir}/libblis.so"
 		-Dopenblas_LIBRARY="${libdir}/libopenblas.so"
 	)
 
+	if use aocl; then
+		mycmakeargs+=(
+			-DSYS_BLAS_LIBRARY="${libdir}/libblis-mt.so"
+			-DSYS_LAPACK_LIBRARY="${libdir}/libflame.so"
+		)
 	# use system sci-libs/lapack
-	if use system-blas; then
+	elif use system-blas; then
 		# this is sci-libs/lapack[flexiblas] install
 		mycmakeargs+=(
 			-DSYS_BLAS_LIBRARY="${libdir}/libblas-reference.so"
@@ -142,12 +149,15 @@ src_configure() {
 	if use index64; then
 		mycmakeargs+=(
 			-DINTEGER8=ON
-			-Daocl_LIBRARY="${libdir}/libblis64-mt.so"
 			-Dblis_LIBRARY="${libdir}/libblis64.so"
 			-Dopenblas_LIBRARY="${libdir}/libopenblas64.so"
 		)
-
-		if use system-blas; then
+		if use aocl; then
+			mycmakeargs+=(
+				-DSYS_BLAS_LIBRARY="${libdir}/libblis64-mt.so"
+				-DSYS_LAPACK_LIBRARY="${libdir}/libflame64.so"
+			)
+		elif use system-blas; then
 			# this is sci-libs/lapack[flexiblas] install
 			mycmakeargs+=(
 				-DSYS_BLAS_LIBRARY="${libdir}/libblas64-reference.so"
