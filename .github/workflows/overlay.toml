@@ -619,13 +619,6 @@ github = "traefik/yaegi"
 use_latest_release = true
 prefix = "v"
 
-["app-misc/qwen-code"]
-source = "github"
-github = "QwenLM/qwen-code"
-use_max_release = true
-prefix = "v"
-exclude_regex = ".*nightly.*"
-
 ["dev-python/jsonargparse"]
 source = "pypi"
 pypi = "jsonargparse"
