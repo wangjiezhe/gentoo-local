@@ -14,8 +14,9 @@ ARROR_RS_WRAPPER="arrow-rs-wrapper-${ARROR_RS_WRAPPER_PV}"
 # dev-python/sentry-sdk does not support python3.10
 PYTHON_COMPAT=( python3_{11..14} )
 DISTUTILS_SINGLE_IMPL=1
+DISTUTILS_EXT=1
 DISTUTILS_USE_PEP517=hatchling
-RUST_MIN_VER="1.81"
+RUST_MIN_VER="1.88"
 inherit cargo distutils-r1 go-module
 
 DESCRIPTION="A tool for visualizing and tracking your machine learning experiments"
@@ -79,5 +80,5 @@ src_unpack() {
 src_prepare() {
 	export CGO_LDFLAGS=$(echo "$CGO_LDFLAGS" | sed 's/-Wl,-z,pack-relative-relocs//g')
 	distutils-r1_src_prepare
-	sed -i "s/^go 1.26.3$/go 1.26.2/" core/go.mod || die
+	sed -i "s/^go 1.26.4$/go 1.26.2/" core/go.mod || die
 }
