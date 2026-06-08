@@ -17,7 +17,7 @@ KEYWORDS="~amd64 ~loong ~mips ~riscv"
 IUSE="abi_mips_o32 abi_mips_n64 +client +server +web"
 REQUIRED_USE="|| ( client server )"
 BDEPEND="
-	>=dev-lang/go-1.25
+	>=dev-lang/go-1.25.0
 	web? ( net-libs/nodejs[npm] )
 "
 
