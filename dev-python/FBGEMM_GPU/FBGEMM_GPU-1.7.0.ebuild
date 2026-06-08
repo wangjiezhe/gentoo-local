@@ -82,9 +82,9 @@ python_configure_all() {
 		--build-target default
 	)
 	use cuda && DISTUTILS_ARGS+=(
-		--build_variant cuda
+		--build-variant cuda
 		--nccl_lib_path "${EPREFIX}"/usr/$(get_libdir)/libnccl.so.2
-	) || DISTUTILS_ARGS+=(--build_variant cpu)
+	) || DISTUTILS_ARGS+=(--build-variant cpu)
 }
 
 # distutils_enable_tests pytest
