@@ -45,7 +45,6 @@ src_configure() {
 	local mycmakeargs=(
 		-DCMAKE_INSTALL_PREFIX="${EPREFIX}"/usr
 		-DPVZ_DEBUG=ON
-		-DLIMBO_PAGE=ON
 		-DDO_FIX_BUGS=ON
 		-DCONSOLE=OFF
 	)
