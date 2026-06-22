@@ -21,9 +21,13 @@ DEPEND="
 	dev-qt/qtbase:6[gui,widgets,xml]
 	dev-qt/qt5compat:6
 "
-
+RDEPEND="${DEPEND}
+	dev-texlive/texlive-latexextra
+	dev-texlive/texlive-pictures
+"
 BDEPEND="
-	dev-qt/qttools:6[linguist]
+	dev-qt/qttools:6[assistant,linguist]
+	sys-devel/gettext
 "
 
 PATCHES=(
