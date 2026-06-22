@@ -204,12 +204,6 @@ prefix = "v"
 source = "pypi"
 pypi = "clean-fid"
 
-["sci-ml/framework-reproducibility"]
-source = "github"
-github = "NVIDIA/framework-reproducibility"
-use_latest_release = true
-prefix = "v"
-
 ["dev-python/expecttest"]
 source = "pypi"
 pypi = "expecttest"
