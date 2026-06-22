@@ -20,8 +20,8 @@ RDEPEND="${DEPEND}"
 DOCS=( README.md )
 
 PATCHES=(
-	"${FILESDIR}"/${P}-include.patch
-	"${FILESDIR}"/${P}-cmake-pkgconfig.patch
+	"${FILESDIR}"/${PN}-2.30.4-include.patch
+	"${FILESDIR}"/${PN}-2.30.4-cmake-pkgconfig.patch
 )
 
 src_prepare() {
