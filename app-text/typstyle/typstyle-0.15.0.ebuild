@@ -9,10 +9,10 @@ CRATES="
 "
 
 declare -A GIT_CRATES=(
-	[wasm-minimal-protocol]='https://github.com/astrale-sharp/wasm-minimal-protocol;e622e0e4a4f0f34be871a3a6bd22f6519415364b;wasm-minimal-protocol-%commit%/crates/macro'
+	[wasm-minimal-protocol]='https://github.com/astrale-sharp/wasm-minimal-protocol;e8150000ef6bf51c103fbd5f7c7d8371557f179c;wasm-minimal-protocol-%commit%/crates/macro'
 )
 
-RUST_MIN_VER="1.89"
+RUST_MIN_VER="1.92"
 inherit edo cargo
 
 DESCRIPTION="A beautiful and reliable code formatter for Typst"
