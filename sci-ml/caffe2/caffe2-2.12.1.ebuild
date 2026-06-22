@@ -60,7 +60,7 @@ REQUIRED_USE="
 	cusparselt? ( || ( cuda rocm ) )
 	flash? ( || ( cuda rocm ) )
 	memefficient? ( || ( cuda rocm ) )
-	nccl? (  || ( cuda rocm ) )
+	nccl? ( || ( cuda rocm ) )
 	?? ( aocl flexiblas mkl openblas )
 "
 
@@ -117,7 +117,10 @@ RDEPEND="
 		>=sci-libs/rocRAND-6.3:=   <sci-libs/rocRAND-7.3:=
 		>=sci-libs/rocSOLVER-6.3:= <sci-libs/rocSOLVER-7.3:=
 		memefficient? ( =sci-libs/aotriton-bin-0.11*:= )
-		distributed? ( >=dev-util/rocm-smi-6.3:= <dev-util/rocm-smi-7.3:= )
+		distributed? (
+			>=dev-util/rocm-smi-6.3:= <dev-util/rocm-smi-7.3:=
+			>=dev-util/amdsmi-6.3:= <dev-util/amdsmi-7.3:=
+		)
 		cusparselt? ( >=sci-libs/hipsparselt-6.3:= <sci-libs/hipsparselt-7.3:= )
 	)
 	distributed? (
@@ -174,18 +177,18 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-1.12.0-glog-0.6.0.patch
 	"${FILESDIR}"/${PN}-2.9.1-cmake.patch
 	"${FILESDIR}"/${PN}-2.7.0-glog-0.7.1.patch
-	"${FILESDIR}"/${P}-aotriton-fixes.patch
+	"${FILESDIR}"/${PN}-2.12.0-aotriton-fixes.patch
 	"${FILESDIR}"/${PN}-2.8.0-rocm-minus-flash.patch
-	"${FILESDIR}"/${P}-rocm-distributed-link.patch
+	"${FILESDIR}"/${PN}-2.12.0-rocm-distributed-link.patch
 	"${FILESDIR}"/${PN}-2.10.0-aocl.patch
 	"${FILESDIR}"/${PN}-2.9.0-xnnpack.patch
 	"${FILESDIR}"/${PN}-2.9.1-torch_cpu.patch
 	"${FILESDIR}"/${PN}-2.10.0-blas.patch
 	"${FILESDIR}"/${PN}-2.10.0-lapack.patch
 	"${FILESDIR}"/${PN}-2.11.0-mimalloc.patch
-	"${FILESDIR}"/${P}-removekineto-pr178960.patch
+	"${FILESDIR}"/${PN}-2.12.0-removekineto-pr178960.patch
 	"${FILESDIR}"/${PN}-2.10.0-magma_2_10.patch
-	"${FILESDIR}"/${P}-fbgemm_1_7.patch
+	"${FILESDIR}"/${PN}-2.12.0-fbgemm_1_7.patch
 )
 
 src_prepare() {
