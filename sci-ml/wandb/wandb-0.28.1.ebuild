@@ -16,7 +16,7 @@ PYTHON_COMPAT=( python3_{11..14} )
 DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_EXT=1
 DISTUTILS_USE_PEP517=hatchling
-RUST_MIN_VER="1.88"
+RUST_MIN_VER="1.88.0"
 inherit cargo distutils-r1 go-module
 
 DESCRIPTION="A tool for visualizing and tracking your machine learning experiments"
