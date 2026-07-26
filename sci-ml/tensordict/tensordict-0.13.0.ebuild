@@ -4,7 +4,7 @@
 EAPI=8
 
 DISTUTILS_USE_PEP517=setuptools
-PYTHON_COMPAT=( python3_{11..14} python3_{13..14}t )
+PYTHON_COMPAT=( python3_{12..15} python3_{13..15}t )
 DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_EXT=1
 export SETUPTOOLS_SCM_PRETEND_VERSION=${PV}
@@ -31,7 +31,7 @@ DEPEND="
 		dev-python/importlib-metadata[${PYTHON_USEDEP}]
 		>=dev-python/pyvers-0.2.0[${PYTHON_USEDEP}]
 	')
-	$(python_gen_cond_dep 'dev-python/orjson[${PYTHON_USEDEP}]' python3_{11..12})
+	$(python_gen_cond_dep 'dev-python/orjson[${PYTHON_USEDEP}]' python3_12)
 "
 BDEPEND="
 	$(python_gen_cond_dep '
