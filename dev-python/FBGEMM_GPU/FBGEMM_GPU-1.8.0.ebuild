@@ -3,7 +3,7 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{11..14} )
+PYTHON_COMPAT=( python3_{12..15} python3_{14..15}t)
 DISTUTILS_EXT=1
 DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_USE_PEP517=setuptools
@@ -61,7 +61,7 @@ BDEPEND="
 
 PARENT_PATCHES=(
 	"${FILESDIR}/${P}-version.patch"
-	"${FILESDIR}/${P}-gentoo.patch"
+	"${FILESDIR}/${PN}-1.7.0-gentoo.patch"
 )
 
 src_prepare() {
