@@ -3,7 +3,7 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{11..14} )
+PYTHON_COMPAT=( python3_{12..15} python3_{14..15}t)
 ROCM_VERSION=6.1
 inherit python-single-r1 cmake cuda flag-o-matic prefix rocm
 
@@ -15,7 +15,7 @@ MYP=${MYPN}-${PV}
 CK_COMMIT=7fe50dc3da2069d6645d9deb8c017a876472a977
 CK_P=composable_kernel-${CK_COMMIT:0:8}
 
-FLASH_PV=2.7.4
+FLASH_PV=2.8.3.post1
 FLASH_PN=flash-attention
 FLASH_P=${FLASH_PN}-${FLASH_PV}
 FLASH_ATT_URI="https://github.com/Dao-AILab/${FLASH_PN}/archive/refs/tags/v${FLASH_PV}.tar.gz -> ${FLASH_P}.gh.tar.gz"
@@ -24,6 +24,11 @@ AOTRITON_PV=0.9.2b
 AOTRITON_PN=aotriton
 AOTRITON_P=${AOTRITON_PN}-${AOTRITON_PV}
 AOTRITON_tar=${AOTRITON_P}-manylinux_2_28_x86_64-rocm6.3-shared.tar.gz
+
+CUTLASS_PV=4.4.2
+CUTLASS_PN=cutlass
+CUTLASS_P=${CUTLASS_PN}-${CUTLASS_PV}
+CUTLASS_URI="https://github.com/NVIDIA/${CUTLASS_PN}/archive/v${CUTLASS_PV}.tar.gz -> ${CUTLASS_P}.tar.gz"
 
 DESCRIPTION="A deep learning framework"
 HOMEPAGE="https://pytorch.org/"
@@ -36,6 +41,7 @@ SRC_URI="
 	cuda? (
 		flash? ( ${FLASH_ATT_URI} )
 		memefficient? ( ${FLASH_ATT_URI} )
+		${CUTLASS_URI}
 	)
 "
 
@@ -85,7 +91,7 @@ RDEPEND="
 	)
 	fbgemm? ( sci-ml/FBGEMM:= )
 	gloo? ( >=sci-ml/gloo-2025.06.04[cuda?,rocm?] )
-	kineto? ( ~sci-ml/kineto-0.4.0_p20260323 )
+	kineto? ( ~sci-ml/kineto-0.4.0_p20260603 )
 	magma? ( sci-libs/magma[cuda?] )
 	mimalloc? ( dev-libs/mimalloc )
 	mpi? ( virtual/mpi )
@@ -187,19 +193,23 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.10.0-lapack.patch
 	"${FILESDIR}"/${PN}-2.11.0-mimalloc.patch
 	"${FILESDIR}"/${PN}-2.12.0-removekineto-pr178960.patch
-	"${FILESDIR}"/${PN}-2.10.0-magma_2_10.patch
-	"${FILESDIR}"/${PN}-2.12.0-fbgemm_1_7.patch
+	"${FILESDIR}"/${P}-glog.patch
+	"${FILESDIR}"/${P}-cmake-install-fix.patch
 )
 
 src_prepare() {
 	if use cuda && ( use flash || use memefficient ); then
 		mv "${WORKDIR}"/${FLASH_P}/* third_party/${FLASH_PN}/ || die
 	fi
+	if use cuda; then
+		mv "${WORKDIR}"/${CUTLASS_P}/* third_party/${CUTLASS_PN}/ || die
+	fi
 	filter-lto #bug 862672
 
 	# Unbundle fmt
 	sed -i \
 		-e 's|::fmt-header-only||' \
+		-e '/FMT_NO_UNIQUE_ADDRESS/d' \
 		c10/CMakeLists.txt \
 		cmake/Dependencies.cmake \
 		torch/CMakeLists.txt \
@@ -305,6 +315,7 @@ src_configure() {
 		-DBUILD_SHARED_LIBS=ON
 		-DUSE_SYSTEM_LIBS=ON
 		-DATEN_NO_TEST=ON
+		-DSKBUILD_PLATLIB_DIR="$(python_get_sitedir)"
 
 		-DUSE_CCACHE=OFF
 		-DUSE_CUDA=$(usex cuda)
@@ -360,6 +371,7 @@ src_configure() {
 			-DUSE_CUDNN=ON
 			-DTORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST:-3.5 7.0}"
 			-DUSE_NCCL=$(usex nccl)
+			-DUSE_SYSTEM_NCCL=ON
 			-DCMAKE_CUDA_FLAGS="$(cuda_gccdir -f | tr -d \")"
 			-DUSE_NVRTC=ON
 			-DUSE_CUSPARSELT=$(usex cusparselt)
@@ -410,7 +422,7 @@ src_compile() {
 }
 
 python_install() {
-	python_domodule python/torch
+	python_optimize
 	mkdir "${D}"$(python_get_sitedir)/torch/bin || die
 	mkdir "${D}"$(python_get_sitedir)/torch/lib || die
 	mkdir "${D}"$(python_get_sitedir)/torch/include || die
@@ -425,14 +437,13 @@ python_install() {
 src_install() {
 	cmake_src_install
 
-	patchelf --add-needed libcaffe2_nvrtc.so "${ED}/usr/$(get_libdir)/libtorch_cuda.so" || die "patchelf failed"
+	if use cuda; then
+		patchelf --add-needed libcaffe2_nvrtc.so "${ED}/usr/$(get_libdir)/libtorch_cuda.so" || die "patchelf failed"
+	fi
 
 	# Used by pytorch ebuild
 	insinto "/var/lib/${PN}"
 	doins "${BUILD_DIR}"/CMakeCache.txt
 
-	rm -rf python
-	mkdir -p python/torch || die
-	cp torch/version.py python/torch/ || die
 	python_install
 }

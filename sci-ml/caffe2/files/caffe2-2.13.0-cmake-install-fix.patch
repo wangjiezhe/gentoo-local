@@ -1,0 +1,71 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a8b655d9cf5..48d47251d5f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1468,12 +1468,6 @@ endif()
+ # setuptools builds.
+ include(cmake/FileMirroring.cmake)
+ 
+-# Package data: install non-Python data files (type stubs, templates,
+-# headers, etc.) into the torch package.  Previously declared via
+-# setup.py package_data; now consolidated here for both scikit-build-core
+-# and setuptools builds.
+-include(cmake/PackageData.cmake)
+-
+ include(cmake/PostBuildSteps.cmake)
+ 
+ include(cmake/Summary.cmake)
+diff --git a/cmake/FileMirroring.cmake b/cmake/FileMirroring.cmake
+index 16fe837f8cb..dd9894cbd3b 100644
+--- a/cmake/FileMirroring.cmake
++++ b/cmake/FileMirroring.cmake
+@@ -62,10 +62,6 @@ endif()
+ 
+ # --- Symlink-replacement copies ---
+ # Copy files that were previously handled via symlinks in setup.py.
+-install(FILES
+-  "${PROJECT_SOURCE_DIR}/torch/_utils_internal.py"
+-  DESTINATION "${SKBUILD_PLATLIB_DIR}/tools/shared"
+-)
+ install(FILES
+   "${PROJECT_SOURCE_DIR}/third_party/valgrind-headers/callgrind.h"
+   DESTINATION "${SKBUILD_PLATLIB_DIR}/torch/utils/benchmark/utils/valgrind_wrapper"
+diff --git a/cmake/PostBuildSteps.cmake b/cmake/PostBuildSteps.cmake
+index 71bd0438c38..726ca714bfd 100644
+--- a/cmake/PostBuildSteps.cmake
++++ b/cmake/PostBuildSteps.cmake
+@@ -21,7 +21,7 @@ install(CODE "
+   execute_process(
+     COMMAND \"${_python_exe}\"
+       \"${_project_src}/tools/wrap_headers.py\"
+-      \"\${CMAKE_INSTALL_PREFIX}/${TORCH_INSTALL_INCLUDE_DIR}\"
++      \"\${CMAKE_INSTALL_INCLUDE_DIR}\"
+     COMMAND_ERROR_IS_FATAL ANY
+   )
+ ")
+diff --git a/torch/CMakeLists.txt b/torch/CMakeLists.txt
+index 23aa88ddcb9..8a8d033add4 100644
+--- a/torch/CMakeLists.txt
++++ b/torch/CMakeLists.txt
+@@ -464,9 +464,9 @@ if(BUILD_PYTHON AND NOT BUILD_LIBTORCH_WHL)
+   # alongside the other import libs in torch/lib/, matching the layout that
+   # setup.py used before _C moved to CMake.
+   install(TARGETS _C
+-    RUNTIME DESTINATION "."
+-    LIBRARY DESTINATION "."
+-    ARCHIVE DESTINATION "lib"
++    RUNTIME DESTINATION "${SKBUILD_PLATLIB_DIR}/torch"
++    LIBRARY DESTINATION "${SKBUILD_PLATLIB_DIR}/torch"
++    ARCHIVE DESTINATION "${SKBUILD_PLATLIB_DIR}/torch/lib"
+   )
+ endif()
+ 
+@@ -497,7 +497,7 @@ add_custom_target(
+ add_dependencies(torch_python gen_torch_version)
+ # version.py is gitignored (generated), so scikit-build-core won't include it
+ # via Python package collection. Install it explicitly via cmake instead.
+-install(FILES "${TORCH_SRC_DIR}/version.py" DESTINATION ".")
++install(FILES "${TORCH_SRC_DIR}/version.py" DESTINATION "${SKBUILD_PLATLIB_DIR}/torch")
+ 
+ # Skip building this library under MacOS, since it is currently failing to build on Mac
+ # Github issue #61930
