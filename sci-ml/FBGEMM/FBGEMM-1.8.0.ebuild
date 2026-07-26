@@ -3,7 +3,7 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{11..14} )
+PYTHON_COMPAT=( python3_{12..15} python3_{14..15}t)
 inherit python-any-r1 flag-o-matic cmake
 
 DESCRIPTION="Facebook GEneral Matrix Multiplication"
