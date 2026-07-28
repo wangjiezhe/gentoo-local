@@ -1,10 +1,10 @@
 app-emulation/wslu 4.1.3: A collection of utilities for Windows Subsystem for Linux (WSL)
-app-i18n/man-pages-zh_CN 1.6.4.3-r1: A somewhat comprehensive collection of Chinese Linux man pages
+app-i18n/man-pages-zh_CN 1.6.4.4: A somewhat comprehensive collection of Chinese Linux man pages
 app-laptop/thinkfan 2.0.0: Simple fan control program for thinkpads
 app-misc/aigit 0.1.4: The most powerful git commit assistant ever
 app-misc/cheat 5.1.0: cheat allows you to create and view interactive cheatsheets on the command-line
 app-misc/cmd-wrapped 0.4.1: A CLI tool to view Unix shell history statistics, with support for zsh, bash, fish, and atuin
-app-text/leaf 1.24.2: A friendly terminal Markdown previewer
+app-text/leaf 1.26.2: A friendly terminal Markdown previewer
 app-text/qtikz 0.13.2_p20250728: A nice user interface for making pictures using TikZ
 app-text/typst 0.14.0: A markup-based typesetting system for the sciences
 app-text/typstyle 0.15.0: A beautiful and reliable code formatter for Typst
@@ -15,20 +15,21 @@ dev-cpp/opentelemetry-cpp 1.20.0-r1: The OpenTelemetry C++ Client
 dev-go/yaegi 0.16.1: Yaegi is Another Elegant Go Interpreter
 dev-haskell/plam 2.2.0 2.2.1: An interpreter for learning and exploring pure λ-calculus
 dev-lang/luajit 2.1.1720049189: Just-In-Time Compiler for the Lua programming language
-dev-libs/cudnn 8.9.7.29 9.22.0.52: NVIDIA Accelerated Deep Learning on GPU library
+dev-libs/cudnn 8.9.7.29 9.24.0.43: NVIDIA Accelerated Deep Learning on GPU library
 dev-libs/cudss 0.7.1.4: A high-performance CUDA Library for Direct Sparse Solvers
 dev-libs/cusparselt 0.8.1.1 0.9.1.1: A High-Performance CUDA Library for Sparse Matrix-Matrix Multiplication
+dev-libs/cutlass 4.4.2: CUDA Templates for Linear Algebra Subroutines
 dev-libs/flatbuffers 23.5.26 24.3.25: Memory efficient serialization library
 dev-libs/nccl 2.30.7: Optimized primitives for collective multi-GPU communication
 dev-libs/re2 0.2023.11.01-r1: An efficient, principled regular expression library
-dev-python/FBGEMM_GPU 1.7.0: A collection of high-performance PyTorch GPU operator libraries for training and inference
+dev-python/FBGEMM_GPU 1.8.0: A collection of high-performance PyTorch GPU operator libraries for training and inference
 dev-python/astunparse 1.6.3-r2: Astun parser for python
 dev-python/clang-repl 1.0.4: IPython kernel forwarding C++ cells to clang-repl
 dev-python/cuda-bindings 12.9.6 13.0.0: CUDA Python Low-level Bindings
 dev-python/cuda-core 0.6.0 0.7.0: CUDA Python Low-level Bindings
 dev-python/cuda-pathfinder 1.4.2: Pathfinder for CUDA components
 dev-python/cuda-python 12.9.6 13.0.0: CUDA Python Low-level Bindings
-dev-python/cutlass 3.9.2 4.2.1: Python packages associated with CUTLASS
+dev-python/cutlass 3.9.2 4.4.2: Python packages associated with CUTLASS
 dev-python/diagnostic 3.0.0: Present errors that contain causes better understand what happened
 dev-python/dm-tree 0.1.8: A library for working with nested data structures
 dev-python/docker-pycreds 0.4.0-r1: Python bindings for the docker credentials store API
@@ -74,14 +75,13 @@ dev-python/typing-inspect 0.9.0_p20260119: Runtime inspection utilities for Pyth
 dev-python/watermark 2.6.0: IPython magic function to print date/time stamps and various system information
 dev-texlive/texlive-pictures 2024_p72555-r1: TeXLive Graphics, pictures, diagrams
 dev-util/claude-code 2.1.150: Claude Code - an agentic coding tool by Anthropic
-dev-util/codespell 2.4.2: Check text files for common misspellings
 dev-util/codex 0.133.0: Codex CLI - OpenAI's AI-powered coding agent
 dev-util/evcxr-repl 0.21.1: A REPL for Rust
 dev-util/gemini-cli 0.43.0: Gemini CLI - a command-line AI workflow tool by Google
 dev-util/kimi-cli-bin 1.46.0: Kimi Code CLI - an agentic coding tool by Moonshot AI
 dev-util/minify-html 0.18.1: [CLI] Extremely fast and smart HTML + JS + CSS minifier
 dev-util/minify-js 0.6.0: Extremely fast JS minifier
-games-strategy/pvz-portable 0.1.25: A cross-platform reimplementation of Plants vs. Zombies by the community.
+games-strategy/pvz-portable 0.2.0: A cross-platform reimplementation of Plants vs. Zombies by the community
 media-fonts/maple-mono 6.4 7.9: Open source monospace & nerd font with round corners and ligatures
 media-gfx/pdf2svg 0.2.4-r2: Convert PDF to SVG files using poppler and cairo
 net-libs/bun-bin 1.3.14: Incredibly fast JavaScript runtime, bundler, test runner, and package manager
@@ -89,7 +89,7 @@ net-libs/google-cloud-cpp 2.47.0: Google Cloud Client Library for C++
 net-libs/nodejs 12.22.6 14.21.3 16.20.2-r1 18.20.4 20.16.0 22.5.1: A JavaScript runtime built on Chrome's V8 JavaScript engine
 net-misc/mosh 1.4.0: Mobile shell that supports roaming and intelligent local echo
 net-misc/piping-server 0.18.0: Infinitely transfer between every device over pure HTTP with pipes or browsers
-net-vpn/frp 0.66.0 0.69.1: A reverse proxy that exposes a server behind a NAT or firewall to the internet
+net-vpn/frp 0.66.0 0.70.1: A reverse proxy that exposes a server behind a NAT or firewall to the internet
 sci-libs/aocl-blas 5.3: AMD's optimized version of BLAS targeted for AMD EPYC and Ryzen CPUs
 sci-libs/aocl-lapack 5.3-r1: AMD optimized high-performance object-based library for DLA computations
 sci-libs/aocl-libm 5.3: Optimized libm replacement from AMD for x86_64 architectures
@@ -100,16 +100,17 @@ sci-libs/flexiblas 3.5.0-r1: A BLAS and LAPACK wrapper library with runtime exch
 sci-libs/magma 2.10.0: Matrix Algebra on GPU and Multicore Architectures
 sci-mathematics/elan 4.2.3: Manage multiple Lean installations with ease
 sci-mathematics/mathematica 14.3.0-r1: Wolfram Mathematica
-sci-ml/FBGEMM 1.7.0: Facebook GEneral Matrix Multiplication
+sci-ml/FBGEMM 1.8.0: Facebook GEneral Matrix Multiplication
 sci-ml/XNNPACK 2024.11.08: library of floating-point neural network inference operators
-sci-ml/caffe2 2.12.1: A deep learning framework
+sci-ml/caffe2 2.13.0: A deep learning framework
 sci-ml/clean-fid 0.1.35: FID calculation with proper image resizing and quantization steps
 sci-ml/compressai 1.2.8: A PyTorch library and evaluation platform for end-to-end compression research
-sci-ml/cudnn-frontend 1.24.0: A c++ wrapper for the cudnn backend API
+sci-ml/cudnn-frontend 1.26.0: A c++ wrapper for the cudnn backend API
 sci-ml/einops 0.8.2: Flexible and powerful tensor operations for readable and reliable code
 sci-ml/faiss 1.14.2: A library for efficient similarity search and clustering of dense vectors
 sci-ml/flash-attention 2.8.3: A library that contains a rich collection of performant PyTorch model metrics
 sci-ml/keras 3.13.2: Deep Learning for humans
+sci-ml/kineto 0.4.0_p20260603: part of the PyTorch Profiler
 sci-ml/lightning 2.6.5: Lightweight PyTorch wrapper for ML researchers
 sci-ml/lightning-utilities 0.15.3: Common Python utilities and GitHub Actions in Lightning Ecosystem
 sci-ml/lpips 0.1.4: Perceptual Similarity Metric and Dataset
@@ -117,13 +118,13 @@ sci-ml/nltk 3.9.4: Natural Language Toolkit
 sci-ml/nltk-data 20260109: Data Distribution for NLTK
 sci-ml/onnx 1.19.1: Open Neural Network Exchange (ONNX)
 sci-ml/pysentencepiece 0.2.1: Python wrapper for SentencePiece
-sci-ml/pytorch 2.12.1: Tensors and Dynamic neural networks in Python
-sci-ml/pytorch-image-models 1.0.27: PyTorch image models, scripts, pretrained weights
+sci-ml/pytorch 2.13.0: Tensors and Dynamic neural networks in Python
+sci-ml/pytorch-image-models 1.0.28: PyTorch image models, scripts, pretrained weights
 sci-ml/pytorch-lightning 2.6.5: Lightweight PyTorch wrapper for ML researchers
 sci-ml/pytorch-msssim 1.0.0: Fast and differentiable MS-SSIM and SSIM for pytorch
 sci-ml/safetensors 0.4.2: Simple, safe way to store and distribute tensors
 sci-ml/sentencepiece 0.2.1: Unsupervised text tokenizer for Neural Network-based text generation
-sci-ml/tensordict 0.12.4: A pytorch dedicated tensor container
+sci-ml/tensordict 0.13.0: A pytorch dedicated tensor container
 sci-ml/tensorflow 2.16.2 2.17.1 2.19.0: Computation framework using data flow graphs for scalable machine learning
 sci-ml/tensorrt 8.6.1.6-r1 10.10.0.31 10.14.1.48: An SDK for high-performance deep learning inference
 sci-ml/tokenizers 0.22.2: Implementation of today's most used tokenizers
@@ -133,16 +134,16 @@ sci-ml/torchdata 0.11.0: A repo for data loading and utilities on PyTorch domain
 sci-ml/torcheval 0.0.6: A library that contains a rich collection of performant PyTorch model metrics
 sci-ml/torchinfo 1.8.0-r1: View model summaries in PyTorch
 sci-ml/torchmetrics 1.9.0: Machine learning metrics for distributed, scalable PyTorch applications
-sci-ml/torchrec 1.6.0: Pytorch domain library for recommendation systems
+sci-ml/torchrec 1.7.0: Pytorch domain library for recommendation systems
 sci-ml/torchsnapshot 0.1.0_p20240521-r1: A performant, memory-efficient checkpointing library for PyTorch applications
 sci-ml/torchtext 0.18.0-r1: Data manipulation and transformation for audio signal processing
 sci-ml/torchtnt 0.2.4: A lightweight library for PyTorch training tools and utilities
-sci-ml/torchvision 0.27.1: Datasets, transforms and models to specific to computer vision
-sci-ml/wandb 0.16.6-r1 0.25.1-r1 0.27.2: A tool for visualizing and tracking your machine learning experiments
+sci-ml/torchvision 0.28.0: Datasets, transforms and models to specific to computer vision
+sci-ml/wandb 0.16.6-r1 0.25.1-r1 0.28.1: A tool for visualizing and tracking your machine learning experiments
 sci-visualization/tensorboard 2.16.2 2.17.1 2.19.0: TensorFlow's Visualization Toolkit
 sys-apps/bat-extras 2024.08.24-r1: Bash scripts that integrate bat with various command line tools.
 sys-devel/lld-toolchain-symlinks 14-r2: Symlinks to use LLD on binutils-free system
-sys-process/witr 0.3.2: Why is this running?
+sys-process/witr 0.3.3: Why is this running?
 x11-base/xorg-drivers 1.20-r2: Meta package containing deps on all xorg drivers
 x11-base/xorg-server 1.20.14-r2: X.Org X servers
 x11-drivers/xf86-video-siliconmotion 1.7.9: Silicon Motion video driver
