@@ -9,7 +9,7 @@ CRATES="
 "
 
 declare -A GIT_CRATES=(
-	[wasm-minimal-protocol]='https://github.com/astrale-sharp/wasm-minimal-protocol;e8150000ef6bf51c103fbd5f7c7d8371557f179c;wasm-minimal-protocol-%commit%/crates/macro'
+	[wasm-minimal-protocol]='https://github.com/astrale-sharp/wasm-minimal-protocol;cc29630ac15ffe7c0a8f7f459316edca6ef5a5da;wasm-minimal-protocol-%commit%/crates/macro'
 )
 
 RUST_MIN_VER="1.92"
