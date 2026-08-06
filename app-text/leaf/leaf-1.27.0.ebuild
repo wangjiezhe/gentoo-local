@@ -19,7 +19,7 @@ SRC_URI="
 "
 if [[ ${PKGBUMPING} != ${PVR} ]]; then
 	SRC_URI+="
-		https://github.com/wangjiezhe/gentoo-go-deps/releases/download/${P}/${P}-crates.tar.xz
+		https://github.com/wangjiezhe/gentoo-go-deps/releases/download/${P}/leaf-markdown-viewer-${PV}-crates.tar.xz
 	"
 fi
 
