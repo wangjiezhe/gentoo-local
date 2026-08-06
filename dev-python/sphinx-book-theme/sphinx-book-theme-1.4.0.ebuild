@@ -4,7 +4,7 @@
 EAPI=8
 
 DISTUTILS_USE_PEP517=standalone
-PYTHON_COMPAT=( python3_{11..14} )
+PYTHON_COMPAT=( python3_{12..15} )
 
 inherit distutils-r1 pypi
 
@@ -41,5 +41,5 @@ src_prepare() {
 	mv "${WORKDIR}"/node_modules "${S}" || die
 }
 
-EPYTEST_PLUGINS=( beautifulsoup4 coverage defusedxml myst-nb pytest-{cov,datadir,regressions} )
+EPYTEST_PLUGINS=( beautifulsoup4 coverage defusedxml myst-nb pytest-{cov,datadir,regressions} sphinx-thebe )
 distutils_enable_tests pytest
