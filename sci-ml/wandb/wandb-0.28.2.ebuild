@@ -4,15 +4,15 @@
 EAPI=8
 
 # Check xpu/Cargo.toml
-WANDB_XPU_PV="0.7.0"
+WANDB_XPU_PV="0.7.1"
 # Check parquet-rust-wrapper/Cargo.toml
-ARROR_RS_WRAPPER_PV="0.1.0"
+ARROR_RS_WRAPPER_PV="0.1.1"
 
 WANDB_XPU="wandb-xpu-${WANDB_XPU_PV}"
 ARROR_RS_WRAPPER="arrow-rs-wrapper-${ARROR_RS_WRAPPER_PV}"
 
 # dev-python/sentry-sdk does not support python3.10
-PYTHON_COMPAT=( python3_{11..14} )
+PYTHON_COMPAT=( python3_{12..15} )
 DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_EXT=1
 DISTUTILS_USE_PEP517=hatchling
@@ -37,7 +37,7 @@ fi
 LICENSE="MIT"
 # Dependent crate licenses
 LICENSE+="
-	Apache-2.0 Apache-2.0-with-LLVM-exceptions BSD Boost-1.0 CDLA-Permissive-2.0 ISC MIT Unicode-3.0 ZLIB
+	Apache-2.0 BSD CC0-1.0 CDLA-Permissive-2.0 ISC MIT Unicode-3.0 ZLIB
 "
 SLOT="0"
 KEYWORDS="~amd64"
@@ -45,14 +45,13 @@ RESTRICT="test"
 
 #	sys-devel/binutils[gold]
 BDEPEND="
-	>=dev-lang/go-1.26.2:=
+	>=dev-lang/go-1.26.4:=
 	dev-util/patchelf
 "
 
 RDEPEND="
 	$(python_gen_cond_dep '
 		dev-python/click[${PYTHON_USEDEP}]
-		dev-python/gitpython[${PYTHON_USEDEP}]
 		dev-python/requests[${PYTHON_USEDEP}]
 		dev-python/sentry-sdk[${PYTHON_USEDEP}]
 		dev-python/protobuf[${PYTHON_USEDEP}]
@@ -61,6 +60,7 @@ RDEPEND="
 		dev-python/typing-extensions[${PYTHON_USEDEP}]
 		dev-python/pydantic[${PYTHON_USEDEP}]
 		dev-python/packaging[${PYTHON_USEDEP}]
+		dev-python/opentelemetry-api[${PYTHON_USEDEP}]
 	')
 "
 
@@ -80,5 +80,5 @@ src_unpack() {
 src_prepare() {
 	export CGO_LDFLAGS=$(echo "$CGO_LDFLAGS" | sed 's/-Wl,-z,pack-relative-relocs//g')
 	distutils-r1_src_prepare
-	sed -i "s/^go 1.26.4$/go 1.26.2/" core/go.mod || die
+	sed -i "s/^go 1.26.5$/go 1.26.4/" core/go.mod || die
 }
