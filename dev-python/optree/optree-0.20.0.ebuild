@@ -3,7 +3,7 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{11..15} python3_{13..15}t pypy3 pypy3_11 )
+PYTHON_COMPAT=( python3_{12..15} python3_{14..15}t )
 DISTUTILS_USE_PEP517=setuptools
 DISTUTILS_EXT=1
 inherit distutils-r1
@@ -18,7 +18,6 @@ KEYWORDS="~amd64"
 
 DEPEND="dev-python/typing-extensions[${PYTHON_USEDEP}]"
 
-EPYTEST_XDIST=1
 EPYTEST_PLUGINS=( pytest-cov )
 
 distutils_enable_tests pytest
