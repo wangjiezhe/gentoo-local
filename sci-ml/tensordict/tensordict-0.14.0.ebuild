@@ -4,7 +4,7 @@
 EAPI=8
 
 DISTUTILS_USE_PEP517=setuptools
-PYTHON_COMPAT=( python3_{12..15} python3_{13..15}t )
+PYTHON_COMPAT=( python3_{12..15} python3_{14..15}t )
 DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_EXT=1
 export SETUPTOOLS_SCM_PRETEND_VERSION=${PV}
@@ -45,24 +45,11 @@ PATCHES=( "${FILESDIR}"/${PN}-0.12.2-setup.patch )
 
 EPYTEST_PLUGINS=( h5py pyyaml pytest-rerunfailures )
 EPYTEST_DESELECT=(
-	# need triton
-	test/test_compile.py::TestTD::test_to
-	test/test_compile.py::TestTTD::test_to
-	test/test_compile.py::TestTC::test_tc_to
-	"test/test_compile.py::TestCudaGraphs::test_cudagraphs_random[True]"
-	"test/test_compile.py::TestCudaGraphs::test_backprop[True]"
-	"test/test_compile.py::TestCudaGraphs::test_tdmodule[True]"
-	"test/test_compile.py::TestCudaGraphs::test_td_input_non_tdmodule[True]"
-	"test/test_compile.py::TestCudaGraphs::test_td_input_non_tdmodule_nontensor[True]"
-	"test/test_compile.py::TestCudaGraphs::test_state_dict[True]"
 	# FileNotFoundError
-	test/test_tensorclass.py::test_tensorclass_stub_methods
-	test/test_tensorclass.py::test_tensorclass_instance_methods
+	test/tensorclass/test_tensorclass.py::test_tensorclass_stub_methods
+	test/tensorclass/test_tensorclass.py::test_tensorclass_instance_methods
 	# RuntimeError: !is_cpu() || index_ <= 0 INTERNAL ASSERT FAILED
-	test/test_tensordict.py::TestTensorDicts::test_cast_to
-	# AssertionError: assert 'a string!' == 'a metadata!'
-	"test/test_tensordict.py::TestTensorDicts::test_save_load_memmap[td_with_non_tensor_and_metadata-device31]"
-	"test/test_tensordict.py::TestTensorDicts::test_save_load_memmap[td_with_non_tensor_and_metadata-device32]"
+	test/tensordict/test_methods.py::TestTensorDicts::test_cast_to
 )
 distutils_enable_tests pytest
 
