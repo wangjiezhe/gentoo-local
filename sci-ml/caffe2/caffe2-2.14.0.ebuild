@@ -10,22 +10,22 @@ inherit python-single-r1 cmake cuda flag-o-matic prefix rocm
 MYPN=pytorch
 MYP=${MYPN}-${PV}
 
-# caffe2-2.9.0 depends on future version of composable kernel
+# caffe2-2.14.0 depends on specific commit of composable kernel
 # TODO: replace it with DEPEND in the future
-CK_COMMIT=7fe50dc3da2069d6645d9deb8c017a876472a977
+CK_COMMIT=5a74dec07a894484b9489d0c0e00cd3b52652d18
 CK_P=composable_kernel-${CK_COMMIT:0:8}
 
-FLASH_PV=2.8.3.post1
+FLASH_PV=fa4-v4.0.0.beta24
 FLASH_PN=flash-attention
 FLASH_P=${FLASH_PN}-${FLASH_PV}
-FLASH_ATT_URI="https://github.com/Dao-AILab/${FLASH_PN}/archive/refs/tags/v${FLASH_PV}.tar.gz -> ${FLASH_P}.gh.tar.gz"
+FLASH_ATT_URI="https://github.com/Dao-AILab/${FLASH_PN}/archive/refs/tags/${FLASH_PV}.tar.gz -> ${FLASH_P}.gh.tar.gz"
 
 AOTRITON_PV=0.9.2b
 AOTRITON_PN=aotriton
 AOTRITON_P=${AOTRITON_PN}-${AOTRITON_PV}
 AOTRITON_tar=${AOTRITON_P}-manylinux_2_28_x86_64-rocm6.3-shared.tar.gz
 
-CUTLASS_PV=4.4.2
+CUTLASS_PV=4.6.1
 CUTLASS_PN=cutlass
 CUTLASS_P=${CUTLASS_PN}-${CUTLASS_PV}
 CUTLASS_URI="https://github.com/NVIDIA/${CUTLASS_PN}/archive/v${CUTLASS_PV}.tar.gz -> ${CUTLASS_P}.tar.gz"
@@ -91,7 +91,7 @@ RDEPEND="
 	)
 	fbgemm? ( sci-ml/FBGEMM:= )
 	gloo? ( >=sci-ml/gloo-2025.06.04[cuda?,rocm?] )
-	kineto? ( ~sci-ml/kineto-0.4.0_p20260603 )
+	kineto? ( ~sci-ml/kineto-0.4.0_p20260805 )
 	magma? ( sci-libs/magma[cuda?] )
 	mimalloc? ( dev-libs/mimalloc )
 	mpi? ( virtual/mpi )
@@ -122,7 +122,7 @@ RDEPEND="
 		>=sci-libs/rocBLAS-6.3:=   <sci-libs/rocBLAS-7.3:=
 		>=sci-libs/rocRAND-6.3:=   <sci-libs/rocRAND-7.3:=
 		>=sci-libs/rocSOLVER-6.3:= <sci-libs/rocSOLVER-7.3:=
-		memefficient? ( =sci-libs/aotriton-bin-0.11*:= )
+		memefficient? ( =sci-libs/aotriton-bin-0.13*:= )
 		distributed? (
 			>=dev-util/rocm-smi-6.3:= <dev-util/rocm-smi-7.3:=
 			>=dev-util/amdsmi-6.3:= <dev-util/amdsmi-7.3:=
@@ -156,11 +156,11 @@ DEPEND="
 	dev-libs/psimd
 	sci-ml/FP16
 	$(python_gen_cond_dep '
-		<dev-python/pybind11-3.0.5[${PYTHON_USEDEP}]
+		dev-python/pybind11[${PYTHON_USEDEP}]
 		dev-python/pyyaml[${PYTHON_USEDEP}]
 		dev-python/typing-extensions[${PYTHON_USEDEP}]
 	')
-	cuda? ( >=dev-libs/cutlass-3.9.2[tools(+)] )
+	cuda? ( >=dev-libs/cutlass-4.6.1[tools(+)] )
 	onednn? ( sci-ml/ideep )
 	rocm? (
 		>=sci-libs/hipCUB-6.3:=    <sci-libs/hipCUB-7.3:=
@@ -176,9 +176,9 @@ BDEPEND="
 PATCHES=(
 	"${FILESDIR}"/${PN}-2.5.1-unbundle_fmt.patch
 	"${FILESDIR}"/${PN}-2.5.1-unbundle_kineto.patch
-	"${FILESDIR}"/${PN}-2.8.0-unbundle_pocketfft.patch
+	"${FILESDIR}"/${P}-unbundle_pocketfft.patch
 	"${FILESDIR}"/${PN}-2.3.0-cudnn_include_fix.patch
-	"${FILESDIR}"/${PN}-2.10.0-gentoo.patch
+	"${FILESDIR}"/${P}-gentoo.patch
 	"${FILESDIR}"/${PN}-2.4.0-cpp-httplib.patch
 	"${FILESDIR}"/${PN}-1.12.0-glog-0.6.0.patch
 	"${FILESDIR}"/${PN}-2.9.1-cmake.patch
@@ -192,8 +192,8 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.10.0-blas.patch
 	"${FILESDIR}"/${PN}-2.10.0-lapack.patch
 	"${FILESDIR}"/${PN}-2.11.0-mimalloc.patch
-	"${FILESDIR}"/${PN}-2.12.0-removekineto-pr178960.patch
-	"${FILESDIR}"/${P}-glog.patch
+	# "${FILESDIR}"/${PN}-2.12.0-removekineto-pr178960.patch
+	"${FILESDIR}"/${PN}-2.13.0-glog.patch
 	"${FILESDIR}"/${P}-cmake-install-fix.patch
 )
 

@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a8b655d9cf5..48d47251d5f 100644
+index 07ab6320fe9..408e4aeb2f3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1468,12 +1468,6 @@ endif()
+@@ -1490,12 +1490,6 @@ endif()
  # setuptools builds.
  include(cmake/FileMirroring.cmake)
  
@@ -15,21 +15,6 @@ index a8b655d9cf5..48d47251d5f 100644
  include(cmake/PostBuildSteps.cmake)
  
  include(cmake/Summary.cmake)
-diff --git a/cmake/FileMirroring.cmake b/cmake/FileMirroring.cmake
-index 16fe837f8cb..dd9894cbd3b 100644
---- a/cmake/FileMirroring.cmake
-+++ b/cmake/FileMirroring.cmake
-@@ -62,10 +62,6 @@ endif()
- 
- # --- Symlink-replacement copies ---
- # Copy files that were previously handled via symlinks in setup.py.
--install(FILES
--  "${PROJECT_SOURCE_DIR}/torch/_utils_internal.py"
--  DESTINATION "${SKBUILD_PLATLIB_DIR}/tools/shared"
--)
- install(FILES
-   "${PROJECT_SOURCE_DIR}/third_party/valgrind-headers/callgrind.h"
-   DESTINATION "${SKBUILD_PLATLIB_DIR}/torch/utils/benchmark/utils/valgrind_wrapper"
 diff --git a/cmake/PostBuildSteps.cmake b/cmake/PostBuildSteps.cmake
 index 71bd0438c38..726ca714bfd 100644
 --- a/cmake/PostBuildSteps.cmake
@@ -44,10 +29,10 @@ index 71bd0438c38..726ca714bfd 100644
    )
  ")
 diff --git a/torch/CMakeLists.txt b/torch/CMakeLists.txt
-index 23aa88ddcb9..8a8d033add4 100644
+index e2f0034cbdf..126dff6fa3b 100644
 --- a/torch/CMakeLists.txt
 +++ b/torch/CMakeLists.txt
-@@ -464,9 +464,9 @@ if(BUILD_PYTHON AND NOT BUILD_LIBTORCH_WHL)
+@@ -465,9 +465,9 @@ if(BUILD_PYTHON AND NOT BUILD_LIBTORCH_WHL)
    # alongside the other import libs in torch/lib/, matching the layout that
    # setup.py used before _C moved to CMake.
    install(TARGETS _C
@@ -58,14 +43,14 @@ index 23aa88ddcb9..8a8d033add4 100644
 +    LIBRARY DESTINATION "${SKBUILD_PLATLIB_DIR}/torch"
 +    ARCHIVE DESTINATION "${SKBUILD_PLATLIB_DIR}/torch/lib"
    )
- endif()
  
-@@ -497,7 +497,7 @@ add_custom_target(
+   # ---[ NCCL EP extension (torch._nccl_ep)
+@@ -539,7 +539,7 @@ add_custom_target(
  add_dependencies(torch_python gen_torch_version)
  # version.py is gitignored (generated), so scikit-build-core won't include it
  # via Python package collection. Install it explicitly via cmake instead.
 -install(FILES "${TORCH_SRC_DIR}/version.py" DESTINATION ".")
 +install(FILES "${TORCH_SRC_DIR}/version.py" DESTINATION "${SKBUILD_PLATLIB_DIR}/torch")
  
- # Skip building this library under MacOS, since it is currently failing to build on Mac
- # Github issue #61930
+ # _rocm_init.py is gitignored (injected by ROCm build scripts to bootstrap
+ # torch/__init__.py). See https://github.com/ROCm/TheRock/blob/main/docs/packaging/python_packaging.md
