@@ -670,3 +670,7 @@ pypi = "graphql-core"
 source = "github"
 github = "RivoLink/leaf"
 use_latest_release = true
+
+["dev-python/sphinx-markdown-builder"]
+source = "pypi"
+pypi = "sphinx-markdown-builder"
