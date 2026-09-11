@@ -6,7 +6,7 @@ EAPI=8
 PYTHON_COMPAT=( python3_{12..15} python3_{14..15}t)
 inherit python-any-r1 cmake prefix
 
-CommitId=094d3c1d072362d0a919a77299459eee94f97931
+CommitId=15f4784a3471d4db8b31720d528f2f57cd2b1f40
 
 DESCRIPTION="part of the PyTorch Profiler"
 HOMEPAGE="https://github.com/pytorch/kineto"
@@ -40,10 +40,10 @@ src_prepare() {
 
 src_configure() {
 	local mycmakeargs=(
-		-DLIBKINETO_THIRDPARTY_DIR="${EPREFIX}"/usr/include/
-		-DKINETO_BUILD_TESTS=OFF # tests require cuda toolkit
 		-DCUDA_SOURCE_DIR=/opt/cuda
 		-DKINETO_BACKEND=cuda
+		-DKINETO_BUILD_TESTS=OFF # tests require cuda toolkit
+		-DLIBKINETO_THIRDPARTY_DIR="${EPREFIX}"/usr/include/
 	)
 	eapply -p2 $(prefixify_ro "${FILESDIR}"/${P}-gentoo.patch)
 
