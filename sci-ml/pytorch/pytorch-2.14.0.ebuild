@@ -175,7 +175,6 @@ DEPEND="
 
 BDEPEND="
 	dev-build/cmake
-	dev-util/patchelf
 "
 
 PATCHES=(
