@@ -4,7 +4,7 @@
 EAPI=8
 
 DISTUTILS_USE_PEP517=setuptools
-PYTHON_COMPAT=( python3_{11..14} )
+PYTHON_COMPAT=( python3_{12..14} )
 
 inherit distutils-r1
 
@@ -35,6 +35,7 @@ RDEPEND="
 	dev-python/fastjsonschema
 "
 
+EPYTEST_PLUGINS=( sphinx-markdown-builder )
 distutils_enable_tests pytest
 
 EPYTEST_DESELECT=(
@@ -42,6 +43,7 @@ EPYTEST_DESELECT=(
 	tests/test_projects.py::test_external_projects
 	tests/test_projects.py::test_external_projects_invalid_value
 	tests/test_projects.py::test_external_projects_unknown_project
+	tests/test_llms.py
 )
 
 python_test() {
