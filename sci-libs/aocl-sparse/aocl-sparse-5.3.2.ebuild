@@ -25,7 +25,7 @@ RESTRICT="!test? ( test )"
 DEPEND="
 	sci-libs/aocl-blas
 	sci-libs/aocl-lapack
-	sci-libs/aocl-utils
+	>=sci-libs/aocl-utils-5.3.2
 "
 
 # IUSE+=" doc"
@@ -41,7 +41,7 @@ DEPEND="
 DOCS=( README.md )
 
 PATCHES=(
-	"${FILESDIR}"/${PN}-5.2-install.patch
+	"${FILESDIR}"/${P}-install.patch
 	"${FILESDIR}"/${PN}-5.1-test.patch
 )
 

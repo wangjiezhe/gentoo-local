@@ -1,8 +1,8 @@
 diff --git a/tests/unit_tests/CMakeLists.txt b/tests/unit_tests/CMakeLists.txt
-index 96a8539..0611a8e 100644
+index 6089061..62691f8 100644
 --- a/tests/unit_tests/CMakeLists.txt
 +++ b/tests/unit_tests/CMakeLists.txt
-@@ -310,42 +310,6 @@ add_subdirectory(data)
+@@ -377,44 +377,6 @@ add_subdirectory(data)
  
  set(TESTS_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/unit_tests")
  
@@ -10,6 +10,7 @@ index 96a8539..0611a8e 100644
 -    install(FILES CMakeLists.txt DESTINATION ${TESTS_INSTALL_DIR})
 -    install(FILES common_data_utils.cpp DESTINATION ${TESTS_INSTALL_DIR})
 -    install(FILES common_data_utils.h DESTINATION ${TESTS_INSTALL_DIR}/include)
+-    install(FILES level3_test_common.hpp DESTINATION ${TESTS_INSTALL_DIR}/include)
 -    install(FILES createcsc_ut_functions.hpp DESTINATION ${TESTS_INSTALL_DIR}/include)
 -    install(FILES cg_ut_functions.hpp DESTINATION ${TESTS_INSTALL_DIR}/include)
 -    install(FILES gmres_ut_functions.hpp DESTINATION ${TESTS_INSTALL_DIR}/include)
@@ -37,6 +38,7 @@ index 96a8539..0611a8e 100644
 -    #--------------------------------
 -    # Install KT kernel source files
 -    #--------------------------------
+-    install(FILES kt_kernels.hpp DESTINATION ${TESTS_INSTALL_DIR})
 -    install(FILES kt_kernels.cpp DESTINATION ${TESTS_INSTALL_DIR})
 -    install(FILES ktlvl2_kernels.cpp DESTINATION ${TESTS_INSTALL_DIR})
 -    #--------------------------------
@@ -45,10 +47,10 @@ index 96a8539..0611a8e 100644
  # -----------------------------------------------------------------------
  # Build KT test dependencies
  # -----------------------------------------------------------------------
-@@ -396,9 +360,6 @@ foreach(TNAME ${GTEST_EXECUTABLES})
-     target_compile_definitions(${TNAME} PUBLIC ${AOCLSPARSE_ILP64})
+@@ -466,9 +428,6 @@ foreach(TNAME ${GTEST_EXECUTABLES})
  
      target_compile_options(${TNAME} PUBLIC $<$<CONFIG:Debug>:${COMPILER_FLAGS_DEBUG}> "-mno-avx512f;")
+ 
 -    if(NOT BUILD_SPARSE_TESTS_OUTOFSRCTREE)
 -        install(FILES ${TNAME}.cpp DESTINATION ${TESTS_INSTALL_DIR})
 -    endif()
