@@ -32,7 +32,7 @@ BDEPEND="
 "
 
 PATCHES=(
-	"${FILESDIR}"/${P}-supermatrix.patch
+	"${FILESDIR}"/${PN}-5.3-supermatrix.patch
 )
 
 index64_wrapper() {
