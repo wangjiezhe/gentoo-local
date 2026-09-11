@@ -3,37 +3,36 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{12..15} python3_{14..15}t)
+DISTUTILS_USE_PEP517=scikit-build-core
+PYTHON_COMPAT=( python3_{12..15} python3_{14..15}t )
+DISTUTILS_SINGLE_IMPL=1
+DISTUTILS_EXT=1
+
 ROCM_VERSION=6.1
-inherit python-single-r1 cmake cuda flag-o-matic prefix rocm
+inherit distutils-r1 prefix cuda flag-o-matic rocm multiprocessing
 
-MYPN=pytorch
-MYP=${MYPN}-${PV}
-
-# caffe2-2.14.0 depends on specific commit of composable kernel
+# pytorch-2.14.0 depends on specific commit of composable kernel
 # TODO: replace it with DEPEND in the future
 CK_COMMIT=5a74dec07a894484b9489d0c0e00cd3b52652d18
 CK_P=composable_kernel-${CK_COMMIT:0:8}
 
+# Starting from 2.7.0 pytorch moved flash attention out-of-tree,
+# but hardcoded it as third_party subproject
+# TODO: unbundle
 FLASH_PV=fa4-v4.0.0.beta24
 FLASH_PN=flash-attention
 FLASH_P=${FLASH_PN}-${FLASH_PV}
 FLASH_ATT_URI="https://github.com/Dao-AILab/${FLASH_PN}/archive/refs/tags/${FLASH_PV}.tar.gz -> ${FLASH_P}.gh.tar.gz"
-
-AOTRITON_PV=0.9.2b
-AOTRITON_PN=aotriton
-AOTRITON_P=${AOTRITON_PN}-${AOTRITON_PV}
-AOTRITON_tar=${AOTRITON_P}-manylinux_2_28_x86_64-rocm6.3-shared.tar.gz
 
 CUTLASS_PV=4.6.1
 CUTLASS_PN=cutlass
 CUTLASS_P=${CUTLASS_PN}-${CUTLASS_PV}
 CUTLASS_URI="https://github.com/NVIDIA/${CUTLASS_PN}/archive/v${CUTLASS_PV}.tar.gz -> ${CUTLASS_P}.tar.gz"
 
-DESCRIPTION="A deep learning framework"
+DESCRIPTION="Tensors and Dynamic neural networks in Python with strong GPU acceleration"
 HOMEPAGE="https://pytorch.org/"
-SRC_URI="
-	https://github.com/pytorch/${MYPN}/archive/refs/tags/v${PV}.tar.gz -> ${MYP}.tar.gz
+SRC_URI="https://github.com/pytorch/${PN}/archive/refs/tags/v${PV}.tar.gz
+	-> ${P}.tar.gz
 	rocm? (
 		https://github.com/ROCm/composable_kernel/archive/${CK_COMMIT}.tar.gz
 		-> ${CK_P}.tar.gz
@@ -45,15 +44,14 @@ SRC_URI="
 	)
 "
 
-S="${WORKDIR}"/${MYP}
-
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~arm64"
 IUSE="aocl cuda cudss cusparselt distributed fbgemm flash flexiblas gloo kineto magma memefficient
-	mimalloc mkl mpi nccl numa nnpack +numpy onednn openblas opencl openmp qnnpack
+	mimalloc mkl mpi nccl nnpack numa +numpy onednn openblas openmp qnnpack
 	rocm xnnpack"
 RESTRICT="test"
+
 REQUIRED_USE="
 	${PYTHON_REQUIRED_USE}
 	mpi? ( distributed )
@@ -72,39 +70,56 @@ REQUIRED_USE="
 
 RDEPEND="
 	${PYTHON_DEPS}
+	!sci-ml/caffe2
 	dev-cpp/abseil-cpp:=
 	dev-cpp/gflags:=
-	>=dev-cpp/glog-0.5.0:=
+	>=dev-cpp/glog-0.6.0:=
 	>=dev-libs/cpuinfo-2025.11.14
 	dev-libs/libfmt:=
 	dev-libs/protobuf:=
 	dev-libs/sleef
 	sci-ml/onnx
-	virtual/lapack
+	$(python_gen_cond_dep '
+		dev-python/sympy[${PYTHON_USEDEP}]
+		dev-python/typing-extensions[${PYTHON_USEDEP}]
+	')
+	!mkl? ( !openblas? ( !aocl? ( !flexiblas? ( virtual/blas ) ) ) )
+	aocl? (
+		sci-libs/aocl-blas
+		sci-libs/aocl-lapack
+	)
 	cuda? (
 		dev-libs/cudnn
 		>=sci-ml/cudnn-frontend-1.12.0:=
-		dev-util/nvidia-cuda-toolkit:=[profiler]
-		nccl? ( dev-libs/nccl )
+		>=dev-util/nvidia-cuda-toolkit-12.9:=[profiler]
 		cudss? ( dev-libs/cudss )
 		cusparselt? ( dev-libs/cusparselt )
+		nccl? ( dev-libs/nccl )
 	)
-	fbgemm? ( sci-ml/FBGEMM:= )
+	distributed? (
+		!rocm? ( sci-ml/tensorpipe[cuda?] )
+		dev-cpp/cpp-httplib:=
+	)
+	fbgemm? ( >=sci-ml/FBGEMM-1.4:= )
+	flexiblas? ( sci-libs/flexiblas )
 	gloo? ( >=sci-ml/gloo-2025.06.04[cuda?,rocm?] )
 	kineto? ( ~sci-ml/kineto-0.4.0_p20260805 )
 	magma? ( sci-libs/magma[cuda?] )
 	mimalloc? ( dev-libs/mimalloc )
+	mkl? ( sci-libs/mkl )
 	mpi? ( virtual/mpi )
 	nnpack? (
 		sci-ml/NNPACK
 		dev-libs/pthreadpool
 	)
+	numa? ( sys-process/numactl )
 	numpy? ( $(python_gen_cond_dep '
 		dev-python/numpy[${PYTHON_USEDEP}]
 	') )
 	onednn? ( sci-ml/oneDNN )
-	opencl? ( virtual/opencl )
+	openblas? ( sci-libs/openblas )
 	qnnpack? (
+		!sci-libs/QNNPACK
 		sci-ml/gemmlowp
 		dev-libs/pthreadpool
 	)
@@ -129,22 +144,10 @@ RDEPEND="
 		)
 		cusparselt? ( >=sci-libs/hipsparselt-6.3:= <sci-libs/hipsparselt-7.3:= )
 	)
-	distributed? (
-		!rocm? ( ~sci-ml/tensorpipe-2025.11.05[cuda?] )
-		dev-cpp/cpp-httplib:=
-	)
 	xnnpack? (
 		>=sci-ml/XNNPACK-2024.11
 		dev-libs/pthreadpool
 	)
-	mkl? ( sci-libs/mkl )
-	openblas? ( sci-libs/openblas )
-	aocl? (
-		sci-libs/aocl-blas
-		sci-libs/aocl-lapack
-	)
-	flexiblas? ( sci-libs/flexiblas )
-	numa? ( sys-process/numactl )
 "
 
 DEPEND="
@@ -160,7 +163,7 @@ DEPEND="
 		dev-python/pyyaml[${PYTHON_USEDEP}]
 		dev-python/typing-extensions[${PYTHON_USEDEP}]
 	')
-	cuda? ( >=dev-libs/cutlass-4.6.1[tools(+)] )
+	cuda? ( ~dev-libs/cutlass-4.6.1[tools(+)] )
 	onednn? ( sci-ml/ideep )
 	rocm? (
 		>=sci-libs/hipCUB-6.3:=    <sci-libs/hipCUB-7.3:=
@@ -169,7 +172,9 @@ DEPEND="
 	)
 	qnnpack? ( dev-libs/clog )
 "
+
 BDEPEND="
+	dev-build/cmake
 	dev-util/patchelf
 "
 
@@ -183,7 +188,7 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-1.12.0-glog-0.6.0.patch
 	"${FILESDIR}"/${PN}-2.9.1-cmake.patch
 	"${FILESDIR}"/${PN}-2.7.0-glog-0.7.1.patch
-	"${FILESDIR}"/${PN}-2.12.0-aotriton-fixes.patch
+	"${FILESDIR}"/${PN}-2.13.0-aotriton-fixes.patch
 	"${FILESDIR}"/${PN}-2.8.0-rocm-minus-flash.patch
 	"${FILESDIR}"/${PN}-2.12.0-rocm-distributed-link.patch
 	"${FILESDIR}"/${PN}-2.10.0-aocl.patch
@@ -192,9 +197,12 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.10.0-blas.patch
 	"${FILESDIR}"/${PN}-2.10.0-lapack.patch
 	"${FILESDIR}"/${PN}-2.11.0-mimalloc.patch
-	# "${FILESDIR}"/${PN}-2.12.0-removekineto-pr178960.patch
+	"${FILESDIR}"/${PN}-2.14.0-removekineto-pr178960.patch
 	"${FILESDIR}"/${PN}-2.13.0-glog.patch
-	"${FILESDIR}"/${P}-cmake-install-fix.patch
+	"${FILESDIR}"/${PN}-2.10.0-cpp-extension-multilib.patch
+	"${FILESDIR}"/${PN}-2.13.0-rocm-assert-fix.patch
+	"${FILESDIR}"/${PN}-2.13.0-unbundle_mkldnn.patch
+	"${FILESDIR}"/${P}-license.patch
 )
 
 src_prepare() {
@@ -206,6 +214,10 @@ src_prepare() {
 	fi
 	filter-lto #bug 862672
 
+	# Replace placeholders added by cpp-extension.patch
+	sed -e "s|%LIB_DIR%|$(get_libdir)|g" \
+		-i torch/utils/cpp_extension.py || die
+
 	# Unbundle fmt
 	sed -i \
 		-e 's|::fmt-header-only||' \
@@ -215,7 +227,7 @@ src_prepare() {
 		torch/CMakeLists.txt \
 		|| die
 
-	# tensorpipe is in system, not a build target of caffe2
+	# tensorpipe is in system, not a build target of pytorch
 	sed -e '/target_compile_options_if_supported(tensorpipe/d' -i cmake/Dependencies.cmake || die
 
 	# Drop third_party from CMake tree
@@ -226,25 +238,22 @@ src_prepare() {
 		cmake/ProtoBuf.cmake \
 		aten/src/ATen/CMakeLists.txt \
 		|| die
-	# Change libc10* path
-	sed -i \
-		-e "/EXPORT/s|DESTINATION lib)|DESTINATION $(get_libdir))|" \
-		c10/cuda/CMakeLists.txt \
-		c10/CMakeLists.txt \
-		c10/hip/CMakeLists.txt \
-		|| die
 
-	# Change libaotriton path
-	sed -i \
-		-e "s|}/lib|}/\${CMAKE_INSTALL_LIBDIR}|g" \
-		-e "/set(__AOTRITON_LIB/s|lib/|\${CMAKE_INSTALL_LIBDIR}/|g" \
-		cmake/External/aotriton.cmake \
-		|| die
+	# Add needed file for cutlass as symbolic link
+	ln -sf /usr/share/cutlass/examples third_party/cutlass/examples || die
+
+	# cudnn_frontend is unbundled, but some targets still look for its
+	# headers under third_party/cudnn_frontend/include.
+	if use cuda; then
+		mkdir -p third_party/cudnn_frontend || die
+		ln -sf /usr/include third_party/cudnn_frontend/include || die
+	fi
+
+	distutils-r1_src_prepare
 
 	# Noisy warnings from Logging.h
 	sed -i 's/-Wextra-semi//' cmake/public/utils.cmake || die
 
-	cmake_src_prepare
 	pushd torch/csrc/jit/serialization > /dev/null || die
 	flatc --cpp --gen-mutable --scoped-enums mobile_bytecode.fbs || die
 	popd > /dev/null || die
@@ -265,25 +274,19 @@ src_prepare() {
 		cmake/public/LoadHIP.cmake \
 		cmake/public/cuda.cmake \
 		cmake/Dependencies.cmake \
+		tools/setup_helpers/env.py \
 		torch/CMakeLists.txt \
 		CMakeLists.txt
 
 	if use rocm; then
-		sed -e "s:/opt/rocm:/usr:" \
-			-e "s:lib/cmake:$(get_libdir)/cmake:g" \
-			-i cmake/public/LoadHIP.cmake || die
-
 		# TODO: delete, when caffe2 depends on systemwide composable_kernel
 		sed -e "s:third_party/composable_kernel:../composable_kernel-${CK_COMMIT}:g" \
 			-i aten/src/ATen/CMakeLists.txt || die
 
-		# Bug 959808: fix for gfx101x targets
-		pushd "${WORKDIR}/composable_kernel-${CK_COMMIT}" > /dev/null || die
-		eapply "${FILESDIR}"/composable-kernel-7fe50dc-expand-isa.patch
-		popd > /dev/null || die
-
 		# Workaround for libc++ issue https://github.com/llvm/llvm-project/issues/100802
-		sed -e 's/std::memcpy/memcpy/g' -i torch/headeronly/util/Half.h || die
+		sed -e 's/std::memcpy/memcpy/g' \
+			-i torch/headeronly/util/Half.h \
+			-i aten/src/ATen/native/cuda/int4mm.cu || die
 
 		ebegin "HIPifying cuda sources"
 		FBCODE_BUILD_TOOL="buck" ${EPYTHON} tools/amd_build/build_amd.py || die
@@ -293,73 +296,79 @@ src_prepare() {
 
 src_configure() {
 	if use cuda && [[ -z ${TORCH_CUDA_ARCH_LIST} ]]; then
-		ewarn "WARNING: caffe2 is being built with its default CUDA compute capabilities: 3.5 and 7.0."
+		ewarn "WARNING: pytorch is being built with its default CUDA compute capabilities: 3.5 and 7.0."
 		ewarn "These may not be optimal for your GPU."
 		ewarn ""
-		ewarn "To configure caffe2 with the CUDA compute capability that is optimal for your GPU,"
-		ewarn "set TORCH_CUDA_ARCH_LIST in your make.conf, and re-emerge caffe2."
+		ewarn "To configure pytorch with the CUDA compute capability that is optimal for your GPU,"
+		ewarn "set TORCH_CUDA_ARCH_LIST in your make.conf, and re-emerge pytorch."
 		ewarn "For example, to use CUDA capability 7.5 & 3.5, add: TORCH_CUDA_ARCH_LIST=7.5 3.5"
 		ewarn "For a Maxwell model GPU, an example value would be: TORCH_CUDA_ARCH_LIST=Maxwell"
 		ewarn ""
 		ewarn "You can look up your GPU's CUDA compute capability at https://developer.nvidia.com/cuda-gpus"
 		ewarn "or by running /opt/cuda/extras/demo_suite/deviceQuery | grep 'CUDA Capability'"
 	fi
+}
 
-	local mycmakeargs=(
-		-DBUILD_CUSTOM_PROTOBUF=OFF
-		-DBUILD_TEST=OFF
-		-DLIBSHM_INSTALL_LIB_SUBDIR="${EPREFIX}"/usr/$(get_libdir)
-		-DPython_EXECUTABLE="${PYTHON}"
-		-DTORCH_INSTALL_LIB_DIR="${EPREFIX}"/usr/$(get_libdir)
-		-DUSE_LITE_PROTO=ON
-		-DBUILD_SHARED_LIBS=ON
-		-DUSE_SYSTEM_LIBS=ON
-		-DATEN_NO_TEST=ON
-		-DSKBUILD_PLATLIB_DIR="$(python_get_sitedir)"
-
-		-DUSE_CCACHE=OFF
-		-DUSE_CUDA=$(usex cuda)
-		-DUSE_DISTRIBUTED=$(usex distributed)
-		-DUSE_FBGEMM=$(usex fbgemm)
-		-DUSE_FLASH_ATTENTION=$(usex flash)
-		-DUSE_GFLAGS=ON
-		-DUSE_GLOG=ON
-		-DUSE_GLOO=$(usex gloo)
-		-DUSE_ITT=OFF
-		-DUSE_KINETO=$(usex kineto)
-		-DUSE_KLEIDIAI=OFF # TODO
-		-DUSE_MAGMA=$(usex magma)
-		-DMAGMA_V2=$(usex magma)
-		-DUSE_MEM_EFF_ATTENTION=$(usex memefficient)
-		-DUSE_MIMALLOC=$(usex mimalloc)
-		-DUSE_MKLDNN=$(usex onednn)
-		-DUSE_MPI=$(usex mpi)
-		-DUSE_NNPACK=$(usex nnpack)
-		-DUSE_NUMA=$(usex numa)
-		-DUSE_NUMPY=$(usex numpy)
-		-DUSE_OPENCL=$(usex opencl)
-		-DUSE_OPENMP=$(usex openmp)
-		-DUSE_PYTORCH_QNNPACK=$(usex qnnpack)
-		-DUSE_PYTORCH_METAL=OFF
-		-DUSE_ROCM=$(usex rocm)
-		-DUSE_TENSORPIPE=$(usex distributed $(usex !rocm))
-		-DUSE_UCC=OFF
-		-DUSE_VALGRIND=OFF
-		-DUSE_XNNPACK=$(usex xnnpack)
-		-DUSE_XPU=OFF
-		-Wno-dev
-	)
+python_compile() {
+	local -x ATEN_NO_TEST=ON
+	local -x BUILD_TEST=OFF
+	local -x CMAKE_BUILD_DIR="${BUILD_DIR}"
+	local -x MAX_JOBS=$(makeopts_jobs)
+	local -x PYTORCH_BUILD_VERSION=${PV}
+	local -x PYTORCH_BUILD_NUMBER=0
+	# local -x SKBUILD_PLATLIB_DIR="$(python_get_sitedir)"
+	local -x USE_CCACHE=OFF
+	local -x USE_CUDA=$(usex cuda)
+	local -x USE_DISTRIBUTED=$(usex distributed)
+	local -x USE_FBGEMM=$(usex fbgemm)
+	local -x USE_FLASH_ATTENTION=$(usex flash)
+	local -x USE_GFLAGS=ON
+	local -x USE_GLOG=ON
+	local -x USE_GLOO=$(usex gloo)
+	local -x USE_ITT=OFF
+	local -x USE_KINETO=$(usex kineto)
+	local -x USE_KLEIDIAI=OFF # TODO
+	local -x USE_LITE_PROTO=ON
+	local -x USE_MAGMA=ON
+	local -x MAGMA_V2=ON
+	local -x USE_MEM_EFF_ATTENTION=$(usex memefficient)
+	local -x USE_MIMALLOC=$(usex mimalloc)
+	local -x USE_MKLDNN=$(usex onednn)
+	local -x USE_MPI=$(usex mpi)
+	local -x USE_NNPACK=$(usex nnpack)
+	local -x USE_NUMA=OFF
+	local -x USE_NUMPY=$(usex numpy)
+	local -x USE_OPENMP=$(usex openmp)
+	local -x USE_PYTORCH_QNNPACK=$(usex qnnpack)
+	local -x USE_PYTORCH_METAL=OFF
+	local -x USE_ROCM=$(usex rocm)
+	local -x USE_SYSTEM_LIBS=ON
+	# local -x USE_SYSTEM_XNNPACK=$(usex xnnpack)
+	local -x USE_TENSORPIPE=$(usex distributed $(usex !rocm))
+	local -x USE_UCC=OFF
+	local -x USE_VALGRIND=OFF
+	local -x USE_XNNPACK=$(usex xnnpack)
+	local -x USE_XPU=OFF
 
 	if use mkl; then
-		mycmakeargs+=(-DBLAS=MKL)
+		local -x USE_BLAS=ON
+		local -x BLAS=MKL
 	elif use openblas; then
-		mycmakeargs+=(-DBLAS=OpenBLAS)
+		local -x USE_BLAS=ON
+		local -x BLAS=OpenBLAS
 	elif use aocl; then
-		mycmakeargs+=(-DBLAS=BLIS)
+		local -x USE_BLAS=ON
+		local -x BLAS=BLIS
 	elif use flexiblas; then
-		mycmakeargs+=(-DBLAS=FlexiBLAS)
+		local -x USE_BLAS=ON
+		local -x BLAS=FlexiBLAS
 	else
-		mycmakeargs+=(-DBLAS=Generic -DBLAS_LIBRARIES=)
+		# Note: USE_BLAS=OFF does not properly work, instead pytorch still searches for libraries.
+		# Even though it is easy to patch pytorch to disable BLAS usage completely,
+		# it is practically not useful, as it would render the library barely usable.
+		local -x USE_BLAS=ON
+		local -x BLAS=Generic
+		local -x GENERIC_BLAS_LIBRARIES=cblas
 	fi
 
 	if use cuda; then
@@ -367,22 +376,18 @@ src_configure() {
 		cuda_add_sandbox
 		addpredict "/dev/char/"
 
-		mycmakeargs+=(
-			-DUSE_CUDNN=ON
-			-DTORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST:-3.5 7.0}"
-			-DUSE_NCCL=$(usex nccl)
-			-DUSE_SYSTEM_NCCL=ON
-			-DCMAKE_CUDA_FLAGS="$(cuda_gccdir -f | tr -d \")"
-			-DUSE_NVRTC=ON
-			-DUSE_CUSPARSELT=$(usex cusparselt)
-			-DUSE_CUDSS=$(usex cudss)
-		)
-
-		[[ -v CUDACXX ]] && export PYTORCH_NVCC="${CUDACXX}"
+		local -x CMAKE_CUDA_FLAGS="$(cuda_gccdir -f | tr -d \")"
+		local -x TORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST:-7.5}"
+		local -x USE_CUDNN=ON
+		local -x USE_CUDSS=$(usex cudss)
+		local -x USE_CUSPARSELT=$(usex cusparselt)
+		local -x USE_NCCL=$(usex nccl)
+		local -x USE_NVRTC=ON
+		local -x USE_SYSTEM_NCCL=ON
 
 		if use flash; then
 			export FLASH_ATTENTION_FORCE_BUILD="TRUE"
-			export FLASH_ATTN_CUDA_ARCHS="${CUDAARCHS:-${TORCH_CUDA_ARCH_LIST:-3.5 7.0}}"
+			export FLASH_ATTN_CUDA_ARCHS="${CUDAARCHS:-${TORCH_CUDA_ARCH_LIST:-7.5}}"
 		fi
 
 	elif use rocm; then
@@ -392,58 +397,25 @@ src_configure() {
 			export AOTRITON_INSTALLED_PREFIX="${ESYSROOT}/usr"
 		fi
 
-		mycmakeargs+=(
-			-DUSE_NCCL=$(usex nccl)
-			-DUSE_SYSTEM_NCCL=ON
-			-DCMAKE_REQUIRE_FIND_PACKAGE_HIP=ON
-			-DCMAKE_DISABLE_FIND_PACKAGE_hipsparselt=$(usex !cusparselt) # disable automagic
-			-DUSE_ROCM_CK_SDPA=OFF # requires flash + aiter, works only on gfx90a/gfx942/gfx950
-		)
+		local -x CMAKE_REQUIRE_FIND_PACKAGE_HIP=ON
+		local -x USE_NCCL=$(usex nccl)
+		local -x CMAKE_DISABLE_FIND_PACKAGE_hipsparselt=$(usex !cusparselt) # disable automagic
+		local -x USE_ROCM_CK_SDPA=OFF # requires flash + aiter, works only on gfx90a/gfx942/gfx950
+		local -x ROCM_PATH=/usr
+		local -x HIP_CLANG_PATH=$(hipconfig --hipclangpath)
 
 		# ROCm libraries produce too much warnings
 		append-cxxflags -Wno-deprecated-declarations -Wno-unused-result -Wno-unused-value
+	else
+		local -x USE_NCCL=OFF
 	fi
 
-	if use onednn; then
-		mycmakeargs+=(
-			-DMKLDNN_FOUND=ON
-			-DMKLDNN_LIBRARIES=dnnl
-			-DMKLDNN_INCLUDE_DIR="${ESYSROOT}/usr/include/oneapi/dnnl"
-		)
-	fi
-
-	cmake_src_configure
-}
-
-src_compile() {
-	PYTORCH_BUILD_VERSION=${PV} \
-	PYTORCH_BUILD_NUMBER=0 \
-	cmake_src_compile
+	distutils-r1_python_compile develop sdist
 }
 
 python_install() {
-	python_optimize
-	mkdir "${D}"$(python_get_sitedir)/torch/bin || die
-	mkdir "${D}"$(python_get_sitedir)/torch/lib || die
-	mkdir "${D}"$(python_get_sitedir)/torch/include || die
-	ln -s ../../../../../include/torch \
-		"${D}$(python_get_sitedir)"/torch/include/torch || die # bug 923269
-	ln -s ../../../../../bin/torch_shm_manager \
-		"${D}"/$(python_get_sitedir)/torch/bin/torch_shm_manager || die
-	ln -s ../../../../../$(get_libdir)/libtorch_global_deps.so \
-		"${D}"/$(python_get_sitedir)/torch/lib/libtorch_global_deps.so || die
-}
+	distutils-r1_python_install
 
-src_install() {
-	cmake_src_install
-
-	if use cuda; then
-		patchelf --add-needed libcaffe2_nvrtc.so "${ED}/usr/$(get_libdir)/libtorch_cuda.so" || die "patchelf failed"
-	fi
-
-	# Used by pytorch ebuild
 	insinto "/var/lib/${PN}"
-	doins "${BUILD_DIR}"/CMakeCache.txt
-
-	python_install
+	doins "${S}"/build/CMakeCache.txt
 }

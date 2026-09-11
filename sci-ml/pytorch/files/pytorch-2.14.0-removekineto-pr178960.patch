@@ -14,8 +14,8 @@ deviceTypeFromActivity) and collection.cpp (scopeToType, kinetoType) that use co
  torch/csrc/profiler/kineto_shim.h   |  7 +++++++
  3 files changed, 29 insertions(+), 2 deletions(-)
 
-diff --git a/torch/csrc/profiler/collection.cpp b/torch/csrc/profiler/collection.cpp
 index 1be2d80310910..e8054d4f44df7 100644
+diff --git a/torch/csrc/profiler/collection.cpp b/torch/csrc/profiler/collection.cpp
 --- a/torch/csrc/profiler/collection.cpp
 +++ b/torch/csrc/profiler/collection.cpp
 @@ -573,11 +573,13 @@ std::string toString(const ExtraFields<EventType::PyCall>& e) {
@@ -53,7 +53,7 @@ index 1be2d80310910..e8054d4f44df7 100644
  uint64_t Result::correlationID() const {
    return visit(c10::overloaded(
 diff --git a/torch/csrc/profiler/kineto_shim.cpp b/torch/csrc/profiler/kineto_shim.cpp
-index fa232e1a01016..0ddf62997a07e 100644
+diff --git a/torch/csrc/profiler/kineto_shim.cpp b/torch/csrc/profiler/kineto_shim.cpp
 --- a/torch/csrc/profiler/kineto_shim.cpp
 +++ b/torch/csrc/profiler/kineto_shim.cpp
 @@ -138,6 +138,7 @@ TraceWrapper::TraceWrapper(const int64_t start_time, const std::string& name)
@@ -111,7 +111,7 @@ index fa232e1a01016..0ddf62997a07e 100644
  
  void addMetadataJson(const std::string& key, const std::string& value) {
 diff --git a/torch/csrc/profiler/kineto_shim.h b/torch/csrc/profiler/kineto_shim.h
-index 4f9bdc6770507..44bcb0e18a6e0 100644
+diff --git a/torch/csrc/profiler/kineto_shim.h b/torch/csrc/profiler/kineto_shim.h
 --- a/torch/csrc/profiler/kineto_shim.h
 +++ b/torch/csrc/profiler/kineto_shim.h
 @@ -12,7 +12,14 @@
@@ -146,7 +146,7 @@ init.cpp failed to compile because it referenced those enum member names directl
  4 files changed, 18 insertions(+), 8 deletions(-)
 
 diff --git a/torch/csrc/autograd/init.cpp b/torch/csrc/autograd/init.cpp
-index 1e2442a5d99db..f8e8795c5805e 100644
+diff --git a/torch/csrc/autograd/init.cpp b/torch/csrc/autograd/init.cpp
 --- a/torch/csrc/autograd/init.cpp
 +++ b/torch/csrc/autograd/init.cpp
 @@ -305,12 +305,7 @@ PyObject* THPAutograd_initExtension(PyObject* _unused, PyObject* unused) {
@@ -164,7 +164,7 @@ index 1e2442a5d99db..f8e8795c5805e 100644
            "is_python_function",
            [](const KinetoEvent& e) { return e.isPythonFunction(); })
 diff --git a/torch/csrc/autograd/profiler_kineto.cpp b/torch/csrc/autograd/profiler_kineto.cpp
-index 9a076f58d7143..6b5165f0872fb 100644
+diff --git a/torch/csrc/autograd/profiler_kineto.cpp b/torch/csrc/autograd/profiler_kineto.cpp
 --- a/torch/csrc/autograd/profiler_kineto.cpp
 +++ b/torch/csrc/autograd/profiler_kineto.cpp
 @@ -1081,6 +1081,13 @@ int64_t KinetoEvent::privateuse1ElapsedUs() const {
@@ -182,7 +182,7 @@ index 9a076f58d7143..6b5165f0872fb 100644
    return result_->visit(c10::overloaded(
        [&in](const ExtraFields<EventType::TorchOp>& e) -> void {
 diff --git a/torch/csrc/autograd/profiler_kineto.h b/torch/csrc/autograd/profiler_kineto.h
-index 777b8a5851ed5..c3135c61245d4 100644
+diff --git a/torch/csrc/autograd/profiler_kineto.h b/torch/csrc/autograd/profiler_kineto.h
 --- a/torch/csrc/autograd/profiler_kineto.h
 +++ b/torch/csrc/autograd/profiler_kineto.h
 @@ -67,6 +67,7 @@ struct TORCH_API KinetoEvent {
@@ -194,7 +194,7 @@ index 777b8a5851ed5..c3135c61245d4 100644
    extra_meta_t extraMeta() const;
    std::string metadataJson() const;
 diff --git a/torch/csrc/profiler/kineto_shim.h b/torch/csrc/profiler/kineto_shim.h
-index 44bcb0e18a6e0..ddc00c03fa9cc 100644
+diff --git a/torch/csrc/profiler/kineto_shim.h b/torch/csrc/profiler/kineto_shim.h
 --- a/torch/csrc/profiler/kineto_shim.h
 +++ b/torch/csrc/profiler/kineto_shim.h
 @@ -15,9 +15,16 @@
@@ -238,10 +238,10 @@ duplicating the correlation ID lookup.
  1 file changed, 22 insertions(+), 16 deletions(-)
 
 diff --git a/torch/csrc/autograd/profiler_kineto.cpp b/torch/csrc/autograd/profiler_kineto.cpp
-index 6b5165f0872fb..466e8d66ab518 100644
+diff --git a/torch/csrc/autograd/profiler_kineto.cpp b/torch/csrc/autograd/profiler_kineto.cpp
 --- a/torch/csrc/autograd/profiler_kineto.cpp
 +++ b/torch/csrc/autograd/profiler_kineto.cpp
-@@ -1125,27 +1125,33 @@ int64_t KinetoEvent::externalId() const {
+@@ -1125,29 +1125,35 @@ int64_t KinetoEvent::externalId() const {
      return static_cast<int64_t>(linked);
    }
  
@@ -258,6 +258,8 @@ index 6b5165f0872fb..466e8d66ab518 100644
 -      type != libkineto::ActivityType::CONCURRENT_KERNEL &&
 -      type != libkineto::ActivityType::CUDA_RUNTIME &&
 -      type != libkineto::ActivityType::CUDA_DRIVER &&
+-      type != libkineto::ActivityType::XPU_RUNTIME &&
+-      type != libkineto::ActivityType::XPU_DRIVER &&
 -      type != libkineto::ActivityType::PRIVATEUSE1_RUNTIME &&
 -      type != libkineto::ActivityType::PRIVATEUSE1_DRIVER) {
 -    return static_cast<int64_t>(result_->visit(c10::overloaded(
@@ -273,6 +275,8 @@ index 6b5165f0872fb..466e8d66ab518 100644
 +      type == libkineto::ActivityType::CONCURRENT_KERNEL ||
 +      type == libkineto::ActivityType::CUDA_RUNTIME ||
 +      type == libkineto::ActivityType::CUDA_DRIVER ||
++      type == libkineto::ActivityType::XPU_RUNTIME ||
++      type == libkineto::ActivityType::XPU_DRIVER ||
 +      type == libkineto::ActivityType::PRIVATEUSE1_RUNTIME ||
 +      type == libkineto::ActivityType::PRIVATEUSE1_DRIVER) {
 +    return 0;
