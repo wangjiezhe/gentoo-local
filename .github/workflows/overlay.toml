@@ -601,12 +601,6 @@ github = "pranshuparmar/witr"
 use_latest_release = true
 prefix = "v"
 
-["net-libs/bun-bin"]
-source = "github"
-github = "oven-sh/bun"
-use_latest_release = true
-prefix = "bun-v"
-
 ["dev-go/yaegi"]
 source = "github"
 github = "traefik/yaegi"
