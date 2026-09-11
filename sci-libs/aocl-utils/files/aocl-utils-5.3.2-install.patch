@@ -1,0 +1,17 @@
+diff --git a/CMake/au_install.cmake b/CMake/au_install.cmake
+index 4ba7c48..38f4ce2 100644
+--- a/CMake/au_install.cmake
++++ b/CMake/au_install.cmake
+@@ -50,12 +50,6 @@ install(
+ #    COMPONENT runtime
+ #)
+ 
+-if (UNIX)
+-  install(CODE "execute_process(COMMAND ldconfig)"
+-          COMPONENT runtime
+-  )
+-endif()
+-
+ # Function to install CMake package configuration files
+ function(au_install_package_config)
+     include(CMakePackageConfigHelpers)

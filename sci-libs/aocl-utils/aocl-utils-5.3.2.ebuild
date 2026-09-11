@@ -24,8 +24,8 @@ BDEPEND="
 DOCS=( Readme.md version.txt )
 
 PATCHES=(
-	"${FILESDIR}/${PN}-5.1-install.patch"
-	"${FILESDIR}/${PN}-5.1-test.patch"
+	"${FILESDIR}/${P}-install.patch"
+	"${FILESDIR}/${P}-test.patch"
 )
 
 src_configure() {

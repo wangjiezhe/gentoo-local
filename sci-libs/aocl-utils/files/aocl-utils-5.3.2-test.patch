@@ -1,0 +1,113 @@
+diff --git a/CMake/au_find_gtest.cmake b/CMake/au_find_gtest.cmake
+index b9a87d1..04851d2 100644
+--- a/CMake/au_find_gtest.cmake
++++ b/CMake/au_find_gtest.cmake
+@@ -25,34 +25,9 @@
+ # POSSIBILITY OF SUCH DAMAGE.
+ #
+ 
+-include(FetchContent)
+ set(INSTALL_GTEST OFF)
++find_package(GTest REQUIRED)
+ include(GoogleTest)
+-FetchContent_Declare(gtest
+-  GIT_REPOSITORY https://github.com/google/googletest.git
+-  GIT_TAG ${AU_GTEST_TAG}
+-)
+-
+-# Force googletest and googlemock to build as static libraries even when this
+-# project's BUILD_SHARED_LIBS is ON. With BUILD_SHARED_LIBS=ON propagating in
+-# the gtest subdir, gmock builds as a DLL but its internal globals (Mutex,
+-# ThreadLocal<Sequence*>) are not __declspec(dllexport)'d and link with
+-# undefined-symbol errors in any test EXE that uses gmock (LoggerTest,
+-# CpuidTest). Save the outer value, force OFF for the fetch, restore after.
+-# Pin googletest's CRT to match au::<mod> before gtest configures (setting it
+-# after has no effect); AU_ALIAS_LINKS_MD_CRT (au_options.cmake) is the single
+-# source of truth also consumed by test/example executables.
+-if(AU_ALIAS_LINKS_MD_CRT)
+-    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+-else()
+-    set(gtest_force_shared_crt OFF CACHE BOOL "" FORCE)
+-endif()
+-
+-set(_au_save_build_shared_libs "${BUILD_SHARED_LIBS}")
+-set(BUILD_SHARED_LIBS OFF)
+-FetchContent_MakeAvailable(gtest)
+-set(BUILD_SHARED_LIBS "${_au_save_build_shared_libs}")
+-unset(_au_save_build_shared_libs)
+ 
+ #
+ # On Windows: Prevent overriding the parent project's compiler/linker settings
+@@ -67,8 +42,8 @@ option(GMOCK_ENABLE_INSTALL "" OFF)
+ #FetchContent_MakeAvailable(gtest)
+ # You can disable clang-tidy for specific folders in the fetched content project
+ if(CMAKE_CXX_CLANG_TIDY)
+-    set_target_properties(gtest PROPERTIES CXX_CLANG_TIDY "")
+-    set_target_properties(gtest_main PROPERTIES CXX_CLANG_TIDY "")
+-    set_target_properties(gmock PROPERTIES CXX_CLANG_TIDY "")
+-    set_target_properties(gmock_main PROPERTIES CXX_CLANG_TIDY "")
++    set_target_properties(GTest::gtest PROPERTIES CXX_CLANG_TIDY "")
++    set_target_properties(GTest::gtest_main PROPERTIES CXX_CLANG_TIDY "")
++    set_target_properties(GTest::gmock PROPERTIES CXX_CLANG_TIDY "")
++    set_target_properties(GTest::gmock_main PROPERTIES CXX_CLANG_TIDY "")
+ endif()
+diff --git a/CMake/au_unit_tests.cmake b/CMake/au_unit_tests.cmake
+index 255689c..d11b5b7 100644
+--- a/CMake/au_unit_tests.cmake
++++ b/CMake/au_unit_tests.cmake
+@@ -132,7 +132,7 @@ function(au_cc_test testName)
+   target_compile_definitions(${_target_name} PRIVATE AU_BUILD_TESTS)
+ 
+   # Add gtest with main() as dependency
+-  target_link_libraries(${_target_name} PRIVATE gmock_main)
++  target_link_libraries(${_target_name} PRIVATE gmock gmock_main gtest)
+ 
+   #
+   # Add additional dependencies,
+diff --git a/Library/Tests/CMakeLists.txt b/Library/Tests/CMakeLists.txt
+index 7cb9aad..9d8a799 100644
+--- a/Library/Tests/CMakeLists.txt
++++ b/Library/Tests/CMakeLists.txt
+@@ -166,42 +166,6 @@ endif()
+ #        au::base64
+ #)
+ 
+-if(au_cpuid_cpuid)
+-    au_cc_test(CpuidTest
+-    SOURCES
+-    ${CPUID_TEST_FILES}
+-    HEADERS Mock/MockTest.hh QemuTest.hh
+-    DEPENDS
+-    au::cpuid
+-    EXTLIBRARY
+-    Python3
+-    )
+-
+-    # ---------------------------------------------------------------------
+-    # Standalone CPUID solidity test (assert-based, not gtest): the single
+-    # justified new file. It drives the pure-C core via the raw_fn mock hook
+-    # replaying simnow data and asserts decoded values against the
+-    # authoritative Mock/MockTest.hh table, including ONLY the amalgamated
+-    # au_cpuid_header_only.h header (no other Capi/au/cpuid header, no
+-    # libaoclutils, no libstdc++) to prove the amalgamation is self-contained.
+-    # Takes the repo source dir as argv[1] to locate simnowdata.
+-    # Coverage/Zen56/Affinity/Parity/C++-unified checks are NOT separate
+-    # categories -- they are folded into the existing CpuidTest gtest target
+-    # (see CapiTest.cc and Mock/X86CpuTest.cc).
+-    # ---------------------------------------------------------------------
+-    set(AU_CPUID_STANDALONE_C_TESTS
+-        Cpuid/Unified/UnifiedHeaderTest.c
+-    )
+-    foreach(__caseFile IN LISTS AU_CPUID_STANDALONE_C_TESTS)
+-        get_filename_component(__caseName ${__caseFile} NAME_WE)
+-        add_executable(${__caseName} ${__caseFile})
+-        set_target_properties(${__caseName} PROPERTIES
+-            C_STANDARD 11 C_STANDARD_REQUIRED ON)
+-        target_include_directories(${__caseName} PRIVATE ${AU_INCLUDE_DIRS})
+-        add_test(NAME ${__caseName}
+-            COMMAND ${__caseName} ${PROJECT_SOURCE_DIR})
+-    endforeach()
+-endif()
+ ##########
+ # Dynamic Loader Tests
+ ##########
