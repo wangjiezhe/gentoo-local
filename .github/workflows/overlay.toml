@@ -2,12 +2,6 @@
 oldver = "old_ver.json"
 newver = "new_ver.json"
 
-["sci-ml/caffe2"]
-source = "github"
-github = "pytorch/pytorch"
-use_latest_release = true
-prefix = "v"
-
 ["sci-ml/pytorch"]
 source = "github"
 github = "pytorch/pytorch"

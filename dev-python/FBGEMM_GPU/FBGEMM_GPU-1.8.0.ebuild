@@ -40,7 +40,7 @@ DEPEND="
 	cuda? (
 		dev-util/nvidia-cuda-toolkit
 		dev-libs/cudnn
-		>=sci-ml/caffe2-2.7.1-r1:=[cuda?]
+		sci-ml/pytorch:=[cuda?]
 		dev-libs/nccl
 		>=dev-libs/cutlass-3.8
 	)

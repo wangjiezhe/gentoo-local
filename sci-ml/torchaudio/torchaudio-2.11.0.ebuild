@@ -21,9 +21,8 @@ IUSE="cuda openmp"
 RESTRICT="test"		# has fatal python error and too many other failures
 
 RDEPEND="
-	>=sci-ml/pytorch-${PV}[${PYTHON_SINGLE_USEDEP}]
+	>=sci-ml/pytorch-${PV}[cuda?,${PYTHON_SINGLE_USEDEP}]
 	dev-util/ccache
-	cuda? ( >=sci-ml/caffe2-${PV}[cuda?] )
 "
 DEPEND="${RDEPEND}"
 

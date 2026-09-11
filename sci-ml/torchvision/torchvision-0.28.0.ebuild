@@ -29,8 +29,7 @@ RDEPEND="
 	jpeg? ( media-libs/libjpeg-turbo:= )
 	png? ( media-libs/libpng:= )
 	webp? ( media-libs/libwebp )
-	sci-ml/caffe2[cuda?,${PYTHON_SINGLE_USEDEP}]
-	sci-ml/pytorch[${PYTHON_SINGLE_USEDEP}]
+	sci-ml/pytorch[cuda?,${PYTHON_SINGLE_USEDEP}]
 "
 DEPEND="${RDEPEND}"
 

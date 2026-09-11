@@ -34,8 +34,7 @@ BDEPEND="
 		sci-libs/dlpack
 		test? (
 			dev-python/looseversion
-			sci-ml/pytorch
-			sci-ml/caffe2[cuda]
+			sci-ml/pytorch[cuda]
 		)
 	)
 "

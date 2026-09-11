@@ -20,8 +20,7 @@ KEYWORDS="~amd64"
 RESTRICT="test"
 
 DEPEND="
-	sci-ml/pytorch[${PYTHON_SINGLE_USEDEP}]
-	sci-ml/caffe2[cuda]
+	sci-ml/pytorch[cuda,${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		sci-ml/einops[${PYTHON_USEDEP}]
 	')
