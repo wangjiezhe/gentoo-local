@@ -642,3 +642,9 @@ use_latest_release = true
 ["dev-python/sphinx-markdown-builder"]
 source = "pypi"
 pypi = "sphinx-markdown-builder"
+
+["sci-ml/triton"]
+source = "github"
+github = "triton-lang/triton"
+use_latest_release = true
+prefix = "v"

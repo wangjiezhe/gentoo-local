@@ -52,6 +52,9 @@ src_prepare() {
 	sed -i \
 		-e "/LLVM_LIBRARY_DIR/s:/lib:/$(get_libdir):" \
 		CMakeLists.txt || die
+	sed -i \
+		-e "s:^include_dirs = \[\(.\+\)\]$:include_dirs = [\1, ${ESYSROOT}/opt/cuda/include]:" \
+		third_party/nvidia/backend/driver.py || die
 
 	distutils-r1_src_prepare
 }
