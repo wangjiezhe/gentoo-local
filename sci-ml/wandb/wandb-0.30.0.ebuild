@@ -45,7 +45,7 @@ RESTRICT="test"
 
 #	sys-devel/binutils[gold]
 BDEPEND="
-	>=dev-lang/go-1.26.4:=
+	>=dev-lang/go-1.26.5:=
 	dev-util/patchelf
 "
 
@@ -53,7 +53,6 @@ RDEPEND="
 	$(python_gen_cond_dep '
 		dev-python/click[${PYTHON_USEDEP}]
 		dev-python/requests[${PYTHON_USEDEP}]
-		dev-python/sentry-sdk[${PYTHON_USEDEP}]
 		dev-python/protobuf[${PYTHON_USEDEP}]
 		dev-python/pyyaml[${PYTHON_USEDEP}]
 		dev-python/platformdirs[${PYTHON_USEDEP}]
@@ -61,6 +60,9 @@ RDEPEND="
 		dev-python/pydantic[${PYTHON_USEDEP}]
 		dev-python/packaging[${PYTHON_USEDEP}]
 		dev-python/opentelemetry-api[${PYTHON_USEDEP}]
+		dev-python/opentelemetry-sdk[${PYTHON_USEDEP}]
+		dev-python/opentelemetry-exporter-otlp-proto-http[${PYTHON_USEDEP}]
+		dev-python/xxhash[${PYTHON_USEDEP}]
 	')
 "
 
@@ -80,5 +82,5 @@ src_unpack() {
 src_prepare() {
 	export CGO_LDFLAGS=$(echo "$CGO_LDFLAGS" | sed 's/-Wl,-z,pack-relative-relocs//g')
 	distutils-r1_src_prepare
-	sed -i "s/^go 1.26.5$/go 1.26.4/" core/go.mod || die
+	sed -i "s/^go 1.27.1$/go 1.26.5/" core/go.mod || die
 }
