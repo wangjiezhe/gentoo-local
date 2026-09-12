@@ -186,10 +186,6 @@ prefix = "v"
 source = "pypi"
 pypi = "clean-fid"
 
-["dev-python/expecttest"]
-source = "pypi"
-pypi = "expecttest"
-
 ["sci-ml/sentencepiece"]
 source = "github"
 github = "google/sentencepiece"
