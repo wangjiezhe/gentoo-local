@@ -146,12 +146,6 @@ source = "aur"
 aur = "tensorrt"
 strip_release = true
 
-["sci-ml/onnx"]
-source = "github"
-github = "onnx/onnx"
-use_latest_release = true
-prefix = "v"
-
 ["sci-libs/dlpack"]
 source = "github"
 github = "dmlc/dlpack"
