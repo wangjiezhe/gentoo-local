@@ -182,12 +182,6 @@ github = "icl-utk-edu/magma"
 use_latest_release = true
 prefix = "v"
 
-["dev-python/ml-dtypes"]
-source = "github"
-github = "jax-ml/ml_dtypes"
-use_latest_release = true
-prefix = "v"
-
 ["sci-ml/clean-fid"]
 source = "pypi"
 pypi = "clean-fid"
