@@ -648,3 +648,7 @@ source = "github"
 github = "triton-lang/triton"
 use_latest_release = true
 prefix = "v"
+
+["sci-ml/torch-geometric"]
+source = "pypi"
+pypi = "torch-geometric"
