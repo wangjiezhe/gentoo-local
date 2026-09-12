@@ -29,7 +29,7 @@ IUSE="cuda"
 RESTRICT="test"
 
 RDEPEND="
-	>=sci-ml/pytorch-2.5[${PYTHON_SINGLE_USEDEP}]
+	>=sci-ml/pytorch-2.14[${PYTHON_SINGLE_USEDEP}]
 	$(python_gen_cond_dep '
 		dev-python/numpy[${PYTHON_USEDEP}]
 	')
@@ -54,6 +54,7 @@ BDEPEND="
 		dev-python/tabulate[${PYTHON_USEDEP}]
 		dev-python/jinja2[${PYTHON_USEDEP}]
 	')
+	dev-util/patchelf
 "
 	# test? (
 	# 	dev-python/hypothesis[${PYTHON_USEDEP}]
@@ -80,11 +81,19 @@ python_configure_all() {
 	DISTUTILS_ARGS=(
 		--package_channel release
 		--build-target default
+		-DTorch_DIR="$(python_get_sitedir)/torch/share/cmake/Torch"
 	)
 	use cuda && DISTUTILS_ARGS+=(
 		--build-variant cuda
 		--nccl_lib_path "${EPREFIX}"/usr/$(get_libdir)/libnccl.so.2
 	) || DISTUTILS_ARGS+=(--build-variant cpu)
+}
+
+python_install() {
+	distutils-r1_src_install
+
+	patchelf --add-rpath "$(python_get_sitedir)/torch/lib" "${D}/${python_get_sitedir}"/fbgemm_gpu/*.so
+	patchelf --add-needed libtbb.so "${D}/${python_get_sitedir}"/fbgemm_gpu/fbgemm_gpu_py.so
 }
 
 # distutils_enable_tests pytest
