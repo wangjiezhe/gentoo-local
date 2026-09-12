@@ -1,0 +1,1688 @@
+From bd165cd264769bc8ff726d0110e746b18d584684 Mon Sep 17 00:00:00 2001
+From: Alexander Weinrauch <alexander.weinrauch@amd.com>
+Date: Mon, 15 Jun 2026 21:15:50 +0000
+Subject: [PATCH 1/3] Bump LLVM to 9ce06fd29838777aaa89f133fe4b9f764be11d35
+
+---
+ cmake/llvm-info.json                          |  18 +--
+ python/src/gluon_ir.cc                        |   3 +-
+ python/test/gluon/test_frontend.py            |   4 +-
+ test/Conversion/amd/buffer_atomic_cas.mlir    |   4 +-
+ test/Conversion/amd/buffer_load_store.mlir    |   6 +-
+ .../amd/buffer_load_to_local_to_llvm.mlir     |   9 +-
+ test/Conversion/amd/buffer_ops_gfx1250.mlir   |   5 +-
+ .../Conversion/amd/tritongpu_tdm_to_llvm.mlir |   4 +-
+ .../convert-to-llvmir-with-dbg-info.mlir      |   4 +-
+ test/Proton/amd/add_sched_barriers.mlir       |  24 ++--
+ .../amd/amd-block-pingpong-chained-dots.mlir  |  28 ++--
+ test/TritonGPU/amd/amd-block-pingpong.mlir    | 124 +++++++++---------
+ .../amd/amd-buffer-cache-modifiers-rdna3.mlir |  15 +--
+ .../amd/amd-warp-pipeline-invalid.mlir        |  16 +--
+ test/TritonGPU/amd/amd-warp-pipeline.mlir     |  24 ++--
+ test/TritonGPU/amd/mfma-double-rate.mlir      |   4 +-
+ .../TritonAMDGPUToLLVM/BufferOpsEmitter.cpp   |  68 +++++-----
+ .../lib/TritonAMDGPUToLLVM/BufferOpsEmitter.h |   4 +-
+ .../ConvertWarpPipeline.cpp                   |   8 +-
+ .../TritonAMDGPUToLLVM/DotOpToLLVM/MFMA.cpp   |  60 ++++++---
+ .../TritonAMDGPUToLLVM/LoadStoreOpToLLVM.cpp  |  27 ++--
+ .../TritonAMDGPUTransforms/BlockPingpong.cpp  |  69 ++++++----
+ .../TritonAMDGPUTransforms/WarpPipeliner.cpp  |   3 +-
+ .../ProtonAMDGPUToLLVM/AddSchedBarriers.cpp   |   7 +-
+ 24 files changed, 283 insertions(+), 255 deletions(-)
+
+diff --git a/python/src/gluon_ir.cc b/python/src/gluon_ir.cc
+index 883e03980996..fccd1af5f0b3 100644
+--- a/python/src/gluon_ir.cc
++++ b/python/src/gluon_ir.cc
+@@ -1198,7 +1198,8 @@ void init_gluon_ir(py::module_ &m) {
+            })
+       .def("create_warp_pipeline_border",
+            [](GluonOpBuilder &self, const std::string &marker, int priority) {
+-             auto border = self.create<ROCDL::SchedBarrier>(0);
++             auto border =
++                 self.create<ROCDL::SchedBarrier>(ROCDL::SchedGroupMask::none);
+              auto ctx = self.getContext();
+              border->setAttr("triton.warp_pipeline.border",
+                              StringAttr::get(ctx, marker));
+diff --git a/python/test/gluon/test_frontend.py b/python/test/gluon/test_frontend.py
+index 0bd4fca20da8..2e503bf4ae31 100644
+--- a/python/test/gluon/test_frontend.py
++++ b/python/test/gluon/test_frontend.py
+@@ -3651,14 +3651,14 @@ def kernel():
+       %c1_i32_0 = arith.constant 1 : i32
+       %c1_i32_1 = arith.constant 1 : i32
+       %4 = arith.addi %arg0, %c1_i32_1 : i32
+-      rocdl.sched.barrier 0 {triton.warp_pipeline.border = "stage0"}
++      rocdl.sched.barrier none {triton.warp_pipeline.border = "stage0"}
+       %c1_i32_2 = arith.constant 1 : i32
+       %c1_i32_3 = arith.constant 1 : i32
+       %5 = arith.muli %4, %c1_i32_3 : i32
+       %c1_i32_4 = arith.constant 1 : i32
+       %c1_i32_5 = arith.constant 1 : i32
+       %6 = arith.addi %5, %c1_i32_5 : i32
+-      rocdl.sched.barrier 0 {triton.warp_pipeline.border = "stage1"}
++      rocdl.sched.barrier none {triton.warp_pipeline.border = "stage1"}
+     }
+     tt.return
+   }
+diff --git a/test/Conversion/amd/buffer_atomic_cas.mlir b/test/Conversion/amd/buffer_atomic_cas.mlir
+index be42155fdcfa..d7f616859209 100644
+--- a/test/Conversion/amd/buffer_atomic_cas.mlir
++++ b/test/Conversion/amd/buffer_atomic_cas.mlir
+@@ -27,8 +27,8 @@ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 4 : i32, ttg.targ
+     // CHECK: %[[cas_cmp_insert2:.*]] = llvm.insertelement %[[cas_cmp_extract]], %{{.*}} : vector<1xi64>
+     // CHECK: %[[cas_val_cast2:.*]] = llvm.bitcast %[[cas_val_insert2]] : vector<1xi64> to i64
+     // CHECK: %[[cas_cmp_cast2:.*]] = llvm.bitcast %[[cas_cmp_insert2]] : vector<1xi64> to i64
+-    // CHECK: %[[dst:.*]] = rocdl.raw.ptr.buffer.atomic.cmpswap %[[cas_val_cast2]], %[[cas_cmp_cast2]], %[[resource]], %{{.*}}, %{{.*}}, %{{.*}} : i64
+-    // CHECK: %[[dst:.*]] = rocdl.raw.ptr.buffer.atomic.cmpswap %{{.*}}, %{{.*}}, %[[resource]], %{{.*}}, %{{.*}}, %{{.*}} : i64
++    // CHECK: %[[dst:.*]] = rocdl.raw.ptr.buffer.atomic.cmpswap %[[cas_val_cast2]], %[[cas_cmp_cast2]], %[[resource]], %{{.*}}, %{{.*}}, {{.*}} : i64
++    // CHECK: %[[dst:.*]] = rocdl.raw.ptr.buffer.atomic.cmpswap %{{.*}}, %{{.*}}, %[[resource]], %{{.*}}, %{{.*}}, {{.*}} : i64
+     // CHECK: llvm.fence syncscope("agent") acquire
+     %4 = amdg.buffer_atomic_cas acq_rel, gpu, %cmp, %val, %scalar_ptr[%offsets] : tensor<512xi64, #blocked>
+ 
+diff --git a/test/Conversion/amd/buffer_load_store.mlir b/test/Conversion/amd/buffer_load_store.mlir
+index 093d755cb37b..c90685d46e0f 100644
+--- a/test/Conversion/amd/buffer_load_store.mlir
++++ b/test/Conversion/amd/buffer_load_store.mlir
+@@ -7,8 +7,7 @@ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 1 : i32} {
+     tt.func @buffer_load(%arg0: !tt.ptr<f32> {tt.divisibility = 16 : i32}, %offset : tensor<128xi32, #blocked0>{tt.divisibility=16:i32}) {
+         // CHECK: %[[c_mask:.*]] = llvm.mlir.constant(true) : i1
+         // CHECK: %[[offset:.*]] = llvm.select %[[c_mask]]
+-        // CHECK: %[[aux:.*]] = llvm.mlir.constant(3 : i32) : i32
+-        // CHECK: rocdl.raw.ptr.buffer.load {{.*}}, %[[offset]], {{.*}}, %[[aux]]
++        // CHECK: rocdl.raw.ptr.buffer.load {{.*}}, %[[offset]], {{.*}}, {{.*}}
+         %ret = amdg.buffer_load %arg0[%offset] cacheModifier = cs : tensor<128xf32, #blocked0>
+         tt.return
+   }
+@@ -68,8 +67,7 @@ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 1 : i32} {
+     tt.func @buffer_store(%value : tensor<128xf32, #blocked0>, %arg0: !tt.ptr<f32> {tt.divisibility = 16 : i32}, %offset : tensor<128xi32, #blocked0>{tt.divisibility=16:i32}) {
+         // CHECK: %[[mask:.*]] = llvm.mlir.constant(true) : i1
+         // CHECK: %[[offset:.*]] = llvm.select %[[mask]]
+-        // CHECK: %[[aux:.*]] = llvm.mlir.constant(3 : i32) : i32
+-        // CHECK: rocdl.raw.ptr.buffer.store {{.*}}, {{.*}}, %[[offset]], {{.*}}, %[[aux]]
++        // CHECK: rocdl.raw.ptr.buffer.store {{.*}}, {{.*}}, %[[offset]], {{.*}}, {{.*}}
+         %c256_i32 = arith.constant 256 : i32
+         amdg.buffer_store %value, %arg0[%offset] cacheModifier = cs stride = %c256_i32 : tensor<128xf32, #blocked0>
+         tt.return
+diff --git a/test/Conversion/amd/buffer_load_to_local_to_llvm.mlir b/test/Conversion/amd/buffer_load_to_local_to_llvm.mlir
+index ebbd18c00bd4..c0bc380edb89 100644
+--- a/test/Conversion/amd/buffer_load_to_local_to_llvm.mlir
++++ b/test/Conversion/amd/buffer_load_to_local_to_llvm.mlir
+@@ -190,17 +190,14 @@ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 1 : i32, "ttg.thr
+     // Match the i32 select used to compute voffset
+     // COMMON: %[[VOFFSET:.*]] = llvm.select {{.*}} : i1, i32
+     // COMMON: %[[IMM0:.*]] = llvm.mlir.constant(0 : i32) : i32
+-    // COMMON: %[[aux_ca:.*]] = llvm.mlir.constant(0 : i32) : i32
+     // COMMON: %[[IMM1:.*]] = llvm.mlir.constant(0 : i32) : i32
+-    // COMMON: rocdl.raw.ptr.buffer.load.async.lds {{.*}}, {{.*}}, {{.*}}, %[[VOFFSET]], %[[IMM1]], %[[IMM0]], %[[aux_ca]]
++    // COMMON: rocdl.raw.ptr.buffer.load.async.lds {{.*}}, {{.*}}, {{.*}}, %[[VOFFSET]], %[[IMM0]], %[[IMM1]], 0
+     %1 = amdg.buffer_load_to_local %arg0[%0] cacheModifier = ca into %arg2: <f32>[tensor<64xi32, #blocked>] -> <64xf32, #shared, #smem, mutable>
+     // COMMON: llvm.getelementptr
+-    // COMMON: %[[aux_cg:.*]] = llvm.mlir.constant(3 : i32) : i32
+-    // COMMON: rocdl.raw.ptr.buffer.load.async.lds {{.*}}, {{.*}}, {{.*}}, {{.*}}, {{.*}}, {{.*}}, %[[aux_cg]]
++    // COMMON: rocdl.raw.ptr.buffer.load.async.lds {{.*}}, {{.*}}, {{.*}}, {{.*}}, {{.*}}, {{.*}}, 3
+     %2 = amdg.buffer_load_to_local %arg0[%0] cacheModifier = cg into %arg2: <f32>[tensor<64xi32, #blocked>] -> <64xf32, #shared, #smem, mutable>
+     // COMMON: llvm.getelementptr
+-    // COMMON: %[[aux_cv:.*]] = llvm.mlir.constant(17 : i32) : i32
+-    // COMMON: rocdl.raw.ptr.buffer.load.async.lds {{.*}}, {{.*}}, {{.*}}, {{.*}}, {{.*}}, {{.*}}, %[[aux_cv]]
++    // COMMON: rocdl.raw.ptr.buffer.load.async.lds {{.*}}, {{.*}}, {{.*}}, {{.*}}, {{.*}}, {{.*}}, 17
+     %3 = amdg.buffer_load_to_local %arg0[%0] cacheModifier = cv into %arg2: <f32>[tensor<64xi32, #blocked>] -> <64xf32, #shared, #smem, mutable>
+ 
+     tt.return
+diff --git a/test/Conversion/amd/buffer_ops_gfx1250.mlir b/test/Conversion/amd/buffer_ops_gfx1250.mlir
+index 110e33ab1741..4fbc724fa1c5 100644
+--- a/test/Conversion/amd/buffer_ops_gfx1250.mlir
++++ b/test/Conversion/amd/buffer_ops_gfx1250.mlir
+@@ -47,9 +47,8 @@ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 4 : i32, "ttg.thr
+     // CHECK: rocdl.make.buffer.rsrc
+     // CHECK: llvm.fence syncscope("agent") release
+     // Cache policy = 17 (SC0 | SCOPE_DEV) because CAS return value is used
+-    // CHECK: llvm.mlir.constant(17 : i32)
+-    // CHECK: rocdl.raw.ptr.buffer.atomic.cmpswap {{.*}} : i32
+-    // CHECK: rocdl.raw.ptr.buffer.atomic.cmpswap {{.*}} : i32
++    // CHECK: rocdl.raw.ptr.buffer.atomic.cmpswap {{.*}}, 17 : i32
++    // CHECK: rocdl.raw.ptr.buffer.atomic.cmpswap {{.*}}, 17 : i32
+     // CHECK: llvm.fence syncscope("agent") acquire
+     %4 = amdg.buffer_atomic_cas acq_rel, gpu, %cmp, %val, %scalar_ptr[%offsets] : tensor<256xi32, #blocked>
+ 
+diff --git a/test/Conversion/amd/tritongpu_tdm_to_llvm.mlir b/test/Conversion/amd/tritongpu_tdm_to_llvm.mlir
+index 15f3d217e1fe..d0b5ca09f699 100644
+--- a/test/Conversion/amd/tritongpu_tdm_to_llvm.mlir
++++ b/test/Conversion/amd/tritongpu_tdm_to_llvm.mlir
+@@ -199,10 +199,10 @@ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 4 : i32, "ttg.thr
+     %c_pred = arith.constant true
+     %0 = tt.make_tensor_descriptor %arg0, [%c_shape, %c_shape], [%c_stride0, %c_stride1] : <f16>, <64x64xf16, #shared>
+ 
+-    // CHECK: rocdl.global.prefetch %{{.*}} scope 8
++    // CHECK: rocdl.global.prefetch %{{.*}}, 8 : !llvm.ptr<1>
+     amdg.tdm_prefetch %0[%c_offset, %c_offset], %c_pred, speculative = false : !tt.tensordesc<64x64xf16, #shared>
+ 
+-    // CHECK: rocdl.global.prefetch %{{.*}} scope 9
++    // CHECK: rocdl.global.prefetch %{{.*}}, 9 : !llvm.ptr<1>
+     amdg.tdm_prefetch %0[%c_offset, %c_offset], %c_pred, speculative = true : !tt.tensordesc<64x64xf16, #shared>
+     tt.return
+   }
+diff --git a/test/LLVMIR/convert-to-llvmir-with-dbg-info.mlir b/test/LLVMIR/convert-to-llvmir-with-dbg-info.mlir
+index efc7ccc967b6..3789afd3e2de 100644
+--- a/test/LLVMIR/convert-to-llvmir-with-dbg-info.mlir
++++ b/test/LLVMIR/convert-to-llvmir-with-dbg-info.mlir
+@@ -38,13 +38,13 @@ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 4 : i32} {
+     // CHECK: !DILocalVariable(name: "x", scope:
+     %x_ptr = llvm.getelementptr %arg0[%block_start] : (!llvm.ptr<1>, i32) -> !llvm.ptr<1>, f32
+     %x_buffer_ptr = rocdl.make.buffer.rsrc %x_ptr, %constant_i16, %constant_i64, %constant_i32 : <1> to <8> loc(#loc18)
+-    %x_val = rocdl.raw.ptr.buffer.load %x_buffer_ptr, %mask_i1, %constant_i32, %constant_i32 : vector<4xf32> loc(#loc18)
++    %x_val = rocdl.raw.ptr.buffer.load %x_buffer_ptr, %mask_i1, %constant_i32, 0 : vector<4xf32> loc(#loc18)
+     %x_scalar = llvm.extractelement %x_val[%constant_i32 : i32] : vector<4xf32> loc(#loc18)
+ 
+     // CHECK: !DILocalVariable(name: "y", scope:
+     %y_ptr = llvm.getelementptr %arg1[%block_start] : (!llvm.ptr<1>, i32) -> !llvm.ptr<1>, f32
+     %y_buffer_ptr = rocdl.make.buffer.rsrc %y_ptr, %constant_i16, %constant_i64, %constant_i32 : <1> to <8> loc(#loc19)
+-    %y_val = rocdl.raw.ptr.buffer.load %y_buffer_ptr, %mask_i1, %constant_i32, %constant_i32 : vector<4xf32> loc(#loc19)
++    %y_val = rocdl.raw.ptr.buffer.load %y_buffer_ptr, %mask_i1, %constant_i32, 0 : vector<4xf32> loc(#loc19)
+     %y_scalar = llvm.extractelement %y_val[%constant_i32 : i32] : vector<4xf32> loc(#loc19)
+ 
+     // CHECK: !DILocalVariable(name: "output", scope:
+diff --git a/test/Proton/amd/add_sched_barriers.mlir b/test/Proton/amd/add_sched_barriers.mlir
+index 5ba276dab5a7..a96b98cbc7df 100644
+--- a/test/Proton/amd/add_sched_barriers.mlir
++++ b/test/Proton/amd/add_sched_barriers.mlir
+@@ -5,7 +5,7 @@
+ module attributes {"ttg.num-warps" = 8 : i32} {
+   // CHECK-LABEL: convert_read_counter
+   llvm.func @convert_read_counter() -> i32 {
+-    // CHECK: rocdl.sched.barrier 0
++    // CHECK: rocdl.sched.barrier none
+     %1 = proton_gpu.read_counter : i32
+     llvm.return %1 : i32
+   }
+@@ -19,33 +19,33 @@ module attributes {"ttg.num-warps" = 8 : i32, ttg.profile_scratch_memory_alignme
+   // CHECK-LABEL: nested_record
+   llvm.func @nested_record(%arg: !llvm.ptr<1>) attributes {noinline = false, nvvm.kernel = 1 : ui1} {
+   // CHECK: proton_gpu.initialize
+-  // CHECK: rocdl.sched.barrier 0
++  // CHECK: rocdl.sched.barrier none
+   // CHECK: proton_gpu.read_counter
+   // CHECK: proton_gpu.circular_store
+-  // CHECK: rocdl.sched.barrier 0
++  // CHECK: rocdl.sched.barrier none
+   // CHECK: scf.for
+-  // CHECK:   rocdl.sched.barrier 0
++  // CHECK:   rocdl.sched.barrier none
+   // CHECK:   proton_gpu.read_counter
+   // CHECK:   proton_gpu.circular_store
+-  // CHECK:   rocdl.sched.barrier 0
++  // CHECK:   rocdl.sched.barrier none
+   // CHECK:   scf.for
+-  // CHECK:     rocdl.sched.barrier 0
++  // CHECK:     rocdl.sched.barrier none
+   // CHECK:     proton_gpu.read_counter
+   // CHECK:     proton_gpu.circular_store
+-  // CHECK:     rocdl.sched.barrier 0
++  // CHECK:     rocdl.sched.barrier none
+   // CHECK:   }
+-  // CHECK:   rocdl.sched.barrier 0
++  // CHECK:   rocdl.sched.barrier none
+   // CHECK:   proton_gpu.read_counter
+   // CHECK:   proton_gpu.circular_store
+-  // CHECK:   rocdl.sched.barrier 0
++  // CHECK:   rocdl.sched.barrier none
+   // CHECK: }
+-  // CHECK: rocdl.sched.barrier 0
++  // CHECK: rocdl.sched.barrier none
+   // CHECK: proton_gpu.read_counter
+   // CHECK: proton_gpu.circular_store
+-  // CHECK: rocdl.sched.barrier 0
++  // CHECK: rocdl.sched.barrier none
+   // CHECK: proton_gpu.read_counter
+   // CHECK: proton_gpu.circular_store
+-  // CHECK: rocdl.sched.barrier 0
++  // CHECK: rocdl.sched.barrier none
+   // CHECK: ttg.barrier local|global_read|global_write
+   // CHECK: proton_gpu.finalize
+   // CHECK: llvm.return
+diff --git a/test/TritonGPU/amd/amd-block-pingpong-chained-dots.mlir b/test/TritonGPU/amd/amd-block-pingpong-chained-dots.mlir
+index c98e95c24d79..4dea7e780de2 100644
+--- a/test/TritonGPU/amd/amd-block-pingpong-chained-dots.mlir
++++ b/test/TritonGPU/amd/amd-block-pingpong-chained-dots.mlir
+@@ -12,34 +12,34 @@ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 4 : i32, ttg.targ
+ 
+   // CHECK: scf.for
+   // CHECK-NEXT: rocdl.s.barrier
+-  // CHECK-NEXT: rocdl.sched.barrier 0
++  // CHECK-NEXT: rocdl.sched.barrier none
+   // Compute Cluster1
+   // CHECK: tt.dot
+-  // CHECK: rocdl.sched.barrier 0
++  // CHECK: rocdl.sched.barrier none
+   // CHECK-NEXT: ttg.async_wait
+   // CHECK-NEXT: rocdl.s.setprio 1
+-  // CHECK-NEXT: rocdl.sched.barrier 0
++  // CHECK-NEXT: rocdl.sched.barrier none
+   // Memory Cluster1
+   // CHECK: ttg.local_load
+   // CHECK: ttg.async_copy_global_to_local
+   // CHECK: ttg.async_commit_group
+-  // CHECK: rocdl.sched.barrier 0
++  // CHECK: rocdl.sched.barrier none
+   // CHECK-NEXT: rocdl.s.setprio 0
+   // CHECK-NEXT: llvm.fence syncscope("workgroup") release {llvm.mmra = [[$MMRA_TAG]]}
+   // CHECK-NEXT: rocdl.s.barrier
+   // CHECK-NEXT: llvm.fence syncscope("workgroup") acquire {llvm.mmra = [[$MMRA_TAG]]}
+-  // CHECK-NEXT: rocdl.sched.barrier 0
++  // CHECK-NEXT: rocdl.sched.barrier none
+   // Compute Cluster2
+   // CHECK: tt.dot
+-  // CHECK: rocdl.sched.barrier 0
++  // CHECK: rocdl.sched.barrier none
+   // CHECK: ttg.async_wait
+   // CHECK-NEXT: rocdl.s.setprio 1
+-  // CHECK-NEXT: rocdl.sched.barrier 0
++  // CHECK-NEXT: rocdl.sched.barrier none
+   // Memory Cluster2
+   // CHECK: ttg.local_load
+   // CHECK: ttg.async_copy_global_to_local
+   // CHECK: ttg.async_commit_group
+-  // CHECK: rocdl.sched.barrier 0
++  // CHECK: rocdl.sched.barrier none
+   // CHECK-NEXT: rocdl.s.setprio 0
+   // CHECK-NEXT: llvm.fence syncscope("workgroup") release {llvm.mmra = [[$MMRA_TAG]]}
+   // CHECK-NEXT: scf.yield
+@@ -86,32 +86,32 @@ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 4 : i32, ttg.targ
+   // CHECK-NOT: rocdl.s
+   // CHECK: scf.for
+   // CHECK: rocdl.s.barrier
+-  // CHECK-NEXT: rocdl.sched.barrier 0
++  // CHECK-NEXT: rocdl.sched.barrier none
+   // Compute Cluster1
+   // CHECK: tt.dot
+-  // CHECK: rocdl.sched.barrier 0
++  // CHECK: rocdl.sched.barrier none
+   // CHECK-NEXT: ttg.barrier local
+   // CHECK-NEXT: rocdl.s.setprio 1
+   // Memory Cluster1
+   // CHECK: ttg.local_store
+   // CHECK: ttg.local_load
+   // CHECK: tt.load
+-  // CHECK-NEXT: rocdl.sched.barrier 0
++  // CHECK-NEXT: rocdl.sched.barrier none
+   // CHECK-NEXT: rocdl.s.setprio 0
+   // CHECK-NEXT: llvm.fence syncscope("workgroup") release {llvm.mmra = [[$MMRA_TAG]]}
+   // CHECK-NEXT: rocdl.s.barrier
+   // CHECK-NEXT: llvm.fence syncscope("workgroup") acquire {llvm.mmra = [[$MMRA_TAG]]}
+-  // CHECK-NEXT: rocdl.sched.barrier 0
++  // CHECK-NEXT: rocdl.sched.barrier none
+   // Compute Cluster2
+   // CHECK: tt.dot
+-  // CHECK: rocdl.sched.barrier 0
++  // CHECK: rocdl.sched.barrier none
+   // CHECK-NEXT: ttg.barrier local
+   // CHECK-NEXT: rocdl.s.setprio 1
+   // Memory Cluster2
+   // CHECK: ttg.local_store
+   // CHECK: ttg.local_load
+   // CHECK: tt.load
+-  // CHECK-NEXT: rocdl.sched.barrier 0
++  // CHECK-NEXT: rocdl.sched.barrier none
+   // CHECK-NEXT: rocdl.s.setprio 0
+   // CHECK-NEXT: llvm.fence syncscope("workgroup") release {llvm.mmra = [[$MMRA_TAG]]}
+   // CHECK-NEXT: scf.yield
+diff --git a/test/TritonGPU/amd/amd-block-pingpong.mlir b/test/TritonGPU/amd/amd-block-pingpong.mlir
+index 57416d6c06e4..08f819922763 100644
+--- a/test/TritonGPU/amd/amd-block-pingpong.mlir
++++ b/test/TritonGPU/amd/amd-block-pingpong.mlir
+@@ -90,42 +90,42 @@ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 4 : i32, ttg.targ
+ // CHECK: %[[SLICEA0:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB0:.+]] = ttg.local_load
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: %[[DOT0:.+]] = tt.dot %[[SLICEA0]], %[[SLICEB0]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: tt.load
+ // CHECK: %[[SLICEA1:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB1:.+]] = ttg.local_load
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: %[[DOT1:.+]] = tt.dot %[[SLICEA1]], %[[SLICEB1]], %[[DOT0]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: %[[SLICEA2:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB2:.+]] = ttg.local_load
+ // CHECK: %[[SLICEA3:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB3:.+]] = ttg.local_load
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: %[[DOT2:.+]] = tt.dot %[[SLICEA2]], %[[SLICEB2]], %[[DOT1]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: ttg.local_store
+ // CHECK: ttg.local_store
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: tt.dot %[[SLICEA3]], %[[SLICEB3]], %[[DOT2]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: scf.yield
+ // CHECK: amdg.cond_barrier %[[WARPLOW]]
+ 
+@@ -202,29 +202,29 @@ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 8 : i32, ttg.targ
+ 
+ // CHECK: %[[SLICEA0:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB0:.+]] = ttg.local_load
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: tt.load
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: %[[SLICEA1:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB1:.+]] = ttg.local_load
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: tt.load
+ // CHECK: rocdl.s.barrier
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: %[[DOT0:.+]] = tt.dot %[[SLICEA0]], %[[SLICEB0]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: ttg.local_store
+ // CHECK: ttg.local_store
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: %[[DOT1:.+]] = tt.dot %[[SLICEA1]], %[[SLICEB1]], %[[DOT0]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: scf.yield
+ // CHECK: amdg.cond_barrier %[[WARPLOW]]
+ 
+@@ -600,29 +600,29 @@ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 4 : i32, ttg.targ
+ 
+ // CHECK: %[[SLICEA0:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB0:.+]] = ttg.local_load
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: tt.load
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: %[[SLICEA1:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB1:.+]] = ttg.local_load
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: tt.load
+ // CHECK: rocdl.s.barrier
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: %[[DOT0:.+]] = tt.dot %[[SLICEA0]], %[[SLICEB0]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: ttg.local_store
+ // CHECK: ttg.local_store
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: %[[DOT1:.+]] = tt.dot %[[SLICEA1]], %[[SLICEB1]], %[[DOT0]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: scf.yield
+ // CHECK: amdg.cond_barrier %[[WARPLOW]]
+ 
+@@ -703,42 +703,42 @@ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 8 : i32, ttg.targ
+ // CHECK: %[[SLICEA0:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB0:.+]] = ttg.local_load
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: %[[DOT0:.+]] = tt.dot %[[SLICEA0]], %[[SLICEB0]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: tt.load
+ // CHECK: %[[SLICEA1:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB1:.+]] = ttg.local_load
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: %[[DOT1:.+]] = tt.dot %[[SLICEA1]], %[[SLICEB1]], %[[DOT0]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: %[[SLICEA2:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB2:.+]] = ttg.local_load
+ // CHECK: %[[SLICEA3:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB3:.+]] = ttg.local_load
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: %[[DOT2:.+]] = tt.dot %[[SLICEA2]], %[[SLICEB2]], %[[DOT1]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: ttg.local_store
+ // CHECK: ttg.local_store
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: tt.dot %[[SLICEA3]], %[[SLICEB3]], %[[DOT2]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: scf.yield
+ // CHECK: amdg.cond_barrier %[[WARPLOW]]
+ 
+@@ -1078,30 +1078,30 @@ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 8 : i32, ttg.targ
+ 
+ // CHECK: %[[SLICEA0:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB0:.+]] = ttg.local_load
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: tt.load
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: %[[SLICEA1:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB1:.+]] = ttg.local_load
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: tt.load
+ // CHECK: rocdl.s.barrier
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: %[[DOT0:.+]] = tt.dot %[[SLICEA0]], %[[SLICEB0]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: ttg.local_store
+ // CHECK: ttg.local_store
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: %[[DOT1:.+]] = tt.dot %[[SLICEA1]], %[[SLICEB1]], %[[DOT0]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: scf.if
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: scf.yield
+ // CHECK: amdg.cond_barrier %[[WARPLOW]]
+ 
+@@ -1188,43 +1188,43 @@ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 8 : i32, ttg.targ
+ // CHECK: %[[SLICEA0:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB0:.+]] = ttg.local_load
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: %[[DOT0:.+]] = tt.dot %[[SLICEA0]], %[[SLICEB0]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: tt.load
+ // CHECK: %[[SLICEA1:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB1:.+]] = ttg.local_load
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: %[[DOT1:.+]] = tt.dot %[[SLICEA1]], %[[SLICEB1]], %[[DOT0]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: %[[SLICEA2:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB2:.+]] = ttg.local_load
+ // CHECK: %[[SLICEA3:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB3:.+]] = ttg.local_load
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: %[[DOT2:.+]] = tt.dot %[[SLICEA2]], %[[SLICEB2]], %[[DOT1]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: ttg.local_store
+ // CHECK: ttg.local_store
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: tt.dot %[[SLICEA3]], %[[SLICEB3]], %[[DOT2]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: scf.if
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: scf.yield
+ // CHECK: amdg.cond_barrier %[[WARPLOW]]
+ 
+@@ -1484,29 +1484,29 @@ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 4 : i32, ttg.targ
+ 
+ // CHECK: %[[SLICEA0:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB0:.+]] = ttg.local_load
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: tt.load
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: %[[SLICEA1:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB1:.+]] = ttg.local_load
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: tt.load
+ // CHECK: rocdl.s.barrier
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: %[[DOT0:.+]] = tt.dot %[[SLICEA0]], %[[SLICEB0]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: ttg.local_store
+ // CHECK: ttg.local_store
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: %[[DOT1:.+]] = tt.dot %[[SLICEA1]], %[[SLICEB1]], %[[DOT0]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: scf.yield
+ // CHECK: amdg.cond_barrier %[[WARPLOW]]
+ 
+@@ -1607,42 +1607,42 @@ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 8 : i32, ttg.targ
+ // CHECK: %[[SLICEA0:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB0:.+]] = ttg.local_load
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: %[[DOT0:.+]] = tt.dot %[[SLICEA0]], %[[SLICEB0]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: tt.load
+ // CHECK: %[[SLICEA1:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB1:.+]] = ttg.local_load
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: %[[DOT1:.+]] = tt.dot %[[SLICEA1]], %[[SLICEB1]], %[[DOT0]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: %[[SLICEA2:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB2:.+]] = ttg.local_load
+ // CHECK: %[[SLICEA3:.+]] = ttg.local_load
+ // CHECK: %[[SLICEB3:.+]] = ttg.local_load
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: %[[DOT2:.+]] = tt.dot %[[SLICEA2]], %[[SLICEB2]], %[[DOT1]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: ttg.local_store
+ // CHECK: ttg.local_store
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.setprio 1
+ // CHECK: tt.dot %[[SLICEA3]], %[[SLICEB3]], %[[DOT2]]
+ // CHECK: rocdl.s.setprio 0
+ // CHECK: ttg.barrier local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: scf.yield
+ // CHECK: amdg.cond_barrier %[[WARPLOW]]
+ 
+@@ -1973,9 +1973,9 @@ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 8 : i32, ttg.targ
+ // CHECK: ttg.async_copy_global_to_local
+ // CHECK: ttg.async_copy_global_to_local
+ // CHECK: ttg.async_copy_global_to_local
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: rocdl.s.barrier
+-// CHECK: rocdl.sched.barrier 0
++// CHECK: rocdl.sched.barrier none
+ // CHECK: %[[LL0:.+]] = ttg.local_load
+ // CHECK-SAME: %[[WAIT]]
+ // CHECK: %[[LL1:.+]] = ttg.local_load
+diff --git a/test/TritonGPU/amd/amd-buffer-cache-modifiers-rdna3.mlir b/test/TritonGPU/amd/amd-buffer-cache-modifiers-rdna3.mlir
+index 11d749866c29..3033ebce1418 100644
+--- a/test/TritonGPU/amd/amd-buffer-cache-modifiers-rdna3.mlir
++++ b/test/TritonGPU/amd/amd-buffer-cache-modifiers-rdna3.mlir
+@@ -17,8 +17,7 @@
+ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 1 : i32, "ttg.threads-per-warp" = 32 : i32} {
+   tt.func @buffer_load_cg(%arg0: !tt.ptr<f32> {tt.divisibility = 16 : i32}, %offset: tensor<128xi32, #blocked> {tt.divisibility = 16 : i32}) {
+     // .cg load on RDNA3.5: aux = 1 (GLC)
+-    // CHECK: %[[aux:.*]] = llvm.mlir.constant(1 : i32) : i32
+-    // CHECK: rocdl.raw.ptr.buffer.load {{.*}}, {{.*}}, {{.*}}, %[[aux]]
++    // CHECK: rocdl.raw.ptr.buffer.load {{.*}}, {{.*}}, {{.*}}, 1
+     %ret = amdg.buffer_load %arg0[%offset] cacheModifier = cg : tensor<128xf32, #blocked>
+     tt.return
+   }
+@@ -32,8 +31,7 @@ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 1 : i32, "ttg.thr
+ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 1 : i32, "ttg.threads-per-warp" = 32 : i32} {
+   tt.func @buffer_load_cs(%arg0: !tt.ptr<f32> {tt.divisibility = 16 : i32}, %offset: tensor<128xi32, #blocked> {tt.divisibility = 16 : i32}) {
+     // .cs load on RDNA3.5: aux = 7 (GLC|SLC|DLC)
+-    // CHECK: %[[aux:.*]] = llvm.mlir.constant(7 : i32) : i32
+-    // CHECK: rocdl.raw.ptr.buffer.load {{.*}}, {{.*}}, {{.*}}, %[[aux]]
++    // CHECK: rocdl.raw.ptr.buffer.load {{.*}}, {{.*}}, {{.*}}, 7
+     %ret = amdg.buffer_load %arg0[%offset] cacheModifier = cs : tensor<128xf32, #blocked>
+     tt.return
+   }
+@@ -47,8 +45,7 @@ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 1 : i32, "ttg.thr
+ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 1 : i32, "ttg.threads-per-warp" = 32 : i32} {
+   tt.func @buffer_load_cv(%arg0: !tt.ptr<f32> {tt.divisibility = 16 : i32}, %offset: tensor<128xi32, #blocked> {tt.divisibility = 16 : i32}) {
+     // .cv load on RDNA3.5: aux = 7 (GLC|SLC|DLC)
+-    // CHECK: %[[aux:.*]] = llvm.mlir.constant(7 : i32) : i32
+-    // CHECK: rocdl.raw.ptr.buffer.load {{.*}}, {{.*}}, {{.*}}, %[[aux]]
++    // CHECK: rocdl.raw.ptr.buffer.load {{.*}}, {{.*}}, {{.*}}, 7
+     %ret = amdg.buffer_load %arg0[%offset] cacheModifier = cv : tensor<128xf32, #blocked>
+     tt.return
+   }
+@@ -63,8 +60,7 @@ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 1 : i32, "ttg.thr
+   tt.func @buffer_store_cs(%value: tensor<128xf32, #blocked>, %arg0: !tt.ptr<f32> {tt.divisibility = 16 : i32}, %offset: tensor<128xi32, #blocked> {tt.divisibility = 16 : i32}) {
+     %c256_i32 = arith.constant 256 : i32
+     // .cs store on RDNA3.5: aux = 7 (GLC|SLC|DLC)
+-    // CHECK: %[[aux:.*]] = llvm.mlir.constant(7 : i32) : i32
+-    // CHECK: rocdl.raw.ptr.buffer.store {{.*}}, {{.*}}, {{.*}}, {{.*}}, %[[aux]]
++    // CHECK: rocdl.raw.ptr.buffer.store {{.*}}, {{.*}}, {{.*}}, {{.*}}, 7
+     amdg.buffer_store %value, %arg0[%offset] cacheModifier = cs stride = %c256_i32 : tensor<128xf32, #blocked>
+     tt.return
+   }
+@@ -79,8 +75,7 @@ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 1 : i32, "ttg.thr
+   tt.func @buffer_store_wt(%value: tensor<128xf32, #blocked>, %arg0: !tt.ptr<f32> {tt.divisibility = 16 : i32}, %offset: tensor<128xi32, #blocked> {tt.divisibility = 16 : i32}) {
+     %c256_i32 = arith.constant 256 : i32
+     // .wt store on RDNA3.5: aux = 7 (GLC|SLC|DLC)
+-    // CHECK: %[[aux:.*]] = llvm.mlir.constant(7 : i32) : i32
+-    // CHECK: rocdl.raw.ptr.buffer.store {{.*}}, {{.*}}, {{.*}}, {{.*}}, %[[aux]]
++    // CHECK: rocdl.raw.ptr.buffer.store {{.*}}, {{.*}}, {{.*}}, {{.*}}, 7
+     amdg.buffer_store %value, %arg0[%offset] cacheModifier = wt stride = %c256_i32 : tensor<128xf32, #blocked>
+     tt.return
+   }
+diff --git a/test/TritonGPU/amd/amd-warp-pipeline-invalid.mlir b/test/TritonGPU/amd/amd-warp-pipeline-invalid.mlir
+index 65c4bdd00512..59910fe9d6cf 100644
+--- a/test/TritonGPU/amd/amd-warp-pipeline-invalid.mlir
++++ b/test/TritonGPU/amd/amd-warp-pipeline-invalid.mlir
+@@ -14,14 +14,14 @@ tt.func @loop_form_for_in_cluster(%n: index) {
+ 
+   scf.for %i = %c0 to %n step %c1 {
+     %a = arith.addi %i, %c1 : index
+-    rocdl.sched.barrier 0 {triton.warp_pipeline.border = "stage"}
++    rocdl.sched.barrier none {triton.warp_pipeline.border = "stage"}
+ 
+     // expected-error @+1 {{loop op cannot appear inside a warp_pipeline_stage region}}
+     scf.for %j = %c0 to %n step %c1 {
+       scf.yield
+     }
+ 
+-    rocdl.sched.barrier 0 {triton.warp_pipeline.border = "stage"}
++    rocdl.sched.barrier none {triton.warp_pipeline.border = "stage"}
+     %b = arith.addi %a, %i : index
+ 
+     scf.yield
+@@ -40,7 +40,7 @@ tt.func @loop_form_while_in_cluster(%n: index) {
+ 
+   scf.for %i = %c0 to %n step %c1 {
+     %a = arith.addi %i, %c1 : index
+-    rocdl.sched.barrier 0 {triton.warp_pipeline.border = "stage"}
++    rocdl.sched.barrier none {triton.warp_pipeline.border = "stage"}
+ 
+     // expected-error @+1 {{loop op cannot appear inside a warp_pipeline_stage region}}
+     scf.while (%w = %c0) : (index) -> index {
+@@ -52,7 +52,7 @@ tt.func @loop_form_while_in_cluster(%n: index) {
+       scf.yield %wn : index
+     }
+ 
+-    rocdl.sched.barrier 0 {triton.warp_pipeline.border = "stage"}
++    rocdl.sched.barrier none {triton.warp_pipeline.border = "stage"}
+     %b = arith.addi %a, %i : index
+ 
+     scf.yield
+@@ -74,7 +74,7 @@ tt.func @loop_form_nested_pipelined_for(%n: index) {
+ 
+   scf.for %i = %c0 to %n step %c1 {
+     %a = arith.addi %i, %c1 : index
+-    rocdl.sched.barrier 0 {triton.warp_pipeline.border = "stage"}
++    rocdl.sched.barrier none {triton.warp_pipeline.border = "stage"}
+ 
+     // expected-error @+1 {{loop op cannot appear inside a warp_pipeline_stage region}}
+     scf.for %j = %c0 to %n step %c1 {
+@@ -84,7 +84,7 @@ tt.func @loop_form_nested_pipelined_for(%n: index) {
+       scf.yield
+     } {triton.warp_pipeline.pipelined_for}
+ 
+-    rocdl.sched.barrier 0 {triton.warp_pipeline.border = "stage"}
++    rocdl.sched.barrier none {triton.warp_pipeline.border = "stage"}
+     %b = arith.addi %a, %i : index
+ 
+     scf.yield
+@@ -103,14 +103,14 @@ tt.func @flat_form_for_in_cluster(%n: index, %ptr: !tt.ptr<f32>) {
+   %v0 = arith.constant 0.0 : f32
+ 
+   tt.store %ptr, %v0 : !tt.ptr<f32>
+-  rocdl.sched.barrier 0 {triton.warp_pipeline.border = "stage0"}
++  rocdl.sched.barrier none {triton.warp_pipeline.border = "stage0"}
+ 
+   // expected-error @+1 {{loop op cannot appear inside a warp_pipeline_stage region}}
+   scf.for %j = %c0 to %n step %c1 {
+     scf.yield
+   }
+ 
+-  rocdl.sched.barrier 0 {triton.warp_pipeline.border = "stage1"}
++  rocdl.sched.barrier none {triton.warp_pipeline.border = "stage1"}
+   tt.store %ptr, %v0 : !tt.ptr<f32>
+ 
+   tt.return
+diff --git a/test/TritonGPU/amd/amd-warp-pipeline.mlir b/test/TritonGPU/amd/amd-warp-pipeline.mlir
+index e624cbd38daa..5f7ab8ee210b 100644
+--- a/test/TritonGPU/amd/amd-warp-pipeline.mlir
++++ b/test/TritonGPU/amd/amd-warp-pipeline.mlir
+@@ -19,13 +19,13 @@ tt.func @three_stage_example(%n: index) {
+     %a2 = arith.muli %a, %c1 : index
+ 
+     // explicit split point
+-    rocdl.sched.barrier 0 {triton.warp_pipeline.border="stage"}
++    rocdl.sched.barrier none {triton.warp_pipeline.border="stage"}
+ 
+     // Stage 1
+     %b  = arith.addi %a2, %i : index
+ 
+     // explicit split point
+-    rocdl.sched.barrier 0 {triton.warp_pipeline.border="stage"}
++    rocdl.sched.barrier none {triton.warp_pipeline.border="stage"}
+ 
+     // Stage 2
+     %c  = arith.addi %b, %a : index
+@@ -70,7 +70,7 @@ tt.func @two_stage_example(%n: index) {
+     %x = arith.addi %i, %c1 : index
+ 
+     // split to Stage 1
+-    rocdl.sched.barrier 0 {triton.warp_pipeline.border="stage"}
++    rocdl.sched.barrier none {triton.warp_pipeline.border="stage"}
+ 
+     // Stage 1
+     %y = arith.muli %x, %c1 : index
+@@ -130,12 +130,12 @@ tt.func public @triple_buf_two_stages(%arg0: i32, %arg1: i32, %arg2: i32, %arg3:
+     %40 = ttg.local_load %arg30 token %arg29 : !ttg.memdesc<32x256xbf16, #shared1, #smem, mutable> -> tensor<32x256xbf16, #ttg.dot_op<{opIdx = 1, parent = #mma, kWidth = 8}>>
+     %41 = ttg.async_copy_global_to_local %32, %37 : tensor<256x32x!tt.ptr<bf16>, #linear> -> <256x32xbf16, #shared, #smem, mutable>
+     %42 = ttg.async_commit_group tokens %41
+-    rocdl.sched.barrier 0 {triton.warp_pipeline.border = "stage"}
++    rocdl.sched.barrier none {triton.warp_pipeline.border = "stage"}
+     %43 = ttg.async_wait %arg32, %arg33 {num = 0 : i32}
+     %44 = ttg.async_copy_global_to_local %33, %38 : tensor<32x256x!tt.ptr<bf16>, #linear1> -> <32x256xbf16, #shared1, #smem, mutable>
+     %45 = ttg.async_commit_group tokens %44
+     %46 = tt.dot %39, %40, %arg25 : tensor<256x32xbf16, #ttg.dot_op<{opIdx = 0, parent = #mma, kWidth = 8}>> * tensor<32x256xbf16, #ttg.dot_op<{opIdx = 1, parent = #mma, kWidth = 8}>> -> tensor<256x256xf32, #mma>
+-    rocdl.sched.barrier 0 {triton.warp_pipeline.border = "stage"}
++    rocdl.sched.barrier none {triton.warp_pipeline.border = "stage"}
+     scf.yield %46, %36, %arg28, %37, %43, %arg31, %38, %42, %45, %32, %33 : tensor<256x256xf32, #mma>, i32, !ttg.memdesc<256x32xbf16, #shared, #smem, mutable>, !ttg.memdesc<256x32xbf16, #shared, #smem, mutable>, !ttg.async.token, !ttg.memdesc<32x256xbf16, #shared1, #smem, mutable>, !ttg.memdesc<32x256xbf16, #shared1, #smem, mutable>, !ttg.async.token, !ttg.async.token, tensor<256x32x!tt.ptr<bf16>, #linear>, tensor<32x256x!tt.ptr<bf16>, #linear1>
+   }
+   ttg.local_dealloc %1 : !ttg.memdesc<3x32x256xbf16, #shared1, #smem, mutable>
+@@ -158,7 +158,7 @@ tt.func @flat_pipeline_example(%n: index) {
+   // hard boundary for the flat epilogue's backward walk.
+   scf.for %i = %c0 to %n step %c1 {
+     %x = arith.addi %i, %c1 : index
+-    rocdl.sched.barrier 0 {triton.warp_pipeline.border = "load"}
++    rocdl.sched.barrier none {triton.warp_pipeline.border = "load"}
+     %y = arith.muli %x, %c1 : index
+     scf.yield
+   }
+@@ -167,13 +167,13 @@ tt.func @flat_pipeline_example(%n: index) {
+   %a  = arith.addi %c0, %c1 : index
+   %a2 = arith.muli %a, %c1 : index
+ 
+-  rocdl.sched.barrier 0 {triton.warp_pipeline.border = "stage0_epi", triton.warp_pipeline.priority = 1 : i32}
++  rocdl.sched.barrier none {triton.warp_pipeline.border = "stage0_epi", triton.warp_pipeline.priority = 1 : i32}
+ 
+   // Stage 1
+   %b  = arith.addi %a2, %c0 : index
+   %b2 = arith.muli %b, %c1 : index
+ 
+-  rocdl.sched.barrier 0 {triton.warp_pipeline.border = "stage1_epi", triton.warp_pipeline.priority = 0 : i32}
++  rocdl.sched.barrier none {triton.warp_pipeline.border = "stage1_epi", triton.warp_pipeline.priority = 0 : i32}
+ 
+   tt.return
+ }
+@@ -219,9 +219,9 @@ tt.func @unroll_iv_remap_sunk_past_async_wait(%n: index, %ptr: !tt.ptr<f32>) {
+     // iter 0: async_wait FIRST, then stage1 / stage2 bodies.
+     ttg.async_wait {num = 0 : i32}
+     tt.store %ptr, %v0 : !tt.ptr<f32>
+-    rocdl.sched.barrier 0 {triton.warp_pipeline.border = "stage1"}
++    rocdl.sched.barrier none {triton.warp_pipeline.border = "stage1"}
+     tt.store %ptr, %v0 : !tt.ptr<f32>
+-    rocdl.sched.barrier 0 {triton.warp_pipeline.border = "stage2"}
++    rocdl.sched.barrier none {triton.warp_pipeline.border = "stage2"}
+ 
+     // IV remap injected by unroller; sits between iter-0 last border and
+     // iter-1 async_wait -- the poisonous spot.
+@@ -231,9 +231,9 @@ tt.func @unroll_iv_remap_sunk_past_async_wait(%n: index, %ptr: !tt.ptr<f32>) {
+     ttg.async_wait {num = 0 : i32}
+     %off = arith.muli %i_1, %c1 : index
+     tt.store %ptr, %v0 : !tt.ptr<f32>
+-    rocdl.sched.barrier 0 {triton.warp_pipeline.border = "stage1"}
++    rocdl.sched.barrier none {triton.warp_pipeline.border = "stage1"}
+     tt.store %ptr, %v0 : !tt.ptr<f32>
+-    rocdl.sched.barrier 0 {triton.warp_pipeline.border = "stage2"}
++    rocdl.sched.barrier none {triton.warp_pipeline.border = "stage2"}
+ 
+     scf.yield
+   }
+diff --git a/test/TritonGPU/amd/mfma-double-rate.mlir b/test/TritonGPU/amd/mfma-double-rate.mlir
+index c53fe2ad3bf3..d1e9cfcd639d 100644
+--- a/test/TritonGPU/amd/mfma-double-rate.mlir
++++ b/test/TritonGPU/amd/mfma-double-rate.mlir
+@@ -142,9 +142,9 @@ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 4 : i32, "ttg.thr
+ module attributes {"ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 8 : i32, "ttg.threads-per-warp" = 64 : i32} {
+   tt.func public @mxfp4_2step(%arg0: tensor<256x128xi8, #ttg.dot_op<{opIdx = 0, parent = #mma, kWidth = 16}>>, %arg1: tensor<256x8xi8, #linear>, %arg2: tensor<128x256xi8, #ttg.dot_op<{opIdx = 1, parent = #mma, kWidth = 16}>>, %arg3: tensor<256x8xi8, #linear1>) {
+     // CHECK-COUNT-32: rocdl.mfma.scale.f32.16x16x128.f8f6f4
+-    // CHECK: rocdl.sched.barrier 0
++    // CHECK: rocdl.sched.barrier none
+     // CHECK: rocdl.s.barrier
+-    // CHECK: rocdl.sched.barrier 0
++    // CHECK: rocdl.sched.barrier none
+     // CHECK-COUNT-32: rocdl.mfma.scale.f32.16x16x128.f8f6f4
+     %cst = arith.constant dense<0.000000e+00> : tensor<256x256xf32, #mma>
+     %dots = tt.dot_scaled %arg0 scale %arg1, %arg2 scale %arg3, %cst lhs = e2m1 rhs = e2m1 {fastMath = false, pingpong_2step} : tensor<256x128xi8, #ttg.dot_op<{opIdx = 0, parent = #mma, kWidth = 16}>>, tensor<256x8xi8, #linear> * tensor<128x256xi8, #ttg.dot_op<{opIdx = 1, parent = #mma, kWidth = 16}>>, tensor<256x8xi8, #linear1> -> tensor<256x256xf32, #mma>
+diff --git a/third_party/amd/lib/TritonAMDGPUToLLVM/BufferOpsEmitter.cpp b/third_party/amd/lib/TritonAMDGPUToLLVM/BufferOpsEmitter.cpp
+index 7e913cab9df0..2e57acd24404 100644
+--- a/third_party/amd/lib/TritonAMDGPUToLLVM/BufferOpsEmitter.cpp
++++ b/third_party/amd/lib/TritonAMDGPUToLLVM/BufferOpsEmitter.cpp
+@@ -113,10 +113,14 @@ Value BufferEmitter::emitLoad(Type type, Value rsrcDesc, Value offset,
+                               triton::CacheModifier cm) {
+   auto b = TritonLLVMOpBuilder(loc, rewriter);
+   SmallVector<Value, 6> args;
+-  fillCommonArgs(type, rsrcDesc, offset, pred, cm, /*isBufferLoad=*/true, args);
++  int32_t aux = 0;
++  fillCommonArgs(type, rsrcDesc, offset, pred, cm, /*isBufferLoad=*/true, args,
++                 aux);
+   Type bufferType = getBufferOpType(type, false);
+   Value data = ROCDL::RawPtrBufferLoadOp::create(
+-      rewriter, loc, bufferType, args, ArrayRef<NamedAttribute>());
++      rewriter, loc, bufferType, args[0], args[1], args[2],
++      rewriter.getI32IntegerAttr(aux), /*alias_scopes=*/nullptr,
++      /*noalias_scopes=*/nullptr, /*tbaa=*/nullptr);
+   data = b.bitcast(data, type);
+   if (!isZero(falseVal))
+     data = b.select(pred, data, falseVal);
+@@ -129,23 +133,23 @@ BufferEmitter::emitLoadToLds(Type type, Value byteWidth, Value rsrcDesc,
+                              triton::CacheModifier cm) {
+   auto b = TritonLLVMOpBuilder(loc, rewriter);
+   SmallVector<Value, 6> commonArgs;
++  int32_t aux = 0;
+   fillCommonArgs(type, rsrcDesc, offset, pred, cm, /*isBufferLoad=*/true,
+-                 commonArgs);
++                 commonArgs, aux);
+ 
+   // buffer_load_to_lds is only supported on gfx942/gfx950 which always use
+   // asyncmark. Emit the async intrinsic so LLVM's SIInsertWaitcnts tracks
+   // these operations via asyncmark/wait_asyncmark.
+   return ROCDL::RawPtrBufferLoadAsyncLdsOp::create(
+-      rewriter, loc, TypeRange{},
+-      ValueRange{
+-          commonArgs[0], // Buffer descriptor
+-          dst,           // LDS base ptr
+-          byteWidth,     // Instr size
+-          commonArgs[1], // Buffer offset
+-          b.i32_val(0),  // LDS offset
+-          commonArgs[2], // Instruction offset
+-          commonArgs[3], // AUX
+-      });
++      rewriter, loc,
++      commonArgs[0], // ArgIndex 0: rsrc
++      dst,           // ArgIndex 1: LDS base ptr
++      byteWidth,     // ArgIndex 2: data byte size (immarg)
++      commonArgs[1], // ArgIndex 3: voffset (per-lane VGPR)
++      commonArgs[2], // ArgIndex 4: soffset (always 0 here)
++      b.i32_val(0),  // ArgIndex 5: imm offset (immarg, always 0 here)
++      rewriter.getI32IntegerAttr(aux), /*alias_scopes=*/nullptr,
++      /*noalias_scopes=*/nullptr, /*tbaa=*/nullptr);
+ }
+ 
+ Value BufferEmitter::emitAtomicCAS(Type type, Value rsrcDesc, Value offset,
+@@ -164,10 +168,13 @@ Value BufferEmitter::emitAtomicCAS(Type type, Value rsrcDesc, Value offset,
+   // the opposite of the order in tl.atomic_cmpxchg
+   // and amdg.buffer_atomic_cas
+   SmallVector<Value, 6> args{casStoreVal, casCmpVal};
+-  fillCommonArgsAtomics(type, rsrcDesc, offset, pred, hasUsers, args);
++  int32_t aux = 0;
++  fillCommonArgsAtomics(type, rsrcDesc, offset, pred, hasUsers, aux, args);
+ 
+   Value data = ROCDL::RawPtrBufferAtomicCmpSwap::create(
+-      rewriter, loc, bufferType, args, ArrayRef<NamedAttribute>());
++      rewriter, loc, bufferType, args[0], args[1], args[2], args[3], args[4],
++      rewriter.getI32IntegerAttr(aux), /*alias_scopes=*/nullptr,
++      /*noalias_scopes=*/nullptr, /*tbaa=*/nullptr);
+   data = b.bitcast(data, type);
+   return data;
+ }
+@@ -182,7 +189,8 @@ Value BufferEmitter::emitAtomicRMW(RMWOp rmwType, Type type, Value rsrcDesc,
+     data = b.bitcast(data, bufferType);
+ 
+   SmallVector<Value, 6> args{data};
+-  fillCommonArgsAtomics(type, rsrcDesc, offset, pred, hasUsers, args);
++  int32_t aux = 0;
++  fillCommonArgsAtomics(type, rsrcDesc, offset, pred, hasUsers, aux, args);
+ 
+   // TODO:
+   //   The ops in ROCDL (e.g., RawPtrBufferAtomicFaddOp) have no return value,
+@@ -199,8 +207,10 @@ Value BufferEmitter::emitAtomicRMW(RMWOp rmwType, Type type, Value rsrcDesc,
+     rmwOpStr = (prefix + rmwOpStr).str();
+   }
+   auto instrinsic = "llvm.amdgcn.raw.ptr.buffer.atomic." + rmwOpStr;
++  SmallVector<Value, 6> intrinsicArgs = args;
++  intrinsicArgs.push_back(b.i32_val(aux));
+   auto bufferAtomicRMW = LLVM::createLLVMIntrinsicCallOp(
+-      rewriter, loc, instrinsic, bufferType, args);
++      rewriter, loc, instrinsic, bufferType, intrinsicArgs);
+ 
+   return b.bitcast(bufferAtomicRMW.getResult(0), type);
+ }
+@@ -213,10 +223,13 @@ void BufferEmitter::emitStore(Value rsrcDesc, Value offset, Value data,
+   if (vecTy != bufferType)
+     data = b.bitcast(data, bufferType);
+   SmallVector<Value, 6> args{data};
++  int32_t aux = 0;
+   fillCommonArgs(vecTy, rsrcDesc, offset, pred, cm, /*isBufferLoad=*/false,
+-                 args);
+-  ROCDL::RawPtrBufferStoreOp::create(rewriter, loc, TypeRange{}, args,
+-                                     ArrayRef<NamedAttribute>());
++                 args, aux);
++  ROCDL::RawPtrBufferStoreOp::create(
++      rewriter, loc, TypeRange{}, args[0], args[1], args[2], args[3],
++      rewriter.getI32IntegerAttr(aux), /*alias_scopes=*/nullptr,
++      /*noalias_scopes=*/nullptr, /*tbaa=*/nullptr);
+ }
+ 
+ Type BufferEmitter::getBufferOpType(Type type, bool atomicsOp) {
+@@ -268,7 +281,7 @@ Type BufferEmitter::getBufferOpType(Type type, bool atomicsOp) {
+ void BufferEmitter::fillCommonArgs(Type type, Value rsrcDesc,
+                                    Value vOffsetElems, Value pred,
+                                    triton::CacheModifier cm, bool isBufferLoad,
+-                                   SmallVector<Value> &args) {
++                                   SmallVector<Value> &args, int32_t &aux) {
+   auto b = TritonLLVMOpBuilder(loc, rewriter);
+   // 1. Create the (masked) offset
+   Type elementType = getElementTypeOrSelf(type);
+@@ -285,21 +298,17 @@ void BufferEmitter::fillCommonArgs(Type type, Value rsrcDesc,
+   // 2. Set the sgprOffset to 0
+   Value sgprOffset = b.int_val(32, 0);
+ 
+-  // 3. Create the cache modifiers word
+-  int32_t aux =
+-      getCtrlBitsForCacheModifierOnTarget(cm, isBufferLoad, targetInfo);
+-  Value cacheModifiers = b.int_val(32, aux);
++  aux = getCtrlBitsForCacheModifierOnTarget(cm, isBufferLoad, targetInfo);
+ 
+   // 4. Add the arguments
+   args.push_back(rsrcDesc);
+   args.push_back(maskedOffsetBytes);
+   args.push_back(sgprOffset);
+-  args.push_back(cacheModifiers);
+ }
+ 
+ void BufferEmitter::fillCommonArgsAtomics(Type type, Value rsrcDesc,
+                                           Value vOffsetElems, Value pred,
+-                                          bool hasUsers,
++                                          bool hasUsers, int32_t &aux,
+                                           SmallVector<Value> &args) {
+   auto b = TritonLLVMOpBuilder(loc, rewriter);
+   // 1. Create the (masked) offset
+@@ -317,15 +326,12 @@ void BufferEmitter::fillCommonArgsAtomics(Type type, Value rsrcDesc,
+   // 2. Set the sgprOffset to 0
+   Value sgprOffset = b.int_val(32, 0);
+ 
+-  // 3. Create the cache modifiers word
+-  int32_t aux = targetInfo.getBufferAtomicCachePolicy(hasUsers);
+-  Value cacheModifiers = b.int_val(32, aux);
++  aux = targetInfo.getBufferAtomicCachePolicy(hasUsers);
+ 
+   // 4. Add the arguments
+   args.push_back(rsrcDesc);
+   args.push_back(maskedOffsetBytes);
+   args.push_back(sgprOffset);
+-  args.push_back(cacheModifiers);
+ }
+ 
+ } // namespace mlir::LLVM::AMD
+diff --git a/third_party/amd/lib/TritonAMDGPUToLLVM/BufferOpsEmitter.h b/third_party/amd/lib/TritonAMDGPUToLLVM/BufferOpsEmitter.h
+index 1f9d69857ac1..c28b4e200e72 100644
+--- a/third_party/amd/lib/TritonAMDGPUToLLVM/BufferOpsEmitter.h
++++ b/third_party/amd/lib/TritonAMDGPUToLLVM/BufferOpsEmitter.h
+@@ -94,11 +94,11 @@ struct BufferEmitter {
+   // Fill common buffer operation arguments.
+   void fillCommonArgs(Type type, Value rsrcDesc, Value vOffsetElems, Value pred,
+                       CacheModifier cm, bool isBufferLoad,
+-                      SmallVector<Value> &args);
++                      SmallVector<Value> &args, int32_t &aux);
+ 
+   // Fill buffer atomics arguments
+   void fillCommonArgsAtomics(Type type, Value rsrcDesc, Value vOffsetElems,
+-                             Value pred, bool hasUsers,
++                             Value pred, bool hasUsers, int32_t &aux,
+                              SmallVector<Value> &args);
+ 
+   // Given a type, the buffer type can be either the same type
+diff --git a/third_party/amd/lib/TritonAMDGPUToLLVM/ConvertWarpPipeline.cpp b/third_party/amd/lib/TritonAMDGPUToLLVM/ConvertWarpPipeline.cpp
+index 59624ddde3d9..c60ce19521ef 100644
+--- a/third_party/amd/lib/TritonAMDGPUToLLVM/ConvertWarpPipeline.cpp
++++ b/third_party/amd/lib/TritonAMDGPUToLLVM/ConvertWarpPipeline.cpp
+@@ -239,12 +239,12 @@ static void analyzePipelineDependencies(ArrayRef<BlockInfo> clusterInfo,
+ }
+ 
+ static void emitClusterBarrier(OpBuilder &r, Location loc, bool needLocal) {
+-  ROCDL::SchedBarrier::create(r, loc, 0);
++  ROCDL::SchedBarrier::create(r, loc, ROCDL::SchedGroupMask::none);
+   if (needLocal)
+     mlir::triton::gpu::BarrierOp::create(r, loc, triton::gpu::AddrSpace::Local);
+   else
+     ROCDL::SBarrierOp::create(r, loc);
+-  ROCDL::SchedBarrier::create(r, loc, 0);
++  ROCDL::SchedBarrier::create(r, loc, ROCDL::SchedGroupMask::none);
+ }
+ 
+ static void emitClusterPriority(OpBuilder &r, Location loc,
+@@ -268,9 +268,9 @@ static void wrapExistingBarrier(OpBuilder &b, Location loc,
+                                 bool anyHasPriority) {
+   b.setInsertionPoint(existingBarrier);
+   emitClusterPriority(b, loc, clusterOp, anyHasPriority);
+-  ROCDL::SchedBarrier::create(b, loc, 0);
++  ROCDL::SchedBarrier::create(b, loc, ROCDL::SchedGroupMask::none);
+   b.setInsertionPointAfter(existingBarrier);
+-  ROCDL::SchedBarrier::create(b, loc, 0);
++  ROCDL::SchedBarrier::create(b, loc, ROCDL::SchedGroupMask::none);
+ }
+ 
+ // Emit pre-barrier, thread-ID partitioning, and phase-shift cond_barrier.
+diff --git a/third_party/amd/lib/TritonAMDGPUToLLVM/DotOpToLLVM/MFMA.cpp b/third_party/amd/lib/TritonAMDGPUToLLVM/DotOpToLLVM/MFMA.cpp
+index 43b4f98d9d86..74729ffe9cd2 100644
+--- a/third_party/amd/lib/TritonAMDGPUToLLVM/DotOpToLLVM/MFMA.cpp
++++ b/third_party/amd/lib/TritonAMDGPUToLLVM/DotOpToLLVM/MFMA.cpp
+@@ -49,14 +49,19 @@ using ValueTable = std::map<std::array<int, 3>, Value>;
+ /// - 2: E2M3(FP6)
+ /// - 3: E3M2(BF6)
+ /// - 4: E2M1(FP4)
+-static inline int32_t getMfmaF8F6F4MatrixFormat(Type t) {
+-  return llvm::TypeSwitch<Type, int32_t>(t)
+-      .Case<Float8E4M3FNType>([](Type) { return 0; })
+-      .Case<Float8E5M2Type>([](Type) { return 1; })
+-      .Case<Float6E3M2FNType>([](Type) { return 2; })
+-      .Case<Float6E2M3FNType>([](Type) { return 3; })
+-      .Case<Float4E2M1FNType>([](Type) { return 4; })
+-      .Default([](Type) { return -1; });
++static inline std::optional<ROCDL::MatrixFormat>
++getMfmaF8F6F4MatrixFormat(Type t) {
++  return llvm::TypeSwitch<Type, std::optional<ROCDL::MatrixFormat>>(t)
++      .Case<Float8E4M3FNType>(
++          [](Type) { return ROCDL::MatrixFormat::fp8_e4m3; })
++      .Case<Float8E5M2Type>([](Type) { return ROCDL::MatrixFormat::fp8_e5m2; })
++      .Case<Float6E3M2FNType>(
++          [](Type) { return ROCDL::MatrixFormat::fp6_e3m2; })
++      .Case<Float6E2M3FNType>(
++          [](Type) { return ROCDL::MatrixFormat::fp6_e2m3; })
++      .Case<Float4E2M1FNType>(
++          [](Type) { return ROCDL::MatrixFormat::fp4_e2m1; })
++      .Default([](Type) { return std::nullopt; });
+ }
+ 
+ struct DotOpMFMAConversionHelper {
+@@ -89,7 +94,18 @@ struct DotOpMFMAConversionHelper {
+     loweredOp.addOperands({valA, valB, valC});
+     loweredOp.addAttribute("cbsz", rewriter.getI32IntegerAttr(cbsz));
+     loweredOp.addAttribute("abid", rewriter.getI32IntegerAttr(abid));
+-    loweredOp.addAttribute("blgp", rewriter.getI32IntegerAttr(blgp));
++    // For `blgp`: f64 MFMA uses negation flags, while other MFMA ops use B-lane
++    // permutation flags.
++    auto vecTy = cast<VectorType>(resType);
++    if (vecTy.getElementType().isF64()) {
++      loweredOp.addAttribute(
++          "blgp", ROCDL::MFMANegModifierAttr::get(
++                      ctx, static_cast<ROCDL::MFMANegModifier>(blgp)));
++    } else {
++      loweredOp.addAttribute(
++          "blgp",
++          ROCDL::MFMAPermBAttr::get(ctx, static_cast<ROCDL::MFMAPermB>(blgp)));
++    }
+     return rewriter.create(loweredOp)->getResult(0);
+   }
+ 
+@@ -537,16 +553,16 @@ struct ScaledDotOpMFMAConversionHelper : DotOpMFMAConversionHelper {
+     auto b = TritonLLVMOpBuilder(loc, rewriter);
+     auto resType = valC.getType();
+     OperationState loweredOp(loc, intrinsicName);
+-    int32_t cbsz = getMfmaF8F6F4MatrixFormat(elemTypeA);
+-    int32_t blgp = getMfmaF8F6F4MatrixFormat(elemTypeB);
+-    assert((cbsz != -1) && (blgp != -1));
++    auto cbsz = getMfmaF8F6F4MatrixFormat(elemTypeA);
++    auto blgp = getMfmaF8F6F4MatrixFormat(elemTypeB);
++    assert(cbsz && blgp);
+     loweredOp.addTypes(resType);
+     // If both scales are constant 0, the LLVM backend will use V_MFMA_*_F8F6F4
+     // instructions instead of V_MFMA_SCALE_*_F8F6F4 to reduce memory access.
+     Value zeroScale = b.i32_val(0);
+     loweredOp.addOperands({valA, valB, valC, zeroScale, zeroScale});
+-    loweredOp.addAttribute("cbsz", rewriter.getI32IntegerAttr(cbsz));
+-    loweredOp.addAttribute("blgp", rewriter.getI32IntegerAttr(blgp));
++    loweredOp.addAttribute("cbsz", ROCDL::MatrixFormatAttr::get(ctx, *cbsz));
++    loweredOp.addAttribute("blgp", ROCDL::MatrixFormatAttr::get(ctx, *blgp));
+     loweredOp.addAttribute("opselA", rewriter.getI32IntegerAttr(0));
+     loweredOp.addAttribute("opselB", rewriter.getI32IntegerAttr(0));
+     return rewriter.create(loweredOp)->getResult(0);
+@@ -559,13 +575,13 @@ struct ScaledDotOpMFMAConversionHelper : DotOpMFMAConversionHelper {
+     auto b = TritonLLVMOpBuilder(loc, rewriter);
+     auto resType = valC.getType();
+     OperationState loweredOp(loc, intrinsicName);
+-    int32_t cbsz = getMfmaF8F6F4MatrixFormat(elemTypeA);
+-    int32_t blgp = getMfmaF8F6F4MatrixFormat(elemTypeB);
+-    assert((cbsz != -1) && (blgp != -1));
++    auto cbsz = getMfmaF8F6F4MatrixFormat(elemTypeA);
++    auto blgp = getMfmaF8F6F4MatrixFormat(elemTypeB);
++    assert(cbsz && blgp);
+     loweredOp.addTypes(resType);
+     loweredOp.addOperands({valA, valB, valC, valScaleA, valScaleB});
+-    loweredOp.addAttribute("cbsz", rewriter.getI32IntegerAttr(cbsz));
+-    loweredOp.addAttribute("blgp", rewriter.getI32IntegerAttr(blgp));
++    loweredOp.addAttribute("cbsz", ROCDL::MatrixFormatAttr::get(ctx, *cbsz));
++    loweredOp.addAttribute("blgp", ROCDL::MatrixFormatAttr::get(ctx, *blgp));
+     loweredOp.addAttribute("opselA", rewriter.getI32IntegerAttr(opSelA));
+     loweredOp.addAttribute("opselB", rewriter.getI32IntegerAttr(opSelB));
+     return rewriter.create(loweredOp)->getResult(0);
+@@ -751,9 +767,11 @@ struct ScaledDotOpMFMAConversionHelper : DotOpMFMAConversionHelper {
+           for (int n = 0; n < numRepN; ++n) {
+             // Insert pingpong cluster barrier when needed.
+             if (is2Step && currIter++ == halfPoint) {
+-              ROCDL::SchedBarrier::create(rewriter, loc, 0);
++              ROCDL::SchedBarrier::create(rewriter, loc,
++                                          ROCDL::SchedGroupMask::none);
+               ROCDL::SBarrierOp::create(rewriter, loc);
+-              ROCDL::SchedBarrier::create(rewriter, loc, 0);
++              ROCDL::SchedBarrier::create(rewriter, loc,
++                                          ROCDL::SchedGroupMask::none);
+             }
+             Value acc = tb.undef(vecTy);
+             for (unsigned v = 0; v < elemsPerVec; ++v) {
+diff --git a/third_party/amd/lib/TritonAMDGPUToLLVM/LoadStoreOpToLLVM.cpp b/third_party/amd/lib/TritonAMDGPUToLLVM/LoadStoreOpToLLVM.cpp
+index 45e6c388ce90..5d533b543ca7 100644
+--- a/third_party/amd/lib/TritonAMDGPUToLLVM/LoadStoreOpToLLVM.cpp
++++ b/third_party/amd/lib/TritonAMDGPUToLLVM/LoadStoreOpToLLVM.cpp
+@@ -1054,12 +1054,13 @@ struct AsyncCopyGlobalToLocalOpConversion
+     int32_t cacheModifiers =
+         mlir::LLVM::AMD::getCtrlBitsForCacheModifierOnTarget(
+             cacheMod, /*isLoad=*/true, targetInfo);
++    auto auxAttr = rewriter.getI32IntegerAttr(cacheModifiers);
+ 
+     if (targetInfo.useAsyncMarks()) {
+       // Use the async intrinsic so LLVM tracks these via asyncmark
+       auto asyncLoadOp = ROCDL::GlobalLoadAsyncLDSOp::create(
+-          rewriter, loc, srcPtr, shmemAddr, vecBits / 8,
+-          /*offset=*/0, cacheModifiers, nullptr, nullptr, nullptr);
++          rewriter, loc, srcPtr, shmemAddr, vecBits / 8, /*offset=*/0u, auxAttr,
++          nullptr, nullptr, nullptr);
+       if (targetInfo.requiresAliasInfoForAsyncOps())
+         AMD::addAsyncCopyAliasScope(asyncLoadOp);
+     } else if (targetInfo.getISAFamily() == ISAFamily::GFX1250) {
+@@ -1067,32 +1068,32 @@ struct AsyncCopyGlobalToLocalOpConversion
+       case 32:
+         if (multicastMask)
+           ROCDL::ClusterLoadAsyncToLDSB32Op::create(
+-              rewriter, loc, srcPtr, shmemAddr, 0, cacheModifiers,
+-              multicastMask, nullptr, nullptr, nullptr);
++              rewriter, loc, srcPtr, shmemAddr, 0u, auxAttr, multicastMask,
++              nullptr, nullptr, nullptr);
+         else
+           ROCDL::GlobalLoadAsyncToLDSB32Op::create(rewriter, loc, srcPtr,
+-                                                   shmemAddr, 0, cacheModifiers,
++                                                   shmemAddr, 0u, auxAttr,
+                                                    nullptr, nullptr, nullptr);
+         break;
+       case 64:
+         if (multicastMask)
+           ROCDL::ClusterLoadAsyncToLDSB64Op::create(
+-              rewriter, loc, srcPtr, shmemAddr, 0, cacheModifiers,
+-              multicastMask, nullptr, nullptr, nullptr);
++              rewriter, loc, srcPtr, shmemAddr, 0u, auxAttr, multicastMask,
++              nullptr, nullptr, nullptr);
+         else
+           ROCDL::GlobalLoadAsyncToLDSB64Op::create(rewriter, loc, srcPtr,
+-                                                   shmemAddr, 0, cacheModifiers,
++                                                   shmemAddr, 0u, auxAttr,
+                                                    nullptr, nullptr, nullptr);
+         break;
+       case 128:
+         if (multicastMask)
+           ROCDL::ClusterLoadAsyncToLDSB128Op::create(
+-              rewriter, loc, srcPtr, shmemAddr, 0, cacheModifiers,
+-              multicastMask, nullptr, nullptr, nullptr);
++              rewriter, loc, srcPtr, shmemAddr, 0u, auxAttr, multicastMask,
++              nullptr, nullptr, nullptr);
+         else
+-          ROCDL::GlobalLoadAsyncToLDSB128Op::create(
+-              rewriter, loc, srcPtr, shmemAddr, 0, cacheModifiers, nullptr,
+-              nullptr, nullptr);
++          ROCDL::GlobalLoadAsyncToLDSB128Op::create(rewriter, loc, srcPtr,
++                                                    shmemAddr, 0u, auxAttr,
++                                                    nullptr, nullptr, nullptr);
+         break;
+       default:
+         llvm_unreachable("Unsupported vec size for async load");
+diff --git a/third_party/amd/lib/TritonAMDGPUTransforms/BlockPingpong.cpp b/third_party/amd/lib/TritonAMDGPUTransforms/BlockPingpong.cpp
+index c6891b1d6f40..e40241824b25 100644
+--- a/third_party/amd/lib/TritonAMDGPUTransforms/BlockPingpong.cpp
++++ b/third_party/amd/lib/TritonAMDGPUTransforms/BlockPingpong.cpp
+@@ -28,6 +28,8 @@ namespace mlir {
+ 
+ namespace {
+ 
++using SchedGroupMask = ROCDL::SchedGroupMask;
++
+ static LLVM::FenceOp createLocalMMRAFence(OpBuilder &builder, Location loc,
+                                           LLVM::AtomicOrdering ordering) {
+   Attribute mmra =
+@@ -216,7 +218,8 @@ SmallVector<Operation *> Pingponger::genClusterBarrier(OpBuilder &builder,
+   //  MembarAnalysis can recognize gpu::BarrierOp and skip inserting additional
+   auto barrierOp = triton::gpu::BarrierOp::create(
+       builder, loc, triton::gpu::AddrSpace::Local);
+-  auto schedBarrierOp = ROCDL::SchedBarrier::create(builder, loc, 0);
++  auto schedBarrierOp =
++      ROCDL::SchedBarrier::create(builder, loc, SchedGroupMask::none);
+   return {barrierOp, schedBarrierOp};
+ }
+ void Pingponger::appendClusterBarrier(OpBuilder &builder, Location loc) {
+@@ -427,7 +430,8 @@ void Pingponger::transformOnePPClusters(OpBuilder &builder, Location loc) {
+   auto dotLoc = dotOps[0]->getPrevNode();
+   // sched barrier to prevent memory ops from cross but leave other ops to be
+   // scheduled across the barrier.
+-  auto preDotBar = ROCDL::SchedBarrier::create(builder, loc, 1);
++  auto preDotBar = ROCDL::SchedBarrier::create(
++      builder, loc, SchedGroupMask::non_mem_non_sideeffect);
+   updateOpInsertion(dotLoc);
+   appendOp(preDotBar);
+ 
+@@ -435,7 +439,7 @@ void Pingponger::transformOnePPClusters(OpBuilder &builder, Location loc) {
+   updateOpInsertion(lLoadOps[0]);
+   appendOp(ROCDL::SetPrioOp::create(builder, loc, highPriority));
+   moveOpAndPredecessorsUpSameBlock(gLoadOps[0]);
+-  appendOp(ROCDL::SchedBarrier::create(builder, loc, 0));
++  appendOp(ROCDL::SchedBarrier::create(builder, loc, SchedGroupMask::none));
+   moveOpAndPredecessorsUpSameBlock(lLoadOps[1]);
+   appendOp(ROCDL::SetPrioOp::create(builder, loc, lowPriority));
+   moveOpAndPredecessorsUpSameBlock(gLoadOps[1]);
+@@ -638,18 +642,18 @@ LogicalResult Pingponger::transformTwoPPClusters(OpBuilder &builder,
+   // cycles, sched.barrier prevents backend from canceling the interleaved order
+   updateOpInsertion(gLoadOps[1]);
+   appendSlicedLoadAB(/*slice=*/0);
+-  appendOp(ROCDL::SchedBarrier::create(builder, loc, 0));
++  appendOp(ROCDL::SchedBarrier::create(builder, loc, SchedGroupMask::none));
+   appendOp(gLoadOps[0]);
+-  appendOp(ROCDL::SchedBarrier::create(builder, loc, 0));
++  appendOp(ROCDL::SchedBarrier::create(builder, loc, SchedGroupMask::none));
+   appendSlicedLoadAB(/*slice=*/1);
+-  appendOp(ROCDL::SchedBarrier::create(builder, loc, 0));
++  appendOp(ROCDL::SchedBarrier::create(builder, loc, SchedGroupMask::none));
+   appendOp(gLoadOps[1]);
+   // The first cluster just fits into the two cluster pingpong and cannot
+   // include wait of the local_load inserted by the ttg.barrier, using s.barrier
+   // instead. backend will schedule the local memory fences later in the dot0
+   // cluster.
+   appendOp(ROCDL::SBarrierOp::create(builder, loc));
+-  appendOp(ROCDL::SchedBarrier::create(builder, loc, 0));
++  appendOp(ROCDL::SchedBarrier::create(builder, loc, SchedGroupMask::none));
+ 
+   // dot0 (1/2)
+   appendOpWithPrio(builder, dotSliceOps[0], loc);
+@@ -696,9 +700,9 @@ LogicalResult Pingponger::transformTwoClusterWithAsyncAndAll(OpBuilder &builder,
+   for (auto glop : gLoadOps)
+     moveOpAndPredecessorsUpSameBlock(glop);
+ 
+-  appendOp(ROCDL::SchedBarrier::create(builder, loc, 0));
++  appendOp(ROCDL::SchedBarrier::create(builder, loc, SchedGroupMask::none));
+   appendOp(ROCDL::SBarrierOp::create(builder, loc));
+-  appendOp(ROCDL::SchedBarrier::create(builder, loc, 0));
++  appendOp(ROCDL::SchedBarrier::create(builder, loc, SchedGroupMask::none));
+ 
+   // all other ops are placed in the second cluster
+   // set unit attr, so it can trigger the second step in the ttg to llvm
+@@ -810,14 +814,16 @@ LogicalResult Pingponger::transformChainedDotSchedule(OpBuilder &builder,
+   // ComputeCluster 1
+   updateOpInsertion(dotOps[0]);
+   prependOp(ROCDL::SBarrierOp::create(builder, loc), false);
+-  prependOp(ROCDL::SchedBarrier::create(builder, loc, 0), false);
++  prependOp(ROCDL::SchedBarrier::create(builder, loc, SchedGroupMask::none),
++            false);
+ 
+   // MemoryCluster 1
+   updateOpInsertion(memoryClusterStartOps[0]);
+-  prependOp(ROCDL::SchedBarrier::create(builder, loc, 0), false);
++  prependOp(ROCDL::SchedBarrier::create(builder, loc, SchedGroupMask::none),
++            false);
+   if (llvm::isa<ttg::AsyncWaitOp>(memoryClusterStartOps[0])) {
+     // Only append a sched barrier because membar adds a barrier after asyncwait
+-    appendOp(ROCDL::SchedBarrier::create(builder, loc, 0));
++    appendOp(ROCDL::SchedBarrier::create(builder, loc, SchedGroupMask::none));
+   } else {
+     prependOp(triton::gpu::BarrierOp::create(builder, loc,
+                                              triton::gpu::AddrSpace::Local),
+@@ -842,21 +848,24 @@ LogicalResult Pingponger::transformChainedDotSchedule(OpBuilder &builder,
+   //
+   // Check note 2 and 3 for details.
+   updateOpInsertion(dotOps[1]);
+-  prependOp(ROCDL::SchedBarrier::create(builder, loc, 0), false);
++  prependOp(ROCDL::SchedBarrier::create(builder, loc, SchedGroupMask::none),
++            false);
+   prependOp(ROCDL::SetPrioOp::create(builder, loc, lowPriority), false);
+   prependOp(createLocalMMRAFence(builder, loc, LLVM::AtomicOrdering::release),
+             false);
+   prependOp(ROCDL::SBarrierOp::create(builder, loc), false);
+   prependOp(createLocalMMRAFence(builder, loc, LLVM::AtomicOrdering::acquire),
+             false);
+-  prependOp(ROCDL::SchedBarrier::create(builder, loc, 0), false);
++  prependOp(ROCDL::SchedBarrier::create(builder, loc, SchedGroupMask::none),
++            false);
+ 
+   // MemoryCluster2
+   updateOpInsertion(memoryClusterStartOps[1]);
+-  prependOp(ROCDL::SchedBarrier::create(builder, loc, 0), false);
++  prependOp(ROCDL::SchedBarrier::create(builder, loc, SchedGroupMask::none),
++            false);
+   if (llvm::isa<ttg::AsyncWaitOp>(memoryClusterStartOps[1])) {
+     // Only append a sched barrier because membar adds a barrier after asyncwait
+-    appendOp(ROCDL::SchedBarrier::create(builder, loc, 0));
++    appendOp(ROCDL::SchedBarrier::create(builder, loc, SchedGroupMask::none));
+   } else {
+     prependOp(triton::gpu::BarrierOp::create(builder, loc,
+                                              triton::gpu::AddrSpace::Local),
+@@ -878,7 +887,8 @@ LogicalResult Pingponger::transformChainedDotSchedule(OpBuilder &builder,
+   // them into the compute cluster. Instead, we insert s_barrier
+   // at the beginning of the loop.
+   updateOpInsertion(lastInsertedOp->getBlock()->getTerminator());
+-  prependOp(ROCDL::SchedBarrier::create(builder, loc, 0), false);
++  prependOp(ROCDL::SchedBarrier::create(builder, loc, SchedGroupMask::none),
++            false);
+   prependOp(ROCDL::SetPrioOp::create(builder, loc, lowPriority), false);
+   prependOp(createLocalMMRAFence(builder, loc, LLVM::AtomicOrdering::release),
+             false);
+@@ -922,7 +932,7 @@ Pingponger::transformTwoClusterWithLocalLoadAndAll(OpBuilder &builder,
+ 
+   moveOpAndPredecessorsUpSameBlock(lLoadOps[0]);
+   moveOpAndPredecessorsUpSameBlock(lLoadOps[1]);
+-  appendOp(ROCDL::SchedBarrier::create(builder, loc, 0));
++  appendOp(ROCDL::SchedBarrier::create(builder, loc, SchedGroupMask::none));
+ 
+   appendOp(asyncCopyOps[0]);
+   appendOp(asyncCommitOps[0]);
+@@ -930,25 +940,30 @@ Pingponger::transformTwoClusterWithLocalLoadAndAll(OpBuilder &builder,
+   // The last point we need to guarantee async_copy has been completed.
+   // w0 : local_load 0 - Dot 0                 - local_load 1
+   // w1 :              - local_load 0 (*wait 1)- Dot 0
+-  appendOp(ROCDL::SchedBarrier::create(builder, loc, 0));
++  appendOp(ROCDL::SchedBarrier::create(builder, loc, SchedGroupMask::none));
+   appendOp(newAsyncWaitOp);
+-  appendOp(ROCDL::SchedBarrier::create(builder, loc, 0));
++  appendOp(ROCDL::SchedBarrier::create(builder, loc, SchedGroupMask::none));
+ 
+   // Give hint to backend so it can interleave instructions better.
+   // This tries to interleave 3 SALU instructions per each MFMA
+-  appendOp(ROCDL::SchedGroupBarrier::create(builder, loc, 8, 1, 0));
+-  appendOp(ROCDL::SchedGroupBarrier::create(builder, loc, 4, 3, 0));
+-  appendOp(ROCDL::SchedGroupBarrier::create(builder, loc, 8, 1, 0));
+-  appendOp(ROCDL::SchedGroupBarrier::create(builder, loc, 4, 3, 0));
+-  appendOp(ROCDL::SchedGroupBarrier::create(builder, loc, 8, 1, 0));
++  appendOp(ROCDL::SchedGroupBarrier::create(builder, loc,
++                                            SchedGroupMask::mfma_wmma, 1u, 0u));
++  appendOp(ROCDL::SchedGroupBarrier::create(builder, loc, SchedGroupMask::salu,
++                                            3u, 0u));
++  appendOp(ROCDL::SchedGroupBarrier::create(builder, loc,
++                                            SchedGroupMask::mfma_wmma, 1u, 0u));
++  appendOp(ROCDL::SchedGroupBarrier::create(builder, loc, SchedGroupMask::salu,
++                                            3u, 0u));
++  appendOp(ROCDL::SchedGroupBarrier::create(builder, loc,
++                                            SchedGroupMask::mfma_wmma, 1u, 0u));
+ 
+   appendOp(asyncCopyOps[1]);
+   appendOp(asyncCommitOps[1]);
+   moveOpAndPredecessorsUpSameBlock(dotOps[0]);
+ 
+-  appendOp(ROCDL::SchedBarrier::create(builder, loc, 0));
++  appendOp(ROCDL::SchedBarrier::create(builder, loc, SchedGroupMask::none));
+   appendOp(ROCDL::SBarrierOp::create(builder, loc));
+-  appendOp(ROCDL::SchedBarrier::create(builder, loc, 0));
++  appendOp(ROCDL::SchedBarrier::create(builder, loc, SchedGroupMask::none));
+ 
+   return success();
+ }
+diff --git a/third_party/amd/lib/TritonAMDGPUTransforms/WarpPipeliner.cpp b/third_party/amd/lib/TritonAMDGPUTransforms/WarpPipeliner.cpp
+index 431b00a1bf61..47b8b645eb79 100644
+--- a/third_party/amd/lib/TritonAMDGPUTransforms/WarpPipeliner.cpp
++++ b/third_party/amd/lib/TritonAMDGPUTransforms/WarpPipeliner.cpp
+@@ -75,7 +75,8 @@ static void addDummyOpIfEmptyCluster(OpBuilder &b, Location loc,
+   if (!cluster.empty())
+     return;
+   b.setInsertionPoint(insertBefore);
+-  auto dummyOp = ROCDL::SchedBarrier::create(b, loc, 0);
++  auto dummyOp =
++      ROCDL::SchedBarrier::create(b, loc, ROCDL::SchedGroupMask::none);
+   dummyOp->setAttr("triton.warp_pipeline.empty_cluster", b.getUnitAttr());
+   cluster.push_back(dummyOp);
+ }
+diff --git a/third_party/proton/Dialect/lib/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/AddSchedBarriers.cpp b/third_party/proton/Dialect/lib/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/AddSchedBarriers.cpp
+index d90c35f35e18..26c76c520902 100644
+--- a/third_party/proton/Dialect/lib/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/AddSchedBarriers.cpp
++++ b/third_party/proton/Dialect/lib/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/AddSchedBarriers.cpp
+@@ -32,14 +32,11 @@ struct AddSchedBarriers
+     auto funcOps = triton::proton::gpu::getTritonFunctions(mod);
+     assert(funcOps.size() == 1 && "Expected exactly one funcOp");
+ 
+-    IntegerAttr zeroAttrValue =
+-        builder.getI32IntegerAttr(static_cast<int32_t>(0));
+-
+     funcOps[0].walk([&](mlir::triton::proton::gpu::ReadCounterOp op) {
+       auto loc = op.getLoc();
+       if (!isa_and_nonnull<ROCDL::SchedBarrier>(op->getPrevNode())) {
+         builder.setInsertionPoint(op);
+-        ROCDL::SchedBarrier::create(builder, loc, zeroAttrValue);
++        ROCDL::SchedBarrier::create(builder, loc, ROCDL::SchedGroupMask::none);
+       }
+     });
+ 
+@@ -47,7 +44,7 @@ struct AddSchedBarriers
+       auto loc = op.getLoc();
+       if (!isa_and_nonnull<ROCDL::SchedBarrier>(op->getNextNode())) {
+         builder.setInsertionPointAfter(op);
+-        ROCDL::SchedBarrier::create(builder, loc, zeroAttrValue);
++        ROCDL::SchedBarrier::create(builder, loc, ROCDL::SchedGroupMask::none);
+       }
+     });
+   }
+
+From 84920d94ee8a3d9c3451241fd0f13041984ca63e Mon Sep 17 00:00:00 2001
+From: Lei Zhang <antiagainst@gmail.com>
+Date: Fri, 26 Jun 2026 19:15:28 +0000
+Subject: [PATCH 2/3] Bump LLVM to 850a2b1b975c
+
+Advance the consumed LLVM revision to 850a2b1b975c061ae0fc982ba68064d305485cb2, the local branch tip that reverts d226dcc019d6 ("[NVPTX] Fix illegal combineInsertEltToShuffle pattern (#198259)"). That branch also carries fced504af64e, which reverts c3fc506e29ba ("[AMDGPU] Remove explicit PartialThreshold setting in loop unrolling (#198901)").
+
+The Triton source updates are required by upstream LLVM commit 6e6c296f20149b0a9e793c2d526566bddb162939 ("[mlir] Use explicit op targets for region successors (#203552)"). That MLIR change replaces the RegionSuccessor parent sentinel with explicit Operation * successors, so downstream uses of RegionSuccessor::parent() become RegionSuccessor(op), and successor.isParent() checks become successor.isOperation().
+
+Validated against the local LLVM build at /home/lzhang20/build/mlir-release.
+
+Tested: make; make test-cpp; make test-lit; pytest -s --tb=short python/test/gluon/test_frontend.py; pytest -s --tb=short python/test/unit/language/test_frontend.py.
+---
+ cmake/llvm-info.json                             | 16 ++++++++--------
+ lib/Analysis/Membar.cpp                          |  4 ++--
+ lib/Dialect/TritonGPU/IR/Ops.cpp                 |  4 ++--
+ third_party/amd/lib/Analysis/RangeAnalysis.cpp   |  5 +++--
+ .../Dialect/lib/Analysis/ScopeIdAllocation.cpp   |  4 ++--
+ 5 files changed, 17 insertions(+), 16 deletions(-)
+
+diff --git a/lib/Analysis/Membar.cpp b/lib/Analysis/Membar.cpp
+index dd6964818240..8890e2811902 100644
+--- a/lib/Analysis/Membar.cpp
++++ b/lib/Analysis/Membar.cpp
+@@ -201,7 +201,7 @@ void MembarOrFenceAnalysis::visitTerminator(
+     SmallVector<RegionSuccessor> regions;
+     br.getSuccessorRegions(RegionBranchPoint::parent(), regions);
+     for (RegionSuccessor &region : regions) {
+-      if (region.isParent()) {
++      if (region.isOperation()) {
+         successors.emplace_back(br->getBlock(), br->getIterator());
+       } else {
+         Block &block = region.getSuccessor()->front();
+@@ -221,7 +221,7 @@ void MembarOrFenceAnalysis::visitTerminator(
+     SmallVector<RegionSuccessor> regions;
+     br.getSuccessorRegions(operands, regions);
+     for (RegionSuccessor &region : regions) {
+-      if (region.isParent()) {
++      if (region.isOperation()) {
+         Operation *parent = br->getParentOp();
+         successors.emplace_back(parent->getBlock(), parent->getIterator());
+       } else {
+diff --git a/lib/Dialect/TritonGPU/IR/Ops.cpp b/lib/Dialect/TritonGPU/IR/Ops.cpp
+index 15e6f1c55e5b..0c5b1e0ce86e 100644
+--- a/lib/Dialect/TritonGPU/IR/Ops.cpp
++++ b/lib/Dialect/TritonGPU/IR/Ops.cpp
+@@ -1201,12 +1201,12 @@ void WarpSpecializeOp::getSuccessorRegions(
+   // And the default region branches transparently back to the parent.
+   if (src.getTerminatorPredecessorOrNull()->getParentRegion() ==
+       &getDefaultRegion())
+-    successors.push_back(RegionSuccessor::parent());
++    successors.push_back(RegionSuccessor(getOperation()));
+ }
+ 
+ ValueRange WarpSpecializeOp::getSuccessorInputs(RegionSuccessor successor) {
+   // When returning to parent, the successor inputs are the op results.
+-  return successor.isParent() ? getResults() : ValueRange();
++  return successor.isOperation() ? getResults() : ValueRange();
+ }
+ 
+ void WarpSpecializePartitionsOp::getSuccessorRegions(
+diff --git a/third_party/amd/lib/Analysis/RangeAnalysis.cpp b/third_party/amd/lib/Analysis/RangeAnalysis.cpp
+index 4806056759b8..1d286cc4fba1 100644
+--- a/third_party/amd/lib/Analysis/RangeAnalysis.cpp
++++ b/third_party/amd/lib/Analysis/RangeAnalysis.cpp
+@@ -720,12 +720,13 @@ void TritonIntegerRangeAnalysis::visitRegionSuccessors(
+       if (!point->isBlockStart()) {
+         if (!inputs.empty())
+           firstIndex = cast<OpResult>(inputs.front()).getResultNumber();
++        RegionSuccessor parentSuccessor(branch.getOperation());
+         SmallVector<Value> nonSuccessorInputs =
+-            branch.getNonSuccessorInputs(RegionSuccessor::parent());
++            branch.getNonSuccessorInputs(parentSuccessor);
+         SmallVector<dataflow::IntegerValueRangeLattice *>
+             nonSuccessorInputLattices =
+                 llvm::map_to_vector(nonSuccessorInputs, valueToLattices);
+-        visitNonControlFlowArguments(branch, RegionSuccessor::parent(),
++        visitNonControlFlowArguments(branch, parentSuccessor,
+                                      nonSuccessorInputs,
+                                      nonSuccessorInputLattices);
+       } else {
+diff --git a/third_party/proton/Dialect/lib/Analysis/ScopeIdAllocation.cpp b/third_party/proton/Dialect/lib/Analysis/ScopeIdAllocation.cpp
+index 94a0a62df7b6..3f7fced37802 100644
+--- a/third_party/proton/Dialect/lib/Analysis/ScopeIdAllocation.cpp
++++ b/third_party/proton/Dialect/lib/Analysis/ScopeIdAllocation.cpp
+@@ -297,7 +297,7 @@ void ScopeIdAllocation::visitTerminator(Operation *op,
+     SmallVector<RegionSuccessor> regions;
+     br.getSuccessorRegions(RegionBranchPoint::parent(), regions);
+     for (RegionSuccessor &region : regions) {
+-      if (region.isParent()) {
++      if (region.isOperation()) {
+         successors.emplace_back(br->getBlock(), br->getIterator());
+       } else {
+         Block &block = region.getSuccessor()->front();
+@@ -317,7 +317,7 @@ void ScopeIdAllocation::visitTerminator(Operation *op,
+     SmallVector<RegionSuccessor> regions;
+     br.getSuccessorRegions(operands, regions);
+     for (RegionSuccessor &region : regions) {
+-      if (region.isParent()) {
++      if (region.isOperation()) {
+         Operation *parent = br->getParentOp();
+         successors.emplace_back(parent->getBlock(), parent->getIterator());
+       } else {
+
+From a24f7ac256e37e99953a687c192c8704969cc15d Mon Sep 17 00:00:00 2001
+From: Lei Zhang <antiagainst@gmail.com>
+Date: Sat, 27 Jun 2026 02:11:14 +0000
+Subject: [PATCH 3/3] Fix AMDGCN target triple test matching
+
+LLVM now prints the AMDGCN target triple with an explicit unknown environment, for example amdgcn-amd-amdhsa-unknown-gfx942 instead of the previous amdgcn-amd-amdhsa--gfx942 spelling.
+
+Keep the tests focused on the gfx target by accepting any environment component while still asserting the requested architecture.
+---
+ python/test/unit/language/test_core.py | 2 +-
+ python/test/unit/tools/test_aot.py     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/python/test/unit/language/test_core.py b/python/test/unit/language/test_core.py
+index 1cd30e076c41..6a7753552024 100644
+--- a/python/test/unit/language/test_core.py
++++ b/python/test/unit/language/test_core.py
+@@ -6319,7 +6319,7 @@ def simple(data, out):
+             h = simple.warmup(data, out, arch=arch, grid=(1, ))
+         ttgir_gfx = re.search(r'hip:(\w+)', h.asm["ttgir"])
+         ttgir_warp = re.search(r'"ttg.threads-per-warp" = (\d+)', h.asm["ttgir"])
+-        amdgcn_gfx = re.search(r'.amdgcn_target "amdgcn-amd-amdhsa--(\w+)"', h.asm["amdgcn"])
++        amdgcn_gfx = re.search(r'\.amdgcn_target "amdgcn-amd-amdhsa-[^-]*-(\w+)"', h.asm["amdgcn"])
+         assert ttgir_gfx.group(1) == arch
+         assert int(ttgir_warp.group(1)) == (32 if arch == "gfx1200" else 64)
+         assert amdgcn_gfx.group(1) == arch
+diff --git a/python/test/unit/tools/test_aot.py b/python/test/unit/tools/test_aot.py
+index 320f2434f842..ff03c206dd95 100644
+--- a/python/test/unit/tools/test_aot.py
++++ b/python/test/unit/tools/test_aot.py
+@@ -562,7 +562,7 @@ def test_ttgir_to_asm():
+             assert ".address_size 64" in ptx
+         elif is_hip():
+             amdgcn = k.asm["amdgcn"]
+-            assert '.amdgcn_target "amdgcn-amd-amdhsa--gfx942"' in amdgcn
++            assert re.search(r'\.amdgcn_target "amdgcn-amd-amdhsa-[^-]*-gfx942"', amdgcn)
+             assert '.wavefront_size: 64' in amdgcn
+ 
+ 

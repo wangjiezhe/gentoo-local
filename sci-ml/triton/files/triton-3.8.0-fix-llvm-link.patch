@@ -1,0 +1,507 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3f066ea91..559a10111 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -353,29 +353,10 @@ if(TRITON_BUILD_PYTHON_MODULE)
+     ${triton_plugins}
+ 
+     # mlir
+-    MLIRNVVMDialect
+-    MLIRNVVMToLLVMIRTranslation
+-    MLIRGPUToNVVMTransforms
+-    MLIRIR
+-    MLIRControlFlowToLLVM
+-    MLIRPass
+-    MLIRTransforms
+-    MLIRLLVMDialect
+-    MLIRSupport
+-    MLIRTargetLLVMIRExport
+-    MLIRMathToLLVM
+-    MLIRROCDLToLLVMIRTranslation
+-    MLIRGPUDialect
+-    MLIRSCFToControlFlow
+-    MLIRIndexToLLVM
+-    MLIRGPUToROCDLTransforms
+-    MLIRUBToLLVM
++    MLIR
+ 
+     # LLVM
+-    LLVMPasses
+-    LLVMNVPTXCodeGen
+-    LLVMAMDGPUCodeGen
+-    LLVMAMDGPUAsmParser
++    LLVM
+ 
+     Python3::Module
+     pybind11::headers
+@@ -384,18 +365,15 @@ if(TRITON_BUILD_PYTHON_MODULE)
+      CMAKE_SYSTEM_PROCESSOR MATCHES "arm64" OR # macOS arm64
+      CMAKE_OSX_ARCHITECTURES MATCHES "arm64")  # also macOS arm64
+       list(APPEND TRITON_LIBRARIES
+-          LLVMAArch64CodeGen
+-          LLVMAArch64AsmParser
++          LLVM
+       )
+   elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64" OR CMAKE_SYSTEM_PROCESSOR MATCHES "AMD64")
+       list(APPEND TRITON_LIBRARIES
+-          LLVMX86CodeGen
+-          LLVMX86AsmParser
++          LLVM
+       )
+   elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "ppc64le")
+       list(APPEND TRITON_LIBRARIES
+-        LLVMPowerPCAsmParser
+-        LLVMPowerPCCodeGen
++        LLVM
+       )
+   else()
+     message(FATAL_ERROR "LLVM codegen/ASM parser libs: This HW architecture (${CMAKE_SYSTEM_PROCESSOR}) is not configured in cmake lib dependencies.")
+diff --git a/bin/CMakeLists.txt b/bin/CMakeLists.txt
+index 1d3f647c2..4bffc76ea 100644
+--- a/bin/CMakeLists.txt
++++ b/bin/CMakeLists.txt
+@@ -11,11 +11,7 @@ target_link_libraries(triton-opt PRIVATE
+   TritonAMDGPUTestAnalysis
+   TritonTestProton
+   # MLIR core
+-  MLIROptLib
+-  MLIRPass
+-  MLIRRegisterAllDialects
+-  MLIRRegisterAllPasses
+-  MLIRTransforms
++  MLIR
+ )
+ 
+ mlir_check_all_link_libraries(triton-opt)
+@@ -32,11 +28,7 @@ target_link_libraries(triton-reduce PRIVATE
+   TritonAMDGPUTestAnalysis
+   TritonTestProton
+   # MLIR core
+-  MLIRReduceLib
+-  MLIRPass
+-  MLIRRegisterAllDialects
+-  MLIRRegisterAllPasses
+-  MLIRTransforms
++  MLIR
+ )
+ 
+ mlir_check_all_link_libraries(triton-reduce)
+@@ -52,11 +44,7 @@ target_link_libraries(triton-lsp PRIVATE
+   TritonAMDGPUTestAnalysis
+   TritonTestProton
+   # MLIR core
+-  MLIRLspServerLib
+-  MLIRPass
+-  MLIRRegisterAllDialects
+-  MLIRRegisterAllPasses
+-  MLIRTransforms
++  MLIR
+ )
+ 
+ mlir_check_all_link_libraries(triton-lsp)
+@@ -68,11 +56,8 @@ target_compile_options(triton-llvm-opt PRIVATE ${TRITON_DISABLE_EH_RTTI_FLAGS})
+ target_link_libraries(triton-llvm-opt PRIVATE
+   TritonLLVMIR
+ 
+-  LLVMAnalysis
+-  LLVMCore
++  LLVM
+   LLVMSupport
+-  LLVMOption
+-  LLVMCodeGen
+ )
+ export_executable_symbols_for_plugins(triton-llvm-opt)
+ 
+@@ -85,9 +70,7 @@ target_link_libraries(triton-tensor-layout PRIVATE
+   TritonTestDialect
+   TritonTestProton
+   TritonAMDGPUTestAnalysis
+-  MLIRRegisterAllDialects
+-  MLIRRegisterAllPasses
+-  MLIRTransforms
++  MLIR
+ )
+ 
+ install(TARGETS
+diff --git a/lib/Analysis/CMakeLists.txt b/lib/Analysis/CMakeLists.txt
+index f7bd302de..2a86f0b2a 100644
+--- a/lib/Analysis/CMakeLists.txt
++++ b/lib/Analysis/CMakeLists.txt
+@@ -14,8 +14,7 @@ add_triton_library(TritonAnalysis
+   TritonGPUOpInterfacesIncGen
+ 
+   LINK_LIBS PUBLIC
+-  MLIRAnalysis
+-  MLIRLLVMDialect
++  MLIR
+   TritonIR
+   TritonGPUIR
+   GluonIR
+diff --git a/lib/Conversion/TritonGPUToLLVM/CMakeLists.txt b/lib/Conversion/TritonGPUToLLVM/CMakeLists.txt
+index 9344447f4..862fdaa4b 100644
+--- a/lib/Conversion/TritonGPUToLLVM/CMakeLists.txt
++++ b/lib/Conversion/TritonGPUToLLVM/CMakeLists.txt
+@@ -29,12 +29,7 @@ add_triton_library(TritonGPUToLLVM
+     TritonGPUConversionPassIncGen
+ 
+     LINK_LIBS PUBLIC
+-    MLIRIR
+-    MLIRPass
+-    MLIRGPUDialect
+-    MLIRGPUToNVVMTransforms
+-    MLIRGPUToROCDLTransforms
+-    MLIRGPUTransforms
++    MLIR
+     TritonAnalysis
+     TritonIR
+     TritonGPUIR
+diff --git a/lib/Conversion/TritonInstrumentToLLVM/CMakeLists.txt b/lib/Conversion/TritonInstrumentToLLVM/CMakeLists.txt
+index d69e9e1ad..0fd8d2216 100644
+--- a/lib/Conversion/TritonInstrumentToLLVM/CMakeLists.txt
++++ b/lib/Conversion/TritonInstrumentToLLVM/CMakeLists.txt
+@@ -4,8 +4,7 @@ add_triton_library(TritonInstrumentToLLVM
+     GSanToLLVM.cpp
+ 
+     LINK_LIBS PUBLIC
+-    MLIRIR
+-    MLIRPass
++    MLIR
+     TritonIR
+     TritonGPUIR
+     TritonInstrumentIR
+diff --git a/lib/Conversion/TritonToTritonGPU/CMakeLists.txt b/lib/Conversion/TritonToTritonGPU/CMakeLists.txt
+index ed879c7dd..a646b45e2 100644
+--- a/lib/Conversion/TritonToTritonGPU/CMakeLists.txt
++++ b/lib/Conversion/TritonToTritonGPU/CMakeLists.txt
+@@ -7,9 +7,7 @@ add_triton_library(TritonToTritonGPU
+     TritonConversionPassIncGen
+ 
+     LINK_LIBS PUBLIC
+-    MLIRIR
+-    MLIRPass
+-    MLIRTransforms
++    MLIR
+     TritonIR
+     ProtonIR
+     TritonGPUIR
+diff --git a/lib/Dialect/Gluon/Transforms/CMakeLists.txt b/lib/Dialect/Gluon/Transforms/CMakeLists.txt
+index 0e43d594c..4404e288e 100644
+--- a/lib/Dialect/Gluon/Transforms/CMakeLists.txt
++++ b/lib/Dialect/Gluon/Transforms/CMakeLists.txt
+@@ -13,5 +13,5 @@ add_triton_library(GluonTransforms
+   TritonIR
+   TritonGPUIR
+   GluonIR
+-  MLIRTransformUtils
++  MLIR
+ )
+diff --git a/lib/Dialect/Triton/IR/CMakeLists.txt b/lib/Dialect/Triton/IR/CMakeLists.txt
+index 1662b9496..14f550a40 100644
+--- a/lib/Dialect/Triton/IR/CMakeLists.txt
++++ b/lib/Dialect/Triton/IR/CMakeLists.txt
+@@ -16,8 +16,5 @@ add_triton_library(TritonIR
+   TritonCanonicalizeIncGen
+ 
+   LINK_LIBS PUBLIC
+-  MLIRIR
+-  MLIRArithDialect
+-  MLIRMathDialect
+-  MLIRSCFDialect
++  MLIR
+ )
+diff --git a/lib/Dialect/Triton/Transforms/CMakeLists.txt b/lib/Dialect/Triton/Transforms/CMakeLists.txt
+index fd518d6b0..4a29bf6cf 100644
+--- a/lib/Dialect/Triton/Transforms/CMakeLists.txt
++++ b/lib/Dialect/Triton/Transforms/CMakeLists.txt
+@@ -18,9 +18,6 @@ add_triton_library(TritonTransforms
+   TritonCombineIncGen
+ 
+   LINK_LIBS PUBLIC
+-  MLIRPass
+-  MLIRTransformUtils
+-  MLIRTransforms
+-  MLIRSCFToControlFlow
++  MLIR
+   TritonIR
+ )
+diff --git a/lib/Dialect/TritonGPU/IR/CMakeLists.txt b/lib/Dialect/TritonGPU/IR/CMakeLists.txt
+index b78d29735..f9b5503dd 100644
+--- a/lib/Dialect/TritonGPU/IR/CMakeLists.txt
++++ b/lib/Dialect/TritonGPU/IR/CMakeLists.txt
+@@ -13,7 +13,7 @@ add_triton_library(TritonGPUIR
+   TritonGPUOpInterfacesIncGen
+ 
+   LINK_LIBS PUBLIC
+-  MLIRGPUDialect
++  MLIR
+   TritonIR
+   TritonTools
+ )
+diff --git a/lib/Dialect/TritonGPU/Transforms/CMakeLists.txt b/lib/Dialect/TritonGPU/Transforms/CMakeLists.txt
+index 83f01cf79..3e1dbd64a 100644
+--- a/lib/Dialect/TritonGPU/Transforms/CMakeLists.txt
++++ b/lib/Dialect/TritonGPU/Transforms/CMakeLists.txt
+@@ -42,8 +42,7 @@ add_triton_library(TritonGPUTransforms
+   TritonGPUTransformsIncGen
+ 
+   LINK_LIBS PUBLIC
+-  MLIRTransforms
+-  MLIRTransformUtils
++  MLIR
+   TritonAnalysis
+   TritonIR
+   TritonTransforms
+@@ -53,5 +52,4 @@ add_triton_library(TritonGPUTransforms
+   NVWSTransforms
+   TritonToTritonGPU
+   TritonInstrumentIR
+-  MLIRTransformUtils
+ )
+diff --git a/lib/Dialect/TritonInstrument/IR/CMakeLists.txt b/lib/Dialect/TritonInstrument/IR/CMakeLists.txt
+index 6b39e076d..a374b6614 100644
+--- a/lib/Dialect/TritonInstrument/IR/CMakeLists.txt
++++ b/lib/Dialect/TritonInstrument/IR/CMakeLists.txt
+@@ -8,7 +8,7 @@ add_triton_library(TritonInstrumentIR
+     TritonInstrumentTableGen
+ 
+   LINK_LIBS PUBLIC
+-    MLIRIR
++    MLIR
+     TritonIR
+     TritonGPUIR
+ )
+diff --git a/lib/Dialect/TritonInstrument/Transforms/CMakeLists.txt b/lib/Dialect/TritonInstrument/Transforms/CMakeLists.txt
+index ba7dfffe0..e18281a2b 100644
+--- a/lib/Dialect/TritonInstrument/Transforms/CMakeLists.txt
++++ b/lib/Dialect/TritonInstrument/Transforms/CMakeLists.txt
+@@ -8,12 +8,10 @@ add_triton_library(TritonInstrumentTransforms
+   TritonInstrumentTransformsIncGen
+ 
+   LINK_LIBS PUBLIC
+-  MLIRTransforms
+-  MLIRTransformUtils
++  MLIR
+   TritonIR
+   TritonGPUIR
+   TritonNvidiaGPUIR
+   TritonToTritonGPU
+   TritonInstrumentIR
+-  MLIRTransformUtils
+ )
+diff --git a/lib/Dialect/TritonNvidiaGPU/Transforms/CMakeLists.txt b/lib/Dialect/TritonNvidiaGPU/Transforms/CMakeLists.txt
+index da82b8b59..ec7c19c4b 100644
+--- a/lib/Dialect/TritonNvidiaGPU/Transforms/CMakeLists.txt
++++ b/lib/Dialect/TritonNvidiaGPU/Transforms/CMakeLists.txt
+@@ -28,5 +28,5 @@ add_triton_library(TritonNvidiaGPUTransforms
+   TritonNvidiaGPUIR
+   TritonInstrumentTransforms
+   TritonInstrumentIR
+-  MLIRTransformUtils
++  MLIR
+ )
+diff --git a/lib/Target/LLVMIR/CMakeLists.txt b/lib/Target/LLVMIR/CMakeLists.txt
+index 88a265cd0..c76063576 100644
+--- a/lib/Target/LLVMIR/CMakeLists.txt
++++ b/lib/Target/LLVMIR/CMakeLists.txt
+@@ -10,18 +10,7 @@ add_triton_library(TritonLLVMIR
+         LINK_LIBS
+         ${CMAKE_DL_LIBS}
+         PUBLIC
+-        MLIRArithToLLVM
+-        MLIRBuiltinToLLVMIRTranslation
+-        MLIRIndexToLLVM
+-        MLIRIR
+-        MLIRLLVMDialect
+-        MLIRNVVMToLLVM
+-        MLIRLLVMToLLVMIRTranslation
+-        MLIRNVVMToLLVMIRTranslation
+-        MLIRROCDLToLLVMIRTranslation
+-        MLIRSCFToControlFlow
+-        MLIRSupport
+-        MLIRTargetLLVMIRExport
++        MLIR
+         TritonGPUToLLVM
+         )
+ 
+diff --git a/lib/Tools/CMakeLists.txt b/lib/Tools/CMakeLists.txt
+index 611468b9a..63cadd635 100644
+--- a/lib/Tools/CMakeLists.txt
++++ b/lib/Tools/CMakeLists.txt
+@@ -7,7 +7,6 @@ add_triton_library(TritonTools
+   DEPENDS
+ 
+   LINK_LIBS PUBLIC
+-  MLIRIR
+-  MLIRLLVMDialect
++  MLIR
+   f2reduce
+ )
+diff --git a/test/lib/Analysis/CMakeLists.txt b/test/lib/Analysis/CMakeLists.txt
+index d8eb7a7c9..fdfc71cd7 100644
+--- a/test/lib/Analysis/CMakeLists.txt
++++ b/test/lib/Analysis/CMakeLists.txt
+@@ -5,5 +5,5 @@ add_library(TritonTestAnalysis
+   TestBufferRegion.cpp
+   TestMembar.cpp
+ )
+-target_link_libraries(TritonTestAnalysis PUBLIC MLIRPass TritonAnalysis TritonNvidiaGPUTransforms)
++target_link_libraries(TritonTestAnalysis PUBLIC MLIR TritonAnalysis TritonNvidiaGPUTransforms)
+ target_compile_options(TritonTestAnalysis PRIVATE ${TRITON_DISABLE_EH_RTTI_FLAGS})
+diff --git a/test/lib/Dialect/CMakeLists.txt b/test/lib/Dialect/CMakeLists.txt
+index 529efd514..f008a8767 100644
+--- a/test/lib/Dialect/CMakeLists.txt
++++ b/test/lib/Dialect/CMakeLists.txt
+@@ -1,3 +1,3 @@
+ add_library(TritonTestDialect TestLoopPeeling.cpp)
+-target_link_libraries(TritonTestDialect PUBLIC MLIRPass TritonTransforms)
++target_link_libraries(TritonTestDialect PUBLIC MLIR TritonTransforms)
+ target_compile_options(TritonTestDialect PRIVATE ${TRITON_DISABLE_EH_RTTI_FLAGS})
+diff --git a/test/lib/Instrumentation/CMakeLists.txt b/test/lib/Instrumentation/CMakeLists.txt
+index 6ab340ff5..b1bcf228a 100644
+--- a/test/lib/Instrumentation/CMakeLists.txt
++++ b/test/lib/Instrumentation/CMakeLists.txt
+@@ -17,7 +17,7 @@ foreach( plugin ${GPU_INSTRUMENTATION_PASSES} )
+     target_link_libraries(
+       ${plugin}
+       PRIVATE
+-      LLVMCore
++      LLVM
+       "$<$<PLATFORM_ID:Darwin>:-undefined dynamic_lookup>"
+       )
+     # CMAKE_LIBRARY_OUTPUT_DIRECTORY is only set during the Python
+diff --git a/test/lib/Proton/CMakeLists.txt b/test/lib/Proton/CMakeLists.txt
+index 3f17de6e1..3083fdb39 100644
+--- a/test/lib/Proton/CMakeLists.txt
++++ b/test/lib/Proton/CMakeLists.txt
+@@ -1,3 +1,3 @@
+ add_library(TritonTestProton TestScopeIdAllocation.cpp)
+-target_link_libraries(TritonTestProton PUBLIC MLIRPass ProtonAnalysis)
++target_link_libraries(TritonTestProton PUBLIC MLIR ProtonAnalysis)
+ target_compile_options(TritonTestProton PRIVATE ${TRITON_DISABLE_EH_RTTI_FLAGS})
+diff --git a/third_party/amd/lib/Analysis/CMakeLists.txt b/third_party/amd/lib/Analysis/CMakeLists.txt
+index 3b8ee11e1..bb48a989e 100644
+--- a/third_party/amd/lib/Analysis/CMakeLists.txt
++++ b/third_party/amd/lib/Analysis/CMakeLists.txt
+@@ -8,8 +8,7 @@ add_triton_library(TritonAMDAnalysis
+   TritonAMDGPUTableGen
+ 
+   LINK_LIBS PUBLIC
+-  MLIRAnalysis
+-  MLIRLLVMDialect
++  MLIR
+   TritonIR
+   TritonGPUIR
+ )
+diff --git a/third_party/amd/lib/Dialect/TritonAMDGPU/IR/CMakeLists.txt b/third_party/amd/lib/Dialect/TritonAMDGPU/IR/CMakeLists.txt
+index 9eb2abd87..066601f4e 100644
+--- a/third_party/amd/lib/Dialect/TritonAMDGPU/IR/CMakeLists.txt
++++ b/third_party/amd/lib/Dialect/TritonAMDGPU/IR/CMakeLists.txt
+@@ -7,7 +7,7 @@ add_triton_library(TritonAMDGPUIR
+   TritonAMDGPUAttrDefsIncGen
+ 
+   LINK_LIBS PUBLIC
+-  MLIRLLVMDialect
++  MLIR
+   TritonIR
+   TritonGPUIR
+ )
+diff --git a/third_party/amd/lib/Dialect/TritonAMDGPU/Utility/CMakeLists.txt b/third_party/amd/lib/Dialect/TritonAMDGPU/Utility/CMakeLists.txt
+index f8d4deb6b..b954f116d 100644
+--- a/third_party/amd/lib/Dialect/TritonAMDGPU/Utility/CMakeLists.txt
++++ b/third_party/amd/lib/Dialect/TritonAMDGPU/Utility/CMakeLists.txt
+@@ -2,7 +2,7 @@ add_triton_library(TritonAMDUtils
+   CommonUtils.cpp
+ 
+   LINK_LIBS PUBLIC
+-  MLIRLLVMDialect
++  MLIR
+   TritonIR
+   TritonGPUIR
+ )
+diff --git a/third_party/amd/lib/TritonAMDGPUToLLVM/CMakeLists.txt b/third_party/amd/lib/TritonAMDGPUToLLVM/CMakeLists.txt
+index 9a9ca74d8..b104a7863 100644
+--- a/third_party/amd/lib/TritonAMDGPUToLLVM/CMakeLists.txt
++++ b/third_party/amd/lib/TritonAMDGPUToLLVM/CMakeLists.txt
+@@ -36,12 +36,10 @@ add_triton_library(TritonAMDGPUToLLVM
+     LLVMIRIncGen
+ 
+     LINK_LIBS PUBLIC
+-    MLIRReconcileUnrealizedCasts
++    MLIR
+     TritonGPUToLLVM
+     TritonInstrumentToLLVM
+     TritonAMDGPUIR
+     TritonAMDAnalysis
+-    LLVMCore
+-    LLVMPasses
+-    LLVMSupport
++    LLVM
+ )
+diff --git a/third_party/amd/test/lib/Analysis/CMakeLists.txt b/third_party/amd/test/lib/Analysis/CMakeLists.txt
+index 96ea3869d..8a1c2bed0 100644
+--- a/third_party/amd/test/lib/Analysis/CMakeLists.txt
++++ b/third_party/amd/test/lib/Analysis/CMakeLists.txt
+@@ -10,5 +10,5 @@ add_dependencies(TritonAMDGPUTestAnalysis
+   TritonGPUTypeInterfacesIncGen
+   TritonGPUOpInterfacesIncGen
+ )
+-target_link_libraries(TritonAMDGPUTestAnalysis MLIRPass)
++target_link_libraries(TritonAMDGPUTestAnalysis MLIR)
+ target_compile_options(TritonAMDGPUTestAnalysis PRIVATE ${TRITON_DISABLE_EH_RTTI_FLAGS})
+diff --git a/third_party/nvidia/hopper/lib/Transforms/CMakeLists.txt b/third_party/nvidia/hopper/lib/Transforms/CMakeLists.txt
+index 2b12ef8c4..446be232d 100644
+--- a/third_party/nvidia/hopper/lib/Transforms/CMakeLists.txt
++++ b/third_party/nvidia/hopper/lib/Transforms/CMakeLists.txt
+@@ -20,5 +20,5 @@ add_triton_library(NVHopperTransforms
+   LINK_LIBS PUBLIC
+   TritonIR
+   TritonGPUIR
+-  MLIRTransformUtils
++  MLIR
+ )
+diff --git a/third_party/nvidia/lib/Dialect/NVGPU/IR/CMakeLists.txt b/third_party/nvidia/lib/Dialect/NVGPU/IR/CMakeLists.txt
+index 1fd118d2b..52b871f07 100644
+--- a/third_party/nvidia/lib/Dialect/NVGPU/IR/CMakeLists.txt
++++ b/third_party/nvidia/lib/Dialect/NVGPU/IR/CMakeLists.txt
+@@ -6,5 +6,5 @@ add_triton_library(NVGPUIR
+   NVGPUAttrDefsIncGen
+ 
+   LINK_LIBS PUBLIC
+-  MLIRLLVMDialect
++  MLIR
+ )
+diff --git a/third_party/nvidia/lib/Dialect/NVWS/Transforms/CMakeLists.txt b/third_party/nvidia/lib/Dialect/NVWS/Transforms/CMakeLists.txt
+index 3b285c4ef..3d888c676 100644
+--- a/third_party/nvidia/lib/Dialect/NVWS/Transforms/CMakeLists.txt
++++ b/third_party/nvidia/lib/Dialect/NVWS/Transforms/CMakeLists.txt
+@@ -15,5 +15,5 @@ add_triton_library(NVWSTransforms
+   TritonGPUIR
+   TritonNvidiaGPUIR
+   NVWSIR
+-  MLIRTransformUtils
++  MLIR
+ )
+diff --git a/third_party/nvidia/lib/TritonNVIDIAGPUToLLVM/CMakeLists.txt b/third_party/nvidia/lib/TritonNVIDIAGPUToLLVM/CMakeLists.txt
+index 9d84b4a3b..bf4f0cdbe 100644
+--- a/third_party/nvidia/lib/TritonNVIDIAGPUToLLVM/CMakeLists.txt
++++ b/third_party/nvidia/lib/TritonNVIDIAGPUToLLVM/CMakeLists.txt
+@@ -30,7 +30,6 @@ add_triton_library(TritonNVIDIAGPUToLLVM
+     TritonGPUToLLVM
+     TritonInstrumentIR
+     TritonInstrumentToLLVM
+-    MLIRReconcileUnrealizedCasts
++    MLIR
+     NVGPUIR
+-    MLIRUBToLLVM
+ )
+diff --git a/third_party/nvidia/unittest/Conversion/TritonGPUToLLVM/CMakeLists.txt b/third_party/nvidia/unittest/Conversion/TritonGPUToLLVM/CMakeLists.txt
+index 3c52f7c7a..0ee9ca01f 100644
+--- a/third_party/nvidia/unittest/Conversion/TritonGPUToLLVM/CMakeLists.txt
++++ b/third_party/nvidia/unittest/Conversion/TritonGPUToLLVM/CMakeLists.txt
+@@ -4,5 +4,5 @@ add_triton_ut(
+   LIBS
+     TritonGPUToLLVM
+     TritonNVIDIAGPUToLLVM
+-    NVGPUIR MLIRUBToLLVM
++    NVGPUIR MLIR
+ )
