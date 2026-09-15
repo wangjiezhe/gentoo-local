@@ -3,7 +3,7 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{11..14} )
+PYTHON_COMPAT=( python3_{12..14} )
 DISTUTILS_USE_PEP517=poetry
 # PYPI_NO_NORMALIZE=1
 inherit distutils-r1 pypi
@@ -19,7 +19,7 @@ SLOT="0"
 KEYWORDS="~amd64"
 
 BDEPEND="
-	<dev-python/setuptools-83[${PYTHON_USEDEP}]
+	<dev-python/setuptools-85[${PYTHON_USEDEP}]
 	>=dev-python/setuptools-59[${PYTHON_USEDEP}]
 "
 
