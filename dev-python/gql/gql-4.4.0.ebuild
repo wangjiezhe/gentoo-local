@@ -3,7 +3,7 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{11..14} )
+PYTHON_COMPAT=( python3_{12..15} )
 DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_USE_PEP517=setuptools
 inherit distutils-r1 pypi
@@ -18,10 +18,10 @@ KEYWORDS="~amd64"
 
 RDEPEND="
 	$(python_gen_cond_dep '
-		>=dev-python/graphql-core-3.2[${PYTHON_USEDEP}]
-		<dev-python/graphql-core-3.3[${PYTHON_USEDEP}]
+		>=dev-python/graphql-core-3.3[${PYTHON_USEDEP}]
+		<dev-python/graphql-core-3.4[${PYTHON_USEDEP}]
 		dev-python/yarl[${PYTHON_USEDEP}]
-		dev-python/backoff[${PYTHON_USEDEP}]
+		dev-python/tenacity[${PYTHON_USEDEP}]
 		dev-python/anyio[${PYTHON_USEDEP}]
 	')
 "
@@ -33,7 +33,6 @@ BDEPEND="
 			dev-python/pytest-asyncio[${PYTHON_USEDEP}]
 			dev-python/pytest-console-scripts[${PYTHON_USEDEP}]
 			dev-python/pytest-cov[${PYTHON_USEDEP}]
-			dev-python/mock[${PYTHON_USEDEP}]
 			dev-python/vcrpy[${PYTHON_USEDEP}]
 			dev-python/aiofiles[${PYTHON_USEDEP}]
 			dev-python/requests-toolbelt[${PYTHON_USEDEP}]
