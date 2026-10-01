@@ -180,9 +180,9 @@ BDEPEND="
 PATCHES=(
 	"${FILESDIR}"/${PN}-2.5.1-unbundle_fmt.patch
 	"${FILESDIR}"/${PN}-2.5.1-unbundle_kineto.patch
-	"${FILESDIR}"/${P}-unbundle_pocketfft.patch
+	"${FILESDIR}"/${PN}-2.14.0-unbundle_pocketfft.patch
 	"${FILESDIR}"/${PN}-2.3.0-cudnn_include_fix.patch
-	"${FILESDIR}"/${P}-gentoo.patch
+	"${FILESDIR}"/${PN}-2.14.0-gentoo.patch
 	"${FILESDIR}"/${PN}-2.4.0-cpp-httplib.patch
 	"${FILESDIR}"/${PN}-1.12.0-glog-0.6.0.patch
 	"${FILESDIR}"/${PN}-2.9.1-cmake.patch
@@ -201,7 +201,7 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.10.0-cpp-extension-multilib.patch
 	"${FILESDIR}"/${PN}-2.13.0-rocm-assert-fix.patch
 	"${FILESDIR}"/${PN}-2.13.0-unbundle_mkldnn.patch
-	"${FILESDIR}"/${P}-license.patch
+	"${FILESDIR}"/${PN}-2.14.0-license.patch
 )
 
 src_prepare() {
