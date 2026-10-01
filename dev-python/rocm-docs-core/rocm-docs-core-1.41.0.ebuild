@@ -4,7 +4,7 @@
 EAPI=8
 
 DISTUTILS_USE_PEP517=setuptools
-PYTHON_COMPAT=( python3_{12..14} )
+PYTHON_COMPAT=( python3_{12..15} )
 
 inherit distutils-r1
 
@@ -20,19 +20,20 @@ SLOT="0"
 KEYWORDS="~amd64"
 
 RDEPEND="
-	dev-python/gitpython
-	dev-python/pygithub
-	dev-python/sphinx
-	dev-python/breathe
-	dev-python/myst-nb
-	dev-python/pydata-sphinx-theme
-	dev-python/sphinx-book-theme
-	dev-python/sphinx-copybutton
-	dev-python/sphinx-design
-	dev-python/sphinx-external-toc
-	dev-python/sphinx-notfound-page
-	dev-python/pyyaml
-	dev-python/fastjsonschema
+	dev-python/gitpython[${PYTHON_USEDEP}]
+	dev-python/pygithub[${PYTHON_USEDEP}]
+	dev-python/sphinx[${PYTHON_USEDEP}]
+	dev-python/breathe[${PYTHON_USEDEP}]
+	dev-python/myst-nb[${PYTHON_USEDEP}]
+	dev-python/pydata-sphinx-theme[${PYTHON_USEDEP}]
+	dev-python/sphinx-book-theme[${PYTHON_USEDEP}]
+	dev-python/sphinx-copybutton[${PYTHON_USEDEP}]
+	dev-python/sphinx-design[${PYTHON_USEDEP}]
+	dev-python/sphinx-external-toc[${PYTHON_USEDEP}]
+	dev-python/sphinx-notfound-page[${PYTHON_USEDEP}]
+	dev-python/pyyaml[${PYTHON_USEDEP}]
+	dev-python/fastjsonschema[${PYTHON_USEDEP}]
+	dev-python/requests[${PYTHON_USEDEP}]
 "
 
 EPYTEST_PLUGINS=( sphinx-markdown-builder )
