@@ -3,8 +3,8 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{12..14} )
-DISTUTILS_USE_PEP517=poetry
+PYTHON_COMPAT=( python3_{12..15} )
+DISTUTILS_USE_PEP517=uv-build
 # PYPI_NO_NORMALIZE=1
 inherit distutils-r1 pypi
 
@@ -17,11 +17,6 @@ HOMEPAGE="
 LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64"
-
-BDEPEND="
-	<dev-python/setuptools-85[${PYTHON_USEDEP}]
-	>=dev-python/setuptools-59[${PYTHON_USEDEP}]
-"
 
 EPYTEST_IGNORE=( tests/benchmarks )
 EPYTEST_PLUGINS=( anyio pytest-{asyncio,describe,timeout} )
