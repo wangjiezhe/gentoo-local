@@ -656,3 +656,7 @@ prefix = "v"
 ["sci-ml/torch-geometric"]
 source = "pypi"
 pypi = "torch-geometric"
+
+["sci-ml/llama-cpp-python"]
+source = "pypi"
+pypi = "llama-cpp-python"
