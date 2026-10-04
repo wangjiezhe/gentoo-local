@@ -5,7 +5,6 @@ EAPI=8
 
 DISTUTILS_USE_PEP517=scikit-build-core
 PYTHON_COMPAT=( python3_{12..14} )
-DISTUTILS_EXT=1
 
 inherit cuda distutils-r1
 
