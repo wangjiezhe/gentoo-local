@@ -660,3 +660,7 @@ pypi = "torch-geometric"
 ["sci-ml/llama-cpp-python"]
 source = "pypi"
 pypi = "llama-cpp-python"
+
+["sci-ml/openai"]
+source = "pypi"
+pypi = "openai"
