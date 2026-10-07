@@ -25,11 +25,10 @@ RDEPEND="
 	dev-python/numpy[${PYTHON_USEDEP}]
 	dev-python/diskcache[${PYTHON_USEDEP}]
 	dev-python/jinja2[${PYTHON_USEDEP}]
-	>=sci-ml/llama-cpp-0.5.0
+	>=sci-ml/llama-cpp-0.6.0
 "
 
 src_prepare() {
-	eapply -R "${FILESDIR}"/${P}-2375.patch
 	distutils-r1_src_prepare
 }
 
