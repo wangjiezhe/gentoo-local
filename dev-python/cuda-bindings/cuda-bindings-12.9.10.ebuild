@@ -3,7 +3,7 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{11..14} python3_14t )
+PYTHON_COMPAT=( python3_{12..15} python3_{14..15}t )
 DISTUTILS_EXT=1
 DISTUTILS_USE_PEP517=standalone
 inherit cuda distutils-r1 edo
