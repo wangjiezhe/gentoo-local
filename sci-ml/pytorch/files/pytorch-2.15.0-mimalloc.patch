@@ -1,0 +1,16 @@
+diff --git a/c10/CMakeLists.txt b/c10/CMakeLists.txt
+index 64820d127a5..04097b53f0a 100644
+--- a/c10/CMakeLists.txt
++++ b/c10/CMakeLists.txt
+@@ -164,8 +164,9 @@ if(NOT BUILD_LIBTORCHLESS)
+   endif()
+ 
+   if(USE_MIMALLOC)
+-    target_link_libraries(c10 PRIVATE "mimalloc-static")
+-    add_dependencies(c10 mimalloc-static)
++    find_package(mimalloc REQUIRED)
++    target_link_libraries(c10 PRIVATE "mimalloc")
++    add_dependencies(c10 mimalloc)
+   endif()
+ 
+   if(LINUX)

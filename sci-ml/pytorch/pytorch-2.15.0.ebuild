@@ -8,7 +8,7 @@ PYTHON_COMPAT=( python3_{12..15} python3_{14..15}t )
 DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_EXT=1
 
-ROCM_VERSION=6.1
+ROCM_VERSION=10.1
 inherit distutils-r1 prefix cuda flag-o-matic rocm multiprocessing
 
 # pytorch-2.14.0 depends on specific commit of composable kernel
@@ -24,7 +24,7 @@ FLASH_PN=flash-attention
 FLASH_P=${FLASH_PN}-${FLASH_PV}
 FLASH_ATT_URI="https://github.com/Dao-AILab/${FLASH_PN}/archive/refs/tags/${FLASH_PV}.tar.gz -> ${FLASH_P}.gh.tar.gz"
 
-CUTLASS_PV=4.6.1
+CUTLASS_PV=4.8.0
 CUTLASS_PN=cutlass
 CUTLASS_P=${CUTLASS_PN}-${CUTLASS_PV}
 CUTLASS_URI="https://github.com/NVIDIA/${CUTLASS_PN}/archive/v${CUTLASS_PV}.tar.gz -> ${CUTLASS_P}.tar.gz"
@@ -36,6 +36,8 @@ SRC_URI="https://github.com/pytorch/${PN}/archive/refs/tags/v${PV}.tar.gz
 	rocm? (
 		https://github.com/ROCm/composable_kernel/archive/${CK_COMMIT}.tar.gz
 		-> ${CK_P}.tar.gz
+		https://github.com/ROCm/rocm-libraries/commit/0eab68951d3bb668e8f99beba2e2c07d7e1ca18a.patch
+		-> rocm-libraries-0eab6895.patch
 	)
 	cuda? (
 		flash? ( ${FLASH_ATT_URI} )
@@ -103,7 +105,6 @@ RDEPEND="
 	fbgemm? ( >=sci-ml/FBGEMM-1.4:= )
 	flexiblas? ( sci-libs/flexiblas )
 	gloo? ( >=sci-ml/gloo-2025.06.04[cuda?,rocm?] )
-	kineto? ( ~sci-ml/kineto-0.4.0_p20260805 )
 	magma? ( sci-libs/magma[cuda?] )
 	mimalloc? ( dev-libs/mimalloc )
 	mkl? ( sci-libs/mkl )
@@ -124,25 +125,24 @@ RDEPEND="
 		dev-libs/pthreadpool
 	)
 	rocm? (
-		nccl? ( >=dev-libs/rccl-6.3:= <dev-libs/rccl-7.3:= )
-		>=dev-util/hip-6.3:=       <dev-util/hip-7.3:=
-		>=dev-util/roctracer-6.3:= <dev-util/roctracer-7.3:=
-		>=sci-libs/hipBLAS-6.3:=   <sci-libs/hipBLAS-7.3:=[rocsolver(+)]
-		>=sci-libs/hipBLASLt-6.3:= <sci-libs/hipBLASLt-7.3:=
-		>=sci-libs/hipFFT-6.3:=    <sci-libs/hipFFT-7.3:=
-		>=sci-libs/hipRAND-6.3:=   <sci-libs/hipRAND-7.3:=
-		>=sci-libs/hipSOLVER-6.3:= <sci-libs/hipSOLVER-7.3:=
-		>=sci-libs/hipSPARSE-6.3:= <sci-libs/hipSPARSE-7.3:=
-		>=sci-libs/miopen-6.3:=    <sci-libs/miopen-7.3:=
-		>=sci-libs/rocBLAS-6.3:=   <sci-libs/rocBLAS-7.3:=
-		>=sci-libs/rocRAND-6.3:=   <sci-libs/rocRAND-7.3:=
-		>=sci-libs/rocSOLVER-6.3:= <sci-libs/rocSOLVER-7.3:=
-		memefficient? ( =sci-libs/aotriton-bin-0.13*:= )
+		nccl? ( >=dev-libs/rccl-6.3:= <dev-libs/rccl-10.2:= )
+		>=dev-util/hip-6.3:=       <dev-util/hip-10.2:=
+		>=dev-util/roctracer-6.3:= <dev-util/roctracer-10.2:=
+		>=sci-libs/hipBLAS-6.3:=   <sci-libs/hipBLAS-10.2:=[rocsolver(+)]
+		>=sci-libs/hipBLASLt-6.3:= <sci-libs/hipBLASLt-10.2:=
+		>=sci-libs/hipFFT-6.3:=    <sci-libs/hipFFT-10.2:=
+		>=sci-libs/hipRAND-6.3:=   <sci-libs/hipRAND-10.2:=
+		>=sci-libs/hipSOLVER-6.3:= <sci-libs/hipSOLVER-10.2:=
+		>=sci-libs/hipSPARSE-6.3:= <sci-libs/hipSPARSE-10.2:=
+		>=sci-libs/miopen-6.3:=    <sci-libs/miopen-10.2:=
+		>=sci-libs/rocBLAS-6.3:=   <sci-libs/rocBLAS-10.2:=
+		>=sci-libs/rocRAND-6.3:=   <sci-libs/rocRAND-10.2:=
+		>=sci-libs/rocSOLVER-6.3:= <sci-libs/rocSOLVER-10.2:=
+		memefficient? ( >=sci-libs/aotriton-bin-0.13:= <sci-libs/aotriton-bin-0.15:= )
 		distributed? (
-			>=dev-util/rocm-smi-6.3:= <dev-util/rocm-smi-7.3:=
-			>=dev-util/amdsmi-6.3:= <dev-util/amdsmi-7.3:=
+			>=dev-util/amdsmi-6.3:= <dev-util/amdsmi-10.2:=
 		)
-		cusparselt? ( >=sci-libs/hipsparselt-6.3:= <sci-libs/hipsparselt-7.3:= )
+		cusparselt? ( >=sci-libs/hipsparselt-6.3:= <sci-libs/hipsparselt-10.2:= )
 	)
 	xnnpack? (
 		>=sci-ml/XNNPACK-2024.11
@@ -163,12 +163,12 @@ DEPEND="
 		dev-python/pyyaml[${PYTHON_USEDEP}]
 		dev-python/typing-extensions[${PYTHON_USEDEP}]
 	')
-	cuda? ( ~dev-libs/cutlass-4.6.1[tools(+)] )
+	cuda? ( dev-libs/cutlass[tools(+)] )
 	onednn? ( sci-ml/ideep )
 	rocm? (
-		>=sci-libs/hipCUB-6.3:=    <sci-libs/hipCUB-7.3:=
-		>=sci-libs/rocPRIM-6.3:=   <sci-libs/rocPRIM-7.3:=
-		>=sci-libs/rocThrust-6.3:= <sci-libs/rocThrust-7.3:=
+		>=sci-libs/hipCUB-6.3:=    <sci-libs/hipCUB-10.2:=
+		>=sci-libs/rocPRIM-6.3:=   <sci-libs/rocPRIM-10.2:=
+		>=sci-libs/rocThrust-6.3:= <sci-libs/rocThrust-10.2:=
 	)
 	qnnpack? ( dev-libs/clog )
 "
@@ -179,10 +179,10 @@ BDEPEND="
 
 PATCHES=(
 	"${FILESDIR}"/${PN}-2.5.1-unbundle_fmt.patch
-	"${FILESDIR}"/${PN}-2.5.1-unbundle_kineto.patch
+	"${FILESDIR}"/${P}-kineto.patch
 	"${FILESDIR}"/${PN}-2.14.0-unbundle_pocketfft.patch
 	"${FILESDIR}"/${PN}-2.3.0-cudnn_include_fix.patch
-	"${FILESDIR}"/${PN}-2.14.0-gentoo.patch
+	"${FILESDIR}"/${P}-gentoo.patch
 	"${FILESDIR}"/${PN}-2.4.0-cpp-httplib.patch
 	"${FILESDIR}"/${PN}-1.12.0-glog-0.6.0.patch
 	"${FILESDIR}"/${PN}-2.9.1-cmake.patch
@@ -193,15 +193,14 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.10.0-aocl.patch
 	"${FILESDIR}"/${PN}-2.9.0-xnnpack.patch
 	"${FILESDIR}"/${PN}-2.9.1-torch_cpu.patch
-	"${FILESDIR}"/${PN}-2.10.0-blas.patch
 	"${FILESDIR}"/${PN}-2.10.0-lapack.patch
-	"${FILESDIR}"/${PN}-2.11.0-mimalloc.patch
-	"${FILESDIR}"/${PN}-2.14.0-removekineto-pr178960.patch
+	"${FILESDIR}"/${P}-mimalloc.patch
 	"${FILESDIR}"/${PN}-2.13.0-glog.patch
 	"${FILESDIR}"/${PN}-2.10.0-cpp-extension-multilib.patch
 	"${FILESDIR}"/${PN}-2.13.0-rocm-assert-fix.patch
 	"${FILESDIR}"/${PN}-2.13.0-unbundle_mkldnn.patch
-	"${FILESDIR}"/${PN}-2.14.0-license.patch
+	"${FILESDIR}"/${P}-license.patch
+	"${FILESDIR}"/${P}-cudss.patch
 )
 
 src_prepare() {
@@ -281,11 +280,20 @@ src_prepare() {
 		# TODO: delete, when caffe2 depends on systemwide composable_kernel
 		sed -e "s:third_party/composable_kernel:../composable_kernel-${CK_COMMIT}:g" \
 			-i aten/src/ATen/CMakeLists.txt || die
+		# Fix build of composable_kernel with clang-23
+		pushd "${WORKDIR}"/composable_kernel-${CK_COMMIT} > /dev/null || die
+		eapply -p3 "${DISTDIR}"/rocm-libraries-0eab6895.patch
+		popd > /dev/null || die
 
 		# Workaround for libc++ issue https://github.com/llvm/llvm-project/issues/100802
 		sed -e 's/std::memcpy/memcpy/g' \
 			-i torch/headeronly/util/Half.h \
 			-i aten/src/ATen/native/cuda/int4mm.cu || die
+
+		# hipFile (only for torch.cuda.gds) is not packaged, amd_smi is needed only for distributed
+		sed -e 's/find_package_and_print_version(hipfile REQUIRED)/find_package_and_print_version(hipfile)/' \
+			-e 's/find_package_and_print_version(amd_smi REQUIRED)/find_package_and_print_version(amd_smi)/' \
+			-i cmake/public/LoadHIP.cmake || die
 
 		ebegin "HIPifying cuda sources"
 		FBCODE_BUILD_TOOL="buck" ${EPYTHON} tools/amd_build/build_amd.py || die
@@ -315,7 +323,6 @@ python_compile() {
 	local -x MAX_JOBS=$(makeopts_jobs)
 	local -x PYTORCH_BUILD_VERSION=${PV}
 	local -x PYTORCH_BUILD_NUMBER=0
-	# local -x SKBUILD_PLATLIB_DIR="$(python_get_sitedir)"
 	local -x USE_CCACHE=OFF
 	local -x USE_CUDA=$(usex cuda)
 	local -x USE_DISTRIBUTED=$(usex distributed)
@@ -399,6 +406,7 @@ python_compile() {
 		local -x CMAKE_REQUIRE_FIND_PACKAGE_HIP=ON
 		local -x USE_NCCL=$(usex nccl)
 		local -x CMAKE_DISABLE_FIND_PACKAGE_hipsparselt=$(usex !cusparselt) # disable automagic
+		local -x CMAKE_DISABLE_FIND_PACKAGE_hipfile=ON
 		local -x USE_ROCM_CK_SDPA=OFF # requires flash + aiter, works only on gfx90a/gfx942/gfx950
 		local -x ROCM_PATH=/usr
 		local -x HIP_CLANG_PATH=$(hipconfig --hipclangpath)

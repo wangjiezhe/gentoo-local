@@ -1,0 +1,34 @@
+diff --git a/third_party/kineto/libkineto/CMakeLists.txt b/third_party/kineto/libkineto/CMakeLists.txt
+index 2ee0899a060..3e970ed4e16 100644
+--- a/third_party/kineto/libkineto/CMakeLists.txt
++++ b/third_party/kineto/libkineto/CMakeLists.txt
+@@ -241,7 +241,7 @@ target_compile_options(kineto_api PRIVATE "${KINETO_COMPILE_OPTIONS}")
+ set(DYNOLOG_INCLUDE_DIR "${LIBKINETO_THIRDPARTY_DIR}/dynolog_headers/")
+ set(IPCFABRIC_INCLUDE_DIR "${DYNOLOG_INCLUDE_DIR}/dynolog/src/ipcfabric/")
+ 
+-if(NOT TARGET fmt::fmt-header-only)
++if(FALSE)
+   if(NOT FMT_SOURCE_DIR)
+     set(FMT_SOURCE_DIR "${LIBKINETO_THIRDPARTY_DIR}/fmt"
+       CACHE STRING "fmt source directory from submodules")
+@@ -265,12 +265,10 @@ target_include_directories(kineto_base PUBLIC
+ target_include_directories(kineto_base SYSTEM PUBLIC
+       $<BUILD_INTERFACE:${DYNOLOG_INCLUDE_DIR}>
+       $<BUILD_INTERFACE:${IPCFABRIC_INCLUDE_DIR}>)
+-target_link_libraries(kineto_base PRIVATE $<BUILD_INTERFACE:fmt::fmt-header-only>)
+ 
+ target_include_directories(kineto_api PUBLIC
+       $<BUILD_INTERFACE:${LIBKINETO_DIR}>
+       $<BUILD_INTERFACE:${LIBKINETO_INCLUDE_DIR}>)
+-target_link_libraries(kineto_api PRIVATE $<BUILD_INTERFACE:fmt::fmt-header-only>)
+ 
+ if(KINETO_LIBRARY_TYPE STREQUAL "static")
+   set(BUILD_SHARED_LIBS OFF)
+@@ -334,6 +332,7 @@ elseif(KINETO_BACKEND STREQUAL "xpu")
+   target_link_libraries(kineto PRIVATE "${XPU_xpupti_LIBRARY}")
+ endif()
+ target_compile_definitions(kineto PUBLIC "${KINETO_DEFINITIONS}")
++target_link_libraries(kineto PRIVATE fmt)
+ 
+ if(KINETO_BUILD_TESTS)
+   if(NOT TARGET gtest)
