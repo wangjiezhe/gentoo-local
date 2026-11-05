@@ -3,7 +3,7 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{11..14} python3_14t )
+PYTHON_COMPAT=( python3_{12..15} python3_{14..15}t )
 DISTUTILS_EXT=1
 DISTUTILS_USE_PEP517=standalone
 inherit cuda distutils-r1
@@ -30,13 +30,13 @@ DEPEND="
 BDEPEND="
 	${PYTHON_DEPS}
 	dev-python/cython[${PYTHON_USEDEP}]
-	>=dev-python/cuda-bindings-12.9.0[${PYTHON_USEDEP}]
+	>=dev-python/cuda-bindings-12.9.10[${PYTHON_USEDEP}]
 	>=dev-python/cuda-pathfinder-1.5.0[${PYTHON_USEDEP}]
 "
 
-PARENT_PATCHES=(
-	"${FILESDIR}"/${PN}-0.5.0-test.patch
-)
+# PARENT_PATCHES=(
+# 	"${FILESDIR}"/${PN}-0.5.0-test.patch
+# )
 
 python_prepare_all() {
 	[[ -n "${PARENT_PATCHES[*]}" ]] && eapply -p2 -- "${PARENT_PATCHES[@]}"
