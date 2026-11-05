@@ -8,10 +8,6 @@ EAPI=8
 CRATES="
 "
 
-declare -A GIT_CRATES=(
-	[wasm-minimal-protocol]='https://github.com/astrale-sharp/wasm-minimal-protocol;cc29630ac15ffe7c0a8f7f459316edca6ef5a5da;wasm-minimal-protocol-%commit%/crates/macro'
-)
-
 RUST_MIN_VER="1.92"
 inherit edo cargo
 
