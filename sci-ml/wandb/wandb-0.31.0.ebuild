@@ -3,15 +3,14 @@
 
 EAPI=8
 
-# Check xpu/Cargo.toml
-WANDB_XPU_PV="0.7.1"
+# Check symon/Cargo.toml
+WANDB_SYMON_PV="0.8.0"
 # Check parquet-rust-wrapper/Cargo.toml
 ARROR_RS_WRAPPER_PV="0.1.1"
 
-WANDB_XPU="wandb-xpu-${WANDB_XPU_PV}"
+WANDB_SYMON="wandb-symon-${WANDB_SYMON_PV}"
 ARROR_RS_WRAPPER="arrow-rs-wrapper-${ARROR_RS_WRAPPER_PV}"
 
-# dev-python/sentry-sdk does not support python3.10
 PYTHON_COMPAT=( python3_{12..15} )
 DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_EXT=1
@@ -27,8 +26,8 @@ SRC_URI="
 "
 if [[ ${PKGBUMPING} != ${PVR} ]]; then
 	SRC_URI+="
-		https://github.com/wangjiezhe/gentoo-go-deps/releases/download/${P}/${WANDB_XPU}-crates.tar.xz
-			-> ${P}-${WANDB_XPU}-crates.tar.xz
+		https://github.com/wangjiezhe/gentoo-go-deps/releases/download/${P}/${WANDB_SYMON}-crates.tar.xz
+			-> ${P}-${WANDB_SYMON}-crates.tar.xz
 		https://github.com/wangjiezhe/gentoo-go-deps/releases/download/${P}/${ARROR_RS_WRAPPER}-crates.tar.xz
 			-> ${P}-${ARROR_RS_WRAPPER}-crates.tar.xz
 	"
@@ -45,7 +44,7 @@ RESTRICT="test"
 
 #	sys-devel/binutils[gold]
 BDEPEND="
-	>=dev-lang/go-1.26.5:=
+	>=dev-lang/go-1.27.2:=
 	dev-util/patchelf
 "
 
@@ -82,5 +81,5 @@ src_unpack() {
 src_prepare() {
 	export CGO_LDFLAGS=$(echo "$CGO_LDFLAGS" | sed 's/-Wl,-z,pack-relative-relocs//g')
 	distutils-r1_src_prepare
-	sed -i "s/^go 1.27.1$/go 1.26.5/" core/go.mod || die
+	# sed -i "s/^go 1.27.1$/go 1.26.5/" core/go.mod || die
 }
