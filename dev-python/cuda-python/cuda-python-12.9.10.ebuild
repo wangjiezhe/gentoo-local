@@ -3,7 +3,7 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{11..14} python3_14t )
+PYTHON_COMPAT=( python3_{12..15} python3_{14..15}t )
 inherit python-r1
 
 DESCRIPTION="CUDA Python Low-level Bindings"
@@ -18,5 +18,5 @@ RDEPEND="
 	${PYTHON_DEPS}
 	dev-python/cuda-core[${PYTHON_USEDEP}]
 	~dev-python/cuda-bindings-${PV}[${PYTHON_USEDEP}]
-	~dev-python/cuda-pathfinder-1.4.2[${PYTHON_USEDEP}]
+	dev-python/cuda-pathfinder[${PYTHON_USEDEP}]
 "
