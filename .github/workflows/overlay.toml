@@ -83,6 +83,13 @@ use_max_tag = true
 from_pattern = 'v(\d+)\.(\d+)\.(\d+)-\d+'
 to_pattern = '\1.\2.\3'
 
+["dev-python/nccl"]
+source = "github"
+github = "NVIDIA/nccl"
+use_latest_release = true
+prefix = "nccl4py-v"
+include_regex = "nccl4py-v.*"
+
 ["dev-libs/cusparselt"]
 source = "regex"
 url = "https://developer.download.nvidia.com/compute/cusparselt/redist/libcusparse_lt/linux-x86_64/"
@@ -303,6 +310,7 @@ source = "github"
 github = "NVIDIA/cuda-python"
 use_latest_release = true
 prefix = "v"
+include_regex = "v12.*"
 
 ["dev-python/treelib"]
 source = "github"
@@ -367,7 +375,9 @@ pypi = "iopath"
 source = "github"
 github = "pytorch/torchrec"
 use_latest_release = true
-prefix = "v"
+# prefix = "v"
+from_pattern = 'v(\d+)\.(\d+)\.(\d+)-rc\d+'
+to_pattern = '\1.\2.\3'
 
 ["dev-python/rjieba"]
 source = "github"
@@ -525,14 +535,23 @@ prefix = "v"
 ["dev-python/cuda-bindings"]
 source = "github"
 github = "NVIDIA/cuda-python"
-use_max_release = true
+use_latest_release = true
 prefix = "v"
+include_regex = "v12.*"
 
 ["dev-python/cuda-core"]
 source = "github"
 github = "NVIDIA/cuda-python"
 use_latest_release = true
 prefix = "cuda-core-v"
+include_regex = "cuda-core-v.*"
+
+["dev-python/cuda-pathfinder"]
+source = "github"
+github = "NVIDIA/cuda-python"
+use_latest_release = true
+prefix = "cuda-pathfinder-v"
+include_regex = "cuda-pathfinder-v.*"
 
 ["dev-util/gemini-cli"]
 source = "github"
