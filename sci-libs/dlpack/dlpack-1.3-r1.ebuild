@@ -13,3 +13,8 @@ SRC_URI="https://github.com/dmlc/${PN}/archive/refs/tags/v${PV}.tar.gz
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~amd64"
+
+src_prepare() {
+	sed -i "s/dlpack VERSION 0.6/dlpack VERSION ${PV}/" CMakeLists.txt || die
+	cmake_src_prepare
+}
