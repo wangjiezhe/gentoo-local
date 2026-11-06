@@ -86,7 +86,7 @@ to_pattern = '\1.\2.\3'
 ["dev-python/nccl"]
 source = "github"
 github = "NVIDIA/nccl"
-use_latest_release = true
+use_max_release = true
 prefix = "nccl4py-v"
 include_regex = "^nccl4py-v\\d+\\.\\d+\\.\\d+$"
 
@@ -308,7 +308,7 @@ use_latest_release = true
 ["dev-python/cuda-python"]
 source = "github"
 github = "NVIDIA/cuda-python"
-use_latest_release = true
+use_max_release = true
 prefix = "v"
 include_regex = "^v12.*$"
 
@@ -535,21 +535,21 @@ prefix = "v"
 ["dev-python/cuda-bindings"]
 source = "github"
 github = "NVIDIA/cuda-python"
-use_latest_release = true
+use_max_release = true
 prefix = "v"
 include_regex = "^v12.*$"
 
 ["dev-python/cuda-core"]
 source = "github"
 github = "NVIDIA/cuda-python"
-use_latest_release = true
+use_max_release = true
 prefix = "cuda-core-v"
 include_regex = "cuda-core-v.*"
 
 ["dev-python/cuda-pathfinder"]
 source = "github"
 github = "NVIDIA/cuda-python"
-use_latest_release = true
+use_max_release = true
 prefix = "cuda-pathfinder-v"
 include_regex = "cuda-pathfinder-v.*"
 
