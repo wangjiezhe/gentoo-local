@@ -3,7 +3,7 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{11..14} )
+PYTHON_COMPAT=( python3_{12..15} )
 DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_EXT=1
 DISTUTILS_USE_PEP517=setuptools
@@ -21,7 +21,7 @@ IUSE="cuda openmp"
 RESTRICT="test"		# has fatal python error and too many other failures
 
 RDEPEND="
-	>=sci-ml/pytorch-${PV}[cuda?,${PYTHON_SINGLE_USEDEP}]
+	>=sci-ml/pytorch-2.13[cuda?,${PYTHON_SINGLE_USEDEP}]
 	dev-util/ccache
 "
 DEPEND="${RDEPEND}"
