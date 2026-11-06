@@ -26,8 +26,9 @@ github = "cheat/cheat"
 use_latest_release = true
 
 ["app-emulation/wslu"]
-source = "github"
-github = "wslutilities/wslu"
+source = "gitea"
+host = "codeberg.org"
+gitea = "wslutilities/wslu"
 use_latest_release = true
 prefix = "v"
 
@@ -86,9 +87,9 @@ to_pattern = '\1.\2.\3'
 ["dev-python/nccl"]
 source = "github"
 github = "NVIDIA/nccl"
-use_max_release = true
+use_max_tag = true
 prefix = "nccl4py-v"
-include_regex = "^nccl4py-v\\d+\\.\\d+\\.\\d+$"
+include_regex = "^nccl4py-v.*$"
 
 ["dev-libs/cusparselt"]
 source = "regex"
@@ -129,6 +130,7 @@ prefix = "v"
 source = "github"
 github = "nltk/nltk"
 use_latest_tag = true
+prefix = "v"
 
 ["sci-ml/nltk-data"]
 source = "github"
@@ -308,7 +310,7 @@ use_latest_release = true
 ["dev-python/cuda-python"]
 source = "github"
 github = "NVIDIA/cuda-python"
-use_max_release = true
+use_max_tag = true
 prefix = "v"
 include_regex = "^v12.*$"
 
@@ -528,30 +530,30 @@ pypi = "clang-repl"
 
 ["app-misc/aigit"]
 source = "github"
-github = "zzxwill/aigit"
+github = "agentsdance/aigit"
 use_latest_release = true
 prefix = "v"
 
 ["dev-python/cuda-bindings"]
 source = "github"
 github = "NVIDIA/cuda-python"
-use_max_release = true
+use_max_tag = true
 prefix = "v"
 include_regex = "^v12.*$"
 
 ["dev-python/cuda-core"]
 source = "github"
 github = "NVIDIA/cuda-python"
-use_max_release = true
+use_max_tag = true
 prefix = "cuda-core-v"
-include_regex = "cuda-core-v.*"
+include_regex = "^cuda-core-v.*$"
 
 ["dev-python/cuda-pathfinder"]
 source = "github"
 github = "NVIDIA/cuda-python"
-use_max_release = true
+use_max_tag = true
 prefix = "cuda-pathfinder-v"
-include_regex = "cuda-pathfinder-v.*"
+include_regex = "^cuda-pathfinder-v.*$"
 
 ["dev-util/gemini-cli"]
 source = "github"

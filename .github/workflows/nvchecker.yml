@@ -18,7 +18,7 @@ jobs:
   nvchecker:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/liangyongxiang/gentoo-testing:master
+      image: ghcr.io/wangjiezhe/gentoo-testing:master
     outputs:
       nvcmp: ${{ steps.nvchecker.outputs.nvcmp }}
     steps:
