@@ -312,7 +312,7 @@ source = "github"
 github = "NVIDIA/cuda-python"
 use_max_tag = true
 prefix = "v"
-include_regex = "^v12.*$"
+include_regex = "^v12\\.\\d+\\.\\d+$"
 
 ["dev-python/treelib"]
 source = "github"
@@ -539,7 +539,7 @@ source = "github"
 github = "NVIDIA/cuda-python"
 use_max_tag = true
 prefix = "v"
-include_regex = "^v12.*$"
+include_regex = "^v12\\.\\d+\\.\\d+$"
 
 ["dev-python/cuda-core"]
 source = "github"
