@@ -1,0 +1,37 @@
+diff --git a/setup.py b/setup.py
+index 2466aa3ee..be580e072 100644
+--- a/setup.py
++++ b/setup.py
+@@ -251,6 +251,10 @@ class CMakeBuild(build_ext):
+             cupti_include_dir = os.path.join(get_base_dir(), "third_party", "nvidia", "backend", "include")
+         cmake_args += ["-DCUPTI_INCLUDE_DIR=" + cupti_include_dir]
+ 
++        cuda_include_dir = get_env_with_keys(["TRITON_CUDART_PATH"])
++        if cuda_include_dir:
++            cmake_args += ["-DCUDA_INCLUDE_DIR=" + cuda_include_dir]
++
+         rocm_include_dir = get_env_with_keys(["TRITON_ROCM_INCLUDE_PATH"])
+         rocprofiler_sdk_include_dir = get_env_with_keys(["TRITON_ROCPROFILER_SDK_INCLUDE_PATH"])
+         therock_include_dir = None
+diff --git a/third_party/proton/CMakeLists.txt b/third_party/proton/CMakeLists.txt
+index 95842b563..a3b28861d 100644
+--- a/third_party/proton/CMakeLists.txt
++++ b/third_party/proton/CMakeLists.txt
+@@ -7,6 +7,9 @@ set(PROTON_SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/csrc")
+ set(PROTON_COMMON_DIR "${CMAKE_CURRENT_SOURCE_DIR}/common")
+ 
+ # ============ Check for includes =============
++if(NOT CUDA_INCLUDE_DIR)
++  message(FATAL_ERROR "CUDA include directory not defined")
++endif()
+ if(NOT CUPTI_INCLUDE_DIR)
+   message(FATAL_ERROR "CUPTI include directory not defined")
+ endif()
+@@ -115,6 +118,7 @@ function(add_proton_library name)
+ 
+   target_include_directories(${name}
+     PRIVATE
++      "${CUDA_INCLUDE_DIR}"
+       "${CUPTI_INCLUDE_DIR}"
+       "${JSON_INCLUDE_DIR}"
+       "${PROTON_COMMON_DIR}/include"

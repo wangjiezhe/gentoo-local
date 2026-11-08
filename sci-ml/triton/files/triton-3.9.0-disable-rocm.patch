@@ -1,0 +1,26 @@
+diff --git a/python/build_helpers.py b/python/build_helpers.py
+index d90da6acd..9feb0ebd8 100644
+--- a/python/build_helpers.py
++++ b/python/build_helpers.py
+@@ -811,8 +811,6 @@ def get_nvidia_toolchain_packages():
+ 
+ 
+ def download_and_copy_dependencies(helper_args: BuildHelperArgs):
+-    download_and_copy_amd_codegen(helper_args)
+-
+     for package in get_nvidia_toolchain_packages():
+         download_and_copy(
+             name=package.name,
+diff --git a/setup.py b/setup.py
+index be580e072..380de1f3f 100644
+--- a/setup.py
++++ b/setup.py
+@@ -402,7 +402,7 @@ class CMakeBuild(build_ext):
+                                   cwd=cmake_dir)
+ 
+ 
+-backends = [*BackendInstaller.copy(["nvidia", "amd"]), *BackendInstaller.copy_externals()]
++backends = [*BackendInstaller.copy(["nvidia"]), *BackendInstaller.copy_externals()]
+ 
+ 
+ def get_package_dirs():
